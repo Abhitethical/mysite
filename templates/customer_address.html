@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Customer Address</title>
+</head>
+<body>
+
+<h2>Customer Details</h2>
+
+<p><strong>Username:</strong> {{ user.username }}</p>
+<p><strong>Email:</strong> {{ user.email }}</p>
+
+<!-- Example address fields -->
+<p><strong>Address:</strong> {{ user.profile.address }}</p>
+<p><strong>City:</strong> {{ user.profile.city }}</p>
+<p><strong>Phone:</strong> {{ user.profile.phone }}</p>
+
+<a href="{% url 'order_list' %}">Back to Orders</a>
+
+</body>
+</html>

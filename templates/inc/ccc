@@ -1,0 +1,50 @@
+
+<h2>My Orders</h2>
+
+{% for order in orders %}
+  <h3>Order #{{ order.id }} - Status: {{ order.status }}</h3>
+  <ul>
+    {% for item in order.items.all %}
+      <li>{{ item.product.name }} (x{{ item.quantity }})
+    {% endfor %}
+  </ul>
+{% empty %}
+  <p>No orders found.</p>
+{% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+<h2>Your Orders</h2>
+{% if orders %}
+    <ul>
+        {% for order in orders %}
+            <li>
+                <td><img src="{{ order.product.product_image.url }}" height="75px" alt="{{item.product.name}}"></td>
+                <strong>Product:</strong> {{ order.product.name }}<br>
+                <span class="
+                    {% if order.status == 'pending' %}status-pending
+                    {% elif order.status == 'completed' %}status-completed
+                    {% elif order.status == 'canceled' %}status-canceled
+                    {% endif %}
+                ">
+                    {{ order.status|title }}
+                </span><br>
+
+                <strong>Status:</strong> {{ order.status }}<br>
+                <strong>Quantity:</strong> {{ order.quantity }}<br>
+                <strong>Ordered At:</strong> {{ order.created_at }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No orders placed yet.</p>
+{% endif %}

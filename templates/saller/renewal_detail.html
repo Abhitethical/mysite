@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<style>
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+
+td,th{
+
+border:1px solid #ccc;
+padding:10px;
+text-align:center;
+
+}
+
+
+th{
+
+background:#222;
+color:white;
+
+}
+
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+<h2>
+Renewal History
+</h2>
+
+
+<h3>
+Advertisement :
+{{ad.title}}
+</h3>
+
+
+
+<table>
+
+
+<tr>
+
+<th>
+Plan
+</th>
+
+
+<th>
+Duration
+</th>
+
+
+<th>
+Amount
+</th>
+
+
+<th>
+Payment Status
+</th>
+
+
+<th>
+Payment Method
+</th>
+
+
+<th>
+Payment ID
+</th>
+
+
+<th>
+Paid At
+</th>
+
+
+</tr>
+
+
+
+
+{% for r in renewals %}
+
+
+
+<tr>
+
+
+<td>
+{{r.plan}}
+</td>
+
+
+<td>
+{{r.duration}} Days
+</td>
+
+
+<td>
+₹ {{r.amount}}
+</td>
+
+
+<td>
+{{r.payment_status}}
+</td>
+
+
+<td>
+
+{{r.payment_method|default:"-"}}
+
+</td>
+
+
+<td>
+
+{{r.payment_id|default:"-"}}
+
+</td>
+
+
+
+<td>
+
+{% if r.paid_at %}
+
+{{r.paid_at|date:"d-m-Y H:i"}}
+
+{% else %}
+
+-
+
+{% endif %}
+
+</td>
+
+
+
+</tr>
+
+
+
+{% empty %}
+
+
+<tr>
+
+<td colspan="7">
+
+No Renewal Found
+
+</td>
+
+</tr>
+
+
+{% endfor %}
+
+
+
+</table>
+
+
+</body>
+
+</html>
+{% endblock %}

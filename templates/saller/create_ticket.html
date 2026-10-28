@@ -1,0 +1,2332 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Create a secure customer support ticket">
+<meta name="theme-color" content="#4f46e5">
+
+<title>Create Support Ticket</title>
+
+<!-- Bootstrap -->
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+>
+
+<!-- Bootstrap Icons -->
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+>
+
+<!-- Google Font -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<style>
+
+    :root {
+        --primary: #4f46e5;
+        --primary-dark: #3730a3;
+        --secondary: #7c3aed;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --dark: #111827;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --background: #f4f7fb;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Inter", sans-serif;
+
+        background:
+            radial-gradient(
+                circle at 10% 20%,
+                rgba(79, 70, 229, 0.12),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 90% 80%,
+                rgba(124, 58, 237, 0.12),
+                transparent 30%
+            ),
+            var(--background);
+
+        color: var(--dark);
+    }
+
+    /* ==========================================
+       PAGE
+    ========================================== */
+
+    .page-wrapper {
+        min-height: 100vh;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .ticket-container {
+        width: 100%;
+        max-width: 1100px;
+        background: rgba(255, 255, 255, 0.97);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 28px;
+        overflow: hidden;
+
+        box-shadow:
+            0 30px 80px rgba(15, 23, 42, 0.12),
+            0 10px 30px rgba(79, 70, 229, 0.05);
+    }
+
+    /* ==========================================
+       HEADER
+    ========================================== */
+
+    .ticket-header {
+        position: relative;
+        padding: 38px 45px;
+        color: white;
+
+        background:
+            linear-gradient(
+                135deg,
+                #312e81 0%,
+                #4f46e5 45%,
+                #7c3aed 100%
+            );
+
+        overflow: hidden;
+    }
+
+    .ticket-header::before {
+        content: "";
+        position: absolute;
+        width: 260px;
+        height: 260px;
+        right: -80px;
+        top: -130px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .ticket-header::after {
+        content: "";
+        position: absolute;
+        width: 180px;
+        height: 180px;
+        left: 45%;
+        bottom: -130px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .brand-icon {
+        width: 55px;
+        height: 55px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.16);
+
+        backdrop-filter: blur(10px);
+
+        font-size: 25px;
+        margin-bottom: 18px;
+    }
+
+    .ticket-header h1 {
+        font-size: 30px;
+        font-weight: 800;
+        margin: 0 0 8px;
+        letter-spacing: -0.8px;
+    }
+
+    .ticket-header p {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.78);
+        font-size: 14px;
+        max-width: 650px;
+        line-height: 1.7;
+    }
+
+    .secure-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        margin-top: 20px;
+        padding: 8px 13px;
+
+        border-radius: 50px;
+
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        backdrop-filter: blur(10px);
+    }
+
+    /* ==========================================
+       FORM AREA
+    ========================================== */
+
+    .form-area {
+        padding: 42px 45px 45px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .section-number {
+        width: 32px;
+        height: 32px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        color: white;
+        background: var(--primary);
+
+        font-size: 13px;
+        font-weight: 700;
+
+        flex-shrink: 0;
+    }
+
+    .section-title h5 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .section-title span {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 400;
+    }
+
+    /* ==========================================
+       FORM CONTROLS
+    ========================================== */
+
+    .form-label {
+        margin-bottom: 8px;
+        color: #374151;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .required-star {
+        color: var(--danger);
+    }
+
+    .optional {
+        color: #9ca3af;
+        font-size: 10px;
+        font-weight: 500;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 50px;
+
+        border: 1px solid var(--border);
+        border-radius: 12px;
+
+        background: #f9fafb;
+
+        padding: 12px 15px;
+
+        color: #111827;
+        font-size: 13px;
+
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+    }
+
+    .form-control::placeholder {
+        color: #a1a1aa;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--primary);
+        background: white;
+
+        box-shadow:
+            0 0 0 4px rgba(79, 70, 229, 0.10);
+    }
+
+    textarea.form-control {
+        min-height: 150px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .input-group-text {
+        border: 1px solid var(--border);
+        border-right: 0;
+
+        background: #f9fafb;
+        color: var(--primary);
+
+        border-radius: 12px 0 0 12px;
+    }
+
+    .input-group .form-control {
+        border-radius: 0 12px 12px 0;
+    }
+
+    /* ==========================================
+       AUTO UPPERCASE FIELDS
+    ========================================== */
+
+    .uppercase-field {
+        text-transform: uppercase;
+    }
+
+    /*
+        IMPORTANT:
+        Email does NOT use uppercase-field.
+        Therefore email remains exactly as entered.
+    */
+
+    /* ==========================================
+       DESCRIPTION
+    ========================================== */
+
+    .description-wrapper {
+        position: relative;
+    }
+
+    .character-count {
+        position: absolute;
+
+        right: 14px;
+        bottom: 10px;
+
+        color: #9ca3af;
+        font-size: 10px;
+
+        pointer-events: none;
+
+        background: rgba(255, 255, 255, 0.8);
+
+        padding: 2px 5px;
+        border-radius: 5px;
+    }
+
+    /* ==========================================
+       PRIORITY
+    ========================================== */
+
+    .priority-hint {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+    }
+
+    .priority-tag {
+        padding: 4px 9px;
+        border-radius: 20px;
+
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .priority-low {
+        background: #ecfdf5;
+        color: #047857;
+    }
+
+    .priority-medium {
+        background: #fffbeb;
+        color: #b45309;
+    }
+
+    .priority-high {
+        background: #fff7ed;
+        color: #c2410c;
+    }
+
+    .priority-critical {
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    .priority-selected-low {
+        color: #047857;
+        border-color: #10b981 !important;
+    }
+
+    .priority-selected-medium {
+        color: #b45309;
+        border-color: #f59e0b !important;
+    }
+
+    .priority-selected-high {
+        color: #c2410c;
+        border-color: #f97316 !important;
+    }
+
+    .priority-selected-critical {
+        color: #b91c1c;
+        border-color: #ef4444 !important;
+    }
+
+    /* ==========================================
+       FILE UPLOAD
+    ========================================== */
+
+    .upload-box {
+        position: relative;
+
+        min-height: 125px;
+
+        border: 1.5px dashed #cbd5e1;
+        border-radius: 14px;
+
+        background: #f8fafc;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+
+        transition: all 0.2s ease;
+
+        cursor: pointer;
+        overflow: hidden;
+    }
+
+    .upload-box:hover,
+    .upload-box.drag-over {
+        border-color: var(--primary);
+        background: #f5f3ff;
+    }
+
+    .upload-box i {
+        font-size: 26px;
+        color: var(--primary);
+
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    .upload-box strong {
+        display: block;
+
+        color: #374151;
+
+        font-size: 12px;
+
+        max-width: 90%;
+        margin: auto;
+
+        word-break: break-word;
+    }
+
+    .upload-box small {
+        display: block;
+
+        color: #9ca3af;
+
+        font-size: 10px;
+
+        margin-top: 5px;
+    }
+
+    .upload-box input {
+        position: absolute;
+
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
+
+        opacity: 0;
+
+        cursor: pointer;
+    }
+
+    /* ==========================================
+       SUBMIT AREA
+    ========================================== */
+
+    .submit-area {
+        margin-top: 35px;
+        padding-top: 25px;
+
+        border-top: 1px solid #eef0f3;
+    }
+
+    .submit-button {
+        position: relative;
+
+        width: 100%;
+        min-height: 54px;
+
+        border: 0;
+        border-radius: 14px;
+
+        background:
+            linear-gradient(
+                135deg,
+                var(--primary),
+                var(--secondary)
+            );
+
+        color: white;
+
+        font-size: 14px;
+        font-weight: 700;
+
+        letter-spacing: 0.1px;
+
+        box-shadow:
+            0 10px 25px rgba(79, 70, 229, 0.25);
+
+        transition: all 0.2s ease;
+    }
+
+    .submit-button:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 14px 30px rgba(79, 70, 229, 0.30);
+    }
+
+    .submit-button:active {
+        transform: translateY(0);
+    }
+
+    .submit-button:disabled {
+        opacity: 0.75;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .submit-button .spinner-border {
+        width: 18px;
+        height: 18px;
+    }
+
+    .privacy-note {
+        margin-top: 13px;
+
+        text-align: center;
+
+        color: #9ca3af;
+
+        font-size: 10px;
+    }
+
+    .privacy-note i {
+        color: var(--success);
+    }
+
+    /* ==========================================
+       SUCCESS MODAL
+    ========================================== */
+
+    .success-modal .modal-content {
+        border: 0;
+        border-radius: 24px;
+        overflow: hidden;
+
+        box-shadow:
+            0 30px 80px rgba(15, 23, 42, 0.25);
+    }
+
+    .success-top {
+        padding: 35px 30px 25px;
+
+        text-align: center;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eef2ff,
+                #f5f3ff
+            );
+    }
+
+    .success-icon {
+        width: 75px;
+        height: 75px;
+
+        margin: 0 auto 18px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 50%;
+
+        background: #dcfce7;
+        color: #16a34a;
+
+        font-size: 35px;
+
+        box-shadow:
+            0 10px 25px rgba(22, 163, 74, 0.15);
+    }
+
+    .success-top h3 {
+        font-size: 21px;
+        font-weight: 800;
+        margin-bottom: 7px;
+    }
+
+    .success-top p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .ticket-number-box {
+        margin: 20px 25px;
+
+        padding: 20px;
+
+        border-radius: 15px;
+
+        text-align: center;
+
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+    }
+
+    .ticket-number-label {
+        display: block;
+
+        margin-bottom: 6px;
+
+        color: #9ca3af;
+
+        text-transform: uppercase;
+        letter-spacing: 1px;
+
+        font-size: 9px;
+        font-weight: 700;
+    }
+
+    .ticket-number {
+        color: var(--primary);
+
+        font-size: 25px;
+        font-weight: 800;
+
+        letter-spacing: 1px;
+    }
+
+    /* ==========================================
+       VALIDATION
+    ========================================== */
+
+    .invalid-feedback {
+        font-size: 10px;
+        font-weight: 500;
+    }
+
+    .was-validated .form-control:invalid,
+    .was-validated .form-select:invalid {
+        border-color: var(--danger);
+    }
+
+    .was-validated .form-control:valid,
+    .was-validated .form-select:valid {
+        border-color: #86efac;
+    }
+
+    /* ==========================================
+       RESPONSIVE
+    ========================================== */
+
+    @media (max-width: 768px) {
+
+        .page-wrapper {
+            padding: 15px;
+            align-items: flex-start;
+        }
+
+        .ticket-container {
+            border-radius: 20px;
+            margin: 10px 0;
+        }
+
+        .ticket-header {
+            padding: 30px 24px;
+        }
+
+        .ticket-header h1 {
+            font-size: 24px;
+        }
+
+        .form-area {
+            padding: 30px 22px;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+        }
+    }
+
+    @media (max-width: 480px) {
+
+        .ticket-header h1 {
+            font-size: 21px;
+        }
+
+        .ticket-header p {
+            font-size: 12px;
+        }
+
+        .form-area {
+            padding: 25px 17px;
+        }
+
+        .section-title {
+            margin-bottom: 18px;
+        }
+
+        .submit-button {
+            min-height: 52px;
+        }
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+<div class="ticket-container">
+
+    <!-- ==========================================
+         HEADER
+    =========================================== -->
+
+    <div class="ticket-header">
+
+        <div class="header-content">
+
+            <div class="brand-icon" aria-hidden="true">
+                <i class="bi bi-headset"></i>
+            </div>
+
+            <h1>Create Support Ticket</h1>
+
+            <p>
+                Tell us what you need help with. Our support team will
+                review your request and get back to you as soon as possible.
+            </p>
+
+            <div class="secure-badge">
+
+                <i class="bi bi-shield-check"></i>
+
+                Secure &amp; Confidential
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         FORM
+    =========================================== -->
+
+    <div class="form-area">
+
+        <form
+            method="post"
+            enctype="multipart/form-data"
+            class="needs-validation"
+            novalidate
+            id="ticketForm"
+
+            /*
+                Disable browser automatic form autofill.
+            */
+            autocomplete="off"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- ==================================
+                 CUSTOMER INFORMATION
+            =================================== -->
+
+            <div class="section-title">
+
+                <div class="section-number">
+                    01
+                </div>
+
+                <div>
+
+                    <h5>Your Information</h5>
+
+                    <span>
+                        Tell us how we can contact you.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-4 mb-4">
+
+
+                <!-- Full Name -->
+
+                <div class="col-md-6">
+
+                    <label
+                        for="name"
+                        class="form-label"
+                    >
+
+                        Full Name
+
+                        <span class="required-star">
+                            *
+                        </span>
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-person"></i>
+                        </span>
+
+                        <input
+                            name="name"
+                            type="text"
+
+                            class="form-control uppercase-field"
+
+                            id="name"
+
+                            placeholder="JOHN DOE"
+
+                            autocomplete="off"
+
+                            autocapitalize="characters"
+
+                            spellcheck="false"
+
+                            maxlength="100"
+
+                            required
+
+                            aria-required="true"
+                        >
+
+                    </div>
+
+                    <div class="invalid-feedback">
+                        Please enter your full name.
+                    </div>
+
+                </div>
+
+
+                <!-- Mobile -->
+
+                <div class="col-md-6">
+
+                    <label
+                        for="mobile"
+                        class="form-label"
+                    >
+
+                        Mobile Number
+
+                        <span class="required-star">
+                            *
+                        </span>
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-phone"></i>
+                        </span>
+
+                        <input
+                            name="mobile"
+                            type="tel"
+
+                            class="form-control"
+
+                            id="mobile"
+
+                            placeholder="+91 98765 43210"
+
+                            autocomplete="off"
+
+                            inputmode="numeric"
+
+                            maxlength="20"
+
+                            required
+
+                            aria-required="true"
+                        >
+
+                    </div>
+
+                    <div class="invalid-feedback">
+                        Please enter your mobile number.
+                    </div>
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="col-md-6">
+
+                    <label
+                        for="email"
+                        class="form-label"
+                    >
+
+                        Email Address
+
+                        <span class="required-star">
+                            *
+                        </span>
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-envelope"></i>
+                        </span>
+
+                        <input
+                            name="email"
+                            type="email"
+
+                            class="form-control"
+
+                            id="email"
+
+                            placeholder="example@email.com"
+
+                            /*
+                                IMPORTANT:
+                                Email autocomplete disabled.
+                                Email is NOT converted to uppercase.
+                            */
+                            autocomplete="off"
+
+                            autocapitalize="none"
+
+                            autocorrect="off"
+
+                            spellcheck="false"
+
+                            maxlength="150"
+
+                            required
+
+                            aria-required="true"
+                        >
+
+                    </div>
+
+                    <div class="invalid-feedback">
+                        Please enter a valid email address.
+                    </div>
+
+                </div>
+
+
+                <!-- Department -->
+
+                <div class="col-md-6">
+
+                    <label
+                        for="department"
+                        class="form-label"
+                    >
+
+                        Department / Team
+
+                        <span class="optional">
+                            (Optional)
+                        </span>
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-diagram-3"></i>
+                        </span>
+
+                        <input
+                            name="department"
+                            type="text"
+
+                            class="form-control uppercase-field"
+
+                            id="department"
+
+                            placeholder="E.G. SUPPORT TEAM"
+
+                            autocomplete="off"
+
+                            autocapitalize="characters"
+
+                            spellcheck="false"
+
+                            maxlength="100"
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================
+                 TICKET DETAILS
+            =================================== -->
+
+            <div class="section-title">
+
+                <div class="section-number">
+                    02
+                </div>
+
+                <div>
+
+                    <h5>Ticket Details</h5>
+
+                    <span>
+                        Describe the issue you need assistance with.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-4 mb-4">
+
+
+                <!-- Title -->
+
+                <div class="col-12">
+
+                    <label
+                        for="title"
+                        class="form-label"
+                    >
+
+                        Ticket Title / Subject
+
+                        <span class="required-star">
+                            *
+                        </span>
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-chat-left-text"></i>
+                        </span>
+
+                        <input
+                            name="title"
+                            type="text"
+
+                            class="form-control uppercase-field"
+
+                            id="title"
+
+                            placeholder="BRIEFLY DESCRIBE YOUR ISSUE"
+
+                            autocomplete="off"
+
+                            autocapitalize="characters"
+
+                            spellcheck="false"
+
+                            maxlength="200"
+
+                            required
+
+                            aria-required="true"
+                        >
+
+                    </div>
+
+                    <div class="invalid-feedback">
+                        Please enter a ticket title.
+                    </div>
+
+                </div>
+
+
+                <!-- Description -->
+
+                <div class="col-12">
+
+                    <label
+                        for="description"
+                        class="form-label"
+                    >
+
+                        Description / Details
+
+                        <span class="required-star">
+                            *
+                        </span>
+
+                    </label>
+
+                    <div class="description-wrapper">
+
+                        <textarea
+                            name="description"
+
+                            class="form-control"
+
+                            id="description"
+
+                            rows="5"
+
+                            maxlength="2000"
+
+                            placeholder="Please provide as much detail as possible about your issue..."
+
+                            autocomplete="off"
+
+                            spellcheck="true"
+
+                            required
+
+                            aria-required="true"
+                        ></textarea>
+
+                        <span
+                            class="character-count"
+                            aria-live="polite"
+                        >
+
+                            <span id="charCount">
+                                0
+                            </span>/2000
+
+                        </span>
+
+                    </div>
+
+                    <div class="invalid-feedback">
+                        Please provide a description.
+                    </div>
+
+                </div>
+
+
+                <!-- Category -->
+
+                <div class="col-md-6">
+
+                    <label
+                        for="category"
+                        class="form-label"
+                    >
+
+                        Category
+
+                        <span class="required-star">
+                            *
+                        </span>
+
+                    </label>
+
+                    <select
+                        name="category"
+
+                        class="form-select"
+
+                        id="category"
+
+                        autocomplete="off"
+
+                        required
+
+                        aria-required="true"
+                    >
+
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
+                            Select Category
+                        </option>
+
+                        <option value="PAYMENT">
+                            💳 PAYMENT
+                        </option>
+
+                        <option value="ORDER">
+                            📦 ORDER
+                        </option>
+
+                        <option value="RETURN">
+                            ↩️ RETURN
+                        </option>
+
+                        <option value="ACCOUNT">
+                            👤 ACCOUNT
+                        </option>
+
+                        <option value="LOGISTICS">
+                            🚚 LOGISTICS
+                        </option>
+
+                        <option value="TECHNICAL">
+                            🛠️ TECHNICAL
+                        </option>
+
+                        <option value="OTHER">
+                            📋 OTHER
+                        </option>
+
+                    </select>
+
+                    <div class="invalid-feedback">
+                        Please select a category.
+                    </div>
+
+                </div>
+
+
+                <!-- Priority -->
+
+                <div class="col-md-6">
+
+                    <label
+                        for="priority"
+                        class="form-label"
+                    >
+
+                        Priority
+
+                        <span class="required-star">
+                            *
+                        </span>
+
+                    </label>
+
+                    <select
+                        name="priority"
+
+                        class="form-select"
+
+                        id="priority"
+
+                        autocomplete="off"
+
+                        required
+
+                        aria-required="true"
+                    >
+
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
+                            Select Priority
+                        </option>
+
+                        <option value="LOW">
+                            LOW
+                        </option>
+
+                        <option value="MEDIUM">
+                            MEDIUM
+                        </option>
+
+                        <option value="HIGH">
+                            HIGH
+                        </option>
+
+                        <option value="CRITICAL">
+                            CRITICAL
+                        </option>
+
+                    </select>
+
+                    <div class="invalid-feedback">
+                        Please select a priority level.
+                    </div>
+
+                    <div class="priority-hint">
+
+                        <span class="priority-tag priority-low">
+                            LOW
+                        </span>
+
+                        <span class="priority-tag priority-medium">
+                            MEDIUM
+                        </span>
+
+                        <span class="priority-tag priority-high">
+                            HIGH
+                        </span>
+
+                        <span class="priority-tag priority-critical">
+                            CRITICAL
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================
+                 ADDITIONAL INFORMATION
+            =================================== -->
+
+            <div class="section-title">
+
+                <div class="section-number">
+                    03
+                </div>
+
+                <div>
+
+                    <h5>Additional Information</h5>
+
+                    <span>
+                        Optional information that may help us resolve
+                        your issue faster.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-4">
+
+
+                <!-- Due Date -->
+
+                <div class="col-md-6">
+
+                    <label
+                        for="due_date"
+                        class="form-label"
+                    >
+
+                        Due Date
+
+                        <span class="optional">
+                            (Optional)
+                        </span>
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-calendar-event"></i>
+                        </span>
+
+                        <input
+                            type="date"
+
+                            name="due_date"
+
+                            class="form-control"
+
+                            id="due_date"
+
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Location -->
+
+                <div class="col-md-6">
+
+                    <label
+                        for="location"
+                        class="form-label"
+                    >
+
+                        Location / Event
+
+                        <span class="optional">
+                            (Optional)
+                        </span>
+
+                    </label>
+
+                    <div class="input-group">
+
+                        <span class="input-group-text">
+                            <i class="bi bi-geo-alt"></i>
+                        </span>
+
+                        <input
+                            name="location"
+
+                            type="text"
+
+                            class="form-control uppercase-field"
+
+                            id="location"
+
+                            placeholder="E.G. NEW YORK OFFICE"
+
+                            autocomplete="off"
+
+                            autocapitalize="characters"
+
+                            spellcheck="false"
+
+                            maxlength="150"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- Attachment -->
+
+                <div class="col-12">
+
+                    <label
+                        for="attachment"
+                        class="form-label"
+                    >
+
+                        Attachment
+
+                        <span class="optional">
+                            (Optional)
+                        </span>
+
+                    </label>
+
+                    <div
+                        class="upload-box"
+                        id="uploadBox"
+                    >
+
+                        <input
+                            type="file"
+
+                            name="attachment"
+
+                            id="attachment"
+
+                            accept=".jpg,.jpeg,.png,.gif,.webp,.pdf,.doc,.docx,.xls,.xlsx,.txt"
+
+                            aria-label="Upload attachment"
+
+                            autocomplete="off"
+                        >
+
+                        <div>
+
+                            <i
+                                class="bi bi-cloud-arrow-up"
+                                id="uploadIcon"
+                            ></i>
+
+                            <strong id="fileText">
+                                Click to upload a file
+                            </strong>
+
+                            <small>
+                                PDF, DOC, DOCX, XLS, XLSX, TXT,
+                                images — Maximum 10MB
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div
+                        id="fileError"
+                        class="text-danger mt-2"
+                        style="display:none;font-size:10px;"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================================
+                 SUBMIT
+            =================================== -->
+
+            <div class="submit-area">
+
+                <button
+                    type="submit"
+                    class="submit-button"
+                    id="submitButton"
+                >
+
+                    <span id="submitText">
+
+                        <i class="bi bi-send me-2"></i>
+
+                        Submit Support Ticket
+
+                    </span>
+
+                    <span
+                        id="loadingText"
+                        style="display:none;"
+                    >
+
+                        <span
+                            class="spinner-border spinner-border-sm me-2"
+                            role="status"
+                            aria-hidden="true"
+                        ></span>
+
+                        Submitting Ticket...
+
+                    </span>
+
+                </button>
+
+                <div class="privacy-note">
+
+                    <i class="bi bi-shield-lock-fill me-1"></i>
+
+                    Your information is securely transmitted
+                    and kept confidential.
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- ==========================================
+     SUCCESS MODAL
+=========================================== -->
+
+<div
+    class="modal fade success-modal"
+    id="ticketModal"
+    tabindex="-1"
+    aria-labelledby="ticketModalLabel"
+    aria-hidden="true"
+>
+
+<div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content">
+
+        <div class="success-top">
+
+            <div class="success-icon">
+
+                <i class="bi bi-check-lg"></i>
+
+            </div>
+
+            <h3 id="ticketModalLabel">
+                Ticket Submitted!
+            </h3>
+
+            <p>
+                Your support request has been successfully received.
+            </p>
+
+        </div>
+
+
+        <div class="ticket-number-box">
+
+            <span class="ticket-number-label">
+                Your Ticket Number
+            </span>
+
+            <div class="ticket-number">
+                {{ ticket_number }}
+            </div>
+
+        </div>
+
+
+        <div class="px-4 pb-4 text-center">
+
+            <p
+                class="mb-3"
+                style="font-size:11px;color:#6b7280;"
+            >
+                Please save this ticket number for future reference.
+            </p>
+
+            <button
+                type="button"
+                class="btn btn-primary px-4 py-2 rounded-3"
+                data-bs-dismiss="modal"
+            >
+                Done
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+></script>
+
+<script>
+
+"use strict";
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ==========================================
+       ELEMENTS
+    ========================================== */
+
+    const form = document.getElementById("ticketForm");
+
+    const submitButton =
+        document.getElementById("submitButton");
+
+    const submitText =
+        document.getElementById("submitText");
+
+    const loadingText =
+        document.getElementById("loadingText");
+
+    const description =
+        document.getElementById("description");
+
+    const charCount =
+        document.getElementById("charCount");
+
+    const attachment =
+        document.getElementById("attachment");
+
+    const fileText =
+        document.getElementById("fileText");
+
+    const fileError =
+        document.getElementById("fileError");
+
+    const uploadBox =
+        document.getElementById("uploadBox");
+
+    const uploadIcon =
+        document.getElementById("uploadIcon");
+
+    const dueDate =
+        document.getElementById("due_date");
+
+    const priority =
+        document.getElementById("priority");
+
+
+    /* ==========================================
+       DISABLE AUTOMATIC DATA / AUTOFILL
+
+       The browser is told not to automatically
+       fill previous customer information.
+    ========================================== */
+
+    form.setAttribute("autocomplete", "off");
+
+    const allFormFields =
+        form.querySelectorAll(
+            "input, textarea, select"
+        );
+
+    allFormFields.forEach(function (field) {
+
+        field.setAttribute(
+            "autocomplete",
+            "off"
+        );
+
+    });
+
+
+    /*
+       Extra protection for email.
+
+       Email is NEVER converted to uppercase.
+    */
+
+    const emailField =
+        document.getElementById("email");
+
+    if (emailField) {
+
+        emailField.setAttribute(
+            "autocomplete",
+            "off"
+        );
+
+        emailField.setAttribute(
+            "autocapitalize",
+            "none"
+        );
+
+        emailField.setAttribute(
+            "autocorrect",
+            "off"
+        );
+
+        emailField.setAttribute(
+            "spellcheck",
+            "false"
+        );
+
+    }
+
+
+    /* ==========================================
+       AUTO UPPERCASE
+
+       ONLY fields with .uppercase-field
+       are converted to uppercase.
+
+       Email is intentionally excluded.
+    ========================================== */
+
+    const uppercaseFields =
+        document.querySelectorAll(
+            ".uppercase-field"
+        );
+
+
+    uppercaseFields.forEach(function (field) {
+
+        field.addEventListener(
+            "input",
+            function () {
+
+                const start =
+                    this.selectionStart;
+
+                const end =
+                    this.selectionEnd;
+
+                this.value =
+                    this.value.toUpperCase();
+
+                /*
+                    Keep cursor position.
+                */
+
+                try {
+
+                    this.setSelectionRange(
+                        start,
+                        end
+                    );
+
+                } catch (error) {
+
+                    // Ignore cursor restoration errors.
+
+                }
+
+            }
+        );
+
+
+        /*
+            Convert existing Django values
+            to uppercase.
+        */
+
+        if (field.value) {
+
+            field.value =
+                field.value.toUpperCase();
+
+        }
+
+    });
+
+
+    /* ==========================================
+       EMAIL - DO NOT UPPERCASE
+
+       The email value is left unchanged.
+    ========================================== */
+
+    if (emailField) {
+
+        emailField.addEventListener(
+            "input",
+            function () {
+
+                /*
+                    Intentionally do nothing.
+
+                    Example:
+
+                    john.doe@gmail.com
+
+                    stays:
+
+                    john.doe@gmail.com
+                */
+
+            }
+        );
+
+    }
+
+
+    /* ==========================================
+       CHARACTER COUNTER
+    ========================================== */
+
+    function updateCharacterCount() {
+
+        const length =
+            description.value.length;
+
+        charCount.textContent =
+            length;
+
+        if (length >= 1900) {
+
+            charCount.style.color =
+                "#ef4444";
+
+        } else if (length >= 1700) {
+
+            charCount.style.color =
+                "#f59e0b";
+
+        } else {
+
+            charCount.style.color =
+                "#9ca3af";
+
+        }
+
+    }
+
+
+    description.addEventListener(
+        "input",
+        updateCharacterCount
+    );
+
+    updateCharacterCount();
+
+
+    /* ==========================================
+       DUE DATE
+       PREVENT PAST DATES
+    ========================================== */
+
+    function setMinimumDueDate() {
+
+        const today =
+            new Date();
+
+        const year =
+            today.getFullYear();
+
+        const month =
+            String(
+                today.getMonth() + 1
+            ).padStart(2, "0");
+
+        const day =
+            String(
+                today.getDate()
+            ).padStart(2, "0");
+
+        dueDate.min =
+            `${year}-${month}-${day}`;
+
+    }
+
+    setMinimumDueDate();
+
+
+    /* ==========================================
+       PRIORITY COLOR
+    ========================================== */
+
+    priority.addEventListener(
+        "change",
+        function () {
+
+            this.classList.remove(
+                "priority-selected-low",
+                "priority-selected-medium",
+                "priority-selected-high",
+                "priority-selected-critical"
+            );
+
+            this.style.fontWeight =
+                "600";
+
+            switch (this.value) {
+
+                case "LOW":
+
+                    this.classList.add(
+                        "priority-selected-low"
+                    );
+
+                    break;
+
+                case "MEDIUM":
+
+                    this.classList.add(
+                        "priority-selected-medium"
+                    );
+
+                    break;
+
+                case "HIGH":
+
+                    this.classList.add(
+                        "priority-selected-high"
+                    );
+
+                    break;
+
+                case "CRITICAL":
+
+                    this.classList.add(
+                        "priority-selected-critical"
+                    );
+
+                    break;
+
+                default:
+
+                    this.style.fontWeight =
+                        "400";
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       FILE UPLOAD
+    ========================================== */
+
+    const MAX_FILE_SIZE =
+        10 * 1024 * 1024;
+
+    const allowedExtensions = [
+
+        "jpg",
+        "jpeg",
+        "png",
+        "gif",
+        "webp",
+        "pdf",
+        "doc",
+        "docx",
+        "xls",
+        "xlsx",
+        "txt"
+
+    ];
+
+
+    function resetFileUpload() {
+
+        fileText.textContent =
+            "Click to upload a file";
+
+        uploadIcon.className =
+            "bi bi-cloud-arrow-up";
+
+        fileError.style.display =
+            "none";
+
+        fileError.textContent =
+            "";
+
+        uploadBox.classList.remove(
+            "border-danger"
+        );
+
+    }
+
+
+    attachment.addEventListener(
+        "change",
+        function () {
+
+            fileError.style.display =
+                "none";
+
+            fileError.textContent =
+                "";
+
+
+            if (
+                !this.files ||
+                !this.files.length
+            ) {
+
+                resetFileUpload();
+
+                return;
+
+            }
+
+
+            const file =
+                this.files[0];
+
+            const fileName =
+                file.name;
+
+            const extension =
+                fileName
+                    .split(".")
+                    .pop()
+                    .toLowerCase();
+
+
+            /* Check extension */
+
+            if (
+                !allowedExtensions.includes(
+                    extension
+                )
+            ) {
+
+                fileError.textContent =
+                    "This file type is not allowed.";
+
+                fileError.style.display =
+                    "block";
+
+                this.value =
+                    "";
+
+                resetFileUpload();
+
+                return;
+
+            }
+
+
+            /* Check file size */
+
+            if (
+                file.size >
+                MAX_FILE_SIZE
+            ) {
+
+                fileError.textContent =
+                    "File size must not exceed 10MB.";
+
+                fileError.style.display =
+                    "block";
+
+                this.value =
+                    "";
+
+                resetFileUpload();
+
+                return;
+
+            }
+
+
+            /* Valid file */
+
+            uploadIcon.className =
+                "bi bi-file-earmark-check";
+
+            fileText.textContent =
+                fileName;
+
+        }
+    );
+
+
+    /* ==========================================
+       DRAG & DROP
+    ========================================== */
+
+    uploadBox.addEventListener(
+        "dragover",
+        function (event) {
+
+            event.preventDefault();
+
+            uploadBox.classList.add(
+                "drag-over"
+            );
+
+        }
+    );
+
+
+    uploadBox.addEventListener(
+        "dragleave",
+        function () {
+
+            uploadBox.classList.remove(
+                "drag-over"
+            );
+
+        }
+    );
+
+
+    uploadBox.addEventListener(
+        "drop",
+        function () {
+
+            uploadBox.classList.remove(
+                "drag-over"
+            );
+
+        }
+    );
+
+
+    /* ==========================================
+       FORM VALIDATION
+    ========================================== */
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+
+
+            /*
+                Convert ONLY uppercase fields
+                before Django receives POST.
+            */
+
+            uppercaseFields.forEach(
+                function (field) {
+
+                    field.value =
+                        field.value.toUpperCase();
+
+                }
+            );
+
+
+            /*
+                IMPORTANT:
+
+                Email is NOT modified here.
+
+                Whatever user entered will be
+                submitted as entered.
+            */
+
+
+            /* HTML5 validation */
+
+            if (!form.checkValidity()) {
+
+                event.preventDefault();
+
+                event.stopPropagation();
+
+                form.classList.add(
+                    "was-validated"
+                );
+
+
+                /*
+                    Scroll to first invalid field.
+                */
+
+                const firstInvalid =
+                    form.querySelector(
+                        ":invalid"
+                    );
+
+
+                if (firstInvalid) {
+
+                    firstInvalid.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+
+                    setTimeout(
+                        function () {
+
+                            firstInvalid.focus();
+
+                        },
+                        300
+                    );
+
+                }
+
+                return;
+
+            }
+
+
+            /*
+                Prevent double submission.
+            */
+
+            submitButton.disabled =
+                true;
+
+            submitText.style.display =
+                "none";
+
+            loadingText.style.display =
+                "inline-flex";
+
+            form.classList.add(
+                "was-validated"
+            );
+
+        }
+    );
+
+
+    /* ==========================================
+       SUCCESS MODAL
+    ========================================== */
+
+    {% if ticket_number %}
+
+    const modalElement =
+        document.getElementById(
+            "ticketModal"
+        );
+
+
+    if (modalElement) {
+
+        const ticketModal =
+            new bootstrap.Modal(
+                modalElement
+            );
+
+        ticketModal.show();
+
+    }
+
+    {% endif %}
+
+});
+
+</script>
+
+</body>
+
+</html>
+
+{% endblock %}

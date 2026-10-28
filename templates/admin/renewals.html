@@ -1,0 +1,1364 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+/* =========================================================
+   PROFESSIONAL ADVERTISEMENT RENEWAL MANAGEMENT
+========================================================= */
+
+:root {
+    --renew-primary: #2563eb;
+    --renew-primary-dark: #1d4ed8;
+    --renew-success: #16a34a;
+    --renew-warning: #f59e0b;
+    --renew-danger: #dc2626;
+    --renew-dark: #0f172a;
+    --renew-muted: #64748b;
+    --renew-bg: #f1f5f9;
+    --renew-border: #e2e8f0;
+    --renew-card: #ffffff;
+}
+
+.renewal-page {
+    min-height: calc(100vh - 70px);
+    padding: 30px 20px 60px;
+    background:
+        radial-gradient(
+            circle at 5% 5%,
+            rgba(37, 99, 235, 0.08),
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 95% 10%,
+            rgba(16, 185, 129, 0.07),
+            transparent 25%
+        ),
+        var(--renew-bg);
+}
+
+/* =========================================================
+   MAIN HEADER
+========================================================= */
+
+.renewal-header {
+    background:
+        linear-gradient(
+            135deg,
+            #0f172a,
+            #1e293b
+        );
+    border-radius: 20px;
+    padding: 28px 30px;
+    color: #fff;
+    box-shadow: 0 15px 40px rgba(15, 23, 42, 0.16);
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.renewal-header::before {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.05);
+    right: -80px;
+    top: -100px;
+}
+
+.renewal-header::after {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(37,99,235,.15);
+    right: 80px;
+    bottom: -100px;
+}
+
+.renewal-header-content {
+    position: relative;
+    z-index: 2;
+}
+
+.renewal-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 0;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -.3px;
+}
+
+.renewal-title-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.15);
+    font-size: 23px;
+}
+
+.renewal-subtitle {
+    margin: 9px 0 0 62px;
+    color: #cbd5e1;
+    font-size: 14px;
+}
+
+.total-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(37,99,235,.18);
+    border: 1px solid rgba(96,165,250,.35);
+    color: #dbeafe;
+    border-radius: 999px;
+    padding: 9px 15px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.renewal-stat-card {
+    background: var(--renew-card);
+    border: 1px solid var(--renew-border);
+    border-radius: 18px;
+    padding: 20px;
+    height: 100%;
+    box-shadow: 0 8px 25px rgba(15,23,42,.05);
+    transition: .25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.renewal-stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 15px 35px rgba(15,23,42,.09);
+}
+
+.stat-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    margin-bottom: 13px;
+}
+
+.stat-icon.blue {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.stat-icon.green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.stat-icon.orange {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.stat-icon.red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.stat-label {
+    color: var(--renew-muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+}
+
+.stat-value {
+    margin-top: 4px;
+    font-size: 25px;
+    font-weight: 800;
+    color: var(--renew-dark);
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.renewal-toolbar {
+    background: #fff;
+    border: 1px solid var(--renew-border);
+    border-radius: 18px;
+    padding: 17px;
+    margin-top: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 7px 22px rgba(15,23,42,.04);
+}
+
+.search-wrapper {
+    position: relative;
+}
+
+.search-wrapper .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    pointer-events: none;
+}
+
+#searchInput {
+    height: 47px;
+    padding-left: 44px;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    font-size: 14px;
+    transition: .2s ease;
+}
+
+#searchInput:focus {
+    background: #fff;
+    border-color: var(--renew-primary);
+    box-shadow: 0 0 0 4px rgba(37,99,235,.10);
+}
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.renewal-table-card {
+    background: #fff;
+    border: 1px solid var(--renew-border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(15,23,42,.06);
+}
+
+.table-heading {
+    padding: 19px 22px;
+    border-bottom: 1px solid var(--renew-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.table-heading-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--renew-dark);
+}
+
+.table-heading-subtitle {
+    margin: 3px 0 0;
+    color: #64748b;
+    font-size: 12px;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+#renewalTable {
+    margin: 0;
+    border: 0;
+}
+
+#renewalTable thead th {
+    background: #f8fafc;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+    border-top: 0;
+    padding: 15px 14px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .55px;
+    white-space: nowrap;
+}
+
+#renewalTable tbody td {
+    padding: 16px 14px;
+    border-color: #eef2f7;
+    color: #334155;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+#renewalTable tbody tr {
+    transition: .18s ease;
+}
+
+#renewalTable tbody tr:hover {
+    background: #f8fbff;
+}
+
+/* =========================================================
+   SERIAL NUMBER
+========================================================= */
+
+.serial-number {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #475569;
+    font-weight: 800;
+    font-size: 12px;
+}
+
+/* =========================================================
+   SELLER
+========================================================= */
+
+.seller-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 170px;
+}
+
+.seller-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #4f46e5
+    );
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+    box-shadow: 0 5px 12px rgba(37,99,235,.20);
+}
+
+.seller-name {
+    font-weight: 750;
+    color: #0f172a;
+    line-height: 1.2;
+}
+
+.seller-email {
+    display: block;
+    color: #94a3b8;
+    font-size: 11px;
+    margin-top: 3px;
+    word-break: break-word;
+}
+
+/* =========================================================
+   ADVERTISEMENT
+========================================================= */
+
+.ad-title {
+    min-width: 170px;
+    max-width: 230px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.ad-title-icon {
+    color: #2563eb;
+    margin-right: 6px;
+}
+
+/* =========================================================
+   PLAN
+========================================================= */
+
+.plan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #dbeafe;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+/* =========================================================
+   AMOUNT
+========================================================= */
+
+.amount-value {
+    color: #0f172a;
+    font-weight: 850;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 11px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .3px;
+    white-space: nowrap;
+}
+
+.status-running {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-approved {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-expired {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.status-rejected {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* =========================================================
+   PAYMENT
+========================================================= */
+
+.payment-paid {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.payment-failed {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.payment-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.payment-method {
+    display: block;
+    margin-top: 5px;
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* =========================================================
+   DATE
+========================================================= */
+
+.date-box {
+    min-width: 120px;
+}
+
+.date-main {
+    font-weight: 700;
+    color: #334155;
+    white-space: nowrap;
+}
+
+.date-time {
+    display: block;
+    margin-top: 3px;
+    color: #94a3b8;
+    font-size: 10px;
+}
+
+/* =========================================================
+   EDIT BUTTON
+========================================================= */
+
+.edit-btn {
+    border: 0;
+    border-radius: 10px;
+    padding: 8px 13px;
+    background: #f59e0b;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 750;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: .2s ease;
+    white-space: nowrap;
+}
+
+.edit-btn:hover {
+    background: #d97706;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(245,158,11,.25);
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    padding: 65px 20px !important;
+    text-align: center;
+}
+
+.empty-icon {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 15px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.empty-title {
+    font-weight: 800;
+    color: #334155;
+    margin-bottom: 5px;
+}
+
+.empty-text {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+/* =========================================================
+   SEARCH RESULT
+========================================================= */
+
+.search-hidden {
+    display: none !important;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 992px) {
+
+    .renewal-page {
+        padding: 20px 12px 40px;
+    }
+
+    .renewal-header {
+        padding: 22px;
+    }
+
+    .renewal-title {
+        font-size: 21px;
+    }
+
+    .renewal-subtitle {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .table-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .renewal-title-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .renewal-title {
+        font-size: 19px;
+    }
+
+    .total-badge {
+        margin-top: 15px;
+    }
+
+    .renewal-header-content {
+        display: block;
+    }
+
+    .table-heading {
+        padding: 16px;
+    }
+
+    #renewalTable thead th,
+    #renewalTable tbody td {
+        padding: 12px 10px;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .renewal-page {
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+    .renewal-header {
+        border-radius: 15px;
+        padding: 18px;
+    }
+
+    .renewal-title {
+        align-items: flex-start;
+    }
+
+    .renewal-title-icon {
+        flex-shrink: 0;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+
+    .renewal-table-card {
+        border-radius: 15px;
+    }
+}
+
+</style>
+
+
+<div class="renewal-page">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="renewal-header">
+
+        <div class="renewal-header-content">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+                <div>
+
+                    <h1 class="renewal-title">
+
+                        <span class="renewal-title-icon">
+
+                            <i class="bi bi-arrow-repeat"></i>
+
+                        </span>
+
+                        Advertisement Renewals Management
+
+                    </h1>
+
+                    <p class="renewal-subtitle">
+
+                        Monitor seller advertisement renewal requests,
+                        payment status, plans and active periods.
+
+                    </p>
+
+                </div>
+
+
+                <div class="total-badge">
+
+                    <i class="bi bi-collection"></i>
+
+                    Total Renewals:
+                    {{ renewals|length }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <div class="row g-3">
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="renewal-stat-card">
+
+                <div class="stat-icon blue">
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                </div>
+
+                <div class="stat-label">
+                    Total Renewals
+                </div>
+
+                <div class="stat-value">
+                    {{ renewals|length }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="renewal-stat-card">
+
+                <div class="stat-icon green">
+
+                    <i class="bi bi-credit-card-2-front"></i>
+
+                </div>
+
+                <div class="stat-label">
+                    Renewal Records
+                </div>
+
+                <div class="stat-value">
+                    {{ renewals|length }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="renewal-stat-card">
+
+                <div class="stat-icon orange">
+
+                    <i class="bi bi-clock-history"></i>
+
+                </div>
+
+                <div class="stat-label">
+                    Management
+                </div>
+
+                <div class="stat-value">
+                    Active
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-sm-6 col-xl-3">
+
+            <div class="renewal-stat-card">
+
+                <div class="stat-icon red">
+
+                    <i class="bi bi-shield-check"></i>
+
+                </div>
+
+                <div class="stat-label">
+                    Admin Control
+                </div>
+
+                <div class="stat-value">
+                    Secure
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         SEARCH TOOLBAR
+    ====================================================== -->
+
+    <div class="renewal-toolbar">
+
+        <div class="row align-items-center g-3">
+
+            <div class="col-12 col-lg-8">
+
+                <div class="search-wrapper">
+
+                    <i class="bi bi-search search-icon"></i>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="form-control"
+                        placeholder="Search seller, email, advertisement, plan or payment..."
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="col-12 col-lg-4">
+
+                <div class="text-lg-end">
+
+                    <span class="text-muted small">
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        Search results update instantly
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TABLE
+    ====================================================== -->
+
+    <div class="renewal-table-card">
+
+        <div class="table-heading">
+
+            <div>
+
+                <h5 class="table-heading-title">
+
+                    <i class="bi bi-list-ul me-2 text-primary"></i>
+
+                    Renewal Requests
+
+                </h5>
+
+                <p class="table-heading-subtitle">
+
+                    Complete advertisement renewal activity
+
+                </p>
+
+            </div>
+
+
+            <span class="badge rounded-pill bg-light text-dark border">
+
+                <i class="bi bi-database me-1"></i>
+
+                {{ renewals|length }} Records
+
+            </span>
+
+        </div>
+
+
+        <div class="table-responsive">
+
+            <table
+                class="table align-middle"
+                id="renewalTable"
+            >
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Seller</th>
+
+                        <th>Advertisement</th>
+
+                        <th>Plan</th>
+
+                        <th>Amount</th>
+
+                        <th>Payment</th>
+
+                        <th>Status</th>
+
+                        <th>Start Date</th>
+
+                        <th>End Date</th>
+
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for r in renewals %}
+
+                <tr>
+
+
+                    <!-- NUMBER -->
+
+                    <td>
+
+                        <span class="serial-number">
+
+                            {{ forloop.counter }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- SELLER -->
+
+                    <td>
+
+                        <div class="seller-box">
+
+                            <div class="seller-avatar">
+
+                                {{ r.seller.username|first|upper }}
+
+                            </div>
+
+                            <div>
+
+                                <div class="seller-name">
+
+                                    {{ r.seller.username }}
+
+                                </div>
+
+                                <span class="seller-email">
+
+                                    {{ r.seller.email }}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- ADVERTISEMENT -->
+
+                    <td>
+
+                        <div class="ad-title">
+
+                            <i class="bi bi-megaphone-fill ad-title-icon"></i>
+
+                            {{ r.advertisement.title }}
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- PLAN -->
+
+                    <td>
+
+                        <span class="plan-badge">
+
+                            <i class="bi bi-box-seam"></i>
+
+                            {{ r.plan }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- AMOUNT -->
+
+                    <td>
+
+                        <span class="amount-value">
+
+                            ₹ {{ r.amounts|floatformat:"0" }}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- PAYMENT -->
+
+                    <td>
+
+                        {% if r.payment_status == "PAID" %}
+
+                            <span class="status-badge payment-paid">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                                Paid
+
+                            </span>
+
+                        {% elif r.payment_status == "FAILED" %}
+
+                            <span class="status-badge payment-failed">
+
+                                <i class="bi bi-x-circle-fill"></i>
+
+                                Failed
+
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge payment-pending">
+
+                                <i class="bi bi-clock-fill"></i>
+
+                                Pending
+
+                            </span>
+
+                        {% endif %}
+
+
+                        {% if r.payment_method %}
+
+                            <span class="payment-method">
+
+                                <i class="bi bi-wallet2 me-1"></i>
+
+                                {{ r.payment_method }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        {% if r.status == "RUNNING" %}
+
+                            <span class="status-badge status-running">
+
+                                <i class="bi bi-broadcast-pin"></i>
+
+                                Running
+
+                            </span>
+
+
+                        {% elif r.status == "APPROVED" %}
+
+                            <span class="status-badge status-approved">
+
+                                <i class="bi bi-patch-check-fill"></i>
+
+                                Approved
+
+                            </span>
+
+
+                        {% elif r.status == "EXPIRED" %}
+
+                            <span class="status-badge status-expired">
+
+                                <i class="bi bi-calendar-x-fill"></i>
+
+                                Expired
+
+                            </span>
+
+
+                        {% elif r.status == "REJECTED" %}
+
+                            <span class="status-badge status-rejected">
+
+                                <i class="bi bi-slash-circle-fill"></i>
+
+                                Rejected
+
+                            </span>
+
+
+                        {% else %}
+
+                            <span class="status-badge status-pending">
+
+                                <i class="bi bi-hourglass-split"></i>
+
+                                Pending
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- START DATE -->
+
+                    <td>
+
+                        {% if r.start_date %}
+
+                            <div class="date-box">
+
+                                <div class="date-main">
+
+                                    <i class="bi bi-calendar-event me-1 text-primary"></i>
+
+                                    {{ r.start_date|date:"d M Y" }}
+
+                                </div>
+
+                                <span class="date-time">
+
+                                    <i class="bi bi-clock me-1"></i>
+
+                                    {{ r.start_date|date:"H:i" }}
+
+                                </span>
+
+                            </div>
+
+                        {% else %}
+
+                            <span class="text-muted">
+
+                                <i class="bi bi-dash-circle me-1"></i>
+
+                                Not Set
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- END DATE -->
+
+                    <td>
+
+                        {% if r.end_date %}
+
+                            <div class="date-box">
+
+                                <div class="date-main">
+
+                                    <i class="bi bi-calendar-check me-1 text-success"></i>
+
+                                    {{ r.end_date|date:"d M Y" }}
+
+                                </div>
+
+                                <span class="date-time">
+
+                                    <i class="bi bi-clock me-1"></i>
+
+                                    {{ r.end_date|date:"H:i" }}
+
+                                </span>
+
+                            </div>
+
+                        {% else %}
+
+                            <span class="text-muted">
+
+                                <i class="bi bi-dash-circle me-1"></i>
+
+                                Not Set
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ACTION -->
+
+                    <td>
+
+                        <a
+                            href="{% url 'admin_renewal_edit' r.id %}"
+                            class="edit-btn"
+                        >
+
+                            <i class="bi bi-pencil-square"></i>
+
+                            Edit
+
+                        </a>
+
+                    </td>
+
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td
+                        colspan="10"
+                        class="empty-state"
+                    >
+
+                        <div class="empty-icon">
+
+                            <i class="bi bi-arrow-repeat"></i>
+
+                        </div>
+
+                        <div class="empty-title">
+
+                            No Renewal Requests
+
+                        </div>
+
+                        <div class="empty-text">
+
+                            There are currently no advertisement renewal records available.
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   PROFESSIONAL LIVE SEARCH
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("searchInput");
+    const table = document.getElementById("renewalTable");
+
+    if (!searchInput || !table) {
+        return;
+    }
+
+    const rows = table.querySelectorAll("tbody tr");
+
+    searchInput.addEventListener("input", function () {
+
+        const value = this.value
+            .trim()
+            .toLowerCase();
+
+        rows.forEach(function (row) {
+
+            if (!row.querySelector("td")) {
+                return;
+            }
+
+            const text = row.innerText.toLowerCase();
+
+            if (text.includes(value)) {
+
+                row.classList.remove("search-hidden");
+
+            } else {
+
+                row.classList.add("search-hidden");
+
+            }
+
+        });
+
+    });
+
+});
+
+
+/* =========================================================
+   BACK/FORWARD CACHE PROTECTION
+========================================================= */
+
+window.addEventListener("pageshow", function (event) {
+
+    if (event.persisted) {
+
+        window.location.reload();
+
+    }
+
+});
+
+</script>
+
+
+{% endblock %}

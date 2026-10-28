@@ -1,0 +1,908 @@
+```html
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-10">
+
+            <!-- =====================================================
+                 MAIN CARD
+            ====================================================== -->
+
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <!-- HEADER -->
+
+                <div class="card-header bg-primary text-white p-4">
+
+                    <h2 class="fw-bold mb-1">
+
+                        <i class="bi bi-megaphone-fill me-2"></i>
+
+                        Upload Advertisement
+
+                    </h2>
+
+                    <p class="mb-0 opacity-75">
+
+                        Create your advertisement and select a payment plan.
+
+                    </p>
+
+                </div>
+
+
+                <div class="card-body p-4 p-md-5">
+
+
+                    <!-- =================================================
+                         GUIDELINES
+                    ================================================== -->
+
+                    <div class="alert alert-light border rounded-4 mb-4">
+
+                        <h4 class="fw-bold mb-3">
+
+                            <i class="bi bi-shield-check text-primary me-2"></i>
+
+                            Advertisement Guidelines
+
+                        </h4>
+
+
+                        <ul class="mb-0">
+
+                            <li>
+                                Supported format: MP4
+                            </li>
+
+                            <li>
+                                Maximum video size: 100 MB
+                            </li>
+
+                            <li>
+                                Video duration: 10–30 seconds
+                            </li>
+
+                            <li>
+                                Resolution: 1080×1920 or 1920×1080
+                            </li>
+
+                            <li>
+                                No copyrighted content
+                            </li>
+
+                            <li>
+                                No adult or illegal content
+                            </li>
+
+                            <li>
+                                Admin approval required before publishing
+                            </li>
+
+                        </ul>
+
+                    </div>
+
+
+                    <!-- =================================================
+                         FORM
+                    ================================================== -->
+
+                    <form
+                        method="POST"
+                        enctype="multipart/form-data"
+                        id="advertisementForm"
+                        autocomplete="off"
+                    >
+
+                        {% csrf_token %}
+
+
+                        <!-- =================================================
+                             TITLE
+                        ================================================== -->
+
+                        <div class="mb-4">
+
+                            <label
+                                class="form-label fw-semibold"
+                                for="title"
+                            >
+
+                                Advertisement Title
+
+                            </label>
+
+
+                            <input
+                                type="text"
+                                name="title"
+                                id="title"
+                                class="form-control form-control-lg"
+                                placeholder="Enter advertisement title"
+                                maxlength="200"
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- =================================================
+                             PRODUCT
+                        ================================================== -->
+
+                        <div class="mb-4">
+
+
+
+                         
+                        </div>
+
+
+                        <!-- =================================================
+                             VIDEO
+                        ================================================== -->
+
+                        <div class="mb-4">
+
+                            <label
+                                class="form-label fw-semibold"
+                                for="video"
+                            >
+
+                                Advertisement Video
+
+                            </label>
+
+
+                            <input
+                                type="file"
+                                name="video"
+                                id="video"
+                                accept="video/mp4"
+                                class="form-control form-control-lg"
+                                required
+                            >
+
+
+                            <small class="text-muted">
+
+                                Only MP4 | Maximum 100MB
+
+                            </small>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             THUMBNAIL
+                        ================================================== -->
+
+                        <div class="mb-4">
+
+                            <label
+                                class="form-label fw-semibold"
+                                for="thumbnail"
+                            >
+
+                                Thumbnail Image
+                                <span class="text-muted">
+                                    (Optional)
+                                </span>
+
+                            </label>
+
+
+                            <input
+                                type="file"
+                                name="thumbnail"
+                                id="thumbnail"
+                                accept="image/*"
+                                class="form-control form-control-lg"
+                            >
+
+                        </div>
+
+
+                        <!-- =================================================
+                             DESCRIPTION
+                        ================================================== -->
+
+                        <div class="mb-4">
+
+                            <label
+                                class="form-label fw-semibold"
+                                for="description"
+                            >
+
+                                Description
+
+                            </label>
+
+
+                            <textarea
+                                name="description"
+                                id="description"
+                                class="form-control"
+                                rows="4"
+                                maxlength="2000"
+                                placeholder="Enter advertisement description"
+                            ></textarea>
+
+                        </div>
+
+
+                        <hr class="my-4">
+
+
+                        <!-- =================================================
+                             PLANS
+                        ================================================== -->
+
+                        <h4 class="fw-bold mb-3">
+
+                            <i class="bi bi-tags-fill text-primary me-2"></i>
+
+                            Advertisement Plans
+
+                        </h4>
+
+
+                        <div class="row g-4">
+
+
+                            <!-- BASIC -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    class="plan-card"
+                                    for="planBasic"
+                                >
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        id="planBasic"
+                                        value="BASIC"
+                                        data-price="500"
+                                        required
+                                    >
+
+                                    <div class="plan-content">
+
+                                        <h5 class="fw-bold">
+
+                                            Basic
+
+                                        </h5>
+
+                                        <p class="text-muted mb-2">
+
+                                            1 Day
+
+                                        </p>
+
+                                        <strong class="text-primary fs-4">
+
+                                            ₹500
+
+                                        </strong>
+
+                                    </div>
+
+                                </label>
+
+                            </div>
+
+
+                            <!-- STANDARD -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    class="plan-card"
+                                    for="planStandard"
+                                >
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        id="planStandard"
+                                        value="STANDARD"
+                                        data-price="1250"
+                                    >
+
+                                    <div class="plan-content">
+
+                                        <h5 class="fw-bold">
+
+                                            Standard
+
+                                        </h5>
+
+                                        <p class="text-muted mb-2">
+
+                                            3 Days
+
+                                        </p>
+
+                                        <strong class="text-primary fs-4">
+
+                                            ₹1,250
+
+                                        </strong>
+
+                                    </div>
+
+                                </label>
+
+                            </div>
+
+
+                            <!-- PREMIUM -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    class="plan-card"
+                                    for="planPremium"
+                                >
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        id="planPremium"
+                                        value="PREMIUM"
+                                        data-price="2500"
+                                    >
+
+                                    <div class="plan-content">
+
+                                        <h5 class="fw-bold">
+
+                                            Premium
+
+                                        </h5>
+
+                                        <p class="text-muted mb-2">
+
+                                            7 Days
+
+                                        </p>
+
+                                        <strong class="text-primary fs-4">
+
+                                            ₹2,500
+
+                                        </strong>
+
+                                    </div>
+
+                                </label>
+
+                            </div>
+
+
+                            <!-- GOLD -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    class="plan-card"
+                                    for="planGold"
+                                >
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        id="planGold"
+                                        value="GOLD"
+                                        data-price="4500"
+                                    >
+
+                                    <div class="plan-content">
+
+                                        <h5 class="fw-bold">
+
+                                            Gold
+
+                                        </h5>
+
+                                        <p class="text-muted mb-2">
+
+                                            15 Days
+
+                                        </p>
+
+                                        <strong class="text-primary fs-4">
+
+                                            ₹4,500
+
+                                        </strong>
+
+                                    </div>
+
+                                </label>
+
+                            </div>
+
+
+                            <!-- PLATINUM -->
+
+                            <div class="col-md-4">
+
+                                <label
+                                    class="plan-card"
+                                    for="planPlatinum"
+                                >
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        id="planPlatinum"
+                                        value="PLATINUM"
+                                        data-price="8000"
+                                    >
+
+                                    <div class="plan-content">
+
+                                        <h5 class="fw-bold">
+
+                                            Platinum
+
+                                        </h5>
+
+                                        <p class="text-muted mb-2">
+
+                                            30 Days
+
+                                        </p>
+
+                                        <strong class="text-primary fs-4">
+
+                                            ₹8,000
+
+                                        </strong>
+
+                                    </div>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             AMOUNT
+                        ================================================== -->
+
+                        <div class="amount-box mt-4">
+
+                            <span>
+
+                                Total Advertisement Amount
+
+                            </span>
+
+
+                            <strong>
+
+                                ₹<span id="price">0</span>
+
+                            </strong>
+
+                        </div>
+
+
+                        <!-- =================================================
+                             SUBMIT
+                        ================================================== -->
+
+                        <button
+                            type="submit"
+                            id="continueButton"
+                            class="btn btn-primary btn-lg w-100 mt-4"
+                        >
+
+                            <i class="bi bi-lock-fill me-2"></i>
+
+                            Continue To Payment
+
+                        </button>
+
+
+                        <!-- LOADING -->
+
+                        <div
+                            id="loadingMessage"
+                            class="alert alert-info mt-3 d-none"
+                        >
+
+                            <div class="d-flex align-items-center">
+
+                                <div
+                                    class="spinner-border spinner-border-sm me-2"
+                                    role="status"
+                                ></div>
+
+                                <span>
+
+                                    Creating your advertisement
+                                    and preparing secure payment...
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+
+                <!-- FOOTER -->
+
+                <div class="card-footer bg-light text-center py-3 border-0">
+
+                    <small class="text-muted">
+
+                        <i class="bi bi-shield-lock-fill text-success me-1"></i>
+
+                        Your advertisement information is securely processed.
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<style>
+
+.plan-card {
+
+    display: block;
+
+    cursor: pointer;
+
+}
+
+
+.plan-card input {
+
+    position: absolute;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+}
+
+
+.plan-content {
+
+    border: 2px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    background: #ffffff;
+
+    transition: all 0.2s ease;
+
+}
+
+
+.plan-content:hover {
+
+    border-color: #2563eb;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(15, 23, 42, 0.08);
+
+}
+
+
+.plan-card input:checked + .plan-content {
+
+    border-color: #2563eb;
+
+    background: #eff6ff;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
+
+}
+
+
+.amount-box {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 20px;
+
+    border-radius: 14px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    font-size: 17px;
+
+}
+
+
+.amount-box strong {
+
+    font-size: 28px;
+
+    color: #2563eb;
+
+}
+
+
+#continueButton:disabled {
+
+    cursor: not-allowed;
+
+    opacity: 0.75;
+
+}
+
+</style>
+
+
+<script>
+
+(function () {
+
+    "use strict";
+
+
+    const form =
+        document.getElementById(
+            "advertisementForm"
+        );
+
+
+    const continueButton =
+        document.getElementById(
+            "continueButton"
+        );
+
+
+    const loadingMessage =
+        document.getElementById(
+            "loadingMessage"
+        );
+
+
+    const price =
+        document.getElementById(
+            "price"
+        );
+
+
+    /*
+     * =========================================================
+     * PLAN PRICE DISPLAY
+     * =========================================================
+     */
+
+    document
+        .querySelectorAll(
+            'input[name="plan"]'
+        )
+        .forEach(function (radio) {
+
+            radio.addEventListener(
+                "change",
+                function () {
+
+                    price.textContent =
+                        this.dataset.price;
+
+                }
+            );
+
+        });
+
+
+    /*
+     * =========================================================
+     * FORM SUBMISSION PROTECTION
+     * =========================================================
+     *
+     * Prevents double-clicking Continue To Payment.
+     * =========================================================
+     */
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+
+            /*
+             * Already submitted?
+             */
+
+            if (
+                form.dataset.submitted === "true"
+            ) {
+
+                event.preventDefault();
+
+                return false;
+
+            }
+
+
+            /*
+             * Check plan
+             */
+
+            const selectedPlan =
+                document.querySelector(
+                    'input[name="plan"]:checked'
+                );
+
+
+            if (!selectedPlan) {
+
+                event.preventDefault();
+
+                alert(
+                    "Please select an advertisement plan."
+                );
+
+                return false;
+
+            }
+
+
+            /*
+             * Lock form
+             */
+
+            form.dataset.submitted = "true";
+
+
+            /*
+             * Disable button
+             */
+
+            continueButton.disabled = true;
+
+
+            continueButton.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-2"></span>' +
+                'Preparing Payment...';
+
+
+            /*
+             * Show loading message
+             */
+
+            loadingMessage.classList.remove(
+                "d-none"
+            );
+
+        }
+    );
+
+
+    /*
+     * =========================================================
+     * BROWSER BACK / BF CACHE PROTECTION
+     * =========================================================
+     *
+     * If browser tries to restore this page from history,
+     * reload it from the server.
+     * =========================================================
+     */
+
+    window.addEventListener(
+        "pageshow",
+        function (event) {
+
+            const navigation =
+                performance.getEntriesByType(
+                    "navigation"
+                )[0];
+
+
+            if (
+                event.persisted ||
+                (
+                    navigation &&
+                    navigation.type === "back_forward"
+                )
+            ) {
+
+                window.location.reload();
+
+            }
+
+        }
+    );
+
+
+    /*
+     * =========================================================
+     * HISTORY STATE
+     * =========================================================
+     */
+
+    history.replaceState(
+        null,
+        document.title,
+        window.location.href
+    );
+
+
+    history.pushState(
+        null,
+        document.title,
+        window.location.href
+    );
+
+
+    /*
+     * =========================================================
+     * BROWSER BACK BUTTON
+     * =========================================================
+     */
+
+    window.addEventListener(
+        "popstate",
+        function () {
+
+            /*
+             * Immediately move forward.
+             */
+
+            history.go(1);
+
+
+            /*
+             * Then request a fresh page.
+             */
+
+            setTimeout(
+                function () {
+
+                    window.location.reload();
+
+                },
+                50
+            );
+
+        }
+    );
+
+
+})();
+
+</script>
+
+{% endblock %}

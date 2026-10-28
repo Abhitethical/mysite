@@ -1,0 +1,2483 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<style>
+
+/* =========================================================
+   INVENTORY PAGE
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #f5f7fb;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: #111827;
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.brand:hover {
+    color: #2563eb;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: white;
+    font-size: 20px;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, .22);
+}
+
+.profile {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+    font-size: 20px;
+}
+
+/* =========================================================
+   PAGE HEADING
+========================================================= */
+
+.page-heading {
+    max-width: 1380px;
+    margin: 30px auto 22px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.page-title {
+    margin: 0;
+    color: #111827;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.page-subtitle {
+    margin: 7px 0 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.date-badge {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    padding: 10px 15px;
+    border-radius: 10px;
+    color: #4b5563;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.stats-grid {
+    max-width: 1380px;
+    margin: 0 auto 24px;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 21px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, .04);
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    color: #111827;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.icon-red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.icon-orange {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.icon-blue {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+/* =========================================================
+   INVENTORY CARD
+========================================================= */
+
+.inventory-card {
+    max-width: 1380px;
+    margin: 0 auto 40px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, .05);
+}
+
+.inventory-header {
+    padding: 22px;
+    border-bottom: 1px solid #eef0f3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.inventory-title {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
+
+.warning-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff7ed;
+    color: #ea580c;
+    font-size: 21px;
+}
+
+.inventory-title h5 {
+    margin: 0;
+    color: #111827;
+    font-size: 17px;
+    font-weight: 750;
+}
+
+.inventory-title p {
+    margin: 4px 0 0;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search-box {
+    width: 280px;
+    height: 42px;
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+}
+
+.search-box input {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #dfe3e8;
+    border-radius: 10px;
+    outline: none;
+    padding: 0 14px 0 40px;
+    color: #111827;
+    font-size: 13px;
+    background: #f9fafb;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.search-box input:focus {
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .10);
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.inventory-table {
+    margin: 0;
+    min-width: 750px;
+}
+
+.inventory-table thead th {
+    background: #f8fafc;
+    color: #6b7280;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 15px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+}
+
+.inventory-table tbody td {
+    padding: 17px 20px;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.product-row {
+    transition: background .2s ease;
+}
+
+.product-row:hover {
+    background: #f8fafc;
+}
+
+/* =========================================================
+   PRODUCT
+========================================================= */
+
+.product-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.product-avatar {
+    width: 45px;
+    height: 45px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: #2563eb;
+    border-radius: 11px;
+    font-size: 19px;
+}
+
+.product-name {
+    color: #1d4ed8;
+    font-size: 14px;
+    font-weight: 750;
+    cursor: pointer;
+    display: inline-block;
+    transition: color .2s ease, transform .2s ease;
+}
+
+.product-name:hover {
+    color: #dc2626;
+    text-decoration: underline;
+    transform: translateX(2px);
+}
+
+.product-id {
+    color: #9ca3af;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+/* =========================================================
+   STOCK
+========================================================= */
+
+.stock-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.stock-badge {
+    min-width: 34px;
+    height: 30px;
+    padding: 0 8px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.stock-critical {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.stock-warning {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.stock-low {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.stock-text {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+/* =========================================================
+   PRICE
+========================================================= */
+
+.price {
+    color: #111827;
+    font-weight: 750;
+    font-size: 14px;
+}
+
+.price-symbol {
+    color: #6b7280;
+    margin-right: 2px;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-danger {
+    color: #dc2626;
+}
+
+.status-danger .status-dot {
+    background: #dc2626;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, .10);
+}
+
+.status-warning {
+    color: #d97706;
+}
+
+.status-warning .status-dot {
+    background: #f59e0b;
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, .10);
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.inventory-footer {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.footer-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.footer-alert i {
+    color: #2563eb;
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.empty-icon {
+    width: 75px;
+    height: 75px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dcfce7;
+    color: #16a34a;
+    border-radius: 50%;
+    font-size: 34px;
+}
+
+.empty-state h4 {
+    margin: 0 0 8px;
+    color: #111827;
+    font-weight: 800;
+}
+
+.empty-state p {
+    margin: 0;
+    color: #6b7280;
+}
+
+/* =========================================================
+   POPUP OVERLAY
+========================================================= */
+
+.stock-alert-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, .76);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition:
+        opacity .25s ease,
+        visibility .25s ease;
+}
+
+.stock-alert-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* =========================================================
+   POPUP
+========================================================= */
+
+.stock-alert-modal {
+    width: 100%;
+    max-width: 520px;
+    max-height: 88vh;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, .30),
+        0 8px 25px rgba(0, 0, 0, .12);
+
+    transform: translateY(25px) scale(.96);
+
+    transition:
+        transform .28s cubic-bezier(.2, .8, .2, 1);
+
+    position: relative;
+}
+
+.stock-alert-overlay.show .stock-alert-modal {
+    transform: translateY(0) scale(1);
+}
+
+/* =========================================================
+   POPUP TOP
+========================================================= */
+
+.stock-alert-top {
+    padding: 25px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.stock-alert-icon {
+    width: 56px;
+    height: 56px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: #fee2e2;
+    color: #dc2626;
+
+    font-size: 25px;
+
+    animation: alertPulse 1.2s infinite;
+}
+
+@keyframes alertPulse {
+
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, .30);
+    }
+
+    50% {
+        transform: scale(1.06);
+        box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+    }
+
+}
+
+.stock-alert-title {
+    flex: 1;
+}
+
+.stock-alert-title h3 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.stock-alert-title p {
+    margin: 4px 0 0;
+
+    color: #6b7280;
+
+    font-size: 12px;
+}
+
+.stock-alert-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    margin-bottom: 8px;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    background: #fff7ed;
+
+    color: #c2410c;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .7px;
+}
+
+/* =========================================================
+   POPUP BODY
+========================================================= */
+
+.stock-alert-body {
+    padding: 22px 25px;
+
+    max-height: 48vh;
+
+    overflow-y: auto;
+}
+
+.stock-alert-message {
+    padding: 13px 15px;
+
+    margin-bottom: 15px;
+
+    border-radius: 11px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    color: #4b5563;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+/* =========================================================
+   PRODUCT LIST
+========================================================= */
+
+.alert-product-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.alert-product-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 12px 13px;
+
+    border: 1px solid #eef0f3;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease;
+}
+
+.alert-product-item:hover {
+    border-color: #fecaca;
+
+    background: #fffafa;
+}
+
+.alert-product-left {
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.alert-product-icon {
+    width: 34px;
+    height: 34px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.alert-product-name {
+    min-width: 0;
+
+    color: #1f2937;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.alert-product-stock {
+    flex-shrink: 0;
+
+    padding: 5px 8px;
+
+    border-radius: 7px;
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+/* =========================================================
+   PRODUCT DETAILS
+========================================================= */
+
+.product-details {
+    margin-top: 10px;
+
+    padding: 13px 14px;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+}
+
+.product-detail-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 5px 0;
+
+    font-size: 12px;
+}
+
+.product-detail-row span:first-child {
+    color: #6b7280;
+}
+
+.product-detail-row strong {
+    color: #111827;
+}
+
+.product-detail-row.status-row strong {
+    color: #dc2626;
+}
+
+/* =========================================================
+   POPUP FOOTER
+========================================================= */
+
+.stock-alert-footer {
+    padding: 17px 25px 23px;
+
+    border-top: 1px solid #f0f2f5;
+}
+
+.alert-ok-button {
+    width: 100%;
+
+    height: 48px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #1d4ed8
+        );
+
+    color: #ffffff;
+
+    font-size: 14px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 18px rgba(37, 99, 235, .22);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.alert-ok-button:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 12px 24px rgba(37, 99, 235, .30);
+}
+
+.alert-ok-button:active {
+    transform: translateY(0);
+}
+
+/* =========================================================
+   BODY LOCK
+========================================================= */
+
+body.stock-popup-open {
+    overflow: hidden;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .page-heading {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .date-badge {
+        align-self: flex-start;
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .page-title {
+        font-size: 25px;
+    }
+
+    .inventory-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .inventory-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stock-alert-modal {
+        border-radius: 17px;
+    }
+
+    .stock-alert-top {
+        padding: 20px;
+    }
+
+    .stock-alert-body {
+        padding: 18px 20px;
+    }
+
+    .stock-alert-footer {
+        padding: 15px 20px 20px;
+    }
+
+    .stock-alert-title h3 {
+        font-size: 18px;
+    }
+
+}
+
+</style>
+
+<!-- =====================================================
+     TOP BAR
+====================================================== -->
+
+<div class="container-fluid px-3 px-md-4 py-2">
+
+<div class="d-flex align-items-center justify-content-between">
+
+    <a href="#" class="brand">
+
+        <span class="brand-icon">
+            <i class="bi bi-box-seam"></i>
+        </span>
+
+        Inventory Management
+
+    </a>
+
+    <div class="profile">
+
+        <i class="bi bi-person"></i>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- =====================================================
+     PAGE HEADING
+====================================================== -->
+
+<div class="page-heading">
+
+<div>
+
+    <h1 class="page-title">
+        Low Stock Products
+    </h1>
+
+    <p class="page-subtitle">
+        Monitor products that require immediate inventory attention.
+    </p>
+
+</div>
+
+<div class="date-badge">
+
+    <i class="bi bi-calendar3 me-1"></i>
+
+    Inventory Overview
+
+</div>
+
+</div>
+
+<!-- =====================================================
+     STATISTICS
+====================================================== -->
+
+<div class="stats-grid">
+
+<div class="stat-card">
+
+    <div>
+
+        <div class="stat-label">
+            Products Requiring Attention
+        </div>
+
+        <div class="stat-value" id="productCount">
+
+            {% if products %}
+                {{ products|length }}
+            {% else %}
+                0
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="stat-icon icon-red">
+
+        <i class="bi bi-exclamation-triangle"></i>
+
+    </div>
+
+</div>
+
+
+<div class="stat-card">
+
+    <div>
+
+        <div class="stat-label">
+            Total Units Remaining
+        </div>
+
+        <div class="stat-value" id="totalStock">
+            0
+        </div>
+
+    </div>
+
+    <div class="stat-icon icon-orange">
+
+        <i class="bi bi-boxes"></i>
+
+    </div>
+
+</div>
+
+
+<div class="stat-card">
+
+    <div>
+
+        <div class="stat-label">
+            Inventory Status
+        </div>
+
+        <div
+            class="stat-value"
+            style="font-size:21px;color:#dc2626;"
+        >
+            Attention
+        </div>
+
+    </div>
+
+    <div class="stat-icon icon-blue">
+
+        <i class="bi bi-activity"></i>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- =====================================================
+     INVENTORY CARD
+====================================================== -->
+
+<section class="inventory-card">
+<div class="inventory-header">
+
+    <div class="inventory-title">
+
+        <div class="warning-icon">
+
+            <i class="bi bi-exclamation-lg"></i>
+
+        </div>
+
+        <div>
+
+            <h5>
+                Low Stock Inventory
+            </h5>
+
+            <p>
+                Products below your configured stock threshold
+            </p>
+
+        </div>
+
+    </div>
+
+
+    {% if products %}
+
+    <div class="search-box">
+
+        <i class="bi bi-search"></i>
+
+        <input
+            type="text"
+            id="productSearch"
+            placeholder="Search products..."
+            autocomplete="off"
+        >
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+{% if products %}
+
+<div class="table-wrapper">
+
+    <table class="table inventory-table align-middle">
+
+        <thead>
+
+            <tr>
+
+                <th>
+                    Product
+                </th>
+
+                <th>
+                    Stock
+                </th>
+
+                <th>
+                    Price
+                </th>
+
+                <th>
+                    Status
+                </th>
+
+            </tr>
+
+        </thead>
+
+
+        <tbody id="productTable">
+
+        {% for product in products %}
+
+        <tr
+            class="product-row"
+            data-product-name="{{ product.name|escapejs }}"
+            data-product-stock="{{ product.quantity }}"
+            data-product-price="{{ product.selling_price|floatformat:0 }}"
+        >
+
+            <td>
+
+                <div class="product-info">
+
+                    <div class="product-avatar">
+
+                        <i class="bi bi-box"></i>
+
+                    </div>
+
+                    <div>
+
+                        <div
+                            class="product-name"
+                            role="button"
+                            tabindex="0"
+                            onclick="showProductAlert(this)"
+                            onkeydown="handleProductKey(event, this)"
+                            data-product-name="{{ product.name|escapejs }}"
+                            data-product-stock="{{ product.quantity }}"
+                            data-product-price="{{ product.selling_price|floatformat:0 }}"
+                        >
+
+                            {{ product.name }}
+
+                        </div>
+
+                        <div class="product-id">
+                            Inventory Item
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <div class="stock-wrapper">
+
+                    <span
+                        class="
+                            stock-badge
+
+                            {% if product.quantity <= 2 %}
+                                stock-critical
+                            {% elif product.quantity <= 5 %}
+                                stock-warning
+                            {% else %}
+                                stock-low
+                            {% endif %}
+                        "
+                        data-stock="{{ product.quantity }}"
+                    >
+
+                        {{ product.quantity }}
+
+                    </span>
+
+                    <span class="stock-text">
+                        units
+                    </span>
+
+                </div>
+
+            </td>
+
+
+            <td>
+
+                <span class="price">
+
+                    <span class="price-symbol">
+                        ₹
+                    </span>
+
+                    {{ product.selling_price|floatformat:0 }}
+
+                </span>
+
+            </td>
+
+
+            <td>
+
+                {% if product.quantity <= 2 %}
+
+                <span class="status status-danger">
+
+                    <span class="status-dot"></span>
+
+                    Critical
+
+                </span>
+
+                {% else %}
+
+                <span class="status status-warning">
+
+                    <span class="status-dot"></span>
+
+                    Low Stock
+
+                </span>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<div class="inventory-footer">
+
+    <div class="footer-alert">
+
+        <i class="bi bi-info-circle-fill"></i>
+
+        <span>
+            Restock critical products as soon as possible.
+        </span>
+
+    </div>
+
+    <span id="visibleCount">
+
+        {{ products|length }} products
+
+    </span>
+
+</div>
+
+
+{% else %}
+
+
+<!-- EMPTY STATE -->
+
+<div class="empty-state">
+
+    <div class="empty-icon">
+
+        <i class="bi bi-check-lg"></i>
+
+    </div>
+
+    <h4>
+        Inventory Looks Great!
+    </h4>
+
+    <p>
+        🎉 No products are currently running low on stock.
+    </p>
+
+</div>
+
+{% endif %}
+
+</section>
+
+<!-- =====================================================
+     LOW STOCK POPUP
+     
+     IMPORTANT:
+     
+     1. Outside click DOES NOT close.
+     2. ESC DOES NOT close.
+     3. Only OK closes.
+     4. Sound continues until OK.
+====================================================== -->
+
+<div
+    class="stock-alert-overlay"
+    id="stockAlertOverlay"
+    aria-hidden="true"
+>
+
+<div
+    class="stock-alert-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="stockAlertTitle"
+>
+
+    <div class="stock-alert-top">
+
+        <div class="stock-alert-icon">
+
+            <i class="bi bi-exclamation-triangle-fill"></i>
+
+        </div>
+
+        <div class="stock-alert-title">
+
+            <span class="stock-alert-badge">
+                LOW STOCK ALERT
+            </span>
+
+            <h3 id="stockAlertTitle">
+                Low Stock Products
+            </h3>
+
+            <p>
+                Inventory attention required
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="stock-alert-body">
+
+        <div
+            class="stock-alert-message"
+            id="stockAlertMessage"
+        >
+            Low stock products require your attention.
+        </div>
+
+
+        <div
+            class="alert-product-list"
+            id="alertProductList"
+        >
+        </div>
+
+    </div>
+
+
+    <div class="stock-alert-footer">
+
+        <button
+            type="button"
+            class="alert-ok-button"
+            id="stockAlertOk"
+        >
+
+            <i class="bi bi-check-circle-fill me-1"></i>
+
+            OK
+
+        </button>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const overlay =
+            document.getElementById(
+                "stockAlertOverlay"
+            );
+
+        const okButton =
+            document.getElementById(
+                "stockAlertOk"
+            );
+
+        const alertTitle =
+            document.getElementById(
+                "stockAlertTitle"
+            );
+
+        const alertMessage =
+            document.getElementById(
+                "stockAlertMessage"
+            );
+
+        const alertProductList =
+            document.getElementById(
+                "alertProductList"
+            );
+
+        const productRows =
+            document.querySelectorAll(
+                ".product-row"
+            );
+
+        const totalStockElement =
+            document.getElementById(
+                "totalStock"
+            );
+
+        const searchInput =
+            document.getElementById(
+                "productSearch"
+            );
+
+        const visibleCount =
+            document.getElementById(
+                "visibleCount"
+            );
+
+
+        /* =================================================
+           TOTAL STOCK
+        ================================================= */
+
+        let totalStock = 0;
+
+        productRows.forEach(
+            function (row) {
+
+                const stock =
+                    parseInt(
+                        row.getAttribute(
+                            "data-product-stock"
+                        ) || "0",
+                        10
+                    );
+
+                totalStock += stock;
+
+            }
+        );
+
+
+        if (totalStockElement) {
+
+            totalStockElement.textContent =
+                totalStock;
+
+        }
+
+
+        /* =================================================
+           CONTINUOUS ALERT SOUND
+           
+           Sound starts when popup opens.
+           
+           Sound repeats while popup is open.
+           
+           Sound stops ONLY when OK is clicked.
+        ================================================= */
+
+        let audioContext = null;
+
+        let soundTimer = null;
+
+        let soundIsRunning = false;
+
+
+        function createAudioContext() {
+
+            if (!audioContext) {
+
+                const AudioContext =
+                    window.AudioContext ||
+                    window.webkitAudioContext;
+
+                if (!AudioContext) {
+                    return null;
+                }
+
+                audioContext =
+                    new AudioContext();
+
+            }
+
+            return audioContext;
+
+        }
+
+
+        function playSingleBeep() {
+
+            try {
+
+                const ctx =
+                    createAudioContext();
+
+                if (!ctx) {
+                    return;
+                }
+
+
+                if (
+                    ctx.state ===
+                    "suspended"
+                ) {
+
+                    ctx.resume().catch(
+                        function () {}
+                    );
+
+                }
+
+
+                const now =
+                    ctx.currentTime;
+
+
+                /* First tone */
+
+                const oscillator1 =
+                    ctx.createOscillator();
+
+                const gain1 =
+                    ctx.createGain();
+
+
+                oscillator1.type =
+                    "sine";
+
+
+                oscillator1.frequency.setValueAtTime(
+                    880,
+                    now
+                );
+
+
+                oscillator1.frequency.exponentialRampToValueAtTime(
+                    660,
+                    now + 0.18
+                );
+
+
+                gain1.gain.setValueAtTime(
+                    0.0001,
+                    now
+                );
+
+
+                gain1.gain.exponentialRampToValueAtTime(
+                    0.22,
+                    now + 0.025
+                );
+
+
+                gain1.gain.exponentialRampToValueAtTime(
+                    0.0001,
+                    now + 0.22
+                );
+
+
+                oscillator1.connect(
+                    gain1
+                );
+
+                gain1.connect(
+                    ctx.destination
+                );
+
+
+                oscillator1.start(now);
+
+                oscillator1.stop(
+                    now + 0.23
+                );
+
+
+                /* Second tone */
+
+                const oscillator2 =
+                    ctx.createOscillator();
+
+                const gain2 =
+                    ctx.createGain();
+
+
+                oscillator2.type =
+                    "sine";
+
+
+                oscillator2.frequency.setValueAtTime(
+                    660,
+                    now + 0.24
+                );
+
+
+                oscillator2.frequency.exponentialRampToValueAtTime(
+                    520,
+                    now + 0.42
+                );
+
+
+                gain2.gain.setValueAtTime(
+                    0.0001,
+                    now + 0.24
+                );
+
+
+                gain2.gain.exponentialRampToValueAtTime(
+                    0.20,
+                    now + 0.27
+                );
+
+
+                gain2.gain.exponentialRampToValueAtTime(
+                    0.0001,
+                    now + 0.45
+                );
+
+
+                oscillator2.connect(
+                    gain2
+                );
+
+                gain2.connect(
+                    ctx.destination
+                );
+
+
+                oscillator2.start(
+                    now + 0.24
+                );
+
+                oscillator2.stop(
+                    now + 0.46
+                );
+
+
+            } catch (error) {
+
+                console.log(
+                    "Alert sound error:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        function startContinuousSound() {
+
+            if (soundIsRunning) {
+                return;
+            }
+
+
+            soundIsRunning = true;
+
+
+            /*
+             * Play immediately.
+             */
+
+            playSingleBeep();
+
+
+            /*
+             * Repeat every 900 milliseconds.
+             */
+
+            soundTimer =
+                setInterval(
+                    function () {
+
+                        if (
+                            soundIsRunning &&
+                            overlay.classList.contains(
+                                "show"
+                            )
+                        ) {
+
+                            playSingleBeep();
+
+                        }
+
+                    },
+                    900
+                );
+
+        }
+
+
+        function stopContinuousSound() {
+
+            soundIsRunning = false;
+
+
+            if (soundTimer !== null) {
+
+                clearInterval(
+                    soundTimer
+                );
+
+                soundTimer = null;
+
+            }
+
+
+            /*
+             * Stop and close the audio context.
+             */
+
+            if (audioContext) {
+
+                try {
+
+                    audioContext.close();
+
+                } catch (error) {
+
+                    console.log(
+                        "Audio close error:",
+                        error
+                    );
+
+                }
+
+                audioContext = null;
+
+            }
+
+        }
+
+
+        /* =================================================
+           OPEN POPUP
+        ================================================= */
+
+        function openStockPopup(
+            title,
+            message,
+            products
+        ) {
+
+            alertTitle.textContent =
+                title;
+
+
+            alertMessage.textContent =
+                message;
+
+
+            alertProductList.innerHTML =
+                "";
+
+
+            products.forEach(
+                function (product) {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.className =
+                        "alert-product-item";
+
+
+                    const left =
+                        document.createElement(
+                            "div"
+                        );
+
+                    left.className =
+                        "alert-product-left";
+
+
+                    const icon =
+                        document.createElement(
+                            "div"
+                        );
+
+                    icon.className =
+                        "alert-product-icon";
+
+
+                    icon.innerHTML =
+                        '<i class="bi bi-box"></i>';
+
+
+                    const name =
+                        document.createElement(
+                            "div"
+                        );
+
+                    name.className =
+                        "alert-product-name";
+
+
+                    name.textContent =
+                        product.name;
+
+
+                    const stock =
+                        document.createElement(
+                            "span"
+                        );
+
+                    stock.className =
+                        "alert-product-stock";
+
+
+                    stock.textContent =
+                        product.stock +
+                        (
+                            parseInt(
+                                product.stock,
+                                10
+                            ) === 1
+                                ? " left"
+                                : " left"
+                        );
+
+
+                    left.appendChild(
+                        icon
+                    );
+
+                    left.appendChild(
+                        name
+                    );
+
+
+                    item.appendChild(
+                        left
+                    );
+
+                    item.appendChild(
+                        stock
+                    );
+
+
+                    alertProductList.appendChild(
+                        item
+                    );
+
+                }
+            );
+
+
+            overlay.classList.add(
+                "show"
+            );
+
+
+            overlay.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+
+            document.body.classList.add(
+                "stock-popup-open"
+            );
+
+
+            /*
+             * START CONTINUOUS SOUND.
+             */
+
+            startContinuousSound();
+
+
+            /*
+             * Focus OK.
+             */
+
+            setTimeout(
+                function () {
+
+                    okButton.focus();
+
+                },
+                150
+            );
+
+        }
+
+
+        /* =================================================
+           CLOSE POPUP
+           
+           ONLY OK BUTTON CALLS THIS.
+        ================================================= */
+
+        function closeStockPopup() {
+
+            /*
+             * Stop continuous sound FIRST.
+             */
+
+            stopContinuousSound();
+
+
+            overlay.classList.remove(
+                "show"
+            );
+
+
+            overlay.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+
+            document.body.classList.remove(
+                "stock-popup-open"
+            );
+
+        }
+
+
+        /* =================================================
+           OK BUTTON
+           
+           ONLY WAY TO CLOSE POPUP.
+        ================================================= */
+
+        okButton.addEventListener(
+            "click",
+            function () {
+
+                closeStockPopup();
+
+            }
+        );
+
+
+        /* =================================================
+           IMPORTANT
+           
+           THERE IS NO:
+           
+           overlay.addEventListener("click"...)
+           
+           Therefore outside click cannot close popup.
+        ================================================= */
+
+
+        /* =================================================
+           PRODUCT CLICK ALERT
+        ================================================= */
+
+        window.showProductAlert =
+            function (element) {
+
+                const name =
+                    element.getAttribute(
+                        "data-product-name"
+                    ) ||
+                    element.textContent.trim();
+
+
+                const stock =
+                    element.getAttribute(
+                        "data-product-stock"
+                    ) ||
+                    "0";
+
+
+                const price =
+                    element.getAttribute(
+                        "data-product-price"
+                    ) ||
+                    "0";
+
+
+                const stockNumber =
+                    parseInt(
+                        stock,
+                        10
+                    );
+
+
+                let status =
+                    "Low Stock";
+
+
+                if (
+                    stockNumber <= 2
+                ) {
+
+                    status =
+                        "Critical";
+
+                }
+
+
+                alertTitle.textContent =
+                    "Low Stock Alert";
+
+
+                alertMessage.textContent =
+                    name +
+                    " has only " +
+                    stock +
+                    " unit" +
+                    (
+                        stockNumber === 1
+                            ? ""
+                            : "s"
+                    ) +
+                    " remaining. Please restock this product soon.";
+
+
+                alertProductList.innerHTML =
+                    "";
+
+
+                /* PRODUCT ROW */
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+                item.className =
+                    "alert-product-item";
+
+
+                const left =
+                    document.createElement(
+                        "div"
+                    );
+
+                left.className =
+                    "alert-product-left";
+
+
+                const icon =
+                    document.createElement(
+                        "div"
+                    );
+
+                icon.className =
+                    "alert-product-icon";
+
+
+                icon.innerHTML =
+                    '<i class="bi bi-box-seam"></i>';
+
+
+                const productName =
+                    document.createElement(
+                        "div"
+                    );
+
+                productName.className =
+                    "alert-product-name";
+
+
+                productName.textContent =
+                    name;
+
+
+                left.appendChild(
+                    icon
+                );
+
+                left.appendChild(
+                    productName
+                );
+
+
+                const stockBadge =
+                    document.createElement(
+                        "span"
+                    );
+
+                stockBadge.className =
+                    "alert-product-stock";
+
+
+                stockBadge.textContent =
+                    stock +
+                    " left";
+
+
+                item.appendChild(
+                    left
+                );
+
+                item.appendChild(
+                    stockBadge
+                );
+
+
+                alertProductList.appendChild(
+                    item
+                );
+
+
+                /* PRODUCT DETAILS */
+
+                const details =
+                    document.createElement(
+                        "div"
+                    );
+
+                details.className =
+                    "product-details";
+
+
+                details.innerHTML =
+
+                    '<div class="product-detail-row status-row">' +
+                        '<span>Inventory Status</span>' +
+                        '<strong>' +
+                            status +
+                        '</strong>' +
+                    '</div>' +
+
+                    '<div class="product-detail-row">' +
+                        '<span>Product Price</span>' +
+                        '<strong>₹' +
+                            price +
+                        '</strong>' +
+                    '</div>';
+
+
+                alertProductList.appendChild(
+                    details
+                );
+
+
+                /*
+                 * Open popup.
+                 */
+
+                overlay.classList.add(
+                    "show"
+                );
+
+
+                overlay.setAttribute(
+                    "aria-hidden",
+                    "false"
+                );
+
+
+                document.body.classList.add(
+                    "stock-popup-open"
+                );
+
+
+                /*
+                 * Stop any old sound
+                 * before starting fresh.
+                 */
+
+                stopContinuousSound();
+
+
+                /*
+                 * Start continuous sound.
+                 */
+
+                startContinuousSound();
+
+
+                setTimeout(
+                    function () {
+
+                        okButton.focus();
+
+                    },
+                    150
+                );
+
+            };
+
+
+        /* =================================================
+           KEYBOARD PRODUCT SUPPORT
+        ================================================= */
+
+        window.handleProductKey =
+            function (
+                event,
+                element
+            ) {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    showProductAlert(
+                        element
+                    );
+
+                }
+
+            };
+
+
+        /* =================================================
+           SEARCH
+        ================================================= */
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                "input",
+                function () {
+
+                    const search =
+                        this.value
+                            .trim()
+                            .toLowerCase();
+
+
+                    let visible = 0;
+
+
+                    productRows.forEach(
+                        function (row) {
+
+                            const name =
+                                (
+                                    row.getAttribute(
+                                        "data-product-name"
+                                    ) || ""
+                                ).toLowerCase();
+
+
+                            if (
+                                name.includes(
+                                    search
+                                )
+                            ) {
+
+                                row.style.display =
+                                    "";
+
+                                visible++;
+
+                            } else {
+
+                                row.style.display =
+                                    "none";
+
+                            }
+
+                        }
+                    );
+
+
+                    if (visibleCount) {
+
+                        visibleCount.textContent =
+                            visible +
+                            (
+                                visible === 1
+                                    ? " product"
+                                    : " products"
+                            );
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =================================================
+           AUTOMATIC LOW STOCK POPUP
+           
+           Opens when page loads.
+        ================================================= */
+
+        if (
+            productRows.length > 0
+        ) {
+
+            const lowStockProducts =
+                [];
+
+
+            productRows.forEach(
+                function (row) {
+
+                    const name =
+                        row.getAttribute(
+                            "data-product-name"
+                        ) || "";
+
+
+                    const stock =
+                        row.getAttribute(
+                            "data-product-stock"
+                        ) || "0";
+
+
+                    lowStockProducts.push({
+
+                        name: name,
+
+                        stock: stock
+
+                    });
+
+                }
+            );
+
+
+            if (
+                lowStockProducts.length > 0
+            ) {
+
+                const count =
+                    lowStockProducts.length;
+
+
+                const message =
+                    count === 1
+
+                        ? "1 product has limited stock. Please review the inventory and consider restocking."
+
+                        : count +
+                          " products have limited stock. Please review the inventory and consider restocking.";
+
+
+                setTimeout(
+                    function () {
+
+                        openStockPopup(
+
+                            "Low Stock Products",
+
+                            message,
+
+                            lowStockProducts
+
+                        );
+
+                    },
+                    500
+                );
+
+            }
+
+        }
+
+
+        /* =================================================
+           ESC KEY INTENTIONALLY DISABLED
+           
+           Popup will NOT close with ESC.
+        ================================================= */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Escape" &&
+                    overlay.classList.contains(
+                        "show"
+                    )
+                ) {
+
+                    event.preventDefault();
+
+                    /*
+                     * Do NOTHING.
+                     *
+                     * Popup remains open.
+                     */
+
+                }
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+<!-- =====================================================
+     BOOTSTRAP ICONS
+====================================================== -->
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+{% endblock %}

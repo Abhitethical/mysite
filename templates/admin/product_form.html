@@ -1,0 +1,2834 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+
+<title>{% if product %}Edit{% else %}Add{% endif %} Product | Admin</title>
+
+<style>
+    :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #eef2ff;
+        --success: #10b981;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --dark: #111827;
+        --text: #374151;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --bg: #f5f7fb;
+        --white: #ffffff;
+        --shadow: 0 20px 50px rgba(15, 23, 42, .08);
+        --radius: 18px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family:
+            Inter,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            Helvetica,
+            Arial,
+            sans-serif;
+
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(99, 102, 241, .08),
+                transparent 30%
+            ),
+            var(--bg);
+
+        color: var(--text);
+        min-height: 100vh;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+        font: inherit;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .page {
+        width: 100%;
+        max-width: 1350px;
+        margin: auto;
+        padding: 32px 22px 60px;
+    }
+
+    /* =========================
+       HEADER
+    ========================== */
+
+    .topbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+    }
+
+    .breadcrumb span:last-child {
+        color: var(--dark);
+        font-weight: 700;
+    }
+
+    .page-title {
+        font-size: clamp(25px, 3vw, 32px);
+        line-height: 1.2;
+        font-weight: 850;
+        color: var(--dark);
+        letter-spacing: -.9px;
+    }
+
+    .page-subtitle {
+        margin-top: 7px;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 10px 15px;
+        background: rgba(255,255,255,.9);
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--dark);
+        box-shadow: 0 5px 15px rgba(0,0,0,.03);
+        white-space: nowrap;
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        background: var(--success);
+        border-radius: 50%;
+        box-shadow: 0 0 0 4px rgba(16,185,129,.12);
+    }
+
+    /* =========================
+       LAYOUT
+    ========================== */
+
+    .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .card {
+        background: var(--white);
+        border: 1px solid rgba(229,231,235,.85);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .card-header {
+        padding: 23px 27px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .card-header h2 {
+        color: var(--dark);
+        font-size: 17px;
+        font-weight: 800;
+    }
+
+    .card-header p {
+        margin-top: 4px;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .card-body {
+        padding: 29px;
+    }
+
+    /* =========================
+       FORM SECTION
+    ========================== */
+
+    .form-section {
+        margin-bottom: 34px;
+        padding-bottom: 31px;
+        border-bottom: 1px solid #f0f1f4;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: 0;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 19px;
+    }
+
+    .section-number {
+        width: 32px;
+        height: 32px;
+        display: grid;
+        place-items: center;
+        border-radius: 10px;
+        background: var(--primary-light);
+        color: var(--primary);
+        font-size: 11px;
+        font-weight: 850;
+        flex-shrink: 0;
+    }
+
+    .section-title h3 {
+        font-size: 14px;
+        color: var(--dark);
+        font-weight: 800;
+    }
+
+    .section-title p {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 2px;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0,1fr));
+        gap: 18px;
+    }
+
+    .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0,1fr));
+        gap: 16px;
+    }
+
+    .field {
+        margin-bottom: 18px;
+    }
+
+    .field:last-child {
+        margin-bottom: 0;
+    }
+
+    .label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .required {
+        color: var(--danger);
+        margin-left: 2px;
+    }
+
+    .hint {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 400;
+    }
+
+    .input,
+    .select,
+    .textarea {
+        width: 100%;
+        border: 1px solid var(--border);
+        background: #fbfcfe;
+        color: var(--dark);
+        border-radius: 11px;
+        padding: 12px 14px;
+        outline: none;
+        transition: all .2s ease;
+    }
+
+    .input,
+    .select {
+        height: 46px;
+    }
+
+    .textarea {
+        min-height: 125px;
+        resize: vertical;
+        line-height: 1.6;
+    }
+
+    .input::placeholder,
+    .textarea::placeholder {
+        color: #a1a1aa;
+    }
+
+    .input:hover,
+    .select:hover,
+    .textarea:hover {
+        border-color: #cbd5e1;
+    }
+
+    .input:focus,
+    .select:focus,
+    .textarea:focus {
+        background: #fff;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(99,102,241,.10);
+    }
+
+    .input:invalid:not(:placeholder-shown) {
+        border-color: rgba(239,68,68,.65);
+    }
+
+    .input-group {
+        position: relative;
+    }
+
+    .input-prefix {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 700;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .input-group .input {
+        padding-left: 32px;
+    }
+
+    /* =========================
+       CHARACTER COUNTER
+    ========================== */
+
+    .textarea-wrapper {
+        position: relative;
+    }
+
+    .character-counter {
+        position: absolute;
+        right: 12px;
+        bottom: 9px;
+        padding: 3px 7px;
+        border-radius: 6px;
+        background: rgba(255,255,255,.9);
+        color: var(--muted);
+        font-size: 10px;
+        pointer-events: none;
+    }
+
+    /* =========================
+       TOGGLES
+    ========================== */
+
+    .toggle-grid {
+        display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 14px;
+    }
+
+    .toggle-card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        padding: 15px;
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        background: #fbfcfe;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+    .toggle-card:hover {
+        border-color: #c7d2fe;
+        background: #f8f8ff;
+        transform: translateY(-1px);
+    }
+
+    .toggle-card input {
+        width: 18px;
+        height: 18px;
+        accent-color: var(--primary);
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+
+    .toggle-content strong {
+        display: block;
+        color: var(--dark);
+        font-size: 13px;
+    }
+
+    .toggle-content span {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+        margin-top: 3px;
+        line-height: 1.5;
+    }
+
+    /* =========================
+       IMAGE UPLOAD
+    ========================== */
+
+    .image-grid {
+        display: grid;
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 18px;
+    }
+
+    .image-upload-card {
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 16px;
+        background: #fcfcff;
+    }
+
+    .image-upload-title {
+        font-size: 13px;
+        font-weight: 750;
+        color: var(--dark);
+        margin-bottom: 10px;
+    }
+
+    .upload-box {
+        position: relative;
+        border: 1.5px dashed #cbd5e1;
+        background: #fafbff;
+        border-radius: 15px;
+        padding: 24px 15px;
+        text-align: center;
+        transition: .25s ease;
+        cursor: pointer;
+    }
+
+    .upload-box:hover,
+    .upload-box.drag-active {
+        border-color: var(--primary);
+        background: #f5f3ff;
+    }
+
+    .upload-icon {
+        width: 45px;
+        height: 45px;
+        margin: auto auto 10px;
+        display: grid;
+        place-items: center;
+        background: var(--primary-light);
+        color: var(--primary);
+        border-radius: 13px;
+        font-size: 21px;
+        font-weight: 800;
+    }
+
+    .upload-box strong {
+        display: block;
+        color: var(--dark);
+        font-size: 13px;
+    }
+
+    .upload-box p {
+        color: var(--muted);
+        font-size: 11px;
+        margin: 5px 0 12px;
+    }
+
+    .upload-button {
+        display: inline-block;
+        background: var(--dark);
+        color: #fff;
+        padding: 8px 13px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+    }
+
+    .file-input {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .preview,
+    .current-image {
+        margin-top: 13px;
+        text-align: center;
+    }
+
+    .preview {
+        display: none;
+    }
+
+    .preview img,
+    .current-image img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 13px;
+        border: 1px solid var(--border);
+        padding: 4px;
+        background: #fff;
+    }
+
+    .image-label {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 7px;
+    }
+
+    .selected-file {
+        margin-top: 8px;
+        font-size: 10px;
+        color: var(--success);
+        font-weight: 700;
+        word-break: break-word;
+    }
+
+    /* =========================
+       COUPON
+    ========================== */
+
+    .coupon-box {
+        padding: 19px;
+        background: #fffaf0;
+        border: 1px solid #fde7bd;
+        border-radius: 15px;
+    }
+
+    .coupon-box .section-title {
+        margin-bottom: 15px;
+    }
+
+    .coupon-preview {
+        margin-top: 15px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #fff;
+        border: 1px dashed #f5c76b;
+    }
+
+    .coupon-preview-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 6px 0;
+        font-size: 12px;
+    }
+
+    .coupon-preview-row span:first-child {
+        color: var(--muted);
+    }
+
+    .coupon-preview-row strong {
+        color: var(--dark);
+    }
+
+    .final-price {
+        color: var(--success) !important;
+        font-size: 16px !important;
+    }
+
+    /* =========================
+       SIDEBAR
+    ========================== */
+
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        position: sticky;
+        top: 20px;
+    }
+
+    .summary {
+        padding: 22px;
+    }
+
+    .summary h3 {
+        color: var(--dark);
+        font-size: 15px;
+        font-weight: 800;
+        margin-bottom: 18px;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        padding: 11px 0;
+        border-bottom: 1px solid #f1f2f4;
+        font-size: 13px;
+    }
+
+    .summary-row:last-child {
+        border-bottom: 0;
+    }
+
+    .summary-row span:first-child {
+        color: var(--muted);
+    }
+
+    .summary-row strong {
+        color: var(--dark);
+        text-align: right;
+    }
+
+    .profit {
+        color: var(--success) !important;
+    }
+
+    .profit.negative {
+        color: var(--danger) !important;
+    }
+
+    .final-summary {
+        margin-top: 10px;
+        padding-top: 15px;
+        border-top: 2px solid #eef0f4;
+    }
+
+    .final-summary strong {
+        color: var(--success) !important;
+        font-size: 16px;
+    }
+
+    .info-card {
+        padding: 20px;
+    }
+
+    .info-icon {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border-radius: 11px;
+        background: #ecfdf5;
+        color: var(--success);
+        margin-bottom: 13px;
+        font-weight: 800;
+    }
+
+    .info-card h3 {
+        font-size: 14px;
+        color: var(--dark);
+        margin-bottom: 6px;
+    }
+
+    .info-card p {
+        color: var(--muted);
+        font-size: 12px;
+        line-height: 1.65;
+    }
+
+    /* =========================
+       ACTION BAR
+    ========================== */
+
+    .action-bar {
+        margin-top: 24px;
+        padding: 18px 22px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .action-info {
+        color: var(--muted);
+        font-size: 12px;
+    }
+
+    .actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        height: 44px;
+        padding: 0 18px;
+        border: 0;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 750;
+        transition: all .2s ease;
+    }
+
+    .btn-secondary {
+        color: var(--text);
+        background: #f3f4f6;
+        border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+        background: #e5e7eb;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background: linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-dark)
+        );
+        box-shadow: 0 8px 20px rgba(79,70,229,.25);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 25px rgba(79,70,229,.32);
+    }
+
+    .btn-primary:disabled {
+        opacity: .65;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* =========================
+       VALIDATION MESSAGE
+    ========================== */
+
+    .form-error {
+        display: none;
+        margin-bottom: 18px;
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================== */
+
+    @media (max-width: 1100px) {
+        .layout {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            position: static;
+        }
+    }
+
+    @media (max-width: 800px) {
+        .grid-3 {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        .image-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .page {
+            padding: 22px 14px 40px;
+        }
+
+        .topbar {
+            align-items: flex-start;
+        }
+
+        .status-badge {
+            display: none;
+        }
+
+        .page-title {
+            font-size: 24px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .grid-2,
+        .grid-3,
+        .sidebar,
+        .toggle-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-bar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .actions {
+            width: 100%;
+        }
+
+        .actions .btn {
+            flex: 1;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="page">
+
+<header class="topbar">
+    <div>
+        <div class="breadcrumb">
+            <span>Admin</span>
+            <span>›</span>
+            <span>Products</span>
+            <span>›</span>
+            <span>
+                {% if product %}Edit{% else %}New Product{% endif %}
+            </span>
+        </div>
+
+    <h1 class="page-title">
+        {% if product %}
+            Edit Product
+        {% else %}
+            Add New Product
+        {% endif %}
+    </h1>
+
+    <p class="page-subtitle">
+        {% if product %}
+            Update product information, pricing, images,
+            inventory and coupon settings.
+        {% else %}
+            Create a complete product and add it to your catalog.
+        {% endif %}
+    </p>
+</div>
+
+<div class="status-badge">
+    <span class="status-dot"></span>
+    Admin Mode
+</div>
+
+</header>
+
+<form
+    method="POST"
+    enctype="multipart/form-data"
+    autocomplete="off"
+    id="productForm"
+    novalidate
+>
+
+{% csrf_token %}
+
+<div class="form-error" id="formError"></div>
+
+<div class="layout">
+
+    <main class="card">
+
+        <div class="card-header">
+            <div>
+                <h2>Product Information</h2>
+                <p>Enter and verify all product information below.</p>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <!-- =========================
+                 01 BASIC INFORMATION
+            ========================== -->
+
+            <section class="form-section">
+
+                <div class="section-title">
+                    <div class="section-number">01</div>
+
+                    <div>
+                        <h3>Basic Information</h3>
+                        <p>General product details</p>
+                    </div>
+                </div>
+
+
+                <div class="grid-2">
+
+                    <div class="field">
+
+                        <label class="label">
+                            Product Name
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            class="input uppercase-field"
+                           
+                            maxlength="150"
+                            placeholder="e.g. Premium Wireless Headphones"
+                            value="{{ product.name|default:'' }}"
+                            autocomplete="off"
+                            autocapitalize="words"
+                            spellcheck="false"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label class="label">
+                            Category
+                            <span class="required">*</span>
+                        </label>
+
+                        <select
+                            name="category"
+                            class="select"
+                            autocomplete="off"
+                            required
+                        >
+
+                            <option
+                                value=""
+                                {% if not product %}selected{% endif %}
+                                disabled
+                            >
+                                Select category
+                            </option>
+
+                            {% for cat in categories %}
+
+                                <option
+                                    value="{{ cat.id }}"
+                                    {% if product.category.id == cat.id %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ cat.name }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="field">
+
+                    <label class="label">
+                        Vendor
+                        <span class="required">*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="vendor"
+                        class="input uppercase-field"
+                        maxlength="150"
+                        placeholder="e.g. ABC ELECTRONICS"
+                        value="{{ product.vendor|default:'' }}"
+                        autocomplete="off"
+                        autocapitalize="characters"
+                        spellcheck="false"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label class="label">
+                        Default Product Size
+                        <span class="required">*</span>
+                    </label>
+
+                    <select
+                        name="size"
+                        class="select"
+                        autocomplete="off"
+                        required
+                    >
+
+                        <option
+                            value="XS"
+                            {% if product.size == "XS" %}selected{% endif %}
+                        >
+                            XS — Extra Small
+                        </option>
+
+                        <option
+                            value="S"
+                            {% if product.size == "S" %}selected{% endif %}
+                        >
+                            S — Small
+                        </option>
+
+                        <option
+                            value="M"
+                            {% if not product or product.size == "M" %}selected{% endif %}
+                        >
+                            M — Medium
+                        </option>
+
+                        <option
+                            value="L"
+                            {% if product.size == "L" %}selected{% endif %}
+                        >
+                            L — Large
+                        </option>
+
+                        <option
+                            value="XL"
+                            {% if product.size == "XL" %}selected{% endif %}
+                        >
+                            XL — Extra Large
+                        </option>
+
+                        <option
+                            value="XXL"
+                            {% if product.size == "XXL" %}selected{% endif %}
+                        >
+                            XXL — XX Large
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="field">
+
+                    <label class="label">
+                        Description
+                        <span class="required">*</span>
+
+                        <span class="hint">
+                            Maximum 500 characters
+                        </span>
+                    </label>
+
+                    <div class="textarea-wrapper">
+
+                        <textarea
+                            name="description"
+                            class="textarea"
+                            class="input uppercase-field"
+                            maxlength="500"
+                            placeholder="Write a clear and detailed description of the product..."
+                            autocomplete="off"
+                            spellcheck="true"
+                            id="description"
+                            required
+                        >{{ product.description|default:'' }}</textarea>
+
+                        <span
+                            class="character-counter"
+                            id="descriptionCounter"
+                        >
+                            0 / 500
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 02 PRICING
+            ========================== -->
+
+            <section class="form-section">
+
+                <div class="section-title">
+                    <div class="section-number">02</div>
+
+                    <div>
+                        <h3>Pricing & Inventory</h3>
+                        <p>Manage stock and primary pricing</p>
+                    </div>
+                </div>
+
+
+                <div class="grid-3">
+
+                    <div class="field">
+
+                        <label class="label">
+                            Quantity
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="number"
+                            name="quantity"
+                            class="input"
+                            min="0"
+                            step="1"
+                            inputmode="numeric"
+                            placeholder=""
+                            value="{{ product.quantity|default:'' }}"
+                            id="quantity"
+                            autocomplete="off"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label class="label">
+                            Original Price
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-prefix">₹</span>
+
+                            <input
+                                type="number"
+                                name="original_price"
+                                class="input price-input"
+                                min="0"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder=""
+                                value="{{ product.original_price|default:'' }}"
+                                id="originalPrice"
+                                autocomplete="off"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label class="label">
+                            Selling Price
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-prefix">₹</span>
+
+                            <input
+                                type="number"
+                                name="selling_price"
+                                class="input price-input"
+                                min="0"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder=""
+                                value="{{ product.selling_price|default:'' }}"
+                                id="sellingPrice"
+                                autocomplete="off"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 03 SIZE PRICING
+            ========================== -->
+
+            <section class="form-section">
+
+                <div class="section-title">
+                    <div class="section-number">03</div>
+
+                    <div>
+                        <h3>Size-wise Pricing</h3>
+                        <p>Configure price for each available size</p>
+                    </div>
+                </div>
+
+
+                <div class="grid-3">
+
+                    <div class="field">
+
+                        <label class="label">
+                            Small (S)
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-prefix">₹</span>
+
+                            <input
+                                type="number"
+                                name="price_s"
+                                class="input price-input"
+                                min="0"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder=""
+                                value="{{ product.price_s|default:'' }}"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label class="label">
+                            Medium (M)
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-prefix">₹</span>
+
+                            <input
+                                type="number"
+                                name="price_m"
+                                class="input price-input"
+                                min="0"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder=""
+                                value="{{ product.price_m|default:'' }}"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label class="label">
+                            Large (L)
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-prefix">₹</span>
+
+                            <input
+                                type="number"
+                                name="price_l"
+                                class="input price-input"
+                                min="0"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder=""
+                                value="{{ product.price_l|default:'' }}"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label class="label">
+                            Extra Large (XL)
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-prefix">₹</span>
+
+                            <input
+                                type="number"
+                                name="price_xl"
+                                class="input price-input"
+                                min="0"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder=""
+                                value="{{ product.price_xl|default:'' }}"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <label class="label">
+                            XX Large (XXL)
+                        </label>
+
+                        <div class="input-group">
+
+                            <span class="input-prefix">₹</span>
+
+                            <input
+                                type="number"
+                                name="price_xxl"
+                                class="input price-input"
+                                min="0"
+                                step="0.01"
+                                inputmode="decimal"
+                                placeholder=""
+                                value="{{ product.price_xxl|default:'' }}"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="price-help">
+
+                    <strong>Size pricing:</strong>
+
+                    Size-specific prices are stored separately
+                    from the primary selling price and can be
+                    used by your product size selector.
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 04 COUPON
+            ========================== -->
+
+            <section class="form-section">
+
+                <div class="coupon-box">
+
+                    <div class="section-title">
+
+                        <div class="section-number">04</div>
+
+                        <div>
+                            <h3>Coupon & Discount</h3>
+                            <p>Configure product-level coupon details</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="grid-2">
+
+                        <div class="field">
+
+                            <label class="label">
+                                Coupon Code
+
+                                <span class="hint">
+                                    Optional
+                                </span>
+                            </label>
+
+                            <input
+                                type="text"
+                                name="coupon_code"
+                                class="input uppercase-field"
+                                maxlength="50"
+                                placeholder="SAVE100"
+                                value="{{ product.coupon_code|default:'' }}"
+                                autocomplete="off"
+                                autocapitalize="characters"
+                                spellcheck="false"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label class="label">
+                                Coupon Discount
+
+                                <span class="hint">
+                                    Amount in ₹
+                                </span>
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-prefix">₹</span>
+
+                                <input
+                                    type="number"
+                                    name="coupon_discount"
+                                    class="input price-input"
+                                    min="0"
+                                    step="0.01"
+                                    inputmode="decimal"
+                                    placeholder=""
+                                    value="{{ product.coupon_discount|default:'0' }}"
+                                    id="couponDiscount"
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label class="label">
+                                Coupon Expiry
+
+                                <span class="hint">
+                                    Optional
+                                </span>
+                            </label>
+
+                            <input
+                                type="date"
+                                name="coupon_expiry"
+                                class="input"
+                                autocomplete="off"
+                                value="{% if product.coupon_expiry %}{{ product.coupon_expiry|date:'Y-m-d' }}{% endif %}"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="toggle-grid">
+
+                        <label class="toggle-card">
+
+                            <input
+                                type="checkbox"
+                                name="coupon_active"
+                                value="1"
+                                {% if not product or product.coupon_active %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <div class="toggle-content">
+
+                                <strong>Coupon Active</strong>
+
+                                <span>
+                                    Allow this coupon to reduce
+                                    the product price.
+                                </span>
+
+                            </div>
+
+                        </label>
+
+
+                        <label class="toggle-card">
+
+                            <input
+                                type="checkbox"
+                                name="coupon_used"
+                                value="1"
+                                {% if product.coupon_used %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <div class="toggle-content">
+
+                                <strong>Coupon Used</strong>
+
+                                <span>
+                                    Mark coupon as already used.
+                                </span>
+
+                            </div>
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="coupon-preview">
+
+                        <div class="coupon-preview-row">
+                            <span>Selling Price</span>
+
+                            <strong id="couponSelling">
+                                ₹0
+                            </strong>
+                        </div>
+
+                        <div class="coupon-preview-row">
+                            <span>Coupon Discount</span>
+
+                            <strong id="couponDiscountPreview">
+                                ₹0
+                            </strong>
+                        </div>
+
+                        <div class="coupon-preview-row">
+                            <span>Final Price</span>
+
+                            <strong
+                                class="final-price"
+                                id="finalPricePreview"
+                            >
+                                ₹0
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 05 IMAGES
+            ========================== -->
+
+            <section class="form-section">
+
+                <div class="section-title">
+
+                    <div class="section-number">05</div>
+
+                    <div>
+                        <h3>Product Images</h3>
+                        <p>Upload up to four professional product images</p>
+                    </div>
+
+                </div>
+
+
+                <div class="image-grid">
+
+                    <!-- IMAGE 1 -->
+
+                    <div class="image-upload-card">
+
+                        <div class="image-upload-title">
+                            Main Product Image
+                        </div>
+
+                        <div class="upload-box">
+
+                            <div class="upload-icon">↑</div>
+
+                            <strong>Upload main image</strong>
+
+                            <p>
+                                JPG, PNG or WEBP · Maximum 5 MB
+                            </p>
+
+                            <span class="upload-button">
+                                Choose Image
+                            </span>
+
+                            <input
+                                type="file"
+                                name="product_image"
+                                class="file-input"
+                                id="productImage"
+                                accept="image/png,image/jpeg,image/webp"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                        <div
+                            class="preview"
+                            id="previewContainer"
+                        >
+                            <div class="image-label">
+                                New image preview
+                            </div>
+
+                            <img
+                                id="imagePreview"
+                                src=""
+                                alt="Product preview"
+                            >
+
+                            <div
+                                class="selected-file"
+                                id="fileName1"
+                            ></div>
+                        </div>
+
+                        {% if product.product_image %}
+
+                            <div class="current-image">
+
+                                <div class="image-label">
+                                    Current main image
+                                </div>
+
+                                <img
+                                    src="{{ product.product_image.url }}"
+                                    alt="{{ product.name }}"
+                                >
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- IMAGE 2 -->
+
+                    <div class="image-upload-card">
+
+                        <div class="image-upload-title">
+                            Additional Image 2
+                        </div>
+
+                        <div class="upload-box">
+
+                            <div class="upload-icon">↑</div>
+
+                            <strong>Upload image 2</strong>
+
+                            <p>
+                                Optional · JPG, PNG or WEBP
+                            </p>
+
+                            <span class="upload-button">
+                                Choose Image
+                            </span>
+
+                            <input
+                                type="file"
+                                name="product_image2"
+                                class="file-input"
+                                id="productImage2"
+                                accept="image/png,image/jpeg,image/webp"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                        <div
+                            class="preview"
+                            id="previewContainer2"
+                        >
+                            <div class="image-label">
+                                New image preview
+                            </div>
+
+                            <img
+                                id="imagePreview2"
+                                src=""
+                                alt="Product image 2 preview"
+                            >
+
+                            <div
+                                class="selected-file"
+                                id="fileName2"
+                            ></div>
+                        </div>
+
+                        {% if product.product_image2 %}
+
+                            <div class="current-image">
+
+                                <div class="image-label">
+                                    Current image 2
+                                </div>
+
+                                <img
+                                    src="{{ product.product_image2.url }}"
+                                    alt="{{ product.name }}"
+                                >
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- IMAGE 3 -->
+
+                    <div class="image-upload-card">
+
+                        <div class="image-upload-title">
+                            Additional Image 3
+                        </div>
+
+                        <div class="upload-box">
+
+                            <div class="upload-icon">↑</div>
+
+                            <strong>Upload image 3</strong>
+
+                            <p>
+                                Optional · JPG, PNG or WEBP
+                            </p>
+
+                            <span class="upload-button">
+                                Choose Image
+                            </span>
+
+                            <input
+                                type="file"
+                                name="product_image3"
+                                class="file-input"
+                                id="productImage3"
+                                accept="image/png,image/jpeg,image/webp"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                        <div
+                            class="preview"
+                            id="previewContainer3"
+                        >
+                            <div class="image-label">
+                                New image preview
+                            </div>
+
+                            <img
+                                id="imagePreview3"
+                                src=""
+                                alt="Product image 3 preview"
+                            >
+
+                            <div
+                                class="selected-file"
+                                id="fileName3"
+                            ></div>
+                        </div>
+
+                        {% if product.product_image3 %}
+
+                            <div class="current-image">
+
+                                <div class="image-label">
+                                    Current image 3
+                                </div>
+
+                                <img
+                                    src="{{ product.product_image3.url }}"
+                                    alt="{{ product.name }}"
+                                >
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- IMAGE 4 -->
+
+                    <div class="image-upload-card">
+
+                        <div class="image-upload-title">
+                            Additional Image 4
+                        </div>
+
+                        <div class="upload-box">
+
+                            <div class="upload-icon">↑</div>
+
+                            <strong>Upload image 4</strong>
+
+                            <p>
+                                Optional · JPG, PNG or WEBP
+                            </p>
+
+                            <span class="upload-button">
+                                Choose Image
+                            </span>
+
+                            <input
+                                type="file"
+                                name="product_image4"
+                                class="file-input"
+                                id="productImage4"
+                                accept="image/png,image/jpeg,image/webp"
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+                        <div
+                            class="preview"
+                            id="previewContainer4"
+                        >
+                            <div class="image-label">
+                                New image preview
+                            </div>
+
+                            <img
+                                id="imagePreview4"
+                                src=""
+                                alt="Product image 4 preview"
+                            >
+
+                            <div
+                                class="selected-file"
+                                id="fileName4"
+                            ></div>
+                        </div>
+
+                        {% if product.product_image4 %}
+
+                            <div class="current-image">
+
+                                <div class="image-label">
+                                    Current image 4
+                                </div>
+
+                                <img
+                                    src="{{ product.product_image4.url }}"
+                                    alt="{{ product.name }}"
+                                >
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 06 PRODUCT STATUS
+            ========================== -->
+
+            <section class="form-section">
+
+                <div class="section-title">
+
+                    <div class="section-number">06</div>
+
+                    <div>
+                        <h3>Product Visibility</h3>
+
+                        <p>
+                            Control catalog visibility and presentation
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="toggle-grid">
+
+                    <label class="toggle-card">
+
+                        <input
+                            type="checkbox"
+                            name="status"
+                            value="1"
+                            {% if product.status %}
+                                checked
+                            {% endif %}
+                        >
+
+                        <div class="toggle-content">
+
+                            <strong>Hide Product</strong>
+
+                            <span>
+                                {% if product %}
+                                    Currently:
+                                    {% if product.status %}
+                                        Hidden
+                                    {% else %}
+                                        Visible
+                                    {% endif %}
+                                {% else %}
+                                    Keep unchecked to show the product.
+                                {% endif %}
+                            </span>
+
+                        </div>
+
+                    </label>
+
+
+                    <label class="toggle-card">
+
+                        <input
+                            type="checkbox"
+                            name="trending"
+                            value="1"
+                            {% if product.trending %}
+                                checked
+                            {% endif %}
+                        >
+
+                        <div class="toggle-content">
+
+                            <strong>Trending Product</strong>
+
+                            <span>
+                                Mark this product as trending.
+                            </span>
+
+                        </div>
+
+                    </label>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         SIDEBAR
+    ========================== -->
+
+    <aside class="sidebar">
+
+        <div class="card summary">
+
+            <h3>Product Summary</h3>
+
+            <div class="summary-row">
+                <span>Quantity</span>
+                <strong id="summaryQuantity">0</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Original Price</span>
+                <strong id="summaryOriginal">₹0</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Selling Price</span>
+                <strong id="summarySelling">₹0</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Coupon Discount</span>
+                <strong id="summaryDiscount">₹0</strong>
+            </div>
+
+            <div class="summary-row">
+                <span>Profit / Unit</span>
+                <strong
+                    class="profit"
+                    id="summaryProfit"
+                >
+                    ₹0
+                </strong>
+            </div>
+
+            <div class="summary-row final-summary">
+                <span>Final Price</span>
+                <strong id="summaryFinal">₹0</strong>
+            </div>
+
+        </div>
+
+
+        <div class="card info-card">
+
+            <div class="info-icon">✓</div>
+
+            <h3>Quality Check</h3>
+
+            <p>
+                Use a clear product name, accurate pricing,
+                sufficient inventory and high-quality images
+                for a professional catalog.
+            </p>
+
+        </div>
+
+
+        <div class="card info-card">
+
+            <div
+                class="info-icon"
+                style="background:#fff7ed;color:#f59e0b;"
+            >
+                %
+            </div>
+
+            <h3>Coupon</h3>
+
+            <p>
+                Coupon discount is automatically limited so
+                the final selling price cannot become negative.
+            </p>
+
+        </div>
+
+
+        <div class="card info-card">
+
+            <div
+                class="info-icon"
+                style="background:#eef2ff;color:#6366f1;"
+            >
+                i
+            </div>
+
+            <h3>Product Fields</h3>
+
+            <p>
+                Supports size pricing, four product images,
+                coupon configuration, visibility, trending
+                status and inventory.
+            </p>
+
+        </div>
+
+    </aside>
+
+</div>
+
+
+<!-- =========================
+     ACTION BAR
+========================== -->
+
+<div class="action-bar">
+
+    <div class="action-info">
+        <strong>*</strong>
+        Required fields must be completed.
+    </div>
+
+    <div class="actions">
+
+        <a
+            href="{% url 'product_list' %}"
+            class="btn btn-secondary"
+        >
+            ← Back
+        </a>
+
+        <button
+            type="submit"
+            class="btn btn-primary"
+            id="submitButton"
+        >
+            ✓
+
+            {% if product %}
+                Update Product
+            {% else %}
+                Save Product
+            {% endif %}
+        </button>
+
+    </div>
+
+</div>
+
+</form>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    "use strict";
+
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
+
+    const form = document.getElementById("productForm");
+    const submitButton = document.getElementById("submitButton");
+    const formError = document.getElementById("formError");
+
+    const quantityInput = document.getElementById("quantity");
+    const originalInput = document.getElementById("originalPrice");
+    const sellingInput = document.getElementById("sellingPrice");
+    const couponDiscountInput = document.getElementById("couponDiscount");
+
+    const summaryQuantity = document.getElementById("summaryQuantity");
+    const summaryOriginal = document.getElementById("summaryOriginal");
+    const summarySelling = document.getElementById("summarySelling");
+    const summaryDiscount = document.getElementById("summaryDiscount");
+    const summaryProfit = document.getElementById("summaryProfit");
+    const summaryFinal = document.getElementById("summaryFinal");
+
+    const couponSelling = document.getElementById("couponSelling");
+    const couponDiscountPreview =
+        document.getElementById("couponDiscountPreview");
+    const finalPricePreview =
+        document.getElementById("finalPricePreview");
+
+    const description =
+        document.getElementById("description");
+
+    const descriptionCounter =
+        document.getElementById("descriptionCounter");
+
+
+    /* =========================================================
+       CURRENCY
+    ========================================================= */
+
+    function formatCurrency(value) {
+
+        let number = Number(value);
+
+        if (!Number.isFinite(number)) {
+            number = 0;
+        }
+
+        return "₹" +
+            number.toLocaleString("en-IN", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+    }
+
+
+    /* =========================================================
+       NUMBER NORMALIZATION
+       Prevent values such as ".00"
+    ========================================================= */
+
+    function normalizeDecimalInput(input) {
+
+        if (!input) {
+            return;
+        }
+
+        let value = input.value.trim();
+
+        if (value === "") {
+            return;
+        }
+
+        /*
+         * Convert:
+         * .00      -> 0.00
+         * .50      -> 0.50
+         * 100      -> 100.00
+         * 100.5    -> 100.50
+         */
+
+        if (value.startsWith(".")) {
+            value = "0" + value;
+        }
+
+        const number = Number(value);
+
+        if (!Number.isFinite(number)) {
+            input.value = "";
+            return;
+        }
+
+        input.value = String(number);
+    }
+
+
+    document
+        .querySelectorAll(".price-input")
+        .forEach(function (input) {
+
+            input.addEventListener("blur", function () {
+                normalizeDecimalInput(this);
+                updateSummary();
+            });
+
+        });
+
+
+    /* =========================================================
+       UPPERCASE NORMALIZATION
+    ========================================================= */
+
+    document
+        .querySelectorAll(".uppercase-field")
+        .forEach(function (input) {
+
+            input.addEventListener("input", function () {
+
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+
+                this.value = this.value.toUpperCase();
+
+                try {
+                    this.setSelectionRange(start, end);
+                } catch (error) {
+                    /* Ignore cursor restore errors */
+                }
+
+            });
+
+            /*
+             * Also normalize before submit.
+             */
+            input.addEventListener("blur", function () {
+                this.value = this.value.toUpperCase().trim();
+            });
+
+        });
+
+
+    /* =========================================================
+       DESCRIPTION CHARACTER COUNTER
+    ========================================================= */
+
+    function updateDescriptionCounter() {
+
+        if (!description || !descriptionCounter) {
+            return;
+        }
+
+        const length = description.value.length;
+
+        descriptionCounter.textContent =
+            length + " / 500";
+
+        if (length >= 480) {
+            descriptionCounter.style.color =
+                "#ef4444";
+        } else {
+            descriptionCounter.style.color =
+                "#6b7280";
+        }
+    }
+
+
+    if (description) {
+        description.addEventListener(
+            "input",
+            updateDescriptionCounter
+        );
+
+        updateDescriptionCounter();
+    }
+
+
+    /* =========================================================
+       SUMMARY
+    ========================================================= */
+
+    function updateSummary() {
+
+        const quantity =
+            Number(quantityInput.value) || 0;
+
+        const original =
+            Number(originalInput.value) || 0;
+
+        const selling =
+            Number(sellingInput.value) || 0;
+
+        const discount =
+            Number(couponDiscountInput.value) || 0;
+
+        const safeDiscount =
+            Math.max(0, discount);
+
+        const finalPrice =
+            Math.max(
+                0,
+                selling - safeDiscount
+            );
+
+        const profit =
+            selling - original;
+
+
+        summaryQuantity.textContent =
+            quantity.toLocaleString("en-IN");
+
+        summaryOriginal.textContent =
+            formatCurrency(original);
+
+        summarySelling.textContent =
+            formatCurrency(selling);
+
+        summaryDiscount.textContent =
+            formatCurrency(safeDiscount);
+
+        summaryProfit.textContent =
+            formatCurrency(profit);
+
+        summaryFinal.textContent =
+            formatCurrency(finalPrice);
+
+
+        couponSelling.textContent =
+            formatCurrency(selling);
+
+        couponDiscountPreview.textContent =
+            formatCurrency(safeDiscount);
+
+        finalPricePreview.textContent =
+            formatCurrency(finalPrice);
+
+
+        if (profit < 0) {
+
+            summaryProfit.classList.add("negative");
+
+        } else {
+
+            summaryProfit.classList.remove("negative");
+
+        }
+    }
+
+
+    [
+        quantityInput,
+        originalInput,
+        sellingInput,
+        couponDiscountInput
+    ].forEach(function (input) {
+
+        if (input) {
+
+            input.addEventListener(
+                "input",
+                updateSummary
+            );
+
+        }
+
+    });
+
+
+    updateSummary();
+
+
+    /* =========================================================
+       IMAGE PREVIEW
+    ========================================================= */
+
+    function setupImagePreview(
+        inputId,
+        containerId,
+        previewId,
+        fileNameId
+    ) {
+
+        const input =
+            document.getElementById(inputId);
+
+        const container =
+            document.getElementById(containerId);
+
+        const preview =
+            document.getElementById(previewId);
+
+        const fileName =
+            document.getElementById(fileNameId);
+
+
+        if (!input || !container || !preview) {
+            return;
+        }
+
+
+        input.addEventListener(
+            "change",
+            function () {
+
+                const file = this.files[0];
+
+                if (!file) {
+
+                    container.style.display = "none";
+
+                    if (fileName) {
+                        fileName.textContent = "";
+                    }
+
+                    return;
+                }
+
+
+                const allowedTypes = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp"
+                ];
+
+
+                if (!allowedTypes.includes(file.type)) {
+
+                    alert(
+                        "Invalid image format. Please select JPG, PNG or WEBP."
+                    );
+
+                    this.value = "";
+
+                    container.style.display = "none";
+
+                    return;
+                }
+
+
+                const maxSize =
+                    5 * 1024 * 1024;
+
+
+                if (file.size > maxSize) {
+
+                    alert(
+                        "Image size must be 5 MB or less."
+                    );
+
+                    this.value = "";
+
+                    container.style.display = "none";
+
+                    return;
+                }
+
+
+                if (fileName) {
+
+                    fileName.textContent =
+                        file.name +
+                        " • " +
+                        (
+                            file.size / 1024 / 1024
+                        ).toFixed(2) +
+                        " MB";
+
+                }
+
+
+                const reader =
+                    new FileReader();
+
+
+                reader.onload =
+                    function (event) {
+
+                        preview.src =
+                            event.target.result;
+
+                        container.style.display =
+                            "block";
+
+                    };
+
+
+                reader.readAsDataURL(file);
+
+            }
+        );
+    }
+
+
+    setupImagePreview(
+        "productImage",
+        "previewContainer",
+        "imagePreview",
+        "fileName1"
+    );
+
+    setupImagePreview(
+        "productImage2",
+        "previewContainer2",
+        "imagePreview2",
+        "fileName2"
+    );
+
+    setupImagePreview(
+        "productImage3",
+        "previewContainer3",
+        "imagePreview3",
+        "fileName3"
+    );
+
+    setupImagePreview(
+        "productImage4",
+        "previewContainer4",
+        "imagePreview4",
+        "fileName4"
+    );
+
+
+    /* =========================================================
+       DRAG & DROP
+    ========================================================= */
+
+    document
+        .querySelectorAll(".upload-box")
+        .forEach(function (uploadBox) {
+
+            const input =
+                uploadBox.querySelector(".file-input");
+
+            if (!input) {
+                return;
+            }
+
+
+            [
+                "dragenter",
+                "dragover"
+            ].forEach(function (eventName) {
+
+                uploadBox.addEventListener(
+                    eventName,
+                    function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        uploadBox.classList.add(
+                            "drag-active"
+                        );
+
+                    }
+                );
+
+            });
+
+
+            [
+                "dragleave",
+                "drop"
+            ].forEach(function (eventName) {
+
+                uploadBox.addEventListener(
+                    eventName,
+                    function (event) {
+
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        uploadBox.classList.remove(
+                            "drag-active"
+                        );
+
+                    }
+                );
+
+            });
+
+
+            uploadBox.addEventListener(
+                "drop",
+                function (event) {
+
+                    const files =
+                        event.dataTransfer.files;
+
+                    if (!files.length) {
+                        return;
+                    }
+
+
+                    try {
+
+                        input.files = files;
+
+                        input.dispatchEvent(
+                            new Event(
+                                "change",
+                                {
+                                    bubbles: true
+                                }
+                            )
+                        );
+
+                    } catch (error) {
+
+                        console.error(error);
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    /* =========================================================
+       FORM VALIDATION
+    ========================================================= */
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+
+            formError.style.display = "none";
+            formError.textContent = "";
+
+
+            /* Normalize uppercase fields */
+
+            document
+                .querySelectorAll(".uppercase-field")
+                .forEach(function (input) {
+
+                    input.value =
+                        input.value
+                            .toUpperCase()
+                            .trim();
+
+                });
+
+
+            /* Normalize prices */
+
+            document
+                .querySelectorAll(".price-input")
+                .forEach(function (input) {
+
+                    normalizeDecimalInput(input);
+
+                });
+
+
+            const original =
+                Number(originalInput.value) || 0;
+
+            const selling =
+                Number(sellingInput.value) || 0;
+
+            const discount =
+                Number(couponDiscountInput.value) || 0;
+
+
+            if (original < 0) {
+
+                event.preventDefault();
+
+                formError.textContent =
+                    "Original price cannot be negative.";
+
+                formError.style.display = "block";
+
+                originalInput.focus();
+
+                return;
+            }
+
+
+            if (selling < 0) {
+
+                event.preventDefault();
+
+                formError.textContent =
+                    "Selling price cannot be negative.";
+
+                formError.style.display = "block";
+
+                sellingInput.focus();
+
+                return;
+            }
+
+
+            if (discount < 0) {
+
+                event.preventDefault();
+
+                formError.textContent =
+                    "Coupon discount cannot be negative.";
+
+                formError.style.display = "block";
+
+                couponDiscountInput.focus();
+
+                return;
+            }
+
+
+            /*
+             * Selling price should not be lower than
+             * the coupon discount.
+             */
+
+            if (discount > selling) {
+
+                event.preventDefault();
+
+                formError.textContent =
+                    "Coupon discount cannot be greater than the selling price.";
+
+                formError.style.display = "block";
+
+                couponDiscountInput.focus();
+
+                return;
+            }
+
+
+            /*
+             * Disable button only after all client-side
+             * validation has passed.
+             */
+
+            submitButton.disabled = true;
+
+            submitButton.innerHTML =
+                "⏳ " +
+                (
+                    "{% if product %}" +
+                    "Updating Product..." +
+                    "{% else %}" +
+                    "Saving Product..." +
+                    "{% endif %}"
+                );
+
+        }
+    );
+
+
+    /* =========================================================
+       REMOVE BROWSER AUTOFILL / PASSWORD MANAGER HINTS
+    ========================================================= */
+
+    form.setAttribute(
+        "autocomplete",
+        "off"
+    );
+
+
+    document
+        .querySelectorAll(
+            "input[type='text'], input[type='number'], textarea, select"
+        )
+        .forEach(function (element) {
+
+            element.setAttribute(
+                "autocomplete",
+                "off"
+            );
+
+        });
+
+
+    /*
+     * A hidden decoy field helps prevent some browsers/password
+     * managers from interpreting product fields as account fields.
+     */
+
+    const decoy =
+        document.createElement("input");
+
+    decoy.type = "text";
+    decoy.name = "admin_product_autofill_block";
+    decoy.autocomplete = "new-password";
+    decoy.tabIndex = -1;
+    decoy.style.position = "absolute";
+    decoy.style.left = "-9999px";
+    decoy.style.opacity = "0";
+
+    form.insertBefore(
+        decoy,
+        form.firstChild
+    );
+
+});
+</script>
+
+</body>
+</html>
+
+{% endblock %}

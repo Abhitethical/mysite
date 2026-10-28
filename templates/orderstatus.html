@@ -1,0 +1,2028 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %}
+  My Orders | ShopKart
+{% endblock title %}
+
+{% block content %}
+
+<style>
+/* ============================================================
+   SHOPKART — PROFESSIONAL MY ORDERS
+   Single Django Template
+   ============================================================ */
+
+:root {
+    --sk-primary: #4f46e5;
+    --sk-primary-2: #6366f1;
+    --sk-primary-soft: #eef2ff;
+
+    --sk-success: #16a34a;
+    --sk-success-soft: #dcfce7;
+
+    --sk-warning: #d97706;
+    --sk-warning-soft: #fef3c7;
+
+    --sk-danger: #dc2626;
+    --sk-danger-soft: #fee2e2;
+
+    --sk-info: #0284c7;
+    --sk-info-soft: #e0f2fe;
+
+    --sk-dark: #0f172a;
+    --sk-dark-2: #1e293b;
+
+    --sk-text: #334155;
+    --sk-muted: #64748b;
+    --sk-light-text: #94a3b8;
+
+    --sk-bg: #f6f8fc;
+    --sk-white: #ffffff;
+    --sk-border: #e5e7eb;
+
+    --sk-radius-sm: 10px;
+    --sk-radius: 16px;
+    --sk-radius-lg: 22px;
+
+    --sk-shadow:
+        0 8px 30px rgba(15, 23, 42, 0.06);
+
+    --sk-shadow-hover:
+        0 18px 45px rgba(15, 23, 42, 0.11);
+
+    --sk-transition: all .25s ease;
+}
+
+
+/* ============================================================
+   PAGE
+   ============================================================ */
+
+.sk-orders-page {
+    min-height: 100vh;
+    padding: 45px 0 80px;
+
+    background:
+        radial-gradient(
+            circle at 0% 0%,
+            rgba(99,102,241,.10),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 100% 100%,
+            rgba(14,165,233,.07),
+            transparent 30%
+        ),
+        var(--sk-bg);
+}
+
+
+/* ============================================================
+   TOP HEADER
+   ============================================================ */
+
+.sk-page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.sk-heading-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.sk-heading-icon {
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 18px;
+
+    color: #fff;
+    font-size: 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--sk-primary),
+            #7c3aed
+        );
+
+    box-shadow:
+        0 12px 28px rgba(79,70,229,.25);
+}
+
+.sk-page-title {
+    margin: 0;
+
+    color: var(--sk-dark);
+
+    font-size: 30px;
+    font-weight: 800;
+
+    letter-spacing: -.6px;
+}
+
+.sk-page-subtitle {
+    margin: 5px 0 0;
+
+    color: var(--sk-muted);
+
+    font-size: 14px;
+}
+
+
+/* Shopping Button */
+
+.sk-shop-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 12px 19px;
+
+    border-radius: 11px;
+
+    color: #fff !important;
+    background: var(--sk-dark);
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    transition: var(--sk-transition);
+}
+
+.sk-shop-btn:hover {
+    color: #fff !important;
+
+    background: var(--sk-primary);
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(79,70,229,.22);
+}
+
+
+/* ============================================================
+   STATISTICS
+   ============================================================ */
+
+.sk-stat-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 16px;
+
+    margin-bottom: 25px;
+}
+
+.sk-stat-card {
+    position: relative;
+
+    padding: 20px;
+
+    background: var(--sk-white);
+
+    border: 1px solid var(--sk-border);
+
+    border-radius: var(--sk-radius);
+
+    box-shadow: var(--sk-shadow);
+
+    overflow: hidden;
+
+    transition: var(--sk-transition);
+}
+
+.sk-stat-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow: var(--sk-shadow-hover);
+}
+
+.sk-stat-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 90px;
+    height: 90px;
+
+    right: -35px;
+    top: -35px;
+
+    border-radius: 50%;
+
+    background: rgba(79,70,229,.06);
+}
+
+.sk-stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.sk-stat-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    font-size: 15px;
+}
+
+.sk-stat-icon.total {
+    color: var(--sk-primary);
+    background: var(--sk-primary-soft);
+}
+
+.sk-stat-icon.pending {
+    color: var(--sk-warning);
+    background: var(--sk-warning-soft);
+}
+
+.sk-stat-icon.completed {
+    color: var(--sk-success);
+    background: var(--sk-success-soft);
+}
+
+.sk-stat-icon.cancelled {
+    color: var(--sk-danger);
+    background: var(--sk-danger-soft);
+}
+
+.sk-stat-label {
+    color: var(--sk-muted);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.sk-stat-number {
+    color: var(--sk-dark);
+
+    font-size: 25px;
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+
+/* ============================================================
+   MAIN ORDER BOX
+   ============================================================ */
+
+.sk-orders-box {
+    background: var(--sk-white);
+
+    border:
+        1px solid var(--sk-border);
+
+    border-radius: var(--sk-radius-lg);
+
+    box-shadow: var(--sk-shadow);
+
+    overflow: hidden;
+}
+
+
+/* ============================================================
+   TOOLBAR
+   ============================================================ */
+
+.sk-toolbar {
+    padding: 22px 24px;
+
+    border-bottom:
+        1px solid var(--sk-border);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+.sk-toolbar-title {
+    margin: 0;
+
+    color: var(--sk-dark);
+
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.sk-toolbar-description {
+    margin: 5px 0 0;
+
+    color: var(--sk-light-text);
+
+    font-size: 12px;
+}
+
+
+/* Search */
+
+.sk-search {
+    position: relative;
+
+    width: 260px;
+}
+
+.sk-search i {
+    position: absolute;
+
+    left: 13px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--sk-light-text);
+
+    font-size: 13px;
+}
+
+.sk-search input {
+    width: 100%;
+
+    height: 40px;
+
+    padding:
+        0 14px 0 37px;
+
+    border:
+        1px solid var(--sk-border);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    color: var(--sk-dark);
+
+    background: #fafbfc;
+
+    font-size: 12px;
+
+    transition: var(--sk-transition);
+}
+
+.sk-search input:focus {
+    border-color: #a5b4fc;
+
+    background: #fff;
+
+    box-shadow:
+        0 0 0 3px rgba(99,102,241,.10);
+}
+
+
+/* ============================================================
+   STATUS FILTER
+   ============================================================ */
+
+.sk-filter-bar {
+    padding: 15px 24px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    border-bottom:
+        1px solid var(--sk-border);
+
+    overflow-x: auto;
+}
+
+.sk-filter {
+    flex: 0 0 auto;
+
+    padding: 7px 14px;
+
+    border: 1px solid var(--sk-border);
+
+    border-radius: 30px;
+
+    background: #fff;
+
+    color: var(--sk-muted);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: var(--sk-transition);
+}
+
+.sk-filter:hover,
+.sk-filter.active {
+    color: var(--sk-primary);
+
+    border-color: #c7d2fe;
+
+    background: var(--sk-primary-soft);
+}
+
+
+/* ============================================================
+   DESKTOP TABLE
+   ============================================================ */
+
+.sk-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+.sk-orders-table {
+    width: 100%;
+
+    min-width: 850px;
+
+    border-collapse: collapse;
+}
+
+.sk-orders-table thead th {
+    padding: 14px 20px;
+
+    color: #64748b;
+
+    background: #fafbfc;
+
+    border-bottom:
+        1px solid var(--sk-border);
+
+    text-align: left;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: .7px;
+
+    white-space: nowrap;
+}
+
+.sk-orders-table tbody tr {
+    border-bottom:
+        1px solid #f1f5f9;
+
+    transition: var(--sk-transition);
+}
+
+.sk-orders-table tbody tr:last-child {
+    border-bottom: 0;
+}
+
+.sk-orders-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.sk-orders-table td {
+    padding: 19px 20px;
+
+    vertical-align: middle;
+
+    color: var(--sk-text);
+
+    font-size: 13px;
+}
+
+
+/* ============================================================
+   PRODUCT
+   ============================================================ */
+
+.sk-product {
+    display: flex;
+
+    align-items: center;
+
+    gap: 13px;
+}
+
+.sk-product-image {
+    width: 66px;
+    height: 66px;
+
+    flex-shrink: 0;
+
+    padding: 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid var(--sk-border);
+
+    border-radius: 12px;
+
+    background: #fff;
+
+    transition: var(--sk-transition);
+}
+
+.sk-product-image:hover {
+    transform: scale(1.05);
+
+    border-color: #c7d2fe;
+
+    box-shadow:
+        0 8px 20px rgba(15,23,42,.08);
+}
+
+.sk-product-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    border-radius: 8px;
+}
+
+.sk-product-name {
+    display: block;
+
+    max-width: 230px;
+
+    overflow: hidden;
+
+    color: var(--sk-dark) !important;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 750;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    transition: color .2s ease;
+}
+
+.sk-product-name:hover {
+    color: var(--sk-primary) !important;
+}
+
+.sk-order-number {
+    display: block;
+
+    margin-top: 5px;
+
+    color: var(--sk-light-text);
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   QUANTITY
+   ============================================================ */
+
+.sk-quantity {
+    display: inline-flex;
+
+    min-width: 35px;
+    height: 30px;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 10px;
+
+    border-radius: 8px;
+
+    color: #334155;
+
+    background: #f1f5f9;
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+
+.sk-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border-radius: 30px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.sk-status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+}
+
+.sk-status.pending {
+    color: #92400e;
+    background: var(--sk-warning-soft);
+}
+
+.sk-status.pending .sk-status-dot {
+    background: #f59e0b;
+
+    box-shadow:
+        0 0 0 3px rgba(245,158,11,.12);
+}
+
+.sk-status.completed {
+    color: #166534;
+    background: var(--sk-success-soft);
+}
+
+.sk-status.completed .sk-status-dot {
+    background: #22c55e;
+
+    box-shadow:
+        0 0 0 3px rgba(34,197,94,.12);
+}
+
+.sk-status.canceled {
+    color: #991b1b;
+    background: var(--sk-danger-soft);
+}
+
+.sk-status.canceled .sk-status-dot {
+    background: #ef4444;
+
+    box-shadow:
+        0 0 0 3px rgba(239,68,68,.12);
+}
+
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.sk-action {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-width: 78px;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    text-decoration: none !important;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    transition: var(--sk-transition);
+}
+
+.sk-view {
+    color: #0369a1 !important;
+
+    border:
+        1px solid #bae6fd;
+
+    background: #f0f9ff;
+}
+
+.sk-view:hover {
+    color: #fff !important;
+
+    background: #0284c7;
+
+    border-color: #0284c7;
+
+    transform: translateY(-2px);
+}
+
+.sk-invoice {
+    color: var(--sk-primary) !important;
+
+    border:
+        1px solid #c7d2fe;
+
+    background: var(--sk-primary-soft);
+}
+
+.sk-invoice:hover {
+    color: #fff !important;
+
+    background: var(--sk-primary);
+
+    border-color: var(--sk-primary);
+
+    transform: translateY(-2px);
+}
+
+.sk-invoice-disabled {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    min-width: 78px;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    color: #94a3b8;
+
+    background: #f1f5f9;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   MOBILE ORDERS
+   ============================================================ */
+
+.sk-mobile-orders {
+    display: none;
+}
+
+.sk-mobile-card {
+    margin: 15px;
+
+    padding: 17px;
+
+    border:
+        1px solid var(--sk-border);
+
+    border-radius: 15px;
+
+    background: #fff;
+
+    box-shadow:
+        0 5px 18px rgba(15,23,42,.04);
+
+    transition: var(--sk-transition);
+}
+
+.sk-mobile-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 30px rgba(15,23,42,.08);
+}
+
+.sk-mobile-top {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 15px;
+}
+
+.sk-mobile-product {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+.sk-mobile-image {
+    width: 58px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    padding: 4px;
+
+    border:
+        1px solid var(--sk-border);
+
+    border-radius: 10px;
+
+    background: #fff;
+}
+
+.sk-mobile-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+}
+
+.sk-mobile-name {
+    color: var(--sk-dark);
+
+    font-size: 13px;
+    font-weight: 750;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+.sk-mobile-id {
+    margin-top: 4px;
+
+    color: var(--sk-light-text);
+
+    font-size: 10px;
+}
+
+.sk-mobile-details {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+}
+
+.sk-mobile-detail {
+    padding: 11px;
+
+    border-radius: 9px;
+
+    background: #f8fafc;
+}
+
+.sk-mobile-label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--sk-light-text);
+
+    font-size: 9px;
+
+    text-transform: uppercase;
+
+    font-weight: 800;
+}
+
+.sk-mobile-value {
+    color: var(--sk-dark);
+
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.sk-mobile-actions {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 8px;
+}
+
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+
+.sk-empty {
+    padding: 85px 25px;
+
+    text-align: center;
+}
+
+.sk-empty-icon {
+    width: 105px;
+    height: 105px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin:
+        0 auto 25px;
+
+    border-radius: 50%;
+
+    color: var(--sk-primary);
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f5f3ff
+        );
+
+    font-size: 42px;
+
+    box-shadow:
+        0 12px 30px rgba(79,70,229,.10);
+}
+
+.sk-empty-title {
+    margin: 0 0 9px;
+
+    color: var(--sk-dark);
+
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.sk-empty-text {
+    max-width: 460px;
+
+    margin:
+        0 auto 26px;
+
+    color: var(--sk-muted);
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+.sk-start-shopping {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    padding: 12px 21px;
+
+    border-radius: 10px;
+
+    color: #fff !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--sk-primary),
+            var(--sk-primary-2)
+        );
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 800;
+
+    box-shadow:
+        0 10px 24px rgba(79,70,229,.22);
+
+    transition: var(--sk-transition);
+}
+
+.sk-start-shopping:hover {
+    color: #fff !important;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 15px 32px rgba(79,70,229,.28);
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+.sk-orders-footer {
+    padding: 16px 24px;
+
+    color: var(--sk-light-text);
+
+    background: #fafbfc;
+
+    border-top:
+        1px solid var(--sk-border);
+
+    font-size: 10px;
+}
+
+.sk-orders-footer i {
+    margin-right: 5px;
+
+    color: var(--sk-success);
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 991px) {
+
+    .sk-stat-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .sk-toolbar {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .sk-search {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    .sk-orders-page {
+        padding:
+            30px 0 60px;
+    }
+
+    .sk-page-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .sk-heading-icon {
+        width: 54px;
+        height: 54px;
+
+        font-size: 21px;
+    }
+
+    .sk-page-title {
+        font-size: 25px;
+    }
+
+    .sk-shop-btn {
+        width: 100%;
+    }
+
+    .sk-stat-grid {
+        gap: 10px;
+    }
+
+    .sk-stat-card {
+        padding: 15px;
+    }
+
+    .sk-stat-number {
+        font-size: 21px;
+    }
+
+    .sk-stat-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    /* Hide desktop table */
+    .sk-table-wrapper {
+        display: none;
+    }
+
+    /* Show mobile cards */
+    .sk-mobile-orders {
+        display: block;
+    }
+
+    .sk-toolbar {
+        padding: 18px;
+    }
+
+    .sk-filter-bar {
+        padding:
+            12px 18px;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .sk-page-title {
+        font-size: 22px;
+    }
+
+    .sk-page-subtitle {
+        font-size: 11px;
+    }
+
+    .sk-stat-label {
+        font-size: 10px;
+    }
+
+    .sk-stat-number {
+        font-size: 19px;
+    }
+
+    .sk-stat-card {
+        border-radius: 13px;
+    }
+
+    .sk-mobile-card {
+        margin: 12px;
+    }
+
+    .sk-mobile-details {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .sk-empty {
+        padding:
+            65px 20px;
+    }
+
+    .sk-empty-icon {
+        width: 85px;
+        height: 85px;
+
+        font-size: 34px;
+    }
+
+    .sk-empty-title {
+        font-size: 20px;
+    }
+}
+
+
+/* ============================================================
+   REDUCE MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+</style>
+
+
+<!-- ============================================================
+     PAGE
+     ============================================================ -->
+
+<section class="sk-orders-page">
+
+<div class="container">
+
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+
+<div class="sk-page-header">
+
+    <div class="sk-heading-left">
+
+        <div class="sk-heading-icon">
+            <i class="fa fa-shopping-bag"></i>
+        </div>
+
+        <div>
+
+            <h1 class="sk-page-title">
+                My Orders
+            </h1>
+
+            <p class="sk-page-subtitle">
+                View, track and manage your ShopKart purchases
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <a href="/" class="sk-shop-btn">
+
+        <i class="fa fa-shopping-cart"></i>
+
+        Continue Shopping
+
+    </a>
+
+</div>
+
+
+
+{% if orders %}
+
+
+<!-- ============================================================
+     STATISTICS
+     ============================================================ -->
+
+<div class="sk-stat-grid">
+
+    <!-- Total -->
+    <div class="sk-stat-card">
+
+        <div class="sk-stat-top">
+
+            <span class="sk-stat-label">
+                Total Orders
+            </span>
+
+            <div class="sk-stat-icon total">
+                <i class="fa fa-shopping-bag"></i>
+            </div>
+
+        </div>
+
+        <div class="sk-stat-number">
+            {{ orders|length }}
+        </div>
+
+    </div>
+
+
+    <!-- Pending -->
+    <div class="sk-stat-card">
+
+        <div class="sk-stat-top">
+
+            <span class="sk-stat-label">
+                Pending
+            </span>
+
+            <div class="sk-stat-icon pending">
+                <i class="fa fa-clock-o"></i>
+            </div>
+
+        </div>
+
+        <div class="sk-stat-number">
+
+            {% widthratio orders|length 1 1 %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Completed -->
+    <div class="sk-stat-card">
+
+        <div class="sk-stat-top">
+
+            <span class="sk-stat-label">
+                Completed
+            </span>
+
+            <div class="sk-stat-icon completed">
+                <i class="fa fa-check"></i>
+            </div>
+
+        </div>
+
+        <div class="sk-stat-number">
+            —
+        </div>
+
+    </div>
+
+
+    <!-- Cancelled -->
+    <div class="sk-stat-card">
+
+        <div class="sk-stat-top">
+
+            <span class="sk-stat-label">
+                Cancelled
+            </span>
+
+            <div class="sk-stat-icon cancelled">
+                <i class="fa fa-times"></i>
+            </div>
+
+        </div>
+
+        <div class="sk-stat-number">
+            —
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ============================================================
+     ORDERS BOX
+     ============================================================ -->
+
+<div class="sk-orders-box">
+
+
+    <!-- Toolbar -->
+
+    <div class="sk-toolbar">
+
+        <div>
+
+            <h2 class="sk-toolbar-title">
+                Order History
+            </h2>
+
+            <p class="sk-toolbar-description">
+                All your recent purchases in one place
+            </p>
+
+        </div>
+
+
+        <!-- Search -->
+
+        <div class="sk-search">
+
+            <i class="fa fa-search"></i>
+
+            <input
+                type="text"
+                id="orderSearch"
+                placeholder="Search your orders..."
+                autocomplete="off"
+            >
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================================================
+         FILTERS
+         ======================================================== -->
+
+    <div class="sk-filter-bar">
+
+        <button
+            type="button"
+            class="sk-filter active"
+            data-filter="all"
+        >
+            All Orders
+        </button>
+
+        <button
+            type="button"
+            class="sk-filter"
+            data-filter="pending"
+        >
+            Pending
+        </button>
+
+        <button
+            type="button"
+            class="sk-filter"
+            data-filter="completed"
+        >
+            Completed
+        </button>
+
+        <button
+            type="button"
+            class="sk-filter"
+            data-filter="canceled"
+        >
+            Canceled
+        </button>
+
+    </div>
+
+
+
+    <!-- ========================================================
+         DESKTOP TABLE
+         ======================================================== -->
+
+    <div class="sk-table-wrapper">
+
+        <table class="sk-orders-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>Product</th>
+
+                    <th>Quantity</th>
+
+                    <th>Status</th>
+
+                    <th>Details</th>
+
+                    <th>Invoice</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="desktopOrders">
+
+            {% for order in orders %}
+
+                <tr
+                    class="sk-order-row"
+                    data-status="{{ order.status|lower }}"
+                >
+
+                    <!-- Product -->
+
+                    <td>
+
+                        <div class="sk-product">
+
+                            <a
+                                href="{% url 'orderdetail' order.id %}"
+                                class="sk-product-image"
+                            >
+
+                                {% if order.product_image %}
+
+                                <img
+                                    src="{{ order.product_image.url }}"
+                                    alt="{{ order.product_name }}"
+                                    loading="lazy"
+                                >
+
+                                {% else %}
+
+                                <i
+                                    class="fa fa-image"
+                                    style="color:#cbd5e1;"
+                                ></i>
+
+                                {% endif %}
+
+                            </a>
+
+
+                            <div>
+
+                                <a
+                                    href="{% url 'orderdetail' order.id %}"
+                                    class="sk-product-name"
+                                >
+                                    {{ order.product_name }}
+                                </a>
+
+                                <span class="sk-order-number">
+                                    Order #{{ order.id }}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- Quantity -->
+
+                    <td>
+
+                        <span class="sk-quantity">
+                            {{ order.quantity }}
+                        </span>
+
+                    </td>
+
+
+                    <!-- Status -->
+
+                    <td>
+
+                        {% if order.status == 'pending' %}
+
+                        <span class="sk-status pending">
+
+                            <span class="sk-status-dot"></span>
+
+                            Pending
+
+                        </span>
+
+                        {% elif order.status == 'completed' %}
+
+                        <span class="sk-status completed">
+
+                            <span class="sk-status-dot"></span>
+
+                            Completed
+
+                        </span>
+
+                        {% elif order.status == 'canceled' %}
+
+                        <span class="sk-status canceled">
+
+                            <span class="sk-status-dot"></span>
+
+                            Canceled
+
+                        </span>
+
+                        {% else %}
+
+                        <span class="sk-status">
+
+                            {{ order.status|title }}
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- Details -->
+
+                    <td>
+
+                        <a
+                            href="{% url 'orderdetail' order.id %}"
+                            class="sk-action sk-view"
+                        >
+
+                            <i class="fa fa-eye"></i>
+
+                            View
+
+                        </a>
+
+                    </td>
+
+
+                    <!-- Invoice -->
+
+                    <td>
+
+                        {% if order.status == "completed" %}
+
+                        <a
+                            href="{% url 'invoice' order.id %}"
+                            class="sk-action sk-invoice"
+                            target="_blank"
+                            rel="noopener"
+                        >
+
+                            <i class="fa fa-file-pdf-o"></i>
+
+                            Invoice
+
+                        </a>
+
+                        {% else %}
+
+                        <span class="sk-invoice-disabled">
+
+                            <i class="fa fa-lock"></i>
+
+                            Invoice
+
+                        </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+
+    <!-- ========================================================
+         MOBILE CARDS
+         ======================================================== -->
+
+    <div class="sk-mobile-orders" id="mobileOrders">
+
+    {% for order in orders %}
+
+        <div
+            class="sk-mobile-card sk-order-row"
+            data-status="{{ order.status|lower }}"
+        >
+
+            <div class="sk-mobile-top">
+
+                <div class="sk-mobile-product">
+
+                    <a
+                        href="{% url 'orderdetail' order.id %}"
+                        class="sk-mobile-image"
+                    >
+
+                        {% if order.product_image %}
+
+                        <img
+                            src="{{ order.product_image.url }}"
+                            alt="{{ order.product_name }}"
+                        >
+
+                        {% else %}
+
+                        <div
+                            class="w-100 h-100 d-flex
+                                   align-items-center
+                                   justify-content-center"
+                        >
+                            <i
+                                class="fa fa-image"
+                                style="color:#cbd5e1;"
+                            ></i>
+                        </div>
+
+                        {% endif %}
+
+                    </a>
+
+
+                    <div>
+
+                        <div class="sk-mobile-name">
+                            {{ order.product_name }}
+                        </div>
+
+                        <div class="sk-mobile-id">
+                            Order #{{ order.id }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {% if order.status == 'pending' %}
+
+                <span class="sk-status pending">
+
+                    <span class="sk-status-dot"></span>
+
+                    Pending
+
+                </span>
+
+                {% elif order.status == 'completed' %}
+
+                <span class="sk-status completed">
+
+                    <span class="sk-status-dot"></span>
+
+                    Completed
+
+                </span>
+
+                {% elif order.status == 'canceled' %}
+
+                <span class="sk-status canceled">
+
+                    <span class="sk-status-dot"></span>
+
+                    Canceled
+
+                </span>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <div class="sk-mobile-details">
+
+                <div class="sk-mobile-detail">
+
+                    <span class="sk-mobile-label">
+                        Quantity
+                    </span>
+
+                    <span class="sk-mobile-value">
+                        {{ order.quantity }}
+                    </span>
+
+                </div>
+
+
+                <div class="sk-mobile-detail">
+
+                    <span class="sk-mobile-label">
+                        Status
+                    </span>
+
+                    <span class="sk-mobile-value">
+                        {{ order.status|title }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="sk-mobile-actions">
+
+                <a
+                    href="{% url 'orderdetail' order.id %}"
+                    class="sk-action sk-view"
+                >
+
+                    <i class="fa fa-eye"></i>
+
+                    View Order
+
+                </a>
+
+
+                {% if order.status == "completed" %}
+
+                <a
+                    href="{% url 'invoice' order.id %}"
+                    class="sk-action sk-invoice"
+                    target="_blank"
+                    rel="noopener"
+                >
+
+                    <i class="fa fa-file-pdf-o"></i>
+
+                    Invoice
+
+                </a>
+
+                {% else %}
+
+                <span class="sk-invoice-disabled">
+
+                    <i class="fa fa-lock"></i>
+
+                    Invoice
+
+                </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+    </div>
+
+
+
+    <!-- ========================================================
+         FOOTER
+         ======================================================== -->
+
+    <div class="sk-orders-footer">
+
+        <i class="fa fa-shield"></i>
+
+        Your order information is securely stored and protected.
+
+    </div>
+
+</div>
+
+
+
+{% else %}
+
+
+<!-- ============================================================
+     EMPTY ORDERS
+     ============================================================ -->
+
+<div class="sk-orders-box">
+
+    <div class="sk-empty">
+
+        <div class="sk-empty-icon">
+
+            <i class="fa fa-shopping-bag"></i>
+
+        </div>
+
+
+        <h2 class="sk-empty-title">
+            No Orders Yet
+        </h2>
+
+
+        <p class="sk-empty-text">
+
+            You haven't placed any orders yet.
+            Explore our products and discover something
+            you'll love. Your orders will appear here
+            after your first purchase.
+
+        </p>
+
+
+        <a
+            href="/"
+            class="sk-start-shopping"
+        >
+
+            <i class="fa fa-shopping-cart"></i>
+
+            Start Shopping
+
+        </a>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</section>
+
+
+
+<!-- ============================================================
+     JAVASCRIPT
+     ============================================================ -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput =
+        document.getElementById("orderSearch");
+
+    const filters =
+        document.querySelectorAll(".sk-filter");
+
+    const rows =
+        document.querySelectorAll(".sk-order-row");
+
+
+    let activeFilter = "all";
+
+
+    /* ========================================================
+       FILTER FUNCTION
+       ======================================================== */
+
+    function filterOrders() {
+
+        const search =
+            searchInput
+            ? searchInput.value.toLowerCase().trim()
+            : "";
+
+
+        rows.forEach(function (row) {
+
+            const status =
+                row.dataset.status || "";
+
+            const text =
+                row.innerText.toLowerCase();
+
+
+            const matchesSearch =
+                text.includes(search);
+
+            const matchesFilter =
+                activeFilter === "all" ||
+                status === activeFilter;
+
+
+            if (
+                matchesSearch &&
+                matchesFilter
+            ) {
+
+                row.style.display = "";
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+    }
+
+
+    /* ========================================================
+       SEARCH
+       ======================================================== */
+
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            "input",
+            filterOrders
+        );
+
+    }
+
+
+    /* ========================================================
+       FILTER BUTTONS
+       ======================================================== */
+
+    filters.forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                filters.forEach(function (item) {
+
+                    item.classList.remove(
+                        "active"
+                    );
+
+                });
+
+
+                this.classList.add("active");
+
+
+                activeFilter =
+                    this.dataset.filter;
+
+
+                filterOrders();
+
+            }
+        );
+
+    });
+
+});
+
+</script>
+
+{% endblock content %}

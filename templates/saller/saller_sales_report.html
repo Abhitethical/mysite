@@ -1,0 +1,1158 @@
+
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Seller Sales Report | ShopKart{% endblock %}
+
+{% block content %}
+
+<style>
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --success: #059669;
+    --warning: #c2410c;
+    --dark: #0f172a;
+    --text: #334155;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --white: #fff;
+    --shadow-sm: 0 2px 8px rgba(15,23,42,.05);
+    --shadow-md: 0 12px 35px rgba(15,23,42,.08);
+}
+
+.sales-report,
+.sales-report * {
+    box-sizing: border-box;
+}
+
+.sales-report {
+    width: min(1550px, 96%);
+    margin: auto;
+    padding: 30px 0 55px;
+    color: var(--text);
+    font-family: Inter, -apple-system, BlinkMacSystemFont,
+                 "Segoe UI", Roboto, Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.report-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 22px;
+    padding: 30px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    background: linear-gradient(135deg,#fff,#f8fafc);
+    border: 1px solid var(--border);
+    border-radius: 22px;
+    box-shadow: var(--shadow-md);
+}
+
+.report-header::after {
+    content: "";
+    position: absolute;
+    width: 230px;
+    height: 230px;
+    right: -100px;
+    top: -130px;
+    border-radius: 50%;
+    background: rgba(79,70,229,.08);
+    pointer-events: none;
+}
+
+.header-left {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 17px;
+}
+
+.header-icon {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    color: #fff;
+    font-size: 28px;
+    font-weight: 850;
+    background: linear-gradient(135deg,#4f46e5,#7c3aed);
+    box-shadow: 0 10px 25px rgba(79,70,229,.25);
+}
+
+.header-title h1 {
+    margin: 0 0 4px;
+    color: var(--dark);
+    font-size: clamp(22px,3vw,30px);
+    font-weight: 850;
+    letter-spacing: -.7px;
+}
+
+.header-title p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.seller-badge {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 10px 15px;
+    border: 1px solid #c7d2fe;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: var(--primary-dark);
+    font-size: 13px;
+    font-weight: 750;
+    overflow-wrap: anywhere;
+}
+
+.seller-dot {
+    width: 9px;
+    height: 9px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #22c55e;
+}
+
+.report-section {
+    margin-bottom: 26px;
+    overflow: hidden;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.report-section:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 19px 24px;
+    color: #fff;
+}
+
+.daily-header {
+    background: linear-gradient(135deg,#4338ca,#6366f1);
+}
+
+.weekly-header {
+    background: linear-gradient(135deg,#334155,#64748b);
+}
+
+.monthly-header {
+    background: linear-gradient(135deg,#047857,#10b981);
+}
+
+.yearly-header {
+    background: linear-gradient(135deg,#0f172a,#334155);
+}
+
+.section-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 13px;
+    background: rgba(255,255,255,.14);
+    font-size: 17px;
+    font-weight: 850;
+}
+
+.section-title h2 {
+    margin: 0 0 2px;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.section-title span {
+    font-size: 12px;
+    opacity: .85;
+}
+
+.section-body {
+    padding: 24px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4,minmax(0,1fr));
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.summary-card {
+    position: relative;
+    min-width: 0;
+    overflow: hidden;
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: #fff;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(15,23,42,.07);
+}
+
+.summary-card::after {
+    content: "";
+    position: absolute;
+    right: -45px;
+    bottom: -55px;
+    width: 115px;
+    height: 115px;
+    border-radius: 50%;
+    opacity: .08;
+    pointer-events: none;
+}
+
+.quantity-card {
+    background: linear-gradient(135deg,#f0f9ff,#fff 80%);
+    border-color: #bae6fd;
+}
+
+.quantity-card::after { background: #0284c7; }
+
+.selling-card {
+    background: linear-gradient(135deg,#eef2ff,#fff 80%);
+    border-color: #c7d2fe;
+}
+
+.selling-card::after { background: #4f46e5; }
+
+.discount-card {
+    background: linear-gradient(135deg,#fff7ed,#fff 80%);
+    border-color: #fed7aa;
+}
+
+.discount-card::after { background: #ea580c; }
+
+.final-card {
+    background: linear-gradient(135deg,#ecfdf5,#fff 80%);
+    border-color: #a7f3d0;
+}
+
+.final-card::after { background: #059669; }
+
+.summary-label {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.summary-label-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 29px;
+    height: 29px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 850;
+}
+
+.quantity-card .summary-label-icon {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.selling-card .summary-label-icon {
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.discount-card .summary-label-icon {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+.final-card .summary-label-icon {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.summary-value {
+    position: relative;
+    z-index: 1;
+    overflow-wrap: anywhere;
+    color: var(--dark);
+    font-size: clamp(21px,2vw,28px);
+    font-weight: 850;
+    line-height: 1.3;
+    letter-spacing: -.5px;
+}
+
+.selling-price { color: #4338ca; }
+.coupon-discount { color: #c2410c; }
+.final-total { color: #047857; }
+
+.table-wrapper {
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.table-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.table-heading h3 {
+    margin: 0;
+    color: var(--dark);
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.table-count {
+    padding: 5px 10px;
+    border: 1px solid #c7d2fe;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.table-scroll {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.sales-table {
+    width: 100%;
+    min-width: 1150px;
+    border-collapse: collapse;
+}
+
+.sales-table thead {
+    background: linear-gradient(180deg,#f8fafc,#f1f5f9);
+}
+
+.sales-table th {
+    padding: 14px 15px;
+    border-bottom: 1px solid var(--border);
+    color: #475569;
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: .65px;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.sales-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #475569;
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.sales-table tbody tr {
+    transition: background .15s ease;
+}
+
+.sales-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.sales-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.order-id {
+    display: inline-flex;
+    padding: 5px 9px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f1f5f9;
+    color: #334155;
+    font-size: 11px;
+    font-weight: 850;
+    white-space: nowrap;
+}
+
+.product-name {
+    display: inline-block;
+    max-width: 220px;
+    overflow: hidden;
+    color: var(--dark);
+    font-weight: 750;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.quantity-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 35px;
+    padding: 5px 9px;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: #4338ca;
+    font-weight: 850;
+}
+
+.money {
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.money-selling { color: #4338ca; }
+.money-discount { color: #c2410c; }
+.money-final { color: #047857; }
+
+.date {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.empty-row td {
+    padding: 45px 20px !important;
+    text-align: center;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+}
+
+.empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 5px;
+    border-radius: 15px;
+    background: #f1f5f9;
+    color: #94a3b8;
+    font-size: 22px;
+}
+
+.empty-title {
+    color: #475569;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.empty-text {
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.report-footer {
+    padding: 15px 0;
+    color: #94a3b8;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+
+@media (max-width: 1100px) {
+    .summary-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .sales-report {
+        width: 96%;
+        padding: 18px 0 35px;
+    }
+
+    .report-header {
+        padding: 20px;
+        border-radius: 17px;
+    }
+
+    .header-icon {
+        width: 51px;
+        height: 51px;
+        border-radius: 14px;
+        font-size: 23px;
+    }
+
+    .header-title p { font-size: 12px; }
+
+    .seller-badge {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .section-header {
+        padding: 16px;
+    }
+
+    .section-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 11px;
+    }
+
+    .section-title h2 { font-size: 16px; }
+
+    .section-body { padding: 14px; }
+
+    .summary-grid {
+        gap: 10px;
+    }
+
+    .summary-card {
+        padding: 15px;
+    }
+
+    .summary-label {
+        align-items: flex-start;
+        font-size: 11px;
+    }
+
+    .summary-value {
+        font-size: 21px;
+    }
+}
+
+@media (max-width: 360px) {
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media print {
+    .sales-report {
+        width: 100%;
+        padding: 0;
+    }
+
+    .report-header,
+    .report-section {
+        box-shadow: none;
+        break-inside: avoid;
+    }
+
+    .report-section:hover,
+    .summary-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .table-scroll {
+        overflow: visible;
+    }
+
+    .sales-table {
+        min-width: 0;
+        font-size: 9px;
+    }
+
+    .sales-table th,
+    .sales-table td {
+        padding: 6px;
+        font-size: 9px;
+    }
+
+    .report-footer {
+        display: none;
+    }
+}
+</style>
+
+<div class="sales-report">
+
+    <!-- REPORT HEADER -->
+    <header class="report-header">
+        <div class="header-left">
+            <div class="header-icon">₹</div>
+
+            <div class="header-title">
+                <h1>Seller Sales Report</h1>
+                <p>Selling price, coupon discounts and final total amounts</p>
+            </div>
+        </div>
+
+        <div class="seller-badge">
+            <span class="seller-dot"></span>
+            Seller: {{ request.user.username }}
+        </div>
+    </header>
+
+
+    <!-- DAILY SALES -->
+    <section class="report-section">
+        <div class="section-header daily-header">
+            <div class="section-icon">D</div>
+            <div class="section-title">
+                <h2>Daily Sales</h2>
+                <span>Today's completed sales</span>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="summary-grid">
+
+                <div class="summary-card quantity-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">#</span>
+                        Total Quantity Sold
+                    </div>
+                    <div class="summary-value">
+                        {{ daily_total_quantity|default:"0" }}
+                    </div>
+                </div>
+
+                <div class="summary-card selling-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">₹</span>
+                        Total Selling Price
+                    </div>
+                    <div class="summary-value selling-price">
+                        ₹{{ daily_selling_price|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="summary-card discount-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">%</span>
+                        Total Coupon Discount
+                    </div>
+                    <div class="summary-value coupon-discount">
+                        −₹{{ daily_coupon_discount|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="summary-card final-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">✓</span>
+                        Total Amount
+                    </div>
+                    <div class="summary-value final-total">
+                        ₹{{ daily_total_amount|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="table-wrapper">
+                <div class="table-heading">
+                    <h3>Daily Order Details</h3>
+                    <span class="table-count">{{ daily_sales|length }} orders</span>
+                </div>
+
+                <div class="table-scroll">
+                    <table class="sales-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Selling Price</th>
+                                <th>Selling Price Total</th>
+                                <th>Coupon Discount</th>
+                                <th>Total Amount</th>
+                                <th>Ordered Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in daily_sales %}
+                            <tr>
+                                <td><span class="order-id">#{{ order.id }}</span></td>
+                                <td>
+                                    <span class="product-name" title="{{ order.product.name }}">
+                                        {{ order.product.name }}
+                                    </span>
+                                </td>
+                                <td><span class="quantity-badge">{{ order.quantity }}</span></td>
+                                <td>
+                                    <span class="money money-selling">
+                                        ₹{{ order.selling_price_unit|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-selling">
+                                        ₹{{ order.selling_price_total|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-discount">
+                                        −₹{{ order.coupon_discount_total|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-final">
+                                        ₹{{ order.total_amount|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="date">
+                                        {{ order.ordered_date|date:"d M Y, h:i A" }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr class="empty-row">
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">—</div>
+                                        <div class="empty-title">No sales today</div>
+                                        <div class="empty-text">
+                                            No completed sales were recorded today.
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- WEEKLY SALES -->
+    <section class="report-section">
+        <div class="section-header weekly-header">
+            <div class="section-icon">W</div>
+            <div class="section-title">
+                <h2>Weekly Sales</h2>
+                <span>Current calendar week's completed sales</span>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="summary-grid">
+
+                <div class="summary-card quantity-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">#</span>
+                        Total Quantity Sold
+                    </div>
+                    <div class="summary-value">
+                        {{ weekly_total_quantity|default:"0" }}
+                    </div>
+                </div>
+
+                <div class="summary-card selling-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">₹</span>
+                        Total Selling Price
+                    </div>
+                    <div class="summary-value selling-price">
+                        ₹{{ weekly_selling_price|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="summary-card discount-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">%</span>
+                        Total Coupon Discount
+                    </div>
+                    <div class="summary-value coupon-discount">
+                        −₹{{ weekly_coupon_discount|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="summary-card final-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">✓</span>
+                        Total Amount
+                    </div>
+                    <div class="summary-value final-total">
+                        ₹{{ weekly_total_amount|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="table-wrapper">
+                <div class="table-heading">
+                    <h3>Weekly Order Details</h3>
+                    <span class="table-count">{{ weekly_sales|length }} orders</span>
+                </div>
+
+                <div class="table-scroll">
+                    <table class="sales-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Selling Price</th>
+                                <th>Selling Price Total</th>
+                                <th>Coupon Discount</th>
+                                <th>Total Amount</th>
+                                <th>Ordered Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in weekly_sales %}
+                            <tr>
+                                <td><span class="order-id">#{{ order.id }}</span></td>
+                                <td>
+                                    <span class="product-name" title="{{ order.product.name }}">
+                                        {{ order.product.name }}
+                                    </span>
+                                </td>
+                                <td><span class="quantity-badge">{{ order.quantity }}</span></td>
+                                <td>
+                                    <span class="money money-selling">
+                                        ₹{{ order.selling_price_unit|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-selling">
+                                        ₹{{ order.selling_price_total|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-discount">
+                                        −₹{{ order.coupon_discount_total|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-final">
+                                        ₹{{ order.total_amount|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="date">
+                                        {{ order.ordered_date|date:"d M Y, h:i A" }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr class="empty-row">
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">—</div>
+                                        <div class="empty-title">No sales this week</div>
+                                        <div class="empty-text">
+                                            No completed sales were recorded this week.
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- MONTHLY SALES -->
+    <section class="report-section">
+        <div class="section-header monthly-header">
+            <div class="section-icon">M</div>
+            <div class="section-title">
+                <h2>Monthly Sales</h2>
+                <span>Current calendar month's completed sales</span>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="summary-grid">
+
+                <div class="summary-card quantity-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">#</span>
+                        Total Quantity Sold
+                    </div>
+                    <div class="summary-value">
+                        {{ monthly_total_quantity|default:"0" }}
+                    </div>
+                </div>
+
+                <div class="summary-card selling-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">₹</span>
+                        Total Selling Price
+                    </div>
+                    <div class="summary-value selling-price">
+                        ₹{{ monthly_selling_price|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="summary-card discount-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">%</span>
+                        Total Coupon Discount
+                    </div>
+                    <div class="summary-value coupon-discount">
+                        −₹{{ monthly_coupon_discount|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="summary-card final-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">✓</span>
+                        Total Amount
+                    </div>
+                    <div class="summary-value final-total">
+                        ₹{{ monthly_total_amount|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="table-wrapper">
+                <div class="table-heading">
+                    <h3>Monthly Order Details</h3>
+                    <span class="table-count">{{ monthly_sales|length }} orders</span>
+                </div>
+
+                <div class="table-scroll">
+                    <table class="sales-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Selling Price</th>
+                                <th>Selling Price Total</th>
+                                <th>Coupon Discount</th>
+                                <th>Total Amount</th>
+                                <th>Ordered Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in monthly_sales %}
+                            <tr>
+                                <td><span class="order-id">#{{ order.id }}</span></td>
+                                <td>
+                                    <span class="product-name" title="{{ order.product.name }}">
+                                        {{ order.product.name }}
+                                    </span>
+                                </td>
+                                <td><span class="quantity-badge">{{ order.quantity }}</span></td>
+                                <td>
+                                    <span class="money money-selling">
+                                        ₹{{ order.selling_price_unit|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-selling">
+                                        ₹{{ order.selling_price_total|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-discount">
+                                        −₹{{ order.coupon_discount_total|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-final">
+                                        ₹{{ order.total_amount|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="date">
+                                        {{ order.ordered_date|date:"d M Y, h:i A" }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr class="empty-row">
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">—</div>
+                                        <div class="empty-title">No sales this month</div>
+                                        <div class="empty-text">
+                                            No completed sales were recorded this month.
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- YEARLY SALES -->
+    <section class="report-section">
+        <div class="section-header yearly-header">
+            <div class="section-icon">Y</div>
+            <div class="section-title">
+                <h2>Yearly Sales</h2>
+                <span>Current calendar year's completed sales</span>
+            </div>
+        </div>
+
+        <div class="section-body">
+            <div class="summary-grid">
+
+                <div class="summary-card quantity-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">#</span>
+                        Total Quantity Sold
+                    </div>
+                    <div class="summary-value">
+                        {{ yearly_total_quantity|default:"0" }}
+                    </div>
+                </div>
+
+                <div class="summary-card selling-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">₹</span>
+                        Total Selling Price
+                    </div>
+                    <div class="summary-value selling-price">
+                        ₹{{ yearly_selling_price|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="summary-card discount-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">%</span>
+                        Total Coupon Discount
+                    </div>
+                    <div class="summary-value coupon-discount">
+                        −₹{{ yearly_coupon_discount|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+                <div class="summary-card final-card">
+                    <div class="summary-label">
+                        <span class="summary-label-icon">✓</span>
+                        Total Amount
+                    </div>
+                    <div class="summary-value final-total">
+                        ₹{{ yearly_total_amount|default:0|floatformat:2 }}
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="table-wrapper">
+                <div class="table-heading">
+                    <h3>Yearly Order Details</h3>
+                    <span class="table-count">{{ yearly_sales|length }} orders</span>
+                </div>
+
+                <div class="table-scroll">
+                    <table class="sales-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Unit Selling Price</th>
+                                <th>Selling Price Total</th>
+                                <th>Coupon Discount</th>
+                                <th>Total Amount</th>
+                                <th>Ordered Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in yearly_sales %}
+                            <tr>
+                                <td><span class="order-id">#{{ order.id }}</span></td>
+                                <td>
+                                    <span class="product-name" title="{{ order.product.name }}">
+                                        {{ order.product.name }}
+                                    </span>
+                                </td>
+                                <td><span class="quantity-badge">{{ order.quantity }}</span></td>
+                                <td>
+                                    <span class="money money-selling">
+                                        ₹{{ order.selling_price_unit|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-selling">
+                                        ₹{{ order.selling_price_total|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-discount">
+                                        −₹{{ order.coupon_discount_total|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="money money-final">
+                                        ₹{{ order.total_amount|floatformat:2 }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="date">
+                                        {{ order.ordered_date|date:"d M Y, h:i A" }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr class="empty-row">
+                                <td colspan="8">
+                                    <div class="empty-state">
+                                        <div class="empty-icon">—</div>
+                                        <div class="empty-title">No sales this year</div>
+                                        <div class="empty-text">
+                                            No completed sales were recorded this year.
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="report-footer">
+        ShopKart Seller Sales Report · Generated for
+        {{ request.user.username }}
+    </footer>
+
+</div>
+
+{% endblock content %}
+```

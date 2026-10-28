@@ -1,0 +1,3305 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="robots"
+    content="noindex,nofollow,noarchive"
+>
+
+<title>Admin | Sellers Management</title>
+
+<!-- Bootstrap -->
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+>
+
+<!-- Bootstrap Icons -->
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+<!-- Inter -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<style>
+
+    :root {
+
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --primary-soft: #eff6ff;
+
+        --dark: #0f172a;
+        --dark-2: #1e293b;
+
+        --text: #172033;
+        --text-soft: #475569;
+        --muted: #64748b;
+
+        --border: #e2e8f0;
+        --border-soft: #eef2f7;
+
+        --bg: #f4f7fb;
+        --white: #ffffff;
+
+        --green: #16a34a;
+        --green-soft: #ecfdf3;
+
+        --orange: #d97706;
+        --orange-soft: #fff7ed;
+
+        --red: #dc2626;
+        --red-soft: #fef2f2;
+
+        --gray-soft: #f1f5f9;
+
+        --shadow-sm:
+            0 2px 8px rgba(15, 23, 42, .04);
+
+        --shadow:
+            0 14px 40px rgba(15, 23, 42, .07);
+
+        --shadow-lg:
+            0 24px 70px rgba(15, 23, 42, .12);
+
+        --radius: 18px;
+
+    }
+
+
+    * {
+        box-sizing: border-box;
+    }
+
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+
+    body {
+
+        margin: 0;
+
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(37, 99, 235, .055),
+                transparent 30%
+            ),
+            var(--bg);
+
+        color: var(--text);
+
+        font-family:
+            Inter,
+            "Segoe UI",
+            Arial,
+            sans-serif;
+
+    }
+
+
+    /* =========================
+       PAGE
+    ========================= */
+
+    .seller-page {
+
+        min-height: 100vh;
+
+        padding:
+            34px
+            28px
+            50px;
+
+    }
+
+
+    .seller-container {
+
+        max-width: 1550px;
+
+        margin: 0 auto;
+
+    }
+
+
+    /* =========================
+       TOP HEADER
+    ========================= */
+
+    .hero-card {
+
+        position: relative;
+
+        overflow: hidden;
+
+        border-radius: 22px;
+
+        padding: 28px 30px;
+
+        color: #fff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f172a 0%,
+                #172554 48%,
+                #1d4ed8 100%
+            );
+
+        box-shadow: var(--shadow-lg);
+
+        margin-bottom: 22px;
+
+    }
+
+
+    .hero-card::before {
+
+        content: "";
+
+        position: absolute;
+
+        width: 300px;
+        height: 300px;
+
+        right: -110px;
+        top: -150px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(255,255,255,.07);
+
+    }
+
+
+    .hero-card::after {
+
+        content: "";
+
+        position: absolute;
+
+        width: 220px;
+        height: 220px;
+
+        left: 38%;
+
+        bottom: -180px;
+
+        border-radius: 50%;
+
+        background:
+            rgba(255,255,255,.05);
+
+    }
+
+
+    .hero-content {
+
+        position: relative;
+
+        z-index: 2;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 25px;
+
+    }
+
+
+    .hero-left {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 17px;
+
+    }
+
+
+    .hero-icon {
+
+        width: 58px;
+        height: 58px;
+
+        border-radius: 17px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        background:
+            rgba(255,255,255,.13);
+
+        border:
+            1px solid rgba(255,255,255,.18);
+
+        backdrop-filter: blur(10px);
+
+        font-size: 25px;
+
+        box-shadow:
+            0 10px 25px rgba(0,0,0,.16);
+
+    }
+
+
+    .hero-title {
+
+        margin: 0;
+
+        font-size: 25px;
+
+        font-weight: 800;
+
+        letter-spacing: -.6px;
+
+    }
+
+
+    .hero-subtitle {
+
+        margin: 5px 0 0;
+
+        color: rgba(255,255,255,.70);
+
+        font-size: 13px;
+
+    }
+
+
+    .security-badge {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        padding: 9px 13px;
+
+        border-radius: 50px;
+
+        background:
+            rgba(255,255,255,.10);
+
+        border:
+            1px solid rgba(255,255,255,.16);
+
+        color: #dbeafe;
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+        white-space: nowrap;
+
+    }
+
+
+    .security-dot {
+
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+
+        background: #4ade80;
+
+        box-shadow:
+            0 0 0 4px rgba(74,222,128,.12);
+
+    }
+
+
+    /* =========================
+       ACTIONS
+    ========================= */
+
+    .hero-actions {
+
+        display: flex;
+
+        gap: 9px;
+
+        flex-wrap: wrap;
+
+        margin-top: 15px;
+
+    }
+
+
+    .hero-btn {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 7px;
+
+        border: 0;
+
+        border-radius: 10px;
+
+        padding: 10px 14px;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        text-decoration: none;
+
+        transition: .2s ease;
+
+    }
+
+
+    .hero-btn-primary {
+
+        background: #fff;
+
+        color: var(--dark);
+
+    }
+
+
+    .hero-btn-primary:hover {
+
+        transform: translateY(-1px);
+
+        background: #f8fafc;
+
+        color: var(--dark);
+
+    }
+
+
+    .hero-btn-dark {
+
+        background:
+            rgba(255,255,255,.10);
+
+        color: #fff;
+
+        border:
+            1px solid rgba(255,255,255,.16);
+
+    }
+
+
+    .hero-btn-dark:hover {
+
+        background:
+            rgba(255,255,255,.17);
+
+        color: #fff;
+
+    }
+
+
+    /* =========================
+       STATS
+    ========================= */
+
+    .stats-grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(4, minmax(0, 1fr));
+
+        gap: 15px;
+
+        margin-bottom: 22px;
+
+    }
+
+
+    .stat-card {
+
+        background: var(--white);
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 17px;
+
+        padding: 18px;
+
+        box-shadow: var(--shadow-sm);
+
+        transition:
+            transform .2s ease,
+            box-shadow .2s ease,
+            border-color .2s ease;
+
+    }
+
+
+    .stat-card:hover {
+
+        transform: translateY(-3px);
+
+        box-shadow: var(--shadow);
+
+        border-color: #dbe4f0;
+
+    }
+
+
+    .stat-top {
+
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: center;
+
+        margin-bottom: 13px;
+
+    }
+
+
+    .stat-label {
+
+        color: var(--muted);
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+        text-transform: uppercase;
+
+        letter-spacing: .55px;
+
+    }
+
+
+    .stat-icon {
+
+        width: 36px;
+        height: 36px;
+
+        border-radius: 10px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        font-size: 15px;
+
+    }
+
+
+    .icon-blue {
+
+        background: #eff6ff;
+        color: #2563eb;
+
+    }
+
+
+    .icon-green {
+
+        background: var(--green-soft);
+        color: var(--green);
+
+    }
+
+
+    .icon-orange {
+
+        background: var(--orange-soft);
+        color: var(--orange);
+
+    }
+
+
+    .icon-purple {
+
+        background: #f5f3ff;
+        color: #7c3aed;
+
+    }
+
+
+    .stat-value {
+
+        font-size: 25px;
+
+        font-weight: 800;
+
+        letter-spacing: -.6px;
+
+        color: var(--dark);
+
+    }
+
+
+    .stat-description {
+
+        color: #94a3b8;
+
+        font-size: 10px;
+
+        margin-top: 3px;
+
+    }
+
+
+    /* =========================
+       MAIN CARD
+    ========================= */
+
+    .main-card {
+
+        background: var(--white);
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 20px;
+
+        overflow: hidden;
+
+        box-shadow: var(--shadow);
+
+    }
+
+
+    /* =========================
+       CARD HEADER
+    ========================= */
+
+    .card-toolbar {
+
+        padding: 22px 25px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 18px;
+
+        border-bottom:
+            1px solid var(--border);
+
+    }
+
+
+    .section-heading {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+
+    }
+
+
+    .section-icon {
+
+        width: 38px;
+        height: 38px;
+
+        border-radius: 10px;
+
+        background: var(--primary-soft);
+
+        color: var(--primary);
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+    }
+
+
+    .section-title {
+
+        margin: 0;
+
+        font-size: 16px;
+
+        font-weight: 800;
+
+        color: var(--dark);
+
+    }
+
+
+    .section-description {
+
+        color: var(--muted);
+
+        font-size: 11px;
+
+        margin-top: 3px;
+
+    }
+
+
+    /* =========================
+       FILTERS
+    ========================= */
+
+    .filter-area {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        flex-wrap: wrap;
+
+    }
+
+
+    .search-box {
+
+        position: relative;
+
+        width: 285px;
+
+    }
+
+
+    .search-box i {
+
+        position: absolute;
+
+        left: 13px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        color: #94a3b8;
+
+        pointer-events: none;
+
+    }
+
+
+    .search-box input {
+
+        width: 100%;
+
+        height: 40px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 10px;
+
+        padding:
+            0 38px
+            0 37px;
+
+        outline: none;
+
+        font-size: 12px;
+
+        color: var(--text);
+
+        transition: .2s ease;
+
+    }
+
+
+    .search-box input:focus {
+
+        border-color: #93c5fd;
+
+        box-shadow:
+            0 0 0 3px rgba(37,99,235,.08);
+
+    }
+
+
+    .search-shortcut {
+
+        position: absolute;
+
+        right: 9px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        padding: 3px 6px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 5px;
+
+        background: #f8fafc;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        font-weight: 700;
+
+    }
+
+
+    .filter-select {
+
+        height: 40px;
+
+        min-width: 135px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 10px;
+
+        padding: 0 11px;
+
+        outline: none;
+
+        background: #fff;
+
+        color: var(--text-soft);
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+    }
+
+
+    .filter-select:focus {
+
+        border-color: #93c5fd;
+
+        box-shadow:
+            0 0 0 3px rgba(37,99,235,.08);
+
+    }
+
+
+    .clear-btn {
+
+        height: 40px;
+
+        border:
+            1px solid var(--border);
+
+        background: #fff;
+
+        color: var(--muted);
+
+        border-radius: 10px;
+
+        padding: 0 12px;
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        transition: .18s ease;
+
+    }
+
+
+    .clear-btn:hover {
+
+        background: #f8fafc;
+
+        color: var(--primary);
+
+        border-color: #bfdbfe;
+
+    }
+
+
+    /* =========================
+       TABLE
+    ========================= */
+
+    .table-wrapper {
+
+        overflow-x: auto;
+
+    }
+
+
+    table {
+
+        width: 100%;
+
+        min-width: 1050px;
+
+        border-collapse: separate;
+
+        border-spacing: 0;
+
+    }
+
+
+    thead th {
+
+        position: sticky;
+
+        top: 0;
+
+        z-index: 3;
+
+        background: #f8fafc;
+
+        color: #64748b;
+
+        font-size: 10px;
+
+        text-transform: uppercase;
+
+        letter-spacing: .75px;
+
+        font-weight: 800;
+
+        padding: 13px 18px;
+
+        border-bottom:
+            1px solid var(--border);
+
+        white-space: nowrap;
+
+    }
+
+
+    tbody td {
+
+        padding: 16px 18px;
+
+        border-bottom:
+            1px solid var(--border-soft);
+
+        vertical-align: middle;
+
+        font-size: 12px;
+
+    }
+
+
+    tbody tr {
+
+        transition:
+            background .18s ease,
+            transform .18s ease;
+
+    }
+
+
+    tbody tr:hover {
+
+        background: #f8fbff;
+
+    }
+
+
+    tbody tr:last-child td {
+
+        border-bottom: 0;
+
+    }
+
+
+    /* =========================
+       SERIAL
+    ========================= */
+
+    .serial {
+
+        width: 34px;
+        height: 34px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: #f8fafc;
+
+        border:
+            1px solid var(--border);
+
+        color: #64748b;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+    }
+
+
+    /* =========================
+       SELLER
+    ========================= */
+
+    .seller {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+
+        min-width: 180px;
+
+    }
+
+
+    .avatar {
+
+        width: 42px;
+        height: 42px;
+
+        flex-shrink: 0;
+
+        border-radius: 12px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        color: #fff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #6366f1
+            );
+
+        font-size: 13px;
+
+        font-weight: 800;
+
+        box-shadow:
+            0 7px 16px rgba(37,99,235,.18);
+
+    }
+
+
+    .username {
+
+        display: block;
+
+        max-width: 180px;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+
+        color: var(--dark);
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        font-weight: 750;
+
+    }
+
+
+    .username:hover {
+
+        color: var(--primary);
+
+    }
+
+
+    .seller-label {
+
+        margin-top: 3px;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        font-weight: 600;
+
+    }
+
+
+    /* =========================
+       COMPANY
+    ========================= */
+
+    .company-name {
+
+        max-width: 190px;
+
+        color: #334155;
+
+        font-weight: 700;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+
+    }
+
+
+    .company-type {
+
+        margin-top: 3px;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+    }
+
+
+    /* =========================
+       CONTACT
+    ========================= */
+
+    .contact-item {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        color: #475569;
+
+        white-space: nowrap;
+
+    }
+
+
+    .contact-item i {
+
+        color: #94a3b8;
+
+        font-size: 12px;
+
+    }
+
+
+    /* =========================
+       LOCATION
+    ========================= */
+
+    .location {
+
+        max-width: 170px;
+
+        color: #475569;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+    }
+
+
+    .location i {
+
+        color: #94a3b8;
+
+        margin-right: 5px;
+
+    }
+
+
+    /* =========================
+       STATUS
+    ========================= */
+
+    .status {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        padding: 7px 10px;
+
+        border-radius: 50px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        white-space: nowrap;
+
+    }
+
+
+    .dot {
+
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+
+    }
+
+
+    .approved {
+
+        background: var(--green-soft);
+
+        color: #15803d;
+
+    }
+
+
+    .approved .dot {
+
+        background: var(--green);
+
+        box-shadow:
+            0 0 0 3px rgba(22,163,74,.10);
+
+    }
+
+
+    .pending {
+
+        background: var(--orange-soft);
+
+        color: #b45309;
+
+    }
+
+
+    .pending .dot {
+
+        background: #f59e0b;
+
+    }
+
+
+    .rejected {
+
+        background: var(--red-soft);
+
+        color: var(--red);
+
+    }
+
+
+    .rejected .dot {
+
+        background: var(--red);
+
+    }
+
+
+    .blocked {
+
+        background: var(--gray-soft);
+
+        color: #475569;
+
+    }
+
+
+    .blocked .dot {
+
+        background: #64748b;
+
+    }
+
+
+    /* =========================
+       ACTIONS
+    ========================= */
+
+    .actions {
+
+        display: flex;
+
+        justify-content: flex-end;
+
+        align-items: center;
+
+        gap: 7px;
+
+    }
+
+
+    .action-btn {
+
+        width: 35px;
+        height: 35px;
+
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        border:
+            1px solid var(--border);
+
+        background: #fff;
+
+        color: #64748b;
+
+        text-decoration: none;
+
+        transition: .18s ease;
+
+    }
+
+
+    .action-btn:hover {
+
+        transform: translateY(-1px);
+
+        background: var(--primary-soft);
+
+        border-color: #bfdbfe;
+
+        color: var(--primary);
+
+    }
+
+
+    .action-btn.view:hover {
+
+        color: #7c3aed;
+
+        border-color: #ddd6fe;
+
+        background: #f5f3ff;
+
+    }
+
+
+    /* =========================
+       NO RESULTS
+    ========================= */
+
+    .no-results {
+
+        display: none;
+
+        text-align: center;
+
+        padding: 70px 20px !important;
+
+    }
+
+
+    .no-results-icon {
+
+        width: 62px;
+        height: 62px;
+
+        margin: 0 auto 15px;
+
+        border-radius: 17px;
+
+        background: #f8fafc;
+
+        color: #94a3b8;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        font-size: 25px;
+
+    }
+
+
+    .no-results strong {
+
+        display: block;
+
+        color: #334155;
+
+        font-size: 14px;
+
+        margin-bottom: 5px;
+
+    }
+
+
+    .no-results span {
+
+        color: #94a3b8;
+
+        font-size: 11px;
+
+    }
+
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    .table-footer {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        padding: 15px 20px;
+
+        border-top:
+            1px solid var(--border);
+
+        background: #fcfdff;
+
+        color: #94a3b8;
+
+        font-size: 10px;
+
+    }
+
+
+    .footer-left {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+    }
+
+
+    .footer-count {
+
+        color: #475569;
+
+        font-weight: 800;
+
+    }
+
+
+    .footer-security {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        padding: 6px 9px;
+
+        border-radius: 7px;
+
+        background: var(--green-soft);
+
+        color: #15803d;
+
+        font-size: 9px;
+
+        font-weight: 700;
+
+    }
+
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal-content {
+
+        border: 0;
+
+        border-radius: 20px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 30px 90px rgba(15,23,42,.22);
+
+    }
+
+
+    .modal-header {
+
+        padding: 20px 22px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f172a,
+                #1e3a8a
+            );
+
+        color: #fff;
+
+        border: 0;
+
+    }
+
+
+    .modal-title {
+
+        font-size: 16px;
+
+        font-weight: 800;
+
+    }
+
+
+    .modal-header .btn-close {
+
+        filter: invert(1);
+
+        opacity: .75;
+
+    }
+
+
+    .detail-grid {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0,1fr));
+
+        gap: 12px;
+
+    }
+
+
+    .detail-box {
+
+        padding: 13px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 11px;
+
+        background: #f8fafc;
+
+    }
+
+
+    .detail-label {
+
+        display: block;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .5px;
+
+        margin-bottom: 4px;
+
+    }
+
+
+    .detail-value {
+
+        color: #334155;
+
+        font-size: 12px;
+
+        font-weight: 700;
+
+        word-break: break-word;
+
+    }
+
+
+    /* =========================
+       TOAST
+    ========================= */
+
+    .admin-toast {
+
+        position: fixed;
+
+        right: 22px;
+
+        bottom: 22px;
+
+        z-index: 9999;
+
+        min-width: 270px;
+
+        padding: 13px 15px;
+
+        border-radius: 12px;
+
+        background: #0f172a;
+
+        color: #fff;
+
+        box-shadow:
+            0 15px 45px rgba(15,23,42,.25);
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        opacity: 0;
+
+        transform:
+            translateY(15px);
+
+        pointer-events: none;
+
+        transition: .25s ease;
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+    }
+
+
+    .admin-toast.show {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+
+    }
+
+
+    .toast-icon {
+
+        width: 27px;
+        height: 27px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        background: rgba(74,222,128,.12);
+
+        color: #4ade80;
+
+    }
+
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 1100px) {
+
+        .stats-grid {
+
+            grid-template-columns:
+                repeat(2, minmax(0,1fr));
+
+        }
+
+        .card-toolbar {
+
+            align-items: flex-start;
+
+            flex-direction: column;
+
+        }
+
+        .filter-area {
+
+            width: 100%;
+
+        }
+
+        .search-box {
+
+            flex: 1;
+
+            min-width: 220px;
+
+        }
+
+    }
+
+
+    @media (max-width: 768px) {
+
+        .seller-page {
+
+            padding: 15px;
+
+        }
+
+        .hero-card {
+
+            padding: 21px;
+
+            border-radius: 17px;
+
+        }
+
+        .hero-content {
+
+            align-items: flex-start;
+
+            flex-direction: column;
+
+        }
+
+        .hero-title {
+
+            font-size: 20px;
+
+        }
+
+        .hero-icon {
+
+            width: 48px;
+            height: 48px;
+
+        }
+
+        .stats-grid {
+
+            grid-template-columns:
+                repeat(2, minmax(0,1fr));
+
+            gap: 10px;
+
+        }
+
+        .stat-card {
+
+            padding: 14px;
+
+        }
+
+        .stat-value {
+
+            font-size: 21px;
+
+        }
+
+        .filter-area {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            width: 100%;
+
+        }
+
+        .search-box {
+
+            grid-column:
+                1 / -1;
+
+            width: 100%;
+
+        }
+
+        .filter-select,
+        .clear-btn {
+
+            width: 100%;
+
+        }
+
+        .table-footer {
+
+            align-items: flex-start;
+
+            flex-direction: column;
+
+        }
+
+        .detail-grid {
+
+            grid-template-columns:
+                1fr;
+
+        }
+
+    }
+
+
+    @media (max-width: 480px) {
+
+        .seller-page {
+
+            padding: 10px;
+
+        }
+
+        .stats-grid {
+
+            grid-template-columns: 1fr;
+
+        }
+
+        .hero-actions {
+
+            width: 100%;
+
+        }
+
+        .hero-btn {
+
+            flex: 1;
+
+        }
+
+        .filter-area {
+
+            grid-template-columns: 1fr;
+
+        }
+
+        .search-box {
+
+            grid-column: auto;
+
+        }
+
+    }
+
+
+    /* =========================
+       PRINT
+    ========================= */
+
+    @media print {
+
+        body {
+
+            background: #fff;
+
+        }
+
+        .seller-page {
+
+            padding: 0;
+
+        }
+
+        .hero-actions,
+        .filter-area,
+        .actions,
+        .security-badge,
+        .admin-toast {
+
+            display: none !important;
+
+        }
+
+        .hero-card {
+
+            color: #000;
+
+            background: #fff;
+
+            box-shadow: none;
+
+            border:
+                1px solid #ddd;
+
+        }
+
+        .hero-subtitle {
+
+            color: #555;
+
+        }
+
+        .main-card {
+
+            box-shadow: none;
+
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="seller-page">
+
+<div class="seller-container">
+
+
+    <!-- =====================================================
+         HERO
+    ====================================================== -->
+
+    <section class="hero-card">
+
+        <div class="hero-content">
+
+            <div>
+
+                <div class="hero-left">
+
+                    <div class="hero-icon">
+
+                        <i class="bi bi-shop-window"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h1 class="hero-title">
+                            Sellers Management
+                        </h1>
+
+                        <p class="hero-subtitle">
+                            Manage seller accounts, business information
+                            and verification status from one place.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hero-actions">
+
+                    <a
+                        href="#sellerTable"
+                        class="hero-btn hero-btn-primary"
+                    >
+                        <i class="bi bi-grid-3x3-gap"></i>
+                        Seller Directory
+                    </a>
+
+                    <button
+                        type="button"
+                        class="hero-btn hero-btn-dark"
+                        onclick="window.print()"
+                    >
+                        <i class="bi bi-printer"></i>
+                        Print Report
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="security-badge">
+
+                <span class="security-dot"></span>
+
+                <i class="bi bi-shield-check"></i>
+
+                Admin Protected
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <section class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Total Sellers
+                </span>
+
+                <div class="stat-icon icon-blue">
+                    <i class="bi bi-people"></i>
+                </div>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="totalSellerStat"
+            >
+                {{ sellers|length }}
+            </div>
+
+            <div class="stat-description">
+                Registered seller accounts
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Approved
+                </span>
+
+                <div class="stat-icon icon-green">
+                    <i class="bi bi-patch-check"></i>
+                </div>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="approvedStat"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Verified seller accounts
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Pending
+                </span>
+
+                <div class="stat-icon icon-orange">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="pendingStat"
+            >
+                0
+            </div>
+
+            <div class="stat-description">
+                Awaiting administrator review
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+
+                <span class="stat-label">
+                    Approval Rate
+                </span>
+
+                <div class="stat-icon icon-purple">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+
+            </div>
+
+            <div
+                class="stat-value"
+                id="approvalRate"
+            >
+                0%
+            </div>
+
+            <div class="stat-description">
+                Current seller approval ratio
+            </div>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN MANAGEMENT CARD
+    ====================================================== -->
+
+    <section class="main-card">
+
+
+        <!-- TOOLBAR -->
+
+        <div class="card-toolbar">
+
+
+            <div class="section-heading">
+
+                <div class="section-icon">
+
+                    <i class="bi bi-buildings"></i>
+
+                </div>
+
+                <div>
+
+                    <h2 class="section-title">
+                        Seller Directory
+                    </h2>
+
+                    <div class="section-description">
+                        Search, filter and manage registered sellers.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="filter-area">
+
+
+                <!-- SEARCH -->
+
+                <div class="search-box">
+
+                    <i class="bi bi-search"></i>
+
+                    <input
+                        type="text"
+                        id="sellerSearch"
+                        autocomplete="off"
+                        placeholder="Search seller, company, mobile..."
+                        aria-label="Search sellers"
+                    >
+
+                    <span class="search-shortcut">
+                        Ctrl K
+                    </span>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <select
+                    class="filter-select"
+                    id="statusFilter"
+                    aria-label="Filter seller status"
+                >
+
+                    <option value="all">
+                        All Status
+                    </option>
+
+                    <option value="approved">
+                        Approved
+                    </option>
+
+                    <option value="pending">
+                        Pending
+                    </option>
+
+                    <option value="rejected">
+                        Rejected
+                    </option>
+
+                    <option value="blocked">
+                        Blocked
+                    </option>
+
+                </select>
+
+
+                <!-- CLEAR -->
+
+                <button
+                    type="button"
+                    class="clear-btn"
+                    id="clearFilters"
+                >
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                    Clear
+
+                </button>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             TABLE
+        ================================================== -->
+
+        <div class="table-wrapper">
+
+            <table id="sellerTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>
+                            Seller
+                        </th>
+
+                        <th>
+                            Company
+                        </th>
+
+                        <th>
+                            Mobile
+                        </th>
+
+                        <th>
+                            Location
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th class="text-end">
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                {% for seller in sellers %}
+
+
+                    <tr
+                        class="seller-row"
+                        data-status="{{ seller.status|default:'unknown'|lower }}"
+                        data-search="{{ seller.user.username|default:''|lower }} {{ seller.company_name|default:''|lower }} {{ seller.mobile_number|default:''|lower }} {{ seller.city|default:''|lower }} {{ seller.state|default:''|lower }}"
+                        data-seller="{{ seller.user.username|default:'' }}"
+                        data-company="{{ seller.company_name|default:'' }}"
+                        data-mobile="{{ seller.mobile_number|default:'' }}"
+                        data-city="{{ seller.city|default:'' }}"
+                        data-state="{{ seller.state|default:'' }}"
+                    >
+
+
+                        <!-- NUMBER -->
+
+                        <td>
+
+                            <div class="serial">
+                                {{ forloop.counter }}
+                            </div>
+
+                        </td>
+
+
+                        <!-- SELLER -->
+
+                        <td>
+
+                            <div class="seller">
+
+
+                                <div class="avatar">
+
+                                    {{ seller.user.username|first|upper }}
+
+                                </div>
+
+
+                                <div>
+
+                                    <a
+                                        href="{% url 'admin_seller_detail' seller.id %}"
+                                        class="username"
+                                    >
+                                        {{ seller.user.username }}
+                                    </a>
+
+                                    <div class="seller-label">
+
+                                        <i class="bi bi-person-badge me-1"></i>
+
+                                        Seller Account
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- COMPANY -->
+
+                        <td>
+
+                            <div
+                                class="company-name"
+                                title="{{ seller.company_name|default:'Not provided' }}"
+                            >
+
+                                {{ seller.company_name|default:"—" }}
+
+                            </div>
+
+                            <div class="company-type">
+
+                                <i class="bi bi-building me-1"></i>
+
+                                Business Profile
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- MOBILE -->
+
+                        <td>
+
+                            {% if seller.mobile_number %}
+
+                                <div class="contact-item">
+
+                                    <i class="bi bi-phone"></i>
+
+                                    <span>
+                                        {{ seller.mobile_number }}
+                                    </span>
+
+                                </div>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    —
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- LOCATION -->
+
+                        <td>
+
+                            {% if seller.city or seller.state %}
+
+                                <div
+                                    class="location"
+                                    title="{{ seller.city|default:'' }} {{ seller.state|default:'' }}"
+                                >
+
+                                    <i class="bi bi-geo-alt"></i>
+
+                                    {{ seller.city|default:"" }}
+
+                                    {% if seller.city and seller.state %}
+                                        ,
+                                    {% endif %}
+
+                                    {{ seller.state|default:"" }}
+
+                                </div>
+
+                            {% else %}
+
+                                <span class="text-muted">
+                                    —
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+
+                            {% if seller.status == 'approved' %}
+
+                                <span class="status approved">
+
+                                    <span class="dot"></span>
+
+                                    Approved
+
+                                </span>
+
+
+                            {% elif seller.status == 'pending' %}
+
+                                <span class="status pending">
+
+                                    <span class="dot"></span>
+
+                                    Pending
+
+                                </span>
+
+
+                            {% elif seller.status == 'rejected' %}
+
+                                <span class="status rejected">
+
+                                    <span class="dot"></span>
+
+                                    Rejected
+
+                                </span>
+
+
+                            {% elif seller.status == 'blocked' %}
+
+                                <span class="status blocked">
+
+                                    <span class="dot"></span>
+
+                                    Blocked
+
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="status blocked">
+
+                                    <span class="dot"></span>
+
+                                    {{ seller.status|default:"Unknown" }}
+
+                                </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+
+                        <td>
+
+                            <div class="actions">
+
+
+                                <!-- VIEW -->
+
+                                <button
+                                    type="button"
+                                    class="action-btn view"
+                                    title="View Seller Details"
+                                    onclick="viewSeller(this)"
+                                >
+
+                                    <i class="bi bi-eye"></i>
+
+                                </button>
+
+
+                                <!-- UPDATE -->
+
+                                <a
+                                    href="{% url 'admin_seller_update_status' seller.id %}"
+                                    class="action-btn"
+                                    title="Update Seller Status"
+                                >
+
+                                    <i class="bi bi-pencil-square"></i>
+
+                                </a>
+
+
+                            </div>
+
+                        </td>
+
+
+                    </tr>
+
+
+                {% empty %}
+
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="text-center"
+                            style="padding:80px 20px;"
+                        >
+
+                            <div class="no-results-icon">
+
+                                <i class="bi bi-shop"></i>
+
+                            </div>
+
+                            <strong
+                                style="
+                                    display:block;
+                                    color:#334155;
+                                    font-size:15px;
+                                    margin-bottom:5px;
+                                "
+                            >
+                                No sellers found
+                            </strong>
+
+                            <span
+                                style="
+                                    color:#94a3b8;
+                                    font-size:11px;
+                                "
+                            >
+                                There are currently no seller accounts
+                                available.
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+
+                {% endfor %}
+
+
+                <!-- CLIENT SIDE EMPTY -->
+
+                <tr
+                    id="noResults"
+                    class="no-results"
+                >
+
+                    <td colspan="7">
+
+                        <div class="no-results-icon">
+
+                            <i class="bi bi-search"></i>
+
+                        </div>
+
+                        <strong>
+                            No matching sellers
+                        </strong>
+
+                        <span>
+                            Try another search term or clear the filters.
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =================================================
+             FOOTER
+        ================================================== -->
+
+        <div class="table-footer">
+
+
+            <div class="footer-left">
+
+                <span>
+
+                    Showing
+
+                    <span
+                        class="footer-count"
+                        id="sellerCount"
+                    >
+                        {{ sellers|length }}
+                    </span>
+
+                    sellers
+
+                </span>
+
+
+                <span>
+
+                    of
+
+                    <span
+                        class="footer-count"
+                        id="totalFooterCount"
+                    >
+                        {{ sellers|length }}
+                    </span>
+
+                    total
+
+                </span>
+
+            </div>
+
+
+            <div class="footer-security">
+
+                <i class="bi bi-shield-lock"></i>
+
+                Admin Management Area
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+</div>
+
+</div>
+
+<!-- =========================================================
+     SELLER DETAILS MODAL
+========================================================= -->
+
+<div
+    class="modal fade"
+    id="sellerDetailsModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+
+            <div>
+
+                <div class="modal-title">
+
+                    <i class="bi bi-person-vcard me-2"></i>
+
+                    Seller Details
+
+                </div>
+
+                <div
+                    style="
+                        color:rgba(255,255,255,.62);
+                        font-size:10px;
+                        margin-top:3px;
+                    "
+                >
+                    Seller account information
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+            ></button>
+
+        </div>
+
+
+        <div class="modal-body p-4">
+
+
+            <div class="detail-grid">
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Username
+                    </span>
+
+                    <span
+                        class="detail-value"
+                        id="modalUsername"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Company
+                    </span>
+
+                    <span
+                        class="detail-value"
+                        id="modalCompany"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Mobile
+                    </span>
+
+                    <span
+                        class="detail-value"
+                        id="modalMobile"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        Status
+                    </span>
+
+                    <span
+                        class="detail-value"
+                        id="modalStatus"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        City
+                    </span>
+
+                    <span
+                        class="detail-value"
+                        id="modalCity"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <span class="detail-label">
+                        State
+                    </span>
+
+                    <span
+                        class="detail-value"
+                        id="modalState"
+                    >
+                        —
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                class="mt-3 p-3 rounded-3"
+                style="
+                    background:#eff6ff;
+                    border:1px solid #dbeafe;
+                    color:#475569;
+                    font-size:10px;
+                "
+            >
+
+                <i class="bi bi-info-circle text-primary me-1"></i>
+
+                Use the update button to modify this seller's
+                verification or account status.
+
+            </div>
+
+
+        </div>
+
+
+        <div
+            class="modal-footer"
+            style="
+                border-top:1px solid #e2e8f0;
+                padding:14px 20px;
+            "
+        >
+
+            <button
+                type="button"
+                class="btn btn-light btn-sm"
+                data-bs-dismiss="modal"
+            >
+                Close
+            </button>
+
+
+            <a
+                href="#"
+                id="modalUpdateBtn"
+                class="btn btn-primary btn-sm px-3"
+            >
+
+                <i class="bi bi-pencil-square me-1"></i>
+
+                Update Status
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    class="admin-toast"
+    id="adminToast"
+    role="status"
+    aria-live="polite"
+>
+<div class="toast-icon">
+
+    <i class="bi bi-check-lg"></i>
+
+</div>
+
+<span id="toastMessage">
+    Filters cleared
+</span>
+
+</div>
+
+<!-- Bootstrap -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+></script>
+
+<script>
+
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
+
+    const searchInput =
+        document.getElementById("sellerSearch");
+
+    const statusFilter =
+        document.getElementById("statusFilter");
+
+    const clearFilters =
+        document.getElementById("clearFilters");
+
+    const sellerCount =
+        document.getElementById("sellerCount");
+
+    const totalFooterCount =
+        document.getElementById("totalFooterCount");
+
+    const rows =
+        document.querySelectorAll(
+            "#sellerTable tbody tr.seller-row"
+        );
+
+    const noResults =
+        document.getElementById("noResults");
+
+
+    /* =========================================================
+       STATISTICS
+    ========================================================= */
+
+    function updateStatistics() {
+
+        let approved = 0;
+        let pending = 0;
+
+        rows.forEach(function(row) {
+
+            const status =
+                (row.dataset.status || "").toLowerCase();
+
+            if (status === "approved") {
+                approved++;
+            }
+
+            if (status === "pending") {
+                pending++;
+            }
+
+        });
+
+
+        const total = rows.length;
+
+        const rate =
+            total > 0
+                ? Math.round((approved / total) * 100)
+                : 0;
+
+
+        document.getElementById(
+            "approvedStat"
+        ).textContent = approved;
+
+
+        document.getElementById(
+            "pendingStat"
+        ).textContent = pending;
+
+
+        document.getElementById(
+            "approvalRate"
+        ).textContent = rate + "%";
+
+
+        document.getElementById(
+            "totalSellerStat"
+        ).textContent = total;
+
+
+        totalFooterCount.textContent = total;
+
+    }
+
+
+    /* =========================================================
+       FILTER
+    ========================================================= */
+
+    function filterSellers() {
+
+        const search =
+            searchInput.value
+                .toLowerCase()
+                .trim();
+
+        const selectedStatus =
+            statusFilter.value
+                .toLowerCase();
+
+
+        let visibleCount = 0;
+
+
+        rows.forEach(function(row) {
+
+            const rowSearch =
+                (
+                    row.getAttribute("data-search")
+                    || ""
+                ).toLowerCase();
+
+
+            const rowStatus =
+                (
+                    row.getAttribute("data-status")
+                    || ""
+                ).toLowerCase();
+
+
+            const searchMatch =
+                rowSearch.includes(search);
+
+
+            const statusMatch =
+                selectedStatus === "all"
+                || rowStatus === selectedStatus;
+
+
+            if (searchMatch && statusMatch) {
+
+                row.style.display = "";
+
+                visibleCount++;
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+
+        sellerCount.textContent =
+            visibleCount;
+
+
+        if (visibleCount === 0 && rows.length > 0) {
+
+            noResults.style.display = "table-row";
+
+        } else {
+
+            noResults.style.display = "none";
+
+        }
+
+    }
+
+
+    /* =========================================================
+       CLEAR FILTERS
+    ========================================================= */
+
+    clearFilters.addEventListener(
+        "click",
+        function() {
+
+            searchInput.value = "";
+
+            statusFilter.value = "all";
+
+            filterSellers();
+
+            searchInput.focus();
+
+            showToast(
+                "Seller filters cleared"
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       SEARCH
+    ========================================================= */
+
+    searchInput.addEventListener(
+        "input",
+        filterSellers
+    );
+
+
+    statusFilter.addEventListener(
+        "change",
+        filterSellers
+    );
+
+
+    /* =========================================================
+       VIEW SELLER
+    ========================================================= */
+
+    function viewSeller(button) {
+
+        const row =
+            button.closest(".seller-row");
+
+
+        if (!row) {
+            return;
+        }
+
+
+        const username =
+            row.dataset.seller || "—";
+
+        const company =
+            row.dataset.company || "Not provided";
+
+        const mobile =
+            row.dataset.mobile || "Not provided";
+
+        const city =
+            row.dataset.city || "Not provided";
+
+        const state =
+            row.dataset.state || "Not provided";
+
+        const status =
+            row.dataset.status || "unknown";
+
+
+        document.getElementById(
+            "modalUsername"
+        ).textContent = username;
+
+
+        document.getElementById(
+            "modalCompany"
+        ).textContent = company;
+
+
+        document.getElementById(
+            "modalMobile"
+        ).textContent = mobile;
+
+
+        document.getElementById(
+            "modalCity"
+        ).textContent = city;
+
+
+        document.getElementById(
+            "modalState"
+        ).textContent = state;
+
+
+        document.getElementById(
+            "modalStatus"
+        ).textContent =
+            status
+                .replaceAll("_", " ")
+                .replace(
+                    /\b\w/g,
+                    function(letter) {
+                        return letter.toUpperCase();
+                    }
+                );
+
+
+        const updateLink =
+            row.querySelector(
+                "a.action-btn:not(.view)"
+            );
+
+
+        if (updateLink) {
+
+            document.getElementById(
+                "modalUpdateBtn"
+            ).href = updateLink.href;
+
+        }
+
+
+        const modal =
+            bootstrap.Modal.getOrCreateInstance(
+                document.getElementById(
+                    "sellerDetailsModal"
+                )
+            );
+
+
+        modal.show();
+
+    }
+
+
+    /* =========================================================
+       TOAST
+    ========================================================= */
+
+    let toastTimer;
+
+
+    function showToast(message) {
+
+        const toast =
+            document.getElementById(
+                "adminToast"
+            );
+
+        const toastMessage =
+            document.getElementById(
+                "toastMessage"
+            );
+
+
+        toastMessage.textContent =
+            message;
+
+
+        toast.classList.add("show");
+
+
+        clearTimeout(toastTimer);
+
+
+        toastTimer = setTimeout(
+            function() {
+
+                toast.classList.remove("show");
+
+            },
+            2200
+        );
+
+    }
+
+
+    /* =========================================================
+       KEYBOARD SHORTCUT
+       CTRL + K / CMD + K
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                (event.ctrlKey || event.metaKey)
+                && event.key.toLowerCase() === "k"
+            ) {
+
+                event.preventDefault();
+
+                searchInput.focus();
+
+                searchInput.select();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       ESCAPE SEARCH
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Escape"
+                && document.activeElement === searchInput
+            ) {
+
+                searchInput.value = "";
+
+                filterSellers();
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       INITIAL LOAD
+    ========================================================= */
+
+    updateStatistics();
+
+    filterSellers();
+
+
+</script>
+
+</body>
+</html>
+
+{% endblock %}

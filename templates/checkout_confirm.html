@@ -1,0 +1,1751 @@
+
+{% extends 'layouts/main.html' %}
+
+{% block title %}
+    Shopping Cart | ShopKart
+{% endblock title %}
+
+{% block content %}
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Checkout Confirmation</title>
+
+    <style>
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+
+            --success: #16a34a;
+            --success-light: #f0fdf4;
+
+            --danger: #dc2626;
+            --warning: #d97706;
+
+            --dark: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+
+            --border: #e5e7eb;
+            --border-light: #f1f5f9;
+
+            --background: #f5f7fb;
+            --white: #ffffff;
+
+            --shadow-sm:
+                0 1px 2px rgba(0, 0, 0, 0.04);
+
+            --shadow-md:
+                0 8px 25px rgba(15, 23, 42, 0.06);
+
+            --shadow-lg:
+                0 20px 45px rgba(15, 23, 42, 0.08);
+
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+        }
+
+        body {
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(37, 99, 235, 0.08),
+                    transparent 30%
+                ),
+                var(--background);
+
+            color: var(--text);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        /* =========================================================
+           TOP HEADER
+        ========================================================= */
+
+        .topbar {
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(14px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-inner {
+            max-width: 1180px;
+            margin: auto;
+            padding: 18px 24px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: var(--dark);
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                #4f46e5
+            );
+            color: white;
+            border-radius: 11px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-shadow:
+                0 7px 18px rgba(37, 99, 235, 0.25);
+        }
+
+        .secure-checkout {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+
+            font-size: 13px;
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           MAIN CONTAINER
+        ========================================================= */
+
+        .page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 45px 24px 70px;
+        }
+
+        /* =========================================================
+           PAGE TITLE
+        ========================================================= */
+
+        .page-heading {
+            margin-bottom: 30px;
+        }
+
+        .page-heading h1 {
+            color: var(--dark);
+            font-size: 34px;
+            line-height: 1.15;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .page-heading p {
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .confirmation-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            background: var(--success-light);
+            color: var(--success);
+
+            padding: 7px 12px;
+            border-radius: 999px;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            margin-bottom: 14px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .confirmation-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        /* =========================================================
+           MAIN GRID
+        ========================================================= */
+
+        .checkout-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 380px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        /* =========================================================
+           CARDS
+        ========================================================= */
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .card + .card {
+            margin-top: 20px;
+        }
+
+        .card-header {
+            padding: 22px 24px;
+            border-bottom: 1px solid var(--border-light);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .card-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+
+            background: var(--primary-light);
+            color: var(--primary);
+
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-title {
+            color: var(--dark);
+            font-size: 16px;
+            font-weight: 750;
+        }
+
+        .card-subtitle {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .card-body {
+            padding: 24px;
+        }
+
+        /* =========================================================
+           CUSTOMER INFORMATION
+        ========================================================= */
+
+        .customer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px 25px;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 12px;
+        }
+
+        .info-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+
+            border-radius: 10px;
+            background: #f8fafc;
+            color: #64748b;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .info-label {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 3px;
+        }
+
+        .info-value {
+            color: var(--dark);
+            font-size: 14px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* =========================================================
+           PRODUCT TABLE
+        ========================================================= */
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .products-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+        }
+
+        .products-table th {
+            background: #f8fafc;
+            color: #64748b;
+
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.55px;
+
+            padding: 13px 18px;
+            text-align: left;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .products-table td {
+            padding: 18px;
+            border-bottom: 1px solid var(--border-light);
+
+            color: var(--text);
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+        .products-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .products-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .products-table tbody tr:hover {
+            background: #fafcff;
+        }
+
+        .product-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .product-avatar {
+            width: 44px;
+            height: 44px;
+            flex-shrink: 0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eff6ff,
+                    #eef2ff
+                );
+
+            border: 1px solid #dbeafe;
+            border-radius: 11px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 15px;
+        }
+
+        .product-title {
+            color: var(--dark);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .product-label {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        .price {
+            color: var(--dark);
+            font-weight: 650;
+            white-space: nowrap;
+        }
+
+        .qty {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 32px;
+            height: 30px;
+
+            padding: 0 9px;
+
+            background: #f1f5f9;
+            color: #334155;
+
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .subtotal {
+            color: var(--dark);
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        /* =========================================================
+           COUPON
+        ========================================================= */
+
+        .coupon-card {
+            background:
+                linear-gradient(
+                    135deg,
+                    #eff6ff,
+                    #f8fafc
+                );
+
+            border: 1px solid #dbeafe;
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .coupon-heading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .coupon-heading-icon {
+            width: 35px;
+            height: 35px;
+
+            border-radius: 9px;
+            background: white;
+            color: var(--primary);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            box-shadow: var(--shadow-sm);
+        }
+
+        .coupon-title {
+            color: var(--dark);
+            font-size: 14px;
+            font-weight: 750;
+        }
+
+        .coupon-description {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 1px;
+        }
+
+        .coupon-form {
+            display: flex;
+            gap: 9px;
+        }
+
+        .coupon-input {
+            flex: 1;
+            min-width: 0;
+
+            height: 44px;
+
+            border: 1px solid #dbe2ea;
+            border-radius: 10px;
+
+            background: white;
+            color: var(--dark);
+
+            padding: 0 13px;
+            font-size: 13px;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .coupon-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .coupon-input:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .coupon-button {
+            height: 44px;
+            padding: 0 18px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: var(--dark);
+            color: white;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.15s ease,
+                background 0.2s ease;
+        }
+
+        .coupon-button:hover {
+            background: #1f2937;
+        }
+
+        .coupon-button:active {
+            transform: translateY(1px);
+        }
+
+        .coupon-message {
+            margin-top: 11px;
+            padding: 9px 11px;
+
+            background: #ecfdf5;
+            color: #15803d;
+
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* =========================================================
+           ORDER SUMMARY
+        ========================================================= */
+
+        .summary-card {
+            position: sticky;
+            top: 95px;
+        }
+
+        .summary-header {
+            background:
+                linear-gradient(
+                    135deg,
+                    #111827,
+                    #1e293b
+                );
+
+            color: white;
+            padding: 25px;
+        }
+
+        .summary-header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .summary-heading {
+            font-size: 17px;
+            font-weight: 750;
+        }
+
+        .summary-small {
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .summary-badge {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .summary-body {
+            padding: 23px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+
+            padding: 10px 0;
+
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .summary-row span:first-child {
+            color: var(--muted);
+        }
+
+        .summary-value {
+            color: var(--dark);
+            font-weight: 650;
+            white-space: nowrap;
+        }
+
+        .discount-value {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .summary-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 10px 0;
+        }
+
+        .grand-total {
+            margin-top: 10px;
+            padding: 17px;
+
+            border-radius: 13px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eff6ff,
+                    #f8fafc
+                );
+
+            border: 1px solid #dbeafe;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .grand-label {
+            color: var(--dark);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .grand-note {
+            color: var(--muted);
+            font-size: 10px;
+            margin-top: 2px;
+        }
+
+        .grand-price {
+            color: var(--primary);
+            font-size: 23px;
+            font-weight: 850;
+            letter-spacing: -0.5px;
+            white-space: nowrap;
+        }
+
+        /* =========================================================
+           CONFIRM BUTTON
+        ========================================================= */
+
+        .confirm-form {
+            margin-top: 20px;
+        }
+
+        .confirm-button {
+            width: 100%;
+            height: 53px;
+
+            border: none;
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #4f46e5
+                );
+
+            color: white;
+
+            font-size: 14px;
+            font-weight: 750;
+
+            cursor: pointer;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+
+            box-shadow:
+                0 10px 22px rgba(37, 99, 235, 0.23);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .confirm-button:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 13px 28px rgba(37, 99, 235, 0.3);
+        }
+
+        .confirm-button:active {
+            transform: translateY(1px);
+        }
+
+        .secure-note {
+            margin-top: 13px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+
+            color: var(--muted);
+            font-size: 11px;
+            text-align: center;
+        }
+
+        /* =========================================================
+           PAYMENT / TRUST
+        ========================================================= */
+
+        .trust-box {
+            margin-top: 20px;
+            padding: 17px;
+
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .trust-item + .trust-item {
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .trust-icon {
+            width: 31px;
+            height: 31px;
+
+            border-radius: 8px;
+            background: var(--success-light);
+            color: var(--success);
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .trust-title {
+            color: var(--dark);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .trust-text {
+            color: var(--muted);
+            font-size: 11px;
+            margin-top: 2px;
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .footer {
+            text-align: center;
+            padding-top: 35px;
+
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        /* =========================================================
+           SVG
+        ========================================================= */
+
+        svg {
+            width: 19px;
+            height: 19px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .small-svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-card {
+                position: static;
+            }
+
+            .summary-card {
+                order: -1;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .topbar-inner {
+                padding: 14px 17px;
+            }
+
+            .brand {
+                font-size: 17px;
+            }
+
+            .brand-icon {
+                width: 34px;
+                height: 34px;
+            }
+
+            .secure-checkout {
+                font-size: 11px;
+            }
+
+            .page {
+                padding:
+                    28px
+                    15px
+                    45px;
+            }
+
+            .page-heading h1 {
+                font-size: 28px;
+            }
+
+            .page-heading {
+                margin-bottom: 22px;
+            }
+
+            .card-header {
+                padding: 18px;
+            }
+
+            .card-body {
+                padding: 18px;
+            }
+
+            .customer-grid {
+                grid-template-columns: 1fr;
+                gap: 17px;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .coupon-form {
+                flex-direction: column;
+            }
+
+            .coupon-button {
+                width: 100%;
+            }
+
+            .summary-header {
+                padding: 20px;
+            }
+
+            .summary-body {
+                padding: 18px;
+            }
+
+            .grand-price {
+                font-size: 21px;
+            }
+        }
+
+        @media (max-width: 400px) {
+
+            .secure-checkout {
+                display: none;
+            }
+
+            .page-heading h1 {
+                font-size: 25px;
+            }
+
+            .info-value {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="page">
+
+
+    <!-- PAGE TITLE -->
+
+    <div class="page-heading">
+
+        <div class="confirmation-badge">
+
+            <span class="confirmation-dot"></span>
+
+            Review & Confirm
+
+        </div>
+
+        <h1>Checkout Confirmation</h1>
+
+        <p>
+            Please review your order details before confirming your purchase.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN GRID
+    ===================================================== -->
+
+    <div class="checkout-grid">
+
+
+        <!-- =================================================
+             LEFT COLUMN
+        ================================================= -->
+
+        <div>
+
+
+            <!-- CUSTOMER INFORMATION -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <div class="card-title-wrapper">
+
+                        <div class="card-icon">
+
+                            <svg viewBox="0 0 24 24">
+                                <path d="M20 21a8 8 0 0 0-16 0"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+
+                        </div>
+
+                        <div>
+
+                            <div class="card-title">
+                                Customer Information
+                            </div>
+
+                            <div class="card-subtitle">
+                                Your delivery details
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="customer-grid">
+
+
+                        <!-- NAME -->
+
+                        <div class="info-item">
+
+                            <div class="info-icon">
+
+                                <svg viewBox="0 0 24 24">
+                                    <circle cx="12" cy="8" r="4"></circle>
+                                    <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"></path>
+                                </svg>
+
+                            </div>
+
+                            <div>
+
+                                <div class="info-label">
+                                    Full Name
+                                </div>
+
+                                <div class="info-value">
+                                    {{ form_data.full_name }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- PHONE -->
+
+                        <div class="info-item">
+
+                            <div class="info-icon">
+
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2
+                                    19.79 19.79 0 0 1-8.63-3.07
+                                    19.5 19.5 0 0 1-6-6
+                                    19.79 19.79 0 0 1-3.07-8.67
+                                    A2 2 0 0 1 4.11 2h3a2 2 0 0 1
+                                    2 1.72 12.84 12.84 0 0 0 .7 2.81
+                                    2 2 0 0 1-.45 2.11L8.09 9.91
+                                    a16 16 0 0 0 6 6l1.27-1.27
+                                    a2 2 0 0 1 2.11-.45
+                                    12.84 12.84 0 0 0 2.81.7
+                                    A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+
+                            </div>
+
+                            <div>
+
+                                <div class="info-label">
+                                    Phone
+                                </div>
+
+                                <div class="info-value">
+                                    {{ form_data.phone }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ADDRESS -->
+
+                        <div class="info-item full-width">
+
+                            <div class="info-icon">
+
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"></path>
+                                    <circle cx="12" cy="10" r="2.5"></circle>
+                                </svg>
+
+                            </div>
+
+                            <div>
+
+                                <div class="info-label">
+                                    Delivery Address
+                                </div>
+
+                                <div class="info-value">
+
+                                    {{ form_data.address_line1 }}
+
+                                    {{ form_data.address_line2 }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CITY -->
+
+                        <div class="info-item">
+
+                            <div class="info-icon">
+
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M3 21h18"></path>
+                                    <path d="M5 21V9l7-4 7 4v12"></path>
+                                    <path d="M9 21v-6h6v6"></path>
+                                </svg>
+
+                            </div>
+
+                            <div>
+
+                                <div class="info-label">
+                                    City
+                                </div>
+
+                                <div class="info-value">
+                                    {{ form_data.city }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 PRODUCTS
+            ================================================= -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <div class="card-title-wrapper">
+
+                        <div class="card-icon">
+
+                            <svg viewBox="0 0 24 24">
+                                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path>
+                                <path d="M3 6h18"></path>
+                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                            </svg>
+
+                        </div>
+
+                        <div>
+
+                            <div class="card-title">
+                                Order Items
+                            </div>
+
+                            <div class="card-subtitle">
+                                Products in your shopping cart
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table class="products-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Product
+                                </th>
+
+                                <th>
+                                    Price
+                                </th>
+
+                                <th>
+                                    Qty
+                                </th>
+
+                                <th>
+                                    Subtotal
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for item in cart_items %}
+
+                            <tr>
+
+                                <td>
+
+                                    <div class="product-name">
+
+                                        <div class="product-avatar">
+
+                                            {{ item.product.name|first|upper }}
+
+                                        </div>
+
+                                        <div>
+
+                                            <div class="product-title">
+                                                {{ item.product.name }}
+                                            </div>
+
+                                            <div class="product-label">
+                                                Product
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="price">
+
+                                        ₹{{ item.product.selling_price }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="qty">
+
+                                        {{ item.product_qty }}
+
+                                    </span>
+
+                                </td>
+
+
+                                <td>
+
+                                    <span class="subtotal">
+
+                                        ₹{{ item.product.selling_price }}
+                                        ×
+                                        {{ item.product_qty }}
+
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    style="
+                                        text-align:center;
+                                        padding:35px;
+                                        color:#6b7280;
+                                    "
+                                >
+
+                                    No products found in your cart.
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 COUPON
+            ================================================= -->
+
+            <section class="card">
+
+                <div class="card-body">
+
+                    <div class="coupon-card">
+
+
+                        <div class="coupon-heading">
+
+                            <div class="coupon-heading-icon">
+
+                                <svg viewBox="0 0 24 24">
+
+                                    <path d="M20.59 13.41 11 3.83V3H4v7h.83l9.58 9.59a2 2 0 0 0 2.83 0l3.35-3.35a2 2 0 0 0 0-2.83Z"></path>
+
+                                    <circle
+                                        cx="7.5"
+                                        cy="6.5"
+                                        r=".8"
+                                        fill="currentColor"
+                                        stroke="none"
+                                    ></circle>
+
+                                </svg>
+
+                            </div>
+
+
+                            <div>
+
+                                <div class="coupon-title">
+                                    Have a coupon?
+                                </div>
+
+                                <div class="coupon-description">
+                                    Apply your promotional code to receive a discount.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <form
+                            method="post"
+                            class="coupon-form"
+                        >
+
+                            {% csrf_token %}
+
+                            <input
+                                type="hidden"
+                                name="step"
+                                value="coupon"
+                            >
+
+
+                            <input
+                                type="text"
+                                name="coupon_code"
+                                class="coupon-input"
+                                placeholder="Enter coupon code"
+                                value="{{ applied_coupon }}"
+                                autocomplete="off"
+                            >
+
+
+                            <button
+                                type="submit"
+                                class="coupon-button"
+                            >
+                                Apply Coupon
+                            </button>
+
+                        </form>
+
+
+                        {% if coupon_message %}
+
+                        <div class="coupon-message">
+
+                            ✓ {{ coupon_message }}
+
+                        </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+        <!-- =================================================
+             RIGHT COLUMN
+        ================================================= -->
+
+        <aside>
+
+
+            <section class="card summary-card">
+
+
+                <!-- SUMMARY HEADER -->
+
+                <div class="summary-header">
+
+                    <div class="summary-header-content">
+
+                        <div>
+
+                            <div class="summary-heading">
+                                Order Summary
+                            </div>
+
+                            <div class="summary-small">
+                                Final amount payable
+                            </div>
+
+                        </div>
+
+
+                        <div class="summary-badge">
+
+                            <svg viewBox="0 0 24 24">
+
+                                <path d="M6 2h12v20H6z"></path>
+                                <path d="M9 6h6"></path>
+                                <path d="M9 10h6"></path>
+                                <path d="M9 14h3"></path>
+
+                            </svg>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SUMMARY BODY -->
+
+                <div class="summary-body">
+
+
+                    <!-- NET TOTAL -->
+
+                    <div class="summary-row">
+
+                        <span>
+                            Net Total
+                        </span>
+
+                        <span class="summary-value">
+                            ₹{{ net_total }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- GST -->
+
+                    <div class="summary-row">
+
+                        <span>
+                            GST (0.03%)
+                        </span>
+
+                        <span class="summary-value">
+                            ₹{{ gst_amount }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- DISCOUNT -->
+
+                    <div class="summary-row">
+
+                        <span>
+                            Discount
+                        </span>
+
+                        <span class="discount-value">
+
+                            {% if discount %}
+                                - ₹{{ discount }}
+                            {% else %}
+                                ₹0
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-divider"></div>
+
+
+                    <!-- GRAND TOTAL -->
+
+                    <div class="grand-total">
+
+                        <div>
+
+                            <div class="grand-label">
+                                Grand Total
+                            </div>
+
+                            <div class="grand-note">
+                                Inclusive of applicable taxes
+                            </div>
+
+                        </div>
+
+
+                        <div class="grand-price">
+                            ₹{{ grand_total }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONFIRM FORM -->
+
+                    <form
+                        method="post"
+                        class="confirm-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <input
+                            type="hidden"
+                            name="step"
+                            value="2"
+                        >
+
+
+                        <button
+                            type="submit"
+                            class="confirm-button"
+                        >
+
+                            <svg viewBox="0 0 24 24">
+
+                                <path d="M20 6 9 17l-5-5"></path>
+
+                            </svg>
+
+                            Confirm Order
+
+                        </button>
+
+                    </form>
+
+
+                    <div class="secure-note">
+
+                        <svg
+                            class="small-svg"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <rect
+                                x="3"
+                                y="11"
+                                width="18"
+                                height="10"
+                                rx="2"
+                            ></rect>
+
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+
+                        </svg>
+
+                        Your information is securely protected.
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 TRUST BOX
+            ================================================= -->
+
+            <div class="trust-box">
+
+
+                <div class="trust-item">
+
+                    <div class="trust-icon">
+
+                        <svg
+                            class="small-svg"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+
+                            <path d="m9 12 2 2 4-4"></path>
+
+                        </svg>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="trust-title">
+                            Secure Checkout
+                        </div>
+
+                        <div class="trust-text">
+                            Your checkout information is handled securely.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="trust-item">
+
+                    <div class="trust-icon">
+
+                        <svg
+                            class="small-svg"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <path d="M3 12h18"></path>
+                            <path d="M5 12V7h14v5"></path>
+                            <path d="M5 17h14"></path>
+                            <path d="M7 17v3"></path>
+                            <path d="M17 17v3"></path>
+
+                        </svg>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="trust-title">
+                            Order Protection
+                        </div>
+
+                        <div class="trust-text">
+                            Review all details before confirming your order.
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </aside>
+
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        © 2026 · Checkout Confirmation · All rights reserved.
+
+    </div>
+
+
+</main>
+
+</body>
+</html>
+
+{% endblock content %}

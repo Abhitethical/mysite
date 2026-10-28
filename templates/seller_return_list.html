@@ -1,0 +1,1550 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+/* =========================================================
+   ADVANCED RETURN MANAGEMENT DASHBOARD
+   ========================================================= */
+
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --success: #16a34a;
+    --warning: #d97706;
+    --danger: #dc2626;
+    --info: #0284c7;
+    --purple: #7c3aed;
+
+    --dark: #172033;
+    --text: #344054;
+    --muted: #667085;
+    --light-muted: #98a2b3;
+
+    --border: #e7eaf0;
+    --soft-bg: #f6f8fc;
+    --white: #ffffff;
+
+    --shadow-sm: 0 2px 8px rgba(16, 24, 40, .04);
+    --shadow-md: 0 8px 25px rgba(16, 24, 40, .06);
+    --shadow-lg: 0 15px 40px rgba(16, 24, 40, .08);
+}
+
+.return-page {
+    min-height: calc(100vh - 70px);
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(79, 70, 229, .06),
+            transparent 30%
+        ),
+        #f6f8fc;
+
+    padding: 32px 0 60px;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.return-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 25px;
+    margin-bottom: 28px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.header-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+    font-size: 23px;
+
+    background: linear-gradient(
+        135deg,
+        #4f46e5,
+        #7c3aed
+    );
+
+    box-shadow:
+        0 8px 20px rgba(79, 70, 229, .22);
+}
+
+.page-title {
+    margin: 0;
+
+    color: var(--dark);
+
+    font-size: 28px;
+    font-weight: 750;
+
+    letter-spacing: -.6px;
+}
+
+.page-subtitle {
+    margin: 5px 0 0;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+.header-date {
+    color: var(--muted);
+
+    font-size: 12px;
+
+    background: white;
+
+    padding: 9px 13px;
+
+    border-radius: 10px;
+
+    border: 1px solid var(--border);
+
+    box-shadow: var(--shadow-sm);
+}
+
+/* =========================================================
+   STAT CARDS
+   ========================================================= */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    position: relative;
+
+    overflow: hidden;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    padding: 20px;
+
+    box-shadow: var(--shadow-sm);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 80px;
+    height: 80px;
+
+    right: -30px;
+    bottom: -30px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+    opacity: .04;
+}
+
+.stat-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 15px;
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 17px;
+}
+
+.stat-label {
+    color: var(--muted);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.stat-number {
+    color: var(--dark);
+
+    font-size: 25px;
+    font-weight: 750;
+
+    line-height: 1;
+}
+
+.stat-description {
+    margin-top: 8px;
+
+    color: var(--light-muted);
+
+    font-size: 11px;
+}
+
+.stat-total {
+    color: var(--primary);
+}
+
+.stat-total .stat-icon {
+    background: #eef2ff;
+    color: var(--primary);
+}
+
+.stat-pending {
+    color: var(--warning);
+}
+
+.stat-pending .stat-icon {
+    background: #fff7ed;
+    color: var(--warning);
+}
+
+.stat-approved {
+    color: var(--success);
+}
+
+.stat-approved .stat-icon {
+    background: #ecfdf3;
+    color: var(--success);
+}
+
+.stat-refunded {
+    color: var(--info);
+}
+
+.stat-refunded .stat-icon {
+    background: #eff6ff;
+    color: var(--info);
+}
+
+/* =========================================================
+   MAIN CARD
+   ========================================================= */
+
+.returns-card {
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-shadow: var(--shadow-md);
+}
+
+/* =========================================================
+   TOOLBAR
+   ========================================================= */
+
+.returns-toolbar {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 18px;
+
+    padding: 20px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.toolbar-title {
+    color: var(--dark);
+
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.toolbar-subtitle {
+    margin-top: 3px;
+
+    color: var(--light-muted);
+
+    font-size: 11px;
+}
+
+.toolbar-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+
+    left: 12px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #98a2b3;
+
+    font-size: 13px;
+}
+
+.search-box input {
+    width: 220px;
+
+    height: 38px;
+
+    padding:
+        0 12px 0 35px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 12px;
+
+    color: var(--text);
+
+    background: #fafbfc;
+
+    transition: .2s;
+}
+
+.search-box input:focus {
+    border-color: #a5b4fc;
+
+    background: white;
+
+    box-shadow:
+        0 0 0 3px rgba(79, 70, 229, .08);
+}
+
+.filter-select {
+    height: 38px;
+
+    padding: 0 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: var(--text);
+
+    font-size: 12px;
+
+    outline: none;
+
+    cursor: pointer;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.table-container {
+    overflow-x: auto;
+}
+
+.returns-table {
+    width: 100%;
+
+    min-width: 1050px;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+}
+
+.returns-table thead th {
+    padding: 14px 20px;
+
+    background: #fafbfc;
+
+    color: #667085;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    text-transform: uppercase;
+
+    letter-spacing: .8px;
+
+    white-space: nowrap;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.returns-table tbody td {
+    padding: 17px 20px;
+
+    border-bottom: 1px solid #f0f2f5;
+
+    vertical-align: middle;
+
+    font-size: 13px;
+
+    color: var(--text);
+}
+
+.returns-table tbody tr {
+    transition: background .18s ease;
+}
+
+.returns-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.returns-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* =========================================================
+   PRODUCT
+   ========================================================= */
+
+.product-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.product-image {
+    width: 58px;
+    height: 58px;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+
+    background: #f8fafc;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform .25s ease;
+}
+
+.returns-table tbody tr:hover
+.product-image img {
+    transform: scale(1.07);
+}
+
+.product-placeholder {
+    color: #b8c0cc;
+
+    font-size: 19px;
+}
+
+.product-name {
+    max-width: 230px;
+
+    color: #273149;
+
+    font-size: 13px;
+
+    font-weight: 650;
+
+    line-height: 1.4;
+}
+
+/* =========================================================
+   CUSTOMER
+   ========================================================= */
+
+.customer-box {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.customer-avatar {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6366f1,
+            #8b5cf6
+        );
+}
+
+.customer-name {
+    color: #273149;
+
+    font-weight: 650;
+
+    font-size: 13px;
+}
+
+.customer-role {
+    margin-top: 2px;
+
+    color: #98a2b3;
+
+    font-size: 10px;
+}
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.status-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border-radius: 30px;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    letter-spacing: .35px;
+
+    white-space: nowrap;
+
+    text-transform: uppercase;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+    box-shadow:
+        0 0 0 3px currentColor;
+
+    opacity: .85;
+}
+
+.status-pending {
+    color: #b45309;
+    background: #fff7ed;
+}
+
+.status-approved {
+    color: #15803d;
+    background: #ecfdf3;
+}
+
+.status-pickup {
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.status-picked {
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+.status-received {
+    color: #0369a1;
+    background: #eff6ff;
+}
+
+.status-inspected {
+    color: #0f766e;
+    background: #f0fdfa;
+}
+
+.status-resubmitted {
+    color: #c2410c;
+    background: #fff7ed;
+}
+
+.status-refunded {
+    color: #047857;
+    background: #ecfdf5;
+}
+
+.status-rejected {
+    color: #dc2626;
+    background: #fef2f2;
+}
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+.date-main {
+    color: #344054;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.date-time {
+    margin-top: 3px;
+
+    color: #98a2b3;
+
+    font-size: 10px;
+}
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.view-btn {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 8px 13px;
+
+    color: #344054 !important;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    transition: all .2s ease;
+}
+
+.view-btn:hover {
+    color: white !important;
+
+    background: var(--primary);
+
+    border-color: var(--primary);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 14px rgba(79, 70, 229, .20);
+}
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    padding: 75px 20px;
+
+    text-align: center;
+}
+
+.empty-icon {
+    width: 72px;
+    height: 72px;
+
+    margin: 0 auto 18px;
+
+    border-radius: 20px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #f1f5f9;
+
+    color: #94a3b8;
+
+    font-size: 28px;
+}
+
+.empty-state h4 {
+    margin: 0 0 7px;
+
+    color: #334155;
+
+    font-size: 16px;
+
+    font-weight: 700;
+}
+
+.empty-state p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 992px) {
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .return-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .header-date {
+        display: none;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .return-page {
+        padding: 20px 0 40px;
+    }
+
+    .page-title {
+        font-size: 22px;
+    }
+
+    .header-icon {
+        width: 45px;
+        height: 45px;
+
+        font-size: 19px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 15px;
+    }
+
+    .stat-number {
+        font-size: 21px;
+    }
+
+    .stat-icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .returns-toolbar {
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+    .toolbar-actions {
+        width: 100%;
+    }
+
+    .search-box {
+        flex: 1;
+    }
+
+    .search-box input {
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header-left {
+        align-items: flex-start;
+    }
+
+}
+</style>
+
+
+<div class="return-page">
+
+    <div class="container">
+
+        <!-- =================================================
+             HEADER
+             ================================================= -->
+
+        <div class="return-header">
+
+            <div class="header-left">
+
+                <div class="header-icon">
+                    <i class="bi bi-arrow-return-left"></i>
+                </div>
+
+                <div>
+
+                    <h1 class="page-title">
+                        Customer Returns
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Manage and monitor customer return requests
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="header-date">
+
+                <i class="bi bi-calendar3 me-1"></i>
+
+                Return Management
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             STATISTICS
+             ================================================= -->
+
+        <div class="stats-grid">
+
+            <!-- Total -->
+
+            <div class="stat-card stat-total">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Total Requests
+                    </span>
+
+                    <div class="stat-icon">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-number">
+                    {{ returns|length }}
+                </div>
+
+                <div class="stat-description">
+                    All return requests
+                </div>
+
+            </div>
+
+
+            <!-- Pending -->
+
+            <div class="stat-card stat-pending">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Pending
+                    </span>
+
+                    <div class="stat-icon">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-number">
+                    {{ pending_count|default:"0" }}
+                </div>
+
+                <div class="stat-description">
+                    Waiting for review
+                </div>
+
+            </div>
+
+
+            <!-- Approved -->
+
+            <div class="stat-card stat-approved">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Approved
+                    </span>
+
+                    <div class="stat-icon">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-number">
+                    {{ approved_count|default:"0" }}
+                </div>
+
+                <div class="stat-description">
+                    Approved return requests
+                </div>
+
+            </div>
+
+
+            <!-- Refunded -->
+
+            <div class="stat-card stat-refunded">
+
+                <div class="stat-top">
+
+                    <span class="stat-label">
+                        Refunded
+                    </span>
+
+                    <div class="stat-icon">
+                        <i class="bi bi-cash-coin"></i>
+                    </div>
+
+                </div>
+
+                <div class="stat-number">
+                    {{ refunded_count|default:"0" }}
+                </div>
+
+                <div class="stat-description">
+                    Successfully completed
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             RETURN TABLE CARD
+             ================================================= -->
+
+        <div class="returns-card">
+
+            <!-- Toolbar -->
+
+            <div class="returns-toolbar">
+
+                <div>
+
+                    <div class="toolbar-title">
+                        Return Requests
+                    </div>
+
+                    <div class="toolbar-subtitle">
+                        Review customer return activity and request status
+                    </div>
+
+                </div>
+
+
+                <div class="toolbar-actions">
+
+                    <!-- Search -->
+
+                    <div class="search-box">
+
+                        <i class="bi bi-search"></i>
+
+                        <input
+                            type="text"
+                            id="returnSearch"
+                            placeholder="Search returns..."
+                        >
+
+                    </div>
+
+
+                    <!-- Filter -->
+
+                    <select
+                        class="filter-select"
+                        id="statusFilter"
+                    >
+
+                        <option value="all">
+                            All Status
+                        </option>
+
+                        <option value="pending">
+                            Pending
+                        </option>
+
+                        <option value="approved">
+                            Approved
+                        </option>
+
+                        <option value="pickup">
+                            Pickup Scheduled
+                        </option>
+
+                        <option value="picked">
+                            Picked Up
+                        </option>
+
+                        <option value="received">
+                            Received
+                        </option>
+
+                        <option value="inspected">
+                            Inspected
+                        </option>
+
+                        <option value="resubmitted">
+                            Resubmitted
+                        </option>
+
+                        <option value="refunded">
+                            Refunded
+                        </option>
+
+                        <option value="rejected">
+                            Rejected
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            {% if returns %}
+
+            <!-- =================================================
+                 TABLE
+                 ================================================= -->
+
+            <div class="table-container">
+
+                <table class="returns-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Product</th>
+
+                            <th>Customer</th>
+
+                            <th>Product Name</th>
+
+                            <th>Status</th>
+
+                            <th>Requested</th>
+
+                            <th class="text-end">
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="returnTableBody">
+
+                    {% for item in returns %}
+
+                        <tr
+                            class="return-row"
+                            data-status="{{ item.status|lower }}"
+                        >
+
+                            <!-- Product -->
+
+                            <td>
+
+                                <div class="product-box">
+
+                                    <div class="product-image">
+
+                                        {% if item.product_image %}
+
+                                            <img
+                                                src="{{ item.product_image.url }}"
+                                                alt="{{ item.product_name }}"
+                                                loading="lazy"
+                                            >
+
+                                        {% else %}
+
+                                            <div class="product-placeholder">
+
+                                                <i class="bi bi-image"></i>
+
+                                            </div>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Customer -->
+
+                            <td>
+
+                                <div class="customer-box">
+
+                                    <div class="customer-avatar">
+
+                                        {{ item.user.username|first }}
+
+                                    </div>
+
+                                    <div>
+
+                                        <div class="customer-name">
+
+                                            {{ item.user.username }}
+
+                                        </div>
+
+                                        <div class="customer-role">
+
+                                            Customer
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Product Name -->
+
+                            <td>
+
+                                <div class="product-name">
+
+                                    {{ item.product_name }}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Status -->
+
+                            <td>
+
+                                {% if item.status == 'Pending' %}
+
+                                    <span
+                                        class="status-badge status-pending"
+                                    >
+                                        <span class="status-dot"></span>
+                                        Pending
+                                    </span>
+
+                                {% elif item.status == 'Approved' %}
+
+                                    <span
+                                        class="status-badge status-approved"
+                                    >
+                                        <span class="status-dot"></span>
+                                        Approved
+                                    </span>
+
+                                {% elif item.status == 'pickup_scheduled' %}
+
+                                    <span
+                                        class="status-badge status-pickup"
+                                    >
+                                        <span class="status-dot"></span>
+                                        Pickup Scheduled
+                                    </span>
+
+                                {% elif item.status == 'picked_up' %}
+
+                                    <span
+                                        class="status-badge status-picked"
+                                    >
+                                        <span class="status-dot"></span>
+                                        Picked Up
+                                    </span>
+
+                                {% elif item.status == 'received' %}
+
+                                    <span
+                                        class="status-badge status-received"
+                                    >
+                                        <span class="status-dot"></span>
+                                        Received
+                                    </span>
+
+                                {% elif item.status == 'inspected' %}
+
+                                    <span
+                                        class="status-badge status-inspected"
+                                    >
+                                        <span class="status-dot"></span>
+                                        Inspected
+                                    </span>
+
+                                {% elif item.status == 'resubmitted' %}
+
+                                    <span
+                                        class="status-badge status-resubmitted"
+                                    >
+                                        <span class="status-dot"></span>
+                                        Resubmitted
+                                    </span>
+
+                                {% elif item.status == 'refunded' %}
+
+                                    <span
+                                        class="status-badge status-refunded"
+                                    >
+                                        <span class="status-dot"></span>
+                                        Refunded
+                                    </span>
+
+                                {% else %}
+
+                                    <span
+                                        class="status-badge status-rejected"
+                                    >
+                                        <span class="status-dot"></span>
+                                        Rejected
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- Date -->
+
+                            <td>
+
+                                <div class="date-main">
+
+                                    {{ item.created_at|date:"d M Y" }}
+
+                                </div>
+
+                                <div class="date-time">
+
+                                    {{ item.created_at|date:"h:i A" }}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- Action -->
+
+                            <td class="text-end">
+
+                                <a
+                                    href="{% url 'seller_return_detail' item.id %}"
+                                    class="view-btn"
+                                >
+
+                                    View Details
+
+                                    <i class="bi bi-arrow-up-right"></i>
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- =================================================
+                 NO SEARCH RESULT
+                 ================================================= -->
+
+            <div
+                id="noResults"
+                class="empty-state"
+                style="display:none;"
+            >
+
+                <div class="empty-icon">
+
+                    <i class="bi bi-search"></i>
+
+                </div>
+
+                <h4>
+                    No matching returns
+                </h4>
+
+                <p>
+                    Try another customer name, product or status.
+                </p>
+
+            </div>
+
+
+            {% else %}
+
+            <!-- =================================================
+                 EMPTY DATABASE
+                 ================================================= -->
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+
+                    <i class="bi bi-inbox"></i>
+
+                </div>
+
+                <h4>
+                    No Return Requests
+                </h4>
+
+                <p>
+                    Customer return requests will appear here.
+                </p>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     BOOTSTRAP ICONS
+     ========================================================= -->
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+
+<!-- =========================================================
+     SEARCH + STATUS FILTER
+     ========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput =
+        document.getElementById("returnSearch");
+
+    const statusFilter =
+        document.getElementById("statusFilter");
+
+    const rows =
+        document.querySelectorAll(".return-row");
+
+    const noResults =
+        document.getElementById("noResults");
+
+
+    function filterReturns() {
+
+        if (!rows.length) {
+            return;
+        }
+
+        const search =
+            searchInput.value
+                .toLowerCase()
+                .trim();
+
+        const status =
+            statusFilter.value
+                .toLowerCase();
+
+        let visibleCount = 0;
+
+
+        rows.forEach(function (row) {
+
+            const rowText =
+                row.innerText.toLowerCase();
+
+            const rowStatus =
+                row.dataset.status;
+
+
+            const matchesSearch =
+                rowText.includes(search);
+
+
+            const matchesStatus =
+                status === "all" ||
+                rowStatus === status;
+
+
+            if (
+                matchesSearch &&
+                matchesStatus
+            ) {
+
+                row.style.display = "";
+
+                visibleCount++;
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+
+        if (noResults) {
+
+            noResults.style.display =
+                visibleCount === 0
+                    ? "block"
+                    : "none";
+
+        }
+
+    }
+
+
+    if (searchInput) {
+
+        searchInput.addEventListener(
+            "input",
+            filterReturns
+        );
+
+    }
+
+
+    if (statusFilter) {
+
+        statusFilter.addEventListener(
+            "change",
+            filterReturns
+        );
+
+    }
+
+});
+
+</script>
+
+
+{% endblock %}
+```

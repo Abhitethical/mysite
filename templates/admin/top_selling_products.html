@@ -1,0 +1,4282 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="theme-color"
+        content="#0f172a"
+    >
+
+    <title>Top Selling Products | Advanced Analytics</title>
+
+    <!-- =====================================================
+         GOOGLE FONT
+    ====================================================== -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- =====================================================
+         BOOTSTRAP ICONS
+    ====================================================== -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    >
+
+    <!-- =====================================================
+         CHART JS
+    ====================================================== -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/chart.js">
+    </script>
+
+
+<style>
+
+:root {
+
+    --bg: #f4f7fb;
+    --card: #ffffff;
+
+    --text: #0f172a;
+    --muted: #64748b;
+
+    --border: #e2e8f0;
+
+    --primary: #6d28d9;
+    --primary2: #8b5cf6;
+    --primary3: #a78bfa;
+
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #d97706;
+
+    --shadow:
+        0 14px 40px rgba(15,23,42,.07);
+
+    --shadow-hover:
+        0 20px 50px rgba(15,23,42,.12);
+
+    --radius: 18px;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background:
+        linear-gradient(
+            180deg,
+            #f8fafc 0%,
+            #f4f7fb 100%
+        );
+
+    color: var(--text);
+
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.analytics-page {
+
+    width: min(1500px, 94%);
+
+    margin: 0 auto;
+
+    padding:
+        35px 0 60px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.analytics-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap: 25px;
+
+    margin-bottom: 28px;
+}
+
+
+.header-left {
+
+    display: flex;
+
+    align-items:
+        center;
+
+    gap: 16px;
+}
+
+
+.header-icon {
+
+    width: 58px;
+
+    height: 58px;
+
+    border-radius: 16px;
+
+    display: grid;
+
+    place-items: center;
+
+    color: white;
+
+    font-size: 25px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6d28d9,
+            #8b5cf6
+        );
+
+    box-shadow:
+        0 12px 25px
+        rgba(109,40,217,.25);
+}
+
+
+.header-title h1 {
+
+    margin: 0;
+
+    font-size:
+        clamp(1.6rem, 3vw, 2.25rem);
+
+    font-weight: 800;
+
+    letter-spacing: -.045em;
+}
+
+
+.header-title p {
+
+    margin:
+        6px 0 0;
+
+    color: var(--muted);
+
+    font-size: .9rem;
+}
+
+
+/* =========================================================
+   PERIOD
+========================================================= */
+
+.period-box {
+
+    display: flex;
+
+    align-items:
+        center;
+
+    gap: 10px;
+
+    background:
+        rgba(255,255,255,.9);
+
+    border:
+        1px solid var(--border);
+
+    padding:
+        10px 14px;
+
+    border-radius: 13px;
+
+    box-shadow:
+        0 5px 18px
+        rgba(15,23,42,.05);
+}
+
+
+.period-box i {
+
+    color: var(--primary);
+
+    font-size: 17px;
+}
+
+
+.period-box span {
+
+    color: var(--muted);
+
+    font-size: .82rem;
+
+    font-weight: 600;
+}
+
+
+.period-box select {
+
+    border: 0;
+
+    outline: 0;
+
+    background:
+        transparent;
+
+    color: var(--text);
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   KPI GRID
+========================================================= */
+
+.kpi-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 22px;
+}
+
+
+.kpi-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    background:
+        rgba(255,255,255,.96);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        var(--radius);
+
+    padding: 22px;
+
+    box-shadow:
+        var(--shadow);
+
+    transition:
+        .25s ease;
+}
+
+
+.kpi-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        var(--shadow-hover);
+}
+
+
+.kpi-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 110px;
+
+    height: 110px;
+
+    right: -50px;
+
+    bottom: -50px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(109,40,217,.08);
+}
+
+
+.kpi-top {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+}
+
+
+.kpi-label {
+
+    color:
+        var(--muted);
+
+    font-size: .75rem;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .07em;
+
+    font-weight: 700;
+}
+
+
+.kpi-icon {
+
+    width: 40px;
+
+    height: 40px;
+
+    display: grid;
+
+    place-items: center;
+
+    border-radius: 11px;
+
+    color:
+        var(--primary);
+
+    background:
+        #f3e8ff;
+
+    font-size: 18px;
+}
+
+
+.kpi-value {
+
+    margin-top: 14px;
+
+    font-size:
+        1.65rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        -.035em;
+
+    max-width:
+        100%;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+.kpi-description {
+
+    margin-top: 7px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        .78rem;
+}
+
+
+/* =========================================================
+   MAIN CARD
+========================================================= */
+
+.main-card {
+
+    background:
+        rgba(255,255,255,.97);
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        22px;
+
+    box-shadow:
+        var(--shadow);
+
+    overflow:
+        hidden;
+}
+
+
+/* =========================================================
+   CARD HEADER
+========================================================= */
+
+.main-card-header {
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap: 20px;
+
+    padding:
+        23px 26px;
+
+    border-bottom:
+        1px solid #eef2f7;
+}
+
+
+.main-title h2 {
+
+    margin: 0;
+
+    font-size:
+        1.08rem;
+
+    font-weight:
+        750;
+}
+
+
+.main-title p {
+
+    margin:
+        5px 0 0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        .82rem;
+}
+
+
+/* =========================================================
+   ACTIONS
+========================================================= */
+
+.action-group {
+
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap:
+        wrap;
+}
+
+
+.action-btn {
+
+    border:
+        1px solid var(--border);
+
+    background:
+        white;
+
+    color:
+        #475569;
+
+    border-radius:
+        9px;
+
+    padding:
+        8px 12px;
+
+    font-size:
+        .78rem;
+
+    font-weight:
+        650;
+
+    cursor:
+        pointer;
+
+    transition:
+        .2s ease;
+}
+
+
+.action-btn:hover {
+
+    border-color:
+        var(--primary2);
+
+    color:
+        var(--primary);
+
+    background:
+        #faf7ff;
+}
+
+
+.action-btn.active {
+
+    background:
+        var(--primary);
+
+    border-color:
+        var(--primary);
+
+    color:
+        white;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search-area {
+
+    padding:
+        18px 26px;
+
+    border-bottom:
+        1px solid #eef2f7;
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap: 15px;
+}
+
+
+.search-box {
+
+    position:
+        relative;
+
+    width:
+        min(400px, 100%);
+}
+
+
+.search-box i {
+
+    position:
+        absolute;
+
+    left:
+        13px;
+
+    top:
+        50%;
+
+    transform:
+        translateY(-50%);
+
+    color:
+        #94a3b8;
+}
+
+
+.search-box input {
+
+    width:
+        100%;
+
+    height:
+        42px;
+
+    padding:
+        0 14px 0 38px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        10px;
+
+    outline:
+        none;
+
+    font-family:
+        inherit;
+
+    font-size:
+        .82rem;
+
+    transition:
+        .2s;
+}
+
+
+.search-box input:focus {
+
+    border-color:
+        var(--primary2);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(139,92,246,.1);
+}
+
+
+.result-count {
+
+    color:
+        var(--muted);
+
+    font-size:
+        .78rem;
+
+    font-weight:
+        600;
+}
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+.chart-section {
+
+    padding:
+        25px 26px 30px;
+}
+
+
+.chart-container {
+
+    position:
+        relative;
+
+    height:
+        430px;
+}
+
+
+#salesChart {
+
+    width:
+        100% !important;
+
+    height:
+        100% !important;
+}
+
+
+/* =========================================================
+   INSIGHT STRIP
+========================================================= */
+
+.insight-strip {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:
+        14px;
+
+    margin:
+        0 26px 25px;
+}
+
+
+.insight {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        12px;
+
+    padding:
+        14px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid #edf2f7;
+
+    border-radius:
+        12px;
+}
+
+
+.insight-icon {
+
+    width:
+        37px;
+
+    height:
+        37px;
+
+    border-radius:
+        10px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    background:
+        #f3e8ff;
+
+    color:
+        var(--primary);
+}
+
+
+.insight-label {
+
+    color:
+        var(--muted);
+
+    font-size:
+        .7rem;
+
+    font-weight:
+        600;
+}
+
+
+.insight-value {
+
+    margin-top:
+        3px;
+
+    font-size:
+        .85rem;
+
+    font-weight:
+        750;
+}
+
+
+/* =========================================================
+   RANKING
+========================================================= */
+
+.ranking-section {
+
+    border-top:
+        1px solid #eef2f7;
+
+    padding:
+        25px 26px 30px;
+}
+
+
+.ranking-heading {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        18px;
+}
+
+
+.ranking-heading h3 {
+
+    margin:
+        0;
+
+    font-size:
+        1rem;
+
+    font-weight:
+        750;
+}
+
+
+.ranking-heading span {
+
+    color:
+        var(--muted);
+
+    font-size:
+        .75rem;
+}
+
+
+.product-row {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        45px minmax(180px,1fr) 150px 130px;
+
+    align-items:
+        center;
+
+    gap:
+        16px;
+
+    padding:
+        15px 0;
+
+    border-bottom:
+        1px solid #f1f5f9;
+
+    transition:
+        .2s;
+}
+
+
+.product-row:last-child {
+
+    border-bottom:
+        0;
+}
+
+
+.product-row:hover {
+
+    background:
+        #fafaff;
+
+    border-radius:
+        10px;
+}
+
+
+.rank {
+
+    width:
+        34px;
+
+    height:
+        34px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        10px;
+
+    background:
+        #f3e8ff;
+
+    color:
+        var(--primary);
+
+    font-size:
+        .8rem;
+
+    font-weight:
+        800;
+}
+
+
+.product-main {
+
+    min-width:
+        0;
+}
+
+
+.product-name {
+
+    font-size:
+        .9rem;
+
+    font-weight:
+        700;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+.seller-name {
+
+    margin-top:
+        3px;
+
+    color:
+        var(--muted);
+
+    font-size:
+        .72rem;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+.progress {
+
+    height:
+        6px;
+
+    margin-top:
+        8px;
+
+    background:
+        #f1f5f9;
+
+    border-radius:
+        99px;
+
+    overflow:
+        hidden;
+}
+
+
+.progress span {
+
+    display:
+        block;
+
+    height:
+        100%;
+
+    border-radius:
+        inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6d28d9,
+            #a78bfa
+        );
+
+    transition:
+        width .5s ease;
+}
+
+
+.seller-cell {
+
+    min-width:
+        0;
+}
+
+
+.seller-company {
+
+    font-size:
+        .78rem;
+
+    font-weight:
+        700;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+.seller-location {
+
+    color:
+        var(--muted);
+
+    font-size:
+        .7rem;
+
+    margin-top:
+        3px;
+
+    overflow:
+        hidden;
+
+    text-overflow:
+        ellipsis;
+
+    white-space:
+        nowrap;
+}
+
+
+.units-cell {
+
+    text-align:
+        right;
+}
+
+
+.units-value {
+
+    font-size:
+        .9rem;
+
+    font-weight:
+        800;
+}
+
+
+.units-label {
+
+    color:
+        var(--muted);
+
+    font-size:
+        .68rem;
+
+    margin-top:
+        2px;
+}
+
+
+.view-seller {
+
+    margin-top:
+        5px;
+
+    border:
+        0;
+
+    background:
+        transparent;
+
+    color:
+        var(--primary);
+
+    font-size:
+        .68rem;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+
+    padding:
+        0;
+}
+
+
+.view-seller:hover {
+
+    text-decoration:
+        underline;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty-state {
+
+    display:
+        none;
+
+    text-align:
+        center;
+
+    padding:
+        55px 20px;
+
+    color:
+        var(--muted);
+}
+
+
+.empty-state i {
+
+    font-size:
+        42px;
+
+    color:
+        #cbd5e1;
+}
+
+
+.empty-state h4 {
+
+    margin:
+        12px 0 5px;
+
+    color:
+        var(--text);
+
+    font-size:
+        1rem;
+}
+
+
+/* =========================================================
+   SELLER MODAL
+========================================================= */
+
+.modal-overlay {
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    z-index:
+        99999;
+
+    display:
+        none;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        20px;
+
+    background:
+        rgba(15,23,42,.68);
+
+    backdrop-filter:
+        blur(7px);
+}
+
+
+.modal-overlay.show {
+
+    display:
+        flex;
+}
+
+
+.seller-modal {
+
+    width:
+        min(850px, 100%);
+
+    max-height:
+        90vh;
+
+    overflow:
+        hidden;
+
+    background:
+        white;
+
+    border-radius:
+        22px;
+
+    box-shadow:
+        0 30px 100px
+        rgba(0,0,0,.25);
+
+    animation:
+        modalIn .25s ease;
+}
+
+
+@keyframes modalIn {
+
+    from {
+
+        opacity:
+            0;
+
+        transform:
+            translateY(20px)
+            scale(.97);
+    }
+
+    to {
+
+        opacity:
+            1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+.modal-header {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    padding:
+        20px 23px;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+
+.modal-header-left {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        13px;
+}
+
+
+.modal-header-icon {
+
+    width:
+        43px;
+
+    height:
+        43px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border-radius:
+        11px;
+
+    color:
+        white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #6d28d9,
+            #8b5cf6
+        );
+}
+
+
+.modal-header h3 {
+
+    margin:
+        0;
+
+    font-size:
+        1rem;
+
+    font-weight:
+        800;
+}
+
+
+.modal-header p {
+
+    margin:
+        3px 0 0;
+
+    color:
+        var(--muted);
+
+    font-size:
+        .72rem;
+}
+
+
+.close-modal {
+
+    width:
+        35px;
+
+    height:
+        35px;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        9px;
+
+    background:
+        white;
+
+    color:
+        #64748b;
+
+    cursor:
+        pointer;
+
+    font-size:
+        17px;
+}
+
+
+.close-modal:hover {
+
+    background:
+        #f8fafc;
+
+    color:
+        var(--danger);
+}
+
+
+.modal-body {
+
+    padding:
+        23px;
+
+    overflow-y:
+        auto;
+
+    max-height:
+        calc(90vh - 85px);
+}
+
+
+/* =========================================================
+   SELLER PROFILE
+========================================================= */
+
+.seller-profile {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        16px;
+
+    padding:
+        17px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius:
+        15px;
+
+    background:
+        #f8fafc;
+
+    margin-bottom:
+        20px;
+}
+
+
+.seller-avatar {
+
+    width:
+        65px;
+
+    height:
+        65px;
+
+    flex:
+        0 0 65px;
+
+    border-radius:
+        15px;
+
+    overflow:
+        hidden;
+
+    display:
+        grid;
+
+    place-items:
+        center;
+
+    color:
+        var(--primary);
+
+    background:
+        #ede9fe;
+
+    font-size:
+        25px;
+
+    font-weight:
+        800;
+}
+
+
+.seller-avatar img {
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+}
+
+
+.profile-name {
+
+    font-size:
+        1rem;
+
+    font-weight:
+        800;
+}
+
+
+.profile-company {
+
+    color:
+        var(--primary);
+
+    font-size:
+        .78rem;
+
+    font-weight:
+        650;
+
+    margin-top:
+        3px;
+}
+
+
+.profile-status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+
+    margin-top:
+        6px;
+
+    padding:
+        4px 8px;
+
+    border-radius:
+        99px;
+
+    background:
+        #dcfce7;
+
+    color:
+        #15803d;
+
+    font-size:
+        .65rem;
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================================
+   DETAIL GRID
+========================================================= */
+
+.detail-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap:
+        12px;
+}
+
+
+.detail-box {
+
+    padding:
+        13px;
+
+    border:
+        1px solid #edf2f7;
+
+    border-radius:
+        11px;
+
+    background:
+        #ffffff;
+}
+
+
+.detail-label {
+
+    color:
+        #94a3b8;
+
+    font-size:
+        .64rem;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .06em;
+
+    font-weight:
+        700;
+}
+
+
+.detail-value {
+
+    margin-top:
+        5px;
+
+    font-size:
+        .79rem;
+
+    font-weight:
+        650;
+
+    color:
+        #334155;
+
+    word-break:
+        break-word;
+}
+
+
+.modal-section-title {
+
+    margin:
+        23px 0 12px;
+
+    font-size:
+        .82rem;
+
+    font-weight:
+        800;
+
+    color:
+        #334155;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        7px;
+}
+
+
+.modal-section-title i {
+
+    color:
+        var(--primary);
+}
+
+
+/* =========================================================
+   PRODUCT INFO
+========================================================= */
+
+.product-summary {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap:
+        12px;
+}
+
+
+.product-summary-card {
+
+    padding:
+        14px;
+
+    background:
+        #f8fafc;
+
+    border:
+        1px solid #edf2f7;
+
+    border-radius:
+        12px;
+}
+
+
+.product-summary-label {
+
+    color:
+        var(--muted);
+
+    font-size:
+        .67rem;
+
+    font-weight:
+        600;
+}
+
+
+.product-summary-value {
+
+    margin-top:
+        4px;
+
+    font-size:
+        .9rem;
+
+    font-weight:
+        800;
+}
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast-message {
+
+    position:
+        fixed;
+
+    right:
+        25px;
+
+    bottom:
+        25px;
+
+    z-index:
+        100000;
+
+    padding:
+        12px 16px;
+
+    border-radius:
+        11px;
+
+    background:
+        #0f172a;
+
+    color:
+        white;
+
+    font-size:
+        .78rem;
+
+    box-shadow:
+        0 12px 35px
+        rgba(15,23,42,.25);
+
+    display:
+        none;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .kpi-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .product-row {
+
+        grid-template-columns:
+            42px
+            minmax(160px,1fr)
+            130px
+            100px;
+    }
+}
+
+
+@media (max-width: 800px) {
+
+    .analytics-header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+    .period-box {
+
+        width:
+            100%;
+
+        justify-content:
+            space-between;
+    }
+
+    .insight-strip {
+
+        grid-template-columns:
+            1fr;
+    }
+
+    .chart-container {
+
+        height:
+            360px;
+    }
+
+    .product-row {
+
+        grid-template-columns:
+            40px 1fr 85px;
+    }
+
+    .seller-cell {
+
+        display:
+            none;
+    }
+
+    .detail-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .analytics-page {
+
+        width:
+            92%;
+
+        padding-top:
+            24px;
+    }
+
+    .kpi-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+    .header-icon {
+
+        width:
+            48px;
+
+        height:
+            48px;
+
+        font-size:
+            20px;
+    }
+
+    .main-card-header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        padding:
+            20px;
+    }
+
+    .action-group {
+
+        width:
+            100%;
+    }
+
+    .action-btn {
+
+        flex:
+            1;
+    }
+
+    .search-area {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        padding:
+            16px 20px;
+    }
+
+    .search-box {
+
+        width:
+            100%;
+    }
+
+    .chart-section {
+
+        padding:
+            18px 15px 22px;
+    }
+
+    .chart-container {
+
+        height:
+            300px;
+    }
+
+    .ranking-section {
+
+        padding:
+            20px 15px;
+    }
+
+    .product-row {
+
+        grid-template-columns:
+            35px 1fr 75px;
+
+        gap:
+            9px;
+
+        padding:
+            13px 0;
+    }
+
+    .units-value {
+
+        font-size:
+            .8rem;
+    }
+
+    .seller-profile {
+
+        align-items:
+            flex-start;
+    }
+
+    .product-summary {
+
+        grid-template-columns:
+            1fr;
+    }
+
+    .modal-body {
+
+        padding:
+            17px;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="analytics-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="analytics-header">
+
+        <div class="header-left">
+
+            <div class="header-icon">
+
+                <i class="bi bi-bar-chart-fill"></i>
+
+            </div>
+
+            <div class="header-title">
+
+                <h1>
+                    Top Selling Products
+                </h1>
+
+                <p>
+                    Advanced sales intelligence, product ranking
+                    and seller performance.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="period-box">
+
+            <i class="bi bi-calendar3"></i>
+
+            <span>
+                Period
+            </span>
+
+            <select id="periodSelect">
+
+                <option value="current">
+                    Current Data
+                </option>
+
+                <option value="previous">
+                    Previous Period
+                </option>
+
+                <option value="quarter">
+                    This Quarter
+                </option>
+
+                <option value="year">
+                    This Year
+                </option>
+
+            </select>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         KPI CARDS
+    ====================================================== -->
+
+    <section class="kpi-grid">
+
+
+        <!-- TOTAL UNITS -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-label">
+                    Total Units Sold
+                </div>
+
+                <div class="kpi-icon">
+
+                    <i class="bi bi-box-seam"></i>
+
+                </div>
+
+            </div>
+
+            <div
+                class="kpi-value"
+                id="totalUnits"
+            >
+                0
+            </div>
+
+            <div class="kpi-description">
+                Delivered + completed orders
+            </div>
+
+        </div>
+
+
+        <!-- TOP PRODUCT -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-label">
+                    Top Product
+                </div>
+
+                <div class="kpi-icon">
+
+                    <i class="bi bi-trophy-fill"></i>
+
+                </div>
+
+            </div>
+
+            <div
+                class="kpi-value"
+                id="topProduct"
+            >
+                —
+            </div>
+
+            <div class="kpi-description">
+                Highest sales volume
+            </div>
+
+        </div>
+
+
+        <!-- TOP SELLER -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-label">
+                    Top Seller
+                </div>
+
+                <div class="kpi-icon">
+
+                    <i class="bi bi-person-badge-fill"></i>
+
+                </div>
+
+            </div>
+
+            <div
+                class="kpi-value"
+                id="topSeller"
+            >
+                —
+            </div>
+
+            <div class="kpi-description">
+                Seller with highest volume
+            </div>
+
+        </div>
+
+
+        <!-- AVERAGE -->
+
+        <div class="kpi-card">
+
+            <div class="kpi-top">
+
+                <div class="kpi-label">
+                    Average Units
+                </div>
+
+                <div class="kpi-icon">
+
+                    <i class="bi bi-graph-up-arrow"></i>
+
+                </div>
+
+            </div>
+
+            <div
+                class="kpi-value"
+                id="averageSales"
+            >
+                0
+            </div>
+
+            <div class="kpi-description">
+                Average units per product
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         MAIN CARD
+    ====================================================== -->
+
+    <section class="main-card">
+
+
+        <!-- CARD HEADER -->
+
+        <div class="main-card-header">
+
+            <div class="main-title">
+
+                <h2>
+                    Sales Performance
+                </h2>
+
+                <p>
+                    Product units sold and seller performance
+                </p>
+
+            </div>
+
+
+            <div class="action-group">
+
+                <button
+                    type="button"
+                    class="action-btn active"
+                    id="sortDesc"
+                    onclick="sortChart('desc')"
+                >
+
+                    <i class="bi bi-sort-down"></i>
+
+                    Highest First
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="action-btn"
+                    id="sortAsc"
+                    onclick="sortChart('asc')"
+                >
+
+                    <i class="bi bi-sort-up"></i>
+
+                    Lowest First
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="action-btn"
+                    onclick="resetChart()"
+                >
+
+                    <i class="bi bi-arrow-counterclockwise"></i>
+
+                    Reset
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-area">
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    id="productSearch"
+                    placeholder="Search product or seller..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+
+            <div
+                class="result-count"
+                id="resultCount"
+            >
+                0 products
+            </div>
+
+        </div>
+
+
+        <!-- CHART -->
+
+        <div class="chart-section">
+
+            <div class="chart-container">
+
+                <canvas
+                    id="salesChart">
+                </canvas>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             INSIGHTS
+        ================================================== -->
+
+        <div class="insight-strip">
+
+
+            <div class="insight">
+
+                <div class="insight-icon">
+
+                    <i class="bi bi-award-fill"></i>
+
+                </div>
+
+                <div>
+
+                    <div class="insight-label">
+                        Best Product
+                    </div>
+
+                    <div
+                        class="insight-value"
+                        id="insightProduct"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="insight">
+
+                <div class="insight-icon">
+
+                    <i class="bi bi-person-check-fill"></i>
+
+                </div>
+
+                <div>
+
+                    <div class="insight-label">
+                        Best Seller
+                    </div>
+
+                    <div
+                        class="insight-value"
+                        id="insightSeller"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="insight">
+
+                <div class="insight-icon">
+
+                    <i class="bi bi-percent"></i>
+
+                </div>
+
+                <div>
+
+                    <div class="insight-label">
+                        Top Product Share
+                    </div>
+
+                    <div
+                        class="insight-value"
+                        id="topShare"
+                    >
+                        0%
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             RANKING
+        ================================================== -->
+
+        <div class="ranking-section">
+
+            <div class="ranking-heading">
+
+                <h3>
+                    Product & Seller Ranking
+                </h3>
+
+                <span>
+                    Click "View Seller" for complete seller details
+                </span>
+
+            </div>
+
+
+            <div id="rankingList"></div>
+
+
+            <div
+                class="empty-state"
+                id="emptyState"
+            >
+
+                <i class="bi bi-search"></i>
+
+                <h4>
+                    No products found
+                </h4>
+
+                <div>
+                    Try a different product or seller name.
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </section>
+
+</div>
+
+
+<!-- =========================================================
+     SELLER DETAILS MODAL
+========================================================= -->
+
+<div
+    class="modal-overlay"
+    id="sellerModal"
+>
+
+
+    <div class="seller-modal">
+
+
+        <!-- MODAL HEADER -->
+
+        <div class="modal-header">
+
+            <div class="modal-header-left">
+
+                <div class="modal-header-icon">
+
+                    <i class="bi bi-person-vcard-fill"></i>
+
+                </div>
+
+                <div>
+
+                    <h3>
+                        Seller Details
+                    </h3>
+
+                    <p>
+                        Complete seller and sales information
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="close-modal"
+                onclick="closeSellerModal()"
+            >
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+        </div>
+
+
+        <!-- MODAL BODY -->
+
+        <div class="modal-body">
+
+
+            <!-- PROFILE -->
+
+            <div class="seller-profile">
+
+
+                <div
+                    class="seller-avatar"
+                    id="sellerAvatar"
+                >
+
+                    <i class="bi bi-person-fill"></i>
+
+                </div>
+
+
+                <div>
+
+                    <div
+                        class="profile-name"
+                        id="sellerFullName"
+                    >
+                        —
+                    </div>
+
+                    <div
+                        class="profile-company"
+                        id="sellerCompany"
+                    >
+                        —
+                    </div>
+
+                    <div
+                        class="profile-status"
+                        id="sellerStatus"
+                    >
+
+                        <i class="bi bi-circle-fill"></i>
+
+                        Active
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCT SUMMARY -->
+
+            <div class="modal-section-title">
+
+                <i class="bi bi-box-seam-fill"></i>
+
+                Sales Information
+
+            </div>
+
+
+            <div class="product-summary">
+
+
+                <div class="product-summary-card">
+
+                    <div class="product-summary-label">
+                        Product
+                    </div>
+
+                    <div
+                        class="product-summary-value"
+                        id="modalProduct"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="product-summary-card">
+
+                    <div class="product-summary-label">
+                        Units Sold
+                    </div>
+
+                    <div
+                        class="product-summary-value"
+                        id="modalUnits"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+
+                <div class="product-summary-card">
+
+                    <div class="product-summary-label">
+                        Vendor Username
+                    </div>
+
+                    <div
+                        class="product-summary-value"
+                        id="modalVendor"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACCOUNT -->
+
+            <div class="modal-section-title">
+
+                <i class="bi bi-person-circle"></i>
+
+                Account Information
+
+            </div>
+
+
+            <div class="detail-grid">
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Seller ID
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerId"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Username
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerUsername"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Email
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerEmail"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Business Type
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerBusinessType"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- CONTACT -->
+
+            <div class="modal-section-title">
+
+                <i class="bi bi-telephone-fill"></i>
+
+                Contact Information
+
+            </div>
+
+
+            <div class="detail-grid">
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Mobile
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerMobile"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Phone
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerPhone"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Address
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerAddress"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        City
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerCity"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        State
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerState"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Pincode
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerPincode"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Country
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerCountry"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- VERIFICATION -->
+
+            <div class="modal-section-title">
+
+                <i class="bi bi-shield-check"></i>
+
+                Verification Information
+
+            </div>
+
+
+            <div class="detail-grid">
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        GST Number
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerGST"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        PAN Number
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerPAN"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+
+                <div class="detail-box">
+
+                    <div class="detail-label">
+                        Aadhaar Number
+                    </div>
+
+                    <div
+                        class="detail-value"
+                        id="sellerAadhar"
+                    >
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TOAST -->
+
+<div
+    class="toast-message"
+    id="toastMessage"
+>
+    Updated
+</div>
+
+
+<!-- =========================================================
+     DJANGO DATA
+========================================================= -->
+
+{{ products_data|json_script:"productsData" }}
+
+
+<script>
+
+
+/* =========================================================
+   LOAD DJANGO DATA SAFELY
+========================================================= */
+
+const productsData =
+    JSON.parse(
+        document
+            .getElementById("productsData")
+            .textContent
+    );
+
+
+/* =========================================================
+   ORIGINAL DATA
+========================================================= */
+
+const originalProducts =
+    productsData.map(product => ({
+        ...product
+    }));
+
+
+let filteredProducts =
+    [...originalProducts];
+
+
+let currentSort =
+    "desc";
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const rankingList =
+    document.getElementById(
+        "rankingList"
+    );
+
+
+const emptyState =
+    document.getElementById(
+        "emptyState"
+    );
+
+
+const searchInput =
+    document.getElementById(
+        "productSearch"
+    );
+
+
+/* =========================================================
+   CHART
+========================================================= */
+
+const ctx =
+    document
+        .getElementById(
+            "salesChart"
+        )
+        .getContext("2d");
+
+
+const gradient =
+    ctx.createLinearGradient(
+        0,
+        0,
+        0,
+        430
+    );
+
+
+gradient.addColorStop(
+    0,
+    "#6d28d9"
+);
+
+
+gradient.addColorStop(
+    1,
+    "#c4b5fd"
+);
+
+
+const salesChart =
+    new Chart(
+        ctx,
+        {
+
+            type:
+                "bar",
+
+            data:
+                {
+
+                    labels:
+                        filteredProducts.map(
+                            product =>
+                                product.name
+                        ),
+
+                    datasets:
+                        [{
+
+                            label:
+                                "Units Sold",
+
+                            data:
+                                filteredProducts.map(
+                                    product =>
+                                        product.units
+                                ),
+
+                            backgroundColor:
+                                gradient,
+
+                            hoverBackgroundColor:
+                                "#5b21b6",
+
+                            borderWidth:
+                                0,
+
+                            borderRadius:
+                                9,
+
+                            borderSkipped:
+                                false,
+
+                            barPercentage:
+                                .66,
+
+                            categoryPercentage:
+                                .72
+
+                        }]
+
+                },
+
+
+            options:
+                {
+
+                    responsive:
+                        true,
+
+                    maintainAspectRatio:
+                        false,
+
+                    animation:
+                        {
+                            duration:
+                                650,
+
+                            easing:
+                                "easeOutQuart"
+                        },
+
+
+                    interaction:
+                        {
+                            mode:
+                                "index",
+
+                            intersect:
+                                false
+                        },
+
+
+                    plugins:
+                        {
+
+                            legend:
+                                {
+                                    display:
+                                        false
+                                },
+
+
+                            tooltip:
+                                {
+
+                                    backgroundColor:
+                                        "#0f172a",
+
+                                    titleColor:
+                                        "#ffffff",
+
+                                    bodyColor:
+                                        "#e2e8f0",
+
+                                    padding:
+                                        13,
+
+                                    cornerRadius:
+                                        11,
+
+                                    displayColors:
+                                        false,
+
+
+                                    callbacks:
+                                        {
+
+                                            title:
+                                                function(context)
+                                            {
+                                                return context[0].label;
+                                            },
+
+
+                                            label:
+                                                function(context)
+                                            {
+
+                                                return (
+                                                    " " +
+                                                    Number(
+                                                        context.raw
+                                                    ).toLocaleString() +
+                                                    " units sold"
+                                                );
+
+                                            }
+
+                                        }
+
+                                }
+
+                        },
+
+
+                    scales:
+                        {
+
+                            y:
+                                {
+
+                                    beginAtZero:
+                                        true,
+
+                                    border:
+                                        {
+                                            display:
+                                                false
+                                        },
+
+                                    grid:
+                                        {
+                                            color:
+                                                "#eef2f7",
+
+                                            drawTicks:
+                                                false
+                                        },
+
+                                    ticks:
+                                        {
+
+                                            color:
+                                                "#64748b",
+
+                                            padding:
+                                                10,
+
+                                            font:
+                                                {
+                                                    size:
+                                                        11
+                                                }
+
+                                        },
+
+                                    title:
+                                        {
+
+                                        display:
+                                            true,
+
+                                        text:
+                                            "Units Sold",
+
+                                        color:
+                                            "#475569",
+
+                                        font:
+                                            {
+                                                weight:
+                                                    "700"
+                                            }
+
+                                    }
+
+                                },
+
+
+                            x:
+                                {
+
+                                    border:
+                                        {
+                                            display:
+                                                false
+                                        },
+
+                                    grid:
+                                        {
+                                            display:
+                                                false
+                                        },
+
+                                    ticks:
+                                        {
+
+                                        color:
+                                            "#64748b",
+
+                                        padding:
+                                            8,
+
+                                        font:
+                                            {
+                                                size:
+                                                    11
+                                            }
+
+                                    },
+
+                                    title:
+                                        {
+
+                                        display:
+                                            true,
+
+                                        text:
+                                            "Products",
+
+                                        color:
+                                            "#475569",
+
+                                        font:
+                                            {
+                                                weight:
+                                                    "700"
+                                            }
+
+                                    }
+
+                                }
+
+                        }
+
+                }
+
+        }
+    );
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value)
+{
+
+    return String(value ?? "")
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   SAFE VALUE
+========================================================= */
+
+function safeValue(value)
+{
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    )
+    {
+        return "Not provided";
+    }
+
+    return escapeHTML(value);
+
+}
+
+
+/* =========================================================
+   GET SELLER DISPLAY NAME
+========================================================= */
+
+function getSellerName(product)
+{
+
+    return (
+        product.seller?.company ||
+        product.seller?.full_name ||
+        product.seller?.username ||
+        "Unknown Seller"
+    );
+
+}
+
+
+/* =========================================================
+   UPDATE STATISTICS
+========================================================= */
+
+function updateStats()
+{
+
+    const total =
+        filteredProducts.reduce(
+            (sum, product) =>
+                sum +
+                Number(product.units || 0),
+            0
+        );
+
+
+    const average =
+        filteredProducts.length
+            ? Math.round(
+                total /
+                filteredProducts.length
+            )
+            : 0;
+
+
+    let topProduct =
+        "—";
+
+
+    let topSeller =
+        "—";
+
+
+    if (filteredProducts.length)
+    {
+
+        const sorted =
+            [...filteredProducts]
+                .sort(
+                    (a,b) =>
+                        Number(b.units) -
+                        Number(a.units)
+                );
+
+
+        topProduct =
+            sorted[0].name ||
+            "—";
+
+
+        topSeller =
+            getSellerName(
+                sorted[0]
+            );
+
+    }
+
+
+    document.getElementById(
+        "totalUnits"
+    ).textContent =
+        total.toLocaleString();
+
+
+    document.getElementById(
+        "averageSales"
+    ).textContent =
+        average.toLocaleString();
+
+
+    document.getElementById(
+        "topProduct"
+    ).textContent =
+        topProduct;
+
+
+    document.getElementById(
+        "topSeller"
+    ).textContent =
+        topSeller;
+
+
+    document.getElementById(
+        "insightProduct"
+    ).textContent =
+        topProduct;
+
+
+    document.getElementById(
+        "insightSeller"
+    ).textContent =
+        topSeller;
+
+
+    const topUnits =
+        filteredProducts.length
+            ? Math.max(
+                ...filteredProducts.map(
+                    p =>
+                        Number(p.units)
+                )
+            )
+            : 0;
+
+
+    const share =
+        total && topUnits
+            ? (
+                topUnits /
+                total *
+                100
+            ).toFixed(1)
+            : 0;
+
+
+    document.getElementById(
+        "topShare"
+    ).textContent =
+        share + "%";
+
+
+    document.getElementById(
+        "resultCount"
+    ).textContent =
+        `${filteredProducts.length} ${
+            filteredProducts.length === 1
+                ? "product"
+                : "products"
+        }`;
+
+}
+
+
+/* =========================================================
+   RENDER RANKING
+========================================================= */
+
+function renderRanking()
+{
+
+    if (
+        !filteredProducts.length
+    )
+    {
+
+        rankingList.innerHTML =
+            "";
+
+        emptyState.style.display =
+            "block";
+
+        return;
+
+    }
+
+
+    emptyState.style.display =
+        "none";
+
+
+    const products =
+        [...filteredProducts]
+            .sort(
+                (a,b) =>
+                    currentSort === "desc"
+                        ? Number(b.units) -
+                          Number(a.units)
+                        : Number(a.units) -
+                          Number(b.units)
+            );
+
+
+    const maxValue =
+        Math.max(
+            ...products.map(
+                product =>
+                    Number(product.units)
+            ),
+            1
+        );
+
+
+    rankingList.innerHTML =
+        products
+            .map(
+                (product,index) =>
+                {
+
+                    const percentage =
+                        (
+                            Number(product.units) /
+                            maxValue
+                        ) * 100;
+
+
+                    const sellerName =
+                        getSellerName(
+                            product
+                        );
+
+
+                    const location =
+                        [
+                            product.seller?.city,
+                            product.seller?.state
+                        ]
+                        .filter(Boolean)
+                        .join(", ");
+
+
+                    return `
+
+                    <div class="product-row">
+
+                        <div class="rank">
+                            ${index + 1}
+                        </div>
+
+
+                        <div class="product-main">
+
+                            <div class="product-name">
+                                ${escapeHTML(
+                                    product.name
+                                )}
+                            </div>
+
+                            <div class="seller-name">
+
+                                <i class="bi bi-person-fill"></i>
+
+                                ${escapeHTML(
+                                    sellerName
+                                )}
+
+                            </div>
+
+
+                            <div class="progress">
+
+                                <span
+                                    style="
+                                        width:
+                                        ${percentage}%
+                                    "
+                                ></span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="seller-cell">
+
+                            <div class="seller-company">
+
+                                ${escapeHTML(
+                                    sellerName
+                                )}
+
+                            </div>
+
+
+                            <div class="seller-location">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                                ${escapeHTML(
+                                    location ||
+                                    "Location not provided"
+                                )}
+
+                            </div>
+
+
+                            <button
+                                type="button"
+                                class="view-seller"
+                                onclick="
+                                    openSellerModal(
+                                        ${originalProducts.indexOf(
+                                            product
+                                        )}
+                                    )
+                                "
+                            >
+
+                                View Seller
+
+                                <i class="bi bi-arrow-right"></i>
+
+                            </button>
+
+                        </div>
+
+
+                        <div class="units-cell">
+
+                            <div class="units-value">
+
+                                ${Number(
+                                    product.units
+                                ).toLocaleString()}
+
+                            </div>
+
+                            <div class="units-label">
+                                units sold
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    `;
+
+                }
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   SORT
+========================================================= */
+
+function sortChart(direction)
+{
+
+    currentSort =
+        direction;
+
+
+    document
+        .getElementById("sortDesc")
+        .classList.toggle(
+            "active",
+            direction === "desc"
+        );
+
+
+    document
+        .getElementById("sortAsc")
+        .classList.toggle(
+            "active",
+            direction === "asc"
+        );
+
+
+    const products =
+        [...filteredProducts]
+            .sort(
+                (a,b) =>
+                    direction === "desc"
+                        ? Number(b.units) -
+                          Number(a.units)
+                        : Number(a.units) -
+                          Number(b.units)
+            );
+
+
+    salesChart.data.labels =
+        products.map(
+            product =>
+                product.name
+        );
+
+
+    salesChart.data.datasets[0].data =
+        products.map(
+            product =>
+                product.units
+        );
+
+
+    salesChart.update();
+
+
+    renderRanking();
+
+    updateStats();
+
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+function resetChart()
+{
+
+    searchInput.value =
+        "";
+
+
+    filteredProducts =
+        [...originalProducts];
+
+
+    currentSort =
+        "desc";
+
+
+    document
+        .getElementById("sortDesc")
+        .classList.add(
+            "active"
+        );
+
+
+    document
+        .getElementById("sortAsc")
+        .classList.remove(
+            "active"
+        );
+
+
+    updateChart();
+
+}
+
+
+/* =========================================================
+   UPDATE CHART
+========================================================= */
+
+function updateChart()
+{
+
+    const products =
+        [...filteredProducts]
+            .sort(
+                (a,b) =>
+                    currentSort === "desc"
+                        ? Number(b.units) -
+                          Number(a.units)
+                        : Number(a.units) -
+                          Number(b.units)
+            );
+
+
+    salesChart.data.labels =
+        products.map(
+            product =>
+                product.name
+        );
+
+
+    salesChart.data.datasets[0].data =
+        products.map(
+            product =>
+                Number(product.units)
+        );
+
+
+    salesChart.update();
+
+
+    renderRanking();
+
+    updateStats();
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+searchInput.addEventListener(
+    "input",
+    function()
+    {
+
+        const query =
+            this.value
+                .trim()
+                .toLowerCase();
+
+
+        if (!query)
+        {
+
+            filteredProducts =
+                [...originalProducts];
+
+        }
+        else
+        {
+
+            filteredProducts =
+                originalProducts.filter(
+                    product =>
+                    {
+
+                        const productName =
+                            String(
+                                product.name || ""
+                            )
+                            .toLowerCase();
+
+
+                        const seller =
+                            String(
+                                getSellerName(
+                                    product
+                                )
+                            )
+                            .toLowerCase();
+
+
+                        const username =
+                            String(
+                                product.seller?.username || ""
+                            )
+                            .toLowerCase();
+
+
+                        return (
+                            productName.includes(query) ||
+                            seller.includes(query) ||
+                            username.includes(query)
+                        );
+
+                    }
+                );
+
+        }
+
+
+        updateChart();
+
+    }
+);
+
+
+/* =========================================================
+   OPEN SELLER MODAL
+========================================================= */
+
+function openSellerModal(index)
+{
+
+    const product =
+        originalProducts[index];
+
+
+    if (!product)
+    {
+        return;
+    }
+
+
+    const seller =
+        product.seller || {};
+
+
+    /* PRODUCT */
+
+    document.getElementById(
+        "modalProduct"
+    ).textContent =
+        product.name || "—";
+
+
+    document.getElementById(
+        "modalUnits"
+    ).textContent =
+        Number(
+            product.units || 0
+        ).toLocaleString();
+
+
+    document.getElementById(
+        "modalVendor"
+    ).textContent =
+        seller.username ||
+        product.vendor ||
+        "—";
+
+
+    /* PROFILE */
+
+    document.getElementById(
+        "sellerFullName"
+    ).textContent =
+        seller.full_name ||
+        seller.username ||
+        "Unknown Seller";
+
+
+    document.getElementById(
+        "sellerCompany"
+    ).textContent =
+        seller.company ||
+        "Company not provided";
+
+
+    document.getElementById(
+        "sellerId"
+    ).textContent =
+        safeValue(
+            seller.seller_id
+        );
+
+
+    document.getElementById(
+        "sellerUsername"
+    ).textContent =
+        safeValue(
+            seller.username
+        );
+
+
+    document.getElementById(
+        "sellerEmail"
+    ).textContent =
+        safeValue(
+            seller.email
+        );
+
+
+    document.getElementById(
+        "sellerBusinessType"
+    ).textContent =
+        safeValue(
+            seller.business_type
+        );
+
+
+    /* CONTACT */
+
+    document.getElementById(
+        "sellerMobile"
+    ).textContent =
+        safeValue(
+            seller.mobile
+        );
+
+
+    document.getElementById(
+        "sellerPhone"
+    ).textContent =
+        safeValue(
+            seller.phone
+        );
+
+
+    document.getElementById(
+        "sellerAddress"
+    ).textContent =
+        safeValue(
+            seller.address
+        );
+
+
+    document.getElementById(
+        "sellerCity"
+    ).textContent =
+        safeValue(
+            seller.city
+        );
+
+
+    document.getElementById(
+        "sellerState"
+    ).textContent =
+        safeValue(
+            seller.state
+        );
+
+
+    document.getElementById(
+        "sellerPincode"
+    ).textContent =
+        safeValue(
+            seller.pincode
+        );
+
+
+    document.getElementById(
+        "sellerCountry"
+    ).textContent =
+        safeValue(
+            seller.country
+        );
+
+
+    /* VERIFICATION */
+
+    document.getElementById(
+        "sellerGST"
+    ).textContent =
+        safeValue(
+            seller.gst_number
+        );
+
+
+    document.getElementById(
+        "sellerPAN"
+    ).textContent =
+        safeValue(
+            seller.pan_number
+        );
+
+
+    document.getElementById(
+        "sellerAadhar"
+    ).textContent =
+        safeValue(
+            seller.aadhar_number
+        );
+
+
+    /* STATUS */
+
+    const status =
+        seller.status ||
+        "Unknown";
+
+
+    document.getElementById(
+        "sellerStatus"
+    ).innerHTML = `
+
+        <i class="bi bi-circle-fill"></i>
+
+        ${escapeHTML(status)}
+
+    `;
+
+
+    /* PHOTO */
+
+    const avatar =
+        document.getElementById(
+            "sellerAvatar"
+        );
+
+
+    if (seller.profile_photo)
+    {
+
+        avatar.innerHTML = `
+
+            <img
+                src="${escapeHTML(
+                    seller.profile_photo
+                )}"
+                alt="Seller"
+            >
+
+        `;
+
+    }
+    else
+    {
+
+        const initial =
+            String(
+                seller.full_name ||
+                seller.username ||
+                "S"
+            )
+            .charAt(0)
+            .toUpperCase();
+
+
+        avatar.innerHTML =
+            escapeHTML(initial);
+
+    }
+
+
+    /* OPEN */
+
+    document
+        .getElementById(
+            "sellerModal"
+        )
+        .classList.add(
+            "show"
+        );
+
+
+    document.body.style.overflow =
+        "hidden";
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeSellerModal()
+{
+
+    document
+        .getElementById(
+            "sellerModal"
+        )
+        .classList.remove(
+            "show"
+        );
+
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =========================================================
+   CLOSE WHEN CLICKING OUTSIDE
+========================================================= */
+
+document
+    .getElementById(
+        "sellerModal"
+    )
+    .addEventListener(
+        "click",
+        function(event)
+        {
+
+            if (
+                event.target ===
+                this
+            )
+            {
+
+                closeSellerModal();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   ESC KEY
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    function(event)
+    {
+
+        if (
+            event.key === "Escape"
+        )
+        {
+
+            closeSellerModal();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PERIOD
+========================================================= */
+
+document
+    .getElementById(
+        "periodSelect"
+    )
+    .addEventListener(
+        "change",
+        function()
+        {
+
+            /*
+             * Your current Django view returns
+             * delivered/completed top-5 data.
+             *
+             * Therefore this selector is currently
+             * a UI control only.
+             *
+             * Connect it to separate Django filters
+             * if you later want real monthly,
+             * quarterly and yearly calculations.
+             */
+
+            showToast(
+                "Period selected: " +
+                this.options[
+                    this.selectedIndex
+                ].text
+            );
+
+        }
+    );
+
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+function showToast(message)
+{
+
+    const toast =
+        document.getElementById(
+            "toastMessage"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.style.display =
+        "block";
+
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+
+    window.toastTimer =
+        setTimeout(
+            function()
+            {
+
+                toast.style.display =
+                    "none";
+
+            },
+            1800
+        );
+
+}
+
+
+/* =========================================================
+   INITIAL RENDER
+========================================================= */
+
+updateStats();
+
+renderRanking();
+
+</script>
+
+
+</body>
+</html>
+
+{% endblock %}

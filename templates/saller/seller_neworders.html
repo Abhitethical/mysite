@@ -1,0 +1,1582 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>New Orders | Admin Dashboard</title>
+
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+>
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+<style>
+
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #0ea5e9;
+    --dark: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --background: #f5f7fb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--dark);
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+}
+
+
+/* =========================
+   TOP NAVBAR
+========================= */
+
+.topbar {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+}
+
+.brand {
+    font-weight: 800;
+    font-size: 21px;
+    color: white;
+    text-decoration: none !important;
+    letter-spacing: -0.4px;
+}
+
+.brand:hover,
+.brand:focus,
+.brand:active {
+    color: white;
+    text-decoration: none !important;
+}
+
+.brand-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        #7c3aed
+    );
+
+    color: rgb(242, 224, 224);
+    margin-right: 10px;
+
+    box-shadow:
+        0 6px 16px rgba(79, 70, 229, 0.25);
+}
+
+.admin-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+
+    background: #eef2ff;
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   PAGE
+========================= */
+
+.page-wrapper {
+    max-width: 1450px;
+    margin: auto;
+    padding: 32px 20px 50px;
+}
+
+.page-title {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+    margin-bottom: 6px;
+}
+
+.page-subtitle {
+    color: var(--muted);
+    margin-bottom: 28px;
+}
+
+
+/* =========================
+   STAT CARDS
+========================= */
+
+.stat-card {
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+
+    padding: 22px;
+    height: 100%;
+
+    transition: 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 21px;
+    margin-bottom: 16px;
+}
+
+.icon-blue {
+    color: #2563eb;
+    background: #eff6ff;
+}
+
+.icon-green {
+    color: #059669;
+    background: #ecfdf5;
+}
+
+.icon-orange {
+    color: #d97706;
+    background: #fffbeb;
+}
+
+.icon-purple {
+    color: #7c3aed;
+    background: #f5f3ff;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 27px;
+    font-weight: 800;
+}
+
+
+/* =========================
+   MAIN CARD
+========================= */
+
+.orders-card {
+    margin-top: 30px;
+
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 8px 25px rgba(15, 23, 42, 0.04);
+}
+
+.orders-header {
+    padding: 22px 24px;
+
+    border-bottom: 1px solid var(--border);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.orders-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.orders-title-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #eef2ff;
+    color: var(--primary);
+}
+
+.orders-title h5 {
+    margin: 0;
+    font-weight: 800;
+}
+
+.orders-title small {
+    color: var(--muted);
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+.search-box {
+    position: relative;
+    width: 280px;
+}
+
+.search-box i {
+    position: absolute;
+
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #9ca3af;
+}
+
+.search-box input {
+    width: 100%;
+    height: 42px;
+
+    padding-left: 40px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    outline: none;
+
+    transition: 0.2s;
+}
+
+.search-box input:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.10);
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-container {
+    padding: 0 24px 24px;
+}
+
+.orders-table {
+    margin: 0;
+
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+.orders-table thead th {
+    border: none;
+
+    background: #f8fafc;
+    color: #64748b;
+
+    font-size: 12px;
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+    font-weight: 700;
+
+    padding: 15px;
+
+    white-space: nowrap;
+}
+
+.orders-table thead th:first-child {
+    border-radius: 10px 0 0 10px;
+}
+
+.orders-table thead th:last-child {
+    border-radius: 0 10px 10px 0;
+}
+
+.orders-table tbody tr {
+    transition: 0.2s ease;
+}
+
+.orders-table tbody tr:hover td {
+    background: #f8faff;
+}
+
+.orders-table tbody td {
+    background: #ffffff;
+
+    border-top: 1px solid #f0f1f3;
+    border-bottom: 1px solid #f0f1f3;
+
+    padding: 17px 15px;
+
+    vertical-align: middle;
+}
+
+.orders-table tbody td:first-child {
+    border-left: 1px solid #f0f1f3;
+    border-radius: 12px 0 0 12px;
+}
+
+.orders-table tbody td:last-child {
+    border-right: 1px solid #f0f1f3;
+    border-radius: 0 12px 12px 0;
+}
+
+.order-id {
+    font-weight: 800;
+    color: var(--primary);
+}
+
+
+/* =========================
+   PRODUCT LINK
+========================= */
+
+.orders-table a.product-link {
+    text-decoration: none !important;
+    color: inherit;
+
+    border: none;
+    outline: none;
+}
+
+.orders-table a.product-link:hover,
+.orders-table a.product-link:focus,
+.orders-table a.product-link:active,
+.orders-table a.product-link:visited {
+    text-decoration: none !important;
+
+    border: none;
+    outline: none;
+}
+
+.product-name {
+    font-weight: 700;
+    color: #1f2937;
+
+    text-decoration: none !important;
+}
+
+.product-name:hover {
+    color: var(--primary);
+
+    text-decoration: none !important;
+}
+
+
+/* =========================
+   BUYER
+========================= */
+
+.buyer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.buyer-avatar {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #e0e7ff,
+        #ede9fe
+    );
+
+    color: var(--primary);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 800;
+    font-size: 13px;
+}
+
+.buyer-name {
+    font-weight: 600;
+}
+
+
+/* =========================
+   QUANTITY
+========================= */
+
+.quantity-badge {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-width: 38px;
+    height: 30px;
+
+    padding: 0 10px;
+
+    border-radius: 20px;
+
+    background: #f1f5f9;
+    color: #334155;
+
+    font-weight: 700;
+}
+
+
+/* =========================
+   DATE
+========================= */
+
+.date-text {
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-badge {
+    display: inline-flex;
+
+    align-items: center;
+    gap: 6px;
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    background: #ecfdf5;
+    color: #047857;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    background: #10b981;
+
+    border-radius: 50%;
+}
+
+
+/* =====================================================
+   THREE STAR ORDER INDICATOR
+===================================================== */
+
+.new-order-indicator {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    white-space: nowrap;
+
+    min-width: 75px;
+
+}
+
+
+/* =====================================================
+   EACH STAR
+===================================================== */
+
+.order-star {
+
+    font-size: 21px;
+
+    line-height: 1;
+
+    color: #d1d5db;
+
+    opacity: 0.25;
+
+    display: inline-block;
+
+    transform-origin: center;
+
+}
+
+
+/* =====================================================
+   ACTIVE YELLOW STAR
+===================================================== */
+
+.order-star.active-star {
+
+    color: #facc15;
+
+    opacity: 1;
+
+    animation:
+        starBlink 1s steps(1, end) infinite;
+
+    text-shadow:
+        0 0 5px rgba(250, 204, 21, 0.55),
+        0 0 12px rgba(250, 204, 21, 0.85);
+
+}
+
+
+/* =====================================================
+   STAR 1
+===================================================== */
+
+.order-star.star-1.active-star {
+    animation-delay: 0s;
+}
+
+
+/* =====================================================
+   STAR 2
+===================================================== */
+
+.order-star.star-2.active-star {
+    animation-delay: 0.15s;
+}
+
+
+/* =====================================================
+   STAR 3
+===================================================== */
+
+.order-star.star-3.active-star {
+    animation-delay: 0.30s;
+}
+
+
+/* =====================================================
+   YELLOW STAR BLINK
+===================================================== */
+
+@keyframes starBlink {
+
+    0%,
+    49% {
+
+        opacity: 1;
+
+        color: #facc15;
+
+        text-shadow:
+            0 0 5px rgba(250, 204, 21, 0.55),
+            0 0 14px rgba(250, 204, 21, 0.95);
+
+        transform: scale(1);
+    }
+
+    50%,
+    100% {
+
+        opacity: 0;
+
+        color: #facc15;
+
+        text-shadow: none;
+
+        transform: scale(0.75);
+    }
+
+}
+
+
+/* =====================================================
+   INACTIVE STAR
+===================================================== */
+
+.order-star.inactive-star {
+
+    color: #d1d5db;
+
+    opacity: 0.25;
+
+    animation: none !important;
+
+    text-shadow: none !important;
+
+}
+
+
+/* =====================================================
+   AFTER 3 DAYS
+
+   ALL STARS COMPLETELY OFF
+
+   NO EXPIRED TEXT
+===================================================== */
+
+.new-order-indicator.expired {
+
+    min-width: 0;
+
+}
+
+
+/* =====================================================
+   EXPIRED STAR STATE
+
+   HIDE ALL THREE STARS
+===================================================== */
+
+.new-order-indicator.expired .order-star {
+
+    display: none !important;
+
+}
+
+
+/* =====================================================
+   EMPTY STATE
+===================================================== */
+
+.empty-state {
+    text-align: center;
+    padding: 70px 20px;
+}
+
+.empty-icon {
+    width: 80px;
+    height: 80px;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: #ecfdf5;
+    color: #10b981;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 34px;
+}
+
+.empty-state h4 {
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.empty-state p {
+    color: var(--muted);
+    margin: 0;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.page-footer {
+    text-align: center;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+
+    margin-top: 30px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+    .page-wrapper {
+        padding: 22px 14px 40px;
+    }
+
+    .page-title {
+        font-size: 25px;
+    }
+
+    .orders-header {
+        align-items: stretch;
+    }
+
+    .search-box {
+        width: 100%;
+    }
+
+    .table-container {
+        padding: 0 12px 15px;
+    }
+
+    .orders-table {
+        min-width: 1000px;
+    }
+
+    .admin-profile span {
+        display: none;
+    }
+
+    .topbar {
+        padding: 0 10px;
+    }
+
+    .order-star {
+        font-size: 19px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TOP NAVIGATION
+===================================================== -->
+
+<nav class="topbar">
+
+    <div class="container-fluid px-4">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <a href="#" class="brand">
+
+                <span class="brand-icon">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                </span>
+
+                Admin Panel
+
+            </a>
+
+
+            <div class="admin-profile">
+
+                <span class="text-muted small">
+                    Order Management
+                </span>
+
+                <div class="avatar">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+
+<!-- =====================================================
+     MAIN CONTENT
+===================================================== -->
+
+<div class="page-wrapper">
+
+
+    <!-- PAGE TITLE -->
+
+    <div>
+
+        <h1 class="page-title">
+            New Orders
+        </h1>
+
+        <p class="page-subtitle">
+            Monitor and manage your latest customer orders.
+        </p>
+
+    </div>
+
+
+
+    <!-- =================================================
+         STATISTICS
+    ================================================= -->
+
+    <div class="row g-4">
+
+
+        <!-- TOTAL ORDERS -->
+
+        <div class="col-6 col-xl-3">
+
+            <div class="stat-card">
+
+                <div class="stat-icon icon-blue">
+                    <i class="bi bi-cart3"></i>
+                </div>
+
+                <div class="stat-label">
+                    Total Orders
+                </div>
+
+                <div class="stat-value">
+                    {{ orders|length }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- NEW ORDERS -->
+
+        <div class="col-6 col-xl-3">
+
+            <div class="stat-card">
+
+                <div class="stat-icon icon-green">
+                    <i class="bi bi-bag-check"></i>
+                </div>
+
+                <div class="stat-label">
+                    New Orders
+                </div>
+
+                <div class="stat-value">
+                    {{ orders|length }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- CUSTOMERS -->
+
+        <div class="col-6 col-xl-3">
+
+            <div class="stat-card">
+
+                <div class="stat-icon icon-orange">
+                    <i class="bi bi-people"></i>
+                </div>
+
+                <div class="stat-label">
+                    Recent Customers
+                </div>
+
+                <div class="stat-value">
+                    {{ orders|length }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- STATUS -->
+
+        <div class="col-6 col-xl-3">
+
+            <div class="stat-card">
+
+                <div class="stat-icon icon-purple">
+                    <i class="bi bi-activity"></i>
+                </div>
+
+                <div class="stat-label">
+                    Order Status
+                </div>
+
+                <div class="stat-value">
+                    Active
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =================================================
+         ORDERS CARD
+    ================================================= -->
+
+    <div class="orders-card">
+
+
+        <!-- HEADER -->
+
+        <div class="orders-header">
+
+
+            <div class="orders-title">
+
+                <div class="orders-title-icon">
+                    <i class="bi bi-receipt"></i>
+                </div>
+
+                <div>
+
+                    <h5>
+                        Latest Orders
+                    </h5>
+
+                    <small>
+                        Recently placed customer orders
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SEARCH -->
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    id="orderSearch"
+                    placeholder="Search orders..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             ORDER CONTENT
+        ================================================= -->
+
+        {% if orders %}
+
+        <div class="table-container">
+
+            <div class="table-responsive">
+
+                <table
+                    class="table orders-table align-middle"
+                    id="ordersTable"
+                >
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Order ID
+                            </th>
+
+                            <th>
+                                Product
+                            </th>
+
+                            <th>
+                                Buyer
+                            </th>
+
+                            <th>
+                                Quantity
+                            </th>
+
+                            <th>
+                                Order Date
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                New Order
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+
+                    <tbody>
+
+                        {% for order in orders %}
+
+                        <tr
+                            class="order-row"
+                            data-order-id="{{ order.id }}"
+                            data-order-date="{{ order.created_at|date:'c' }}"
+                        >
+
+                            <!-- ORDER ID -->
+
+                            <td>
+
+                                <span class="order-id">
+                                    #{{ order.id }}
+                                </span>
+
+                            </td>
+
+
+
+                            <!-- PRODUCT -->
+
+                            <td>
+
+                                <a
+                                    href="{% url 'customerorderdetail' order.id %}"
+                                    class="product-link"
+                                >
+
+                                    <span class="product-name">
+                                        {{ order.product.name }}
+                                    </span>
+
+                                </a>
+
+                            </td>
+
+
+
+                            <!-- BUYER -->
+
+                            <td>
+
+                                <div class="buyer">
+
+                                    <div class="buyer-avatar">
+                                        {{ order.user.username|first|upper }}
+                                    </div>
+
+                                    <span class="buyer-name">
+                                        {{ order.user.username }}
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+
+                            <!-- QUANTITY -->
+
+                            <td>
+
+                                <span class="quantity-badge">
+                                    {{ order.quantity }}
+                                </span>
+
+                            </td>
+
+
+
+                            <!-- DATE -->
+
+                            <td>
+
+                                <span class="date-text">
+
+                                    <i class="bi bi-calendar3 me-1"></i>
+
+                                    {{ order.created_at|date:"d M Y, h:i A" }}
+
+                                </span>
+
+                            </td>
+
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                <span class="status-badge">
+
+                                    <span class="status-dot"></span>
+
+                                    New
+
+                                </span>
+
+                            </td>
+
+
+
+                            <!-- =================================================
+                                 THREE STAR INDICATOR
+                            ================================================= -->
+
+                            <td>
+
+                                <div class="new-order-indicator">
+
+                                    <span
+                                        class="order-star star-1 inactive-star"
+                                        aria-label="Order star 1"
+                                    >★ New</span>
+
+                                    <span
+                                        class="order-star star-2 inactive-star"
+                                        aria-label="Order star 2"
+                                    >★</span>
+
+                                    <span
+                                        class="order-star star-3 inactive-star"
+                                        aria-label="Order star 3"
+                                    >★</span>
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+        {% else %}
+
+
+        <!-- =================================================
+             EMPTY STATE
+        ================================================= -->
+
+        <div class="empty-state">
+
+            <div class="empty-icon">
+
+                <i class="bi bi-check2-circle"></i>
+
+            </div>
+
+            <h4>
+                All caught up!
+            </h4>
+
+            <p>
+                There are currently no new orders to display.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+
+    <!-- FOOTER -->
+
+    <div class="page-footer">
+
+        <i class="bi bi-shield-check me-1"></i>
+
+        Order Management Dashboard
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<script>
+
+const searchInput =
+    document.getElementById("orderSearch");
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "keyup",
+        function () {
+
+            const searchValue =
+                this.value.toLowerCase().trim();
+
+            const rows =
+                document.querySelectorAll(
+                    "#ordersTable tbody tr"
+                );
+
+            rows.forEach(function (row) {
+
+                const rowText =
+                    row.textContent.toLowerCase();
+
+                row.style.display =
+                    rowText.includes(searchValue)
+                    ? ""
+                    : "none";
+
+            });
+
+        }
+    );
+
+}
+
+</script>
+
+
+
+<!-- =====================================================
+     INDIVIDUAL 3-DAY / 3-STAR SYSTEM
+===================================================== -->
+
+<script>
+
+function updateOrderIndicators() {
+
+    /*
+    ========================================================
+    EACH ORDER HAS ITS OWN TIMER
+    ========================================================
+    */
+
+    const rows =
+        document.querySelectorAll(".order-row");
+
+    const now =
+        Date.now();
+
+    const ONE_DAY =
+        24 * 60 * 60 * 1000;
+
+    const THREE_DAYS =
+        3 * ONE_DAY;
+
+
+    rows.forEach(function (row) {
+
+        /*
+        ====================================================
+        GET THIS ORDER ONLY
+        ====================================================
+        */
+
+        const dateString =
+            row.getAttribute("data-order-date");
+
+        const stars =
+            row.querySelectorAll(".order-star");
+
+        const indicator =
+            row.querySelector(".new-order-indicator");
+
+
+        if (
+            !dateString ||
+            stars.length !== 3 ||
+            !indicator
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+        ====================================================
+        CONVERT CREATED DATE
+        ====================================================
+        */
+
+        const orderDate =
+            new Date(dateString).getTime();
+
+
+        if (isNaN(orderDate)) {
+
+            return;
+
+        }
+
+
+        /*
+        ====================================================
+        CALCULATE THIS ORDER'S AGE
+        ====================================================
+        */
+
+        const orderAge =
+            now - orderDate;
+
+
+        /*
+        ====================================================
+        RESET ALL THREE STARS
+
+        Every row starts from OFF.
+        ====================================================
+        */
+
+        stars.forEach(function (star) {
+
+            star.classList.remove(
+                "active-star"
+            );
+
+            star.classList.add(
+                "inactive-star"
+            );
+
+        });
+
+
+        indicator.classList.remove(
+            "expired"
+        );
+
+
+        /*
+        ====================================================
+        0 - 1 DAY
+
+        ⭐
+
+        ONLY STAR 1 BLINKS
+        ====================================================
+        */
+
+        if (
+            orderAge >= 0 &&
+            orderAge < ONE_DAY
+        ) {
+
+            stars[0].classList.remove(
+                "inactive-star"
+            );
+
+            stars[0].classList.add(
+                "active-star"
+            );
+
+        }
+
+
+        /*
+        ====================================================
+        1 - 2 DAYS
+
+        ⭐ ⭐
+
+        STAR 1 + STAR 2 BLINK
+        ====================================================
+        */
+
+        else if (
+            orderAge >= ONE_DAY &&
+            orderAge < (2 * ONE_DAY)
+        ) {
+
+            stars[0].classList.remove(
+                "inactive-star"
+            );
+
+            stars[0].classList.add(
+                "active-star"
+            );
+
+
+            stars[1].classList.remove(
+                "inactive-star"
+            );
+
+            stars[1].classList.add(
+                "active-star"
+            );
+
+        }
+
+
+        /*
+        ====================================================
+        2 - 3 DAYS
+
+        ⭐ ⭐ ⭐
+
+        ALL THREE STARS BLINK
+        ====================================================
+        */
+
+        else if (
+            orderAge >= (2 * ONE_DAY) &&
+            orderAge < THREE_DAYS
+        ) {
+
+            stars.forEach(function (star) {
+
+                star.classList.remove(
+                    "inactive-star"
+                );
+
+                star.classList.add(
+                    "active-star"
+                );
+
+            });
+
+        }
+
+
+        /*
+        ====================================================
+        3+ DAYS
+
+        ALL STARS OFF
+
+        NO EXPIRED TEXT
+
+        NOTHING DISPLAYED
+        ====================================================
+        */
+
+        else if (
+            orderAge >= THREE_DAYS
+        ) {
+
+            stars.forEach(function (star) {
+
+                star.classList.remove(
+                    "active-star"
+                );
+
+                star.classList.remove(
+                    "inactive-star"
+                );
+
+            });
+
+            indicator.classList.add(
+                "expired"
+            );
+
+        }
+
+    });
+
+}
+
+
+/*
+============================================================
+START IMMEDIATELY
+============================================================
+*/
+
+updateOrderIndicators();
+
+
+/*
+============================================================
+CHECK EVERY 1 MINUTE
+
+Each order is checked independently.
+============================================================
+*/
+
+setInterval(
+    updateOrderIndicators,
+    60000
+);
+
+</script>
+
+
+</body>
+</html>
+
+{% endblock %}

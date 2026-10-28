@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  {% extends 'layouts/main.html' %}
+
+{% block title %}Order Details{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+
+  <h4 class="mb-4">🧾 Order Details</h4>
+
+  <!-- Product Info -->
+  <div class="card mb-4">
+    <div class="card-body row align-items-center">
+      <div class="col-md-3">
+        <img src="{{ order.product.product_image.url }}" class="img-fluid rounded">
+      </div>
+      <div class="col-md-9">
+        <h5>{{ order.product.name }}</h5>
+        <p>Quantity: <strong>{{ order.quantity }}</strong></p>
+        <p>Order ID: <strong>#{{ order.id }}</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Status -->
+  <div class="card">
+    <div class="card-body">
+      <h5 class="mb-3">📦 Order Status</h5>
+
+      {% if order.status == 'canceled' %}
+        <span class="badge bg-danger p-3 fs-6">
+          ❌ Order Canceled
+        </span>
+      {% else %}
+        <ul class="list-group list-group-horizontal-md text-center">
+          <li class="list-group-item {% if order.status in 'processed shipped delivered completed' %}active{% endif %}">
+            Processed
+          </li>
+          <li class="list-group-item {% if order.status in 'shipped delivered completed' %}active{% endif %}">
+            Shipped
+          </li>
+          <li class="list-group-item {% if order.status in 'delivered completed' %}active{% endif %}">
+            Delivered
+          </li>
+          <li class="list-group-item {% if order.status == 'completed' %}active{% endif %}">
+            Completed
+          </li>
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+
+
+
+</section>
+
+{% endblock %}
+
+
+
+</body>
+</html> 
+
+
+

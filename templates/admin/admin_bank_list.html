@@ -1,0 +1,19 @@
+<h2>Admin - Seller Bank List</h2>
+<table border="1">
+<tr>
+<th>Seller</th><th>Bank</th><th>Branch</th><th>Status</th><th>Action</th>
+</tr>
+{% for bank in banks %}
+<tr>
+<td>{{ bank.seller.username }}</td>
+<td>{{ bank.bank_name }}</td>
+<td>{{ bank.bank_branch }}</td>
+<td>{{ bank.get_status_display }}</td>
+<td>
+    {% if bank.status != 'verified' %}
+        <a href="{% url 'admin_bank_approve' bank.id %}">Approve</a>
+    {% endif %}
+</td>
+</tr>
+{% endfor %}
+</table>

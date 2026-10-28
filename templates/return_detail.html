@@ -1,0 +1,2118 @@
+{% extends 'layouts/main.html' %}
+
+{% block content %}
+
+<style>
+    :root {
+        --primary: #4f46e5;
+        --primary-dark: #3730a3;
+        --success: #16a34a;
+        --danger: #dc2626;
+        --warning: #d97706;
+        --info: #0284c7;
+        --dark: #111827;
+        --muted: #6b7280;
+        --light-bg: #f8fafc;
+        --border: #e5e7eb;
+        --card-radius: 20px;
+    }
+
+    body {
+        background: #f5f7fb;
+    }
+
+    .return-page {
+        max-width: 1450px;
+        margin: auto;
+    }
+
+    .main-card {
+        border: 0;
+        border-radius: var(--card-radius);
+        overflow: hidden;
+        background: #fff;
+        box-shadow:
+            0 20px 50px rgba(15, 23, 42, .08),
+            0 4px 12px rgba(15, 23, 42, .04);
+    }
+
+    .page-header {
+        padding: 30px;
+        background: linear-gradient(135deg, #fff 0%, #f8faff 100%);
+        border-bottom: 1px solid #eef0f4;
+    }
+
+    .page-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--dark);
+        letter-spacing: -.5px;
+    }
+
+    .page-subtitle {
+        color: var(--muted);
+        font-size: 14px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        border-radius: 50px;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .2px;
+    }
+
+    .status-pending {
+        color: #92400e;
+        background: #fef3c7;
+    }
+
+    .status-approved {
+        color: #166534;
+        background: #dcfce7;
+    }
+
+    .status-rejected {
+        color: #991b1b;
+        background: #fee2e2;
+    }
+
+    .status-primary {
+        color: #1e40af;
+        background: #dbeafe;
+    }
+
+    .status-info {
+        color: #075985;
+        background: #e0f2fe;
+    }
+
+    .status-secondary {
+        color: #374151;
+        background: #f3f4f6;
+    }
+
+    .status-warning {
+        color: #92400e;
+        background: #fef3c7;
+    }
+
+    .status-refunded {
+        color: #166534;
+        background: #dcfce7;
+    }
+
+    .product-preview {
+        position: relative;
+        background: linear-gradient(145deg, #f8fafc, #eef2f7);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 20px;
+        min-height: 360px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .product-preview img {
+        max-width: 100%;
+        max-height: 320px;
+        object-fit: contain;
+        border-radius: 15px;
+        transition: transform .3s ease;
+    }
+
+    .product-preview:hover img {
+        transform: scale(1.03);
+    }
+
+    .image-label {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        background: rgba(17, 24, 39, .85);
+        color: white;
+        padding: 7px 12px;
+        border-radius: 30px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .no-image {
+        text-align: center;
+        color: #9ca3af;
+    }
+
+    .no-image i {
+        font-size: 50px;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .info-card {
+        border: 1px solid #edf0f4;
+        border-radius: 18px;
+        background: #fff;
+        overflow: hidden;
+        height: 100%;
+        box-shadow: 0 5px 18px rgba(15, 23, 42, .035);
+    }
+
+    .info-card-header {
+        padding: 18px 22px;
+        border-bottom: 1px solid #eef0f4;
+        background: #fafbfc;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eef2ff;
+        color: var(--primary);
+        font-size: 18px;
+    }
+
+    .info-card-title {
+        font-size: 16px;
+        font-weight: 750;
+        color: var(--dark);
+        margin: 0;
+    }
+
+    .info-card-body {
+        padding: 22px;
+    }
+
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 13px 0;
+        border-bottom: 1px dashed #e5e7eb;
+    }
+
+    .detail-row:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .detail-label {
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 600;
+        min-width: 135px;
+    }
+
+    .detail-value {
+        color: #111827;
+        font-size: 14px;
+        font-weight: 600;
+        text-align: right;
+        word-break: break-word;
+    }
+
+    .description-box {
+        background: #f8fafc;
+        border: 1px solid #eef0f4;
+        border-radius: 14px;
+        padding: 15px;
+        color: #4b5563;
+        font-size: 14px;
+        line-height: 1.7;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+
+    .section-heading-icon {
+        width: 42px;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: #eef2ff;
+        color: var(--primary);
+    }
+
+    .section-heading h4 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 800;
+        color: var(--dark);
+    }
+
+    .section-heading p {
+        margin: 2px 0 0;
+        font-size: 12px;
+        color: var(--muted);
+    }
+
+    .timeline-card {
+        background: white;
+        border: 1px solid #edf0f4;
+        border-radius: 18px;
+        padding: 25px;
+        box-shadow: 0 5px 18px rgba(15, 23, 42, .035);
+    }
+
+    .timeline {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        margin-top: 25px;
+    }
+
+    .timeline::before {
+        content: "";
+        position: absolute;
+        top: 17px;
+        left: 5%;
+        right: 5%;
+        height: 3px;
+        background: #e5e7eb;
+        z-index: 0;
+    }
+
+    .timeline-step {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        flex: 1;
+    }
+
+    .timeline-dot {
+        width: 36px;
+        height: 36px;
+        margin: auto;
+        border-radius: 50%;
+        background: #e5e7eb;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        border: 4px solid white;
+    }
+
+    .timeline-step.active .timeline-dot {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 0 0 5px #e0e7ff;
+    }
+
+    .timeline-step.completed .timeline-dot {
+        background: var(--success);
+        color: white;
+    }
+
+    .timeline-labelz {
+        margin-top: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #6b7280;
+    }
+
+    .timeline-step.active .timeline-labelz,
+    .timeline-step.completed .timeline-labelz {
+        color: #111827;
+    }
+
+    .proof-container {
+        background: white;
+        border: 1px solid #edf0f4;
+        border-radius: 18px;
+        padding: 20px;
+        box-shadow: 0 5px 18px rgba(15, 23, 42, .035);
+    }
+
+    .proof-image {
+        width: 100%;
+        max-height: 420px;
+        object-fit: contain;
+        background: #f8fafc;
+        border-radius: 15px;
+        padding: 10px;
+        border: 1px solid #e5e7eb;
+    }
+
+    .action-card {
+        border-radius: 20px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 15px 35px rgba(15, 23, 42, .07);
+        margin-top: 30px;
+    }
+
+    .action-header {
+        padding: 20px 24px;
+        color: white;
+    }
+
+    .action-header h4 {
+        margin: 0;
+        font-size: 18px;
+        font-weight: 800;
+    }
+
+    .action-header p {
+        margin: 5px 0 0;
+        opacity: .85;
+        font-size: 12px;
+    }
+
+    .danger-header {
+        background: linear-gradient(135deg, #dc2626, #b91c1c);
+    }
+
+    .primary-header {
+        background: linear-gradient(135deg, #4f46e5, #3730a3);
+    }
+
+    .success-header {
+        background: linear-gradient(135deg, #16a34a, #15803d);
+    }
+
+    .action-body {
+        padding: 25px;
+    }
+
+    .form-label {
+        font-size: 13px;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 7px;
+    }
+
+    .form-control,
+    .form-select {
+        border-radius: 12px;
+        border: 1px solid #dfe3e8;
+        padding: 12px 14px;
+        font-size: 14px;
+        box-shadow: none;
+        transition: all .2s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, .10);
+    }
+
+    textarea.form-control {
+        resize: vertical;
+    }
+
+    .btn-modern {
+        border: 0;
+        border-radius: 12px;
+        padding: 12px 20px;
+        font-weight: 700;
+        font-size: 14px;
+        transition: all .2s ease;
+    }
+
+    .btn-modern:hover {
+        transform: translateY(-1px);
+    }
+
+    .modern-alert {
+        border: 0;
+        border-radius: 15px;
+        padding: 17px 18px;
+        font-size: 14px;
+    }
+
+    .refund-box {
+        border: 1px solid #e5e7eb;
+        background: #f8fafc;
+        border-radius: 17px;
+        padding: 22px;
+        height: 100%;
+    }
+
+    .refund-amount {
+        font-size: 30px;
+        font-weight: 850;
+        color: #15803d;
+    }
+
+    .refund-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px dashed #dfe3e8;
+        font-size: 13px;
+    }
+
+    .refund-item:last-child {
+        border-bottom: 0;
+    }
+
+    .refund-item span:first-child {
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+    .refund-item span:last-child {
+        color: #111827;
+        font-weight: 700;
+        text-align: right;
+    }
+
+    /* PICKUP SAVED DETAILS */
+
+    .pickup-saved {
+        background: linear-gradient(145deg, #f0fdf4, #f8fafc);
+        border: 1px solid #bbf7d0;
+        border-radius: 18px;
+        padding: 22px;
+    }
+
+    .pickup-saved-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .pickup-success-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+        background: #dcfce7;
+        color: #15803d;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+    }
+
+    .pickup-saved-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: #166534;
+        margin: 0;
+    }
+
+    .pickup-saved-subtitle {
+        color: #6b7280;
+        font-size: 12px;
+        margin: 3px 0 0;
+    }
+
+    .pickup-detail-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 16px;
+        height: 100%;
+    }
+
+    .pickup-detail-icon {
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #eef2ff;
+        color: #4f46e5;
+        margin-bottom: 10px;
+    }
+
+    .pickup-detail-title {
+        font-size: 11px;
+        color: #6b7280;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 5px;
+    }
+
+    .pickup-detail-value {
+        color: #111827;
+        font-size: 14px;
+        font-weight: 700;
+        word-break: break-word;
+    }
+
+    .pickup-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #dcfce7;
+        color: #166534;
+        border-radius: 50px;
+        padding: 7px 12px;
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    @media (max-width: 768px) {
+
+        .page-header {
+            padding: 22px;
+        }
+
+        .page-title {
+            font-size: 22px;
+        }
+
+        .status-badge {
+            margin-top: 15px;
+        }
+
+        .timeline {
+            overflow-x: auto;
+            justify-content: flex-start;
+            gap: 25px;
+            padding-bottom: 10px;
+        }
+
+        .timeline::before {
+            display: none;
+        }
+
+        .timeline-step {
+            min-width: 90px;
+        }
+
+        .detail-row {
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .detail-value {
+            text-align: left;
+        }
+
+        .product-preview {
+            min-height: 280px;
+        }
+    }
+</style>
+
+
+<div class="container-fluid py-4 px-3 px-lg-5 return-page">
+
+    <div class="main-card">
+
+        <!-- =====================================================
+             PAGE HEADER
+        ====================================================== -->
+
+        <div class="page-header">
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+
+                <div>
+
+                    <div class="d-flex align-items-center gap-2 mb-2">
+
+                        <span class="badge bg-light text-primary px-3 py-2 rounded-pill">
+                            <i class="bi bi-arrow-return-left me-1"></i>
+                            Return Management
+                        </span>
+
+                    </div>
+
+                    <h1 class="page-title mb-1">
+                        Return Request Details
+                    </h1>
+
+                    <p class="page-subtitle mb-0">
+                        Complete information about this customer return and refund request.
+                    </p>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div>
+
+                    {% if return_request.status == "rejected" %}
+
+                        <span class="status-badge status-rejected">
+                            <i class="bi bi-x-circle-fill"></i>
+                            Rejected
+                        </span>
+
+                    {% elif return_request.status == "Approved" %}
+
+                        <span class="status-badge status-approved">
+                            <i class="bi bi-check-circle-fill"></i>
+                            Approved
+                        </span>
+
+                    {% elif return_request.status == "pickup_scheduled" %}
+
+                        <span class="status-badge status-primary">
+                            <i class="bi bi-calendar-check-fill"></i>
+                            Pickup Scheduled
+                        </span>
+
+                    {% elif return_request.status == "picked_up" %}
+
+                        <span class="status-badge status-info">
+                            <i class="bi bi-box-seam-fill"></i>
+                            Picked Up
+                        </span>
+
+                    {% elif return_request.status == "received" %}
+
+                        <span class="status-badge status-secondary">
+                            <i class="bi bi-inbox-fill"></i>
+                            Received
+                        </span>
+
+                    {% elif return_request.status == "inspected" %}
+
+                        <span class="status-badge status-warning">
+                            <i class="bi bi-search"></i>
+                            Inspected
+                        </span>
+
+                    {% elif return_request.status == "resubmitted" %}
+
+                        <span class="status-badge status-warning">
+                            <i class="bi bi-arrow-repeat"></i>
+                            Resubmitted
+                        </span>
+
+                    {% elif return_request.status == "refunded" %}
+
+                        <span class="status-badge status-refunded">
+                            <i class="bi bi-cash-coin"></i>
+                            Refunded
+                        </span>
+
+                    {% else %}
+
+                        <span class="status-badge status-pending">
+                            <i class="bi bi-clock-fill"></i>
+                            Pending
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MAIN BODY
+        ====================================================== -->
+
+        <div class="p-3 p-lg-4">
+
+            <div class="row g-4">
+
+                <!-- PRODUCT IMAGE -->
+
+                <div class="col-lg-4">
+
+                    <div class="product-preview">
+
+                        <span class="image-label">
+                            <i class="bi bi-image me-1"></i>
+                            Product
+                        </span>
+
+                        {% if return_request.product_image %}
+
+                            <img
+                                src="{{ return_request.product_image.url }}"
+                                alt="{{ return_request.product_name }}"
+                            >
+
+                        {% else %}
+
+                            <div class="no-image">
+
+                                <i class="bi bi-image"></i>
+
+                                <div>
+                                    No Product Image
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- PRODUCT + CUSTOMER -->
+
+                <div class="col-lg-8">
+
+                    <div class="row g-4">
+
+                        <!-- PRODUCT DETAILS -->
+
+                        <div class="col-12">
+
+                            <div class="info-card">
+
+                                <div class="info-card-header">
+
+                                    <div class="info-icon">
+                                        <i class="bi bi-box-seam"></i>
+                                    </div>
+
+                                    <h3 class="info-card-title">
+                                        Product Information
+                                    </h3>
+
+                                </div>
+
+                                <div class="info-card-body">
+
+                                    <div class="detail-row">
+
+                                        <div class="detail-label">
+                                            Product Name
+                                        </div>
+
+                                        <div class="detail-value">
+                                            {{ return_request.product_name }}
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="detail-row">
+
+                                        <div class="detail-label">
+                                            Return Status
+                                        </div>
+
+                                        <div class="detail-value">
+
+                                            {% if return_request.status == "rejected" %}
+
+                                                <span class="badge bg-danger-subtle text-danger rounded-pill px-3">
+                                                    Rejected
+                                                </span>
+
+                                            {% elif return_request.status == "refunded" %}
+
+                                                <span class="badge bg-success-subtle text-success rounded-pill px-3">
+                                                    Refunded
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="badge bg-primary-subtle text-primary rounded-pill px-3">
+                                                    {{ return_request.status }}
+                                                </span>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="detail-row">
+
+                                        <div class="detail-label">
+                                            Return Reason
+                                        </div>
+
+                                        <div class="detail-value">
+                                            {{ return_request.reason }}
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="mt-4">
+
+                                        <div class="detail-label mb-2">
+                                            Customer Description
+                                        </div>
+
+                                        <div class="description-box">
+
+                                            {% if return_request.description %}
+                                                {{ return_request.description }}
+                                            {% else %}
+                                                <span class="text-muted">
+                                                    No description provided.
+                                                </span>
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CUSTOMER -->
+
+                        <div class="col-12">
+
+                            <div class="info-card">
+
+                                <div class="info-card-header">
+
+                                    <div class="info-icon">
+                                        <i class="bi bi-person"></i>
+                                    </div>
+
+                                    <h3 class="info-card-title">
+                                        Customer Information
+                                    </h3>
+
+                                </div>
+
+                                <div class="info-card-body">
+
+                                    <div class="detail-row">
+
+                                        <div class="detail-label">
+                                            Customer Name
+                                        </div>
+
+                                        <div class="detail-value">
+                                            {{ return_request.user.username }}
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="detail-row">
+
+                                        <div class="detail-label">
+                                            Email Address
+                                        </div>
+
+                                        <div class="detail-value">
+                                            {{ return_request.user.email }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 RETURN PROGRESS
+            ====================================================== -->
+
+            <div class="timeline-card mt-4">
+
+                <div class="section-heading">
+
+                    <div class="section-heading-icon">
+                        <i class="bi bi-diagram-3"></i>
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Return Progress
+                        </h4>
+
+                        <p>
+                            Current status of the return process
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="timeline">
+
+                    <!-- REQUEST -->
+
+                    <div class="timeline-step completed">
+
+                        <div class="timeline-dot">
+                            <i class="bi bi-check"></i>
+                        </div>
+
+                        <div class="timeline-labelz">
+                            Requested
+                        </div>
+
+                    </div>
+
+
+                    <!-- APPROVED -->
+
+                    <div class="timeline-step
+                        {% if return_request.status == 'Approved' or return_request.status == 'pickup_scheduled' or return_request.status == 'picked_up' or return_request.status == 'received' or return_request.status == 'inspected' or return_request.status == 'refunded' %}
+                            completed
+                        {% endif %}
+                    ">
+
+                        <div class="timeline-dot">
+                            <i class="bi bi-check"></i>
+                        </div>
+
+                        <div class="timeline-labelz">
+                            Approved
+                        </div>
+
+                    </div>
+
+
+                    <!-- PICKUP -->
+
+                    <div class="timeline-step
+                        {% if return_request.status == 'pickup_scheduled' %}
+                            active
+                        {% elif return_request.status == 'picked_up' or return_request.status == 'received' or return_request.status == 'inspected' or return_request.status == 'refunded' %}
+                            completed
+                        {% endif %}
+                    ">
+
+                        <div class="timeline-dot">
+                            <i class="bi bi-truck"></i>
+                        </div>
+
+                        <div class="timeline-labelz">
+                            Pickup
+                        </div>
+
+                    </div>
+
+
+                    <!-- RECEIVED -->
+
+                    <div class="timeline-step
+                        {% if return_request.status == 'received' %}
+                            active
+                        {% elif return_request.status == 'inspected' or return_request.status == 'refunded' %}
+                            completed
+                        {% endif %}
+                    ">
+
+                        <div class="timeline-dot">
+                            <i class="bi bi-box"></i>
+                        </div>
+
+                        <div class="timeline-labelz">
+                            Received
+                        </div>
+
+                    </div>
+
+
+                    <!-- INSPECTED -->
+
+                    <div class="timeline-step
+                        {% if return_request.status == 'inspected' %}
+                            active
+                        {% elif return_request.status == 'refunded' %}
+                            completed
+                        {% endif %}
+                    ">
+
+                        <div class="timeline-dot">
+                            <i class="bi bi-search"></i>
+                        </div>
+
+                        <div class="timeline-labelz">
+                            Inspected
+                        </div>
+
+                    </div>
+
+
+                    <!-- REFUNDED -->
+
+                    <div class="timeline-step
+                        {% if return_request.status == 'refunded' %}
+                            active
+                        {% endif %}
+                    ">
+
+                        <div class="timeline-dot">
+                            <i class="bi bi-cash"></i>
+                        </div>
+
+                        <div class="timeline-labelz">
+                            Refunded
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =====================================================
+                 CUSTOMER PROOF
+            ====================================================== -->
+
+            {% if return_request.return_image %}
+
+            <div class="proof-container mt-4">
+
+                <div class="section-heading">
+
+                    <div class="section-heading-icon">
+                        <i class="bi bi-file-earmark-image"></i>
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            Customer Proof
+                        </h4>
+
+                        <p>
+                            Image submitted by the customer
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <img
+                    src="{{ return_request.return_image.url }}"
+                    alt="Customer Return Proof"
+                    class="proof-image"
+                >
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- =====================================================
+                 REJECTION SECTION
+            ====================================================== -->
+
+            {% if return_request.status == "rejected" %}
+
+            <div class="action-card">
+
+                <div class="action-header danger-header">
+
+                    <h4>
+                        <i class="bi bi-exclamation-octagon me-2"></i>
+                        Rejection Details
+                    </h4>
+
+                    <p>
+                        Review the rejection reason and submit a new request if required.
+                    </p>
+
+                </div>
+
+
+                <div class="action-body">
+
+                    <div class="alert alert-danger modern-alert mb-4">
+
+                        <div class="d-flex gap-3">
+
+                            <i class="bi bi-info-circle-fill fs-5"></i>
+
+                            <div>
+
+                                <div class="fw-bold mb-1">
+                                    Admin Rejection Reason
+                                </div>
+
+                                <div>
+                                    {{ return_request.admin_reject_reason }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if return_request.resubmitted %}
+
+                        <div class="alert alert-success modern-alert">
+
+                            <i class="bi bi-check-circle-fill me-2"></i>
+
+                            Your resubmission has been sent successfully.
+                            Please wait for admin review.
+
+                        </div>
+
+
+                        <button
+                            class="btn btn-secondary btn-modern w-100"
+                            disabled
+                        >
+
+                            <i class="bi bi-lock-fill me-2"></i>
+                            Resubmission Locked
+
+                        </button>
+
+                    {% else %}
+
+                        <div class="mb-4">
+
+                            <h5 class="fw-bold mb-1">
+                                Resubmit Return Request
+                            </h5>
+
+                            <p class="text-muted small mb-0">
+                                Upload updated evidence and explain the issue clearly.
+                            </p>
+
+                        </div>
+
+
+                        <form method="POST" enctype="multipart/form-data">
+
+                            {% csrf_token %}
+
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">
+                                        <i class="bi bi-image me-1"></i>
+                                        Upload Image Proof
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        name="resubmit_image"
+                                        class="form-control"
+                                        accept="image/*"
+                                        required
+                                    >
+
+                                    <small class="text-muted">
+                                        JPG, PNG or WEBP image
+                                    </small>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">
+                                        <i class="bi bi-camera-video me-1"></i>
+                                        Upload Video Proof
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        name="resubmit_video"
+                                        class="form-control"
+                                        accept="video/*"
+                                        required
+                                    >
+
+                                    <small class="text-muted">
+                                        MP4, MOV or supported video
+                                    </small>
+
+                                </div>
+
+
+                                <div class="col-12">
+
+                                    <label class="form-label">
+                                        <i class="bi bi-pencil-square me-1"></i>
+                                        Updated Description
+                                    </label>
+
+                                    <textarea
+                                        name="resubmit_description"
+                                        rows="5"
+                                        class="form-control"
+                                        placeholder="Explain your issue clearly..."
+                                        required
+                                    ></textarea>
+
+                                </div>
+
+
+                                <div class="col-12">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-danger btn-modern w-100"
+                                    >
+
+                                        <i class="bi bi-send-fill me-2"></i>
+                                        Submit Resubmission
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- =====================================================
+                 PICKUP SECTION
+            ====================================================== -->
+
+            {% if return_request.status == "pickup_scheduled" %}
+
+            <div class="action-card">
+
+                <div class="action-header primary-header">
+
+                    <h4>
+                        <i class="bi bi-truck me-2"></i>
+                        Pickup Scheduling
+                    </h4>
+
+                    <p>
+                        Schedule and manage the pickup for the returned product.
+                    </p>
+
+                </div>
+
+
+                <div class="action-body">
+
+                    <!-- =================================================
+                         SAVED PICKUP DETAILS
+                    ================================================== -->
+
+                    {% if return_request.pickup_submitted %}
+
+                        <div class="pickup-saved">
+
+                            <div class="pickup-saved-header">
+
+                                <div class="pickup-success-icon">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </div>
+
+                                <div>
+
+                                    <h5 class="pickup-saved-title">
+                                        Pickup Details Saved Successfully
+                                    </h5>
+
+                                    <p class="pickup-saved-subtitle">
+                                        The pickup information has been recorded for this return request.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="row g-3">
+
+                                <!-- PRODUCT -->
+
+                                <div class="col-md-6">
+
+                                    <div class="pickup-detail-card">
+
+                                        <div class="pickup-detail-icon">
+                                            <i class="bi bi-box-seam"></i>
+                                        </div>
+
+                                        <div class="pickup-detail-title">
+                                            Product
+                                        </div>
+
+                                        <div class="pickup-detail-value">
+                                            {{ return_request.product_name }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- PICKUP STATUS -->
+
+                                <div class="col-md-6">
+
+                                    <div class="pickup-detail-card">
+
+                                        <div class="pickup-detail-icon">
+                                            <i class="bi bi-check-circle"></i>
+                                        </div>
+
+                                        <div class="pickup-detail-title">
+                                            Pickup Status
+                                        </div>
+
+                                        <div class="pickup-detail-value">
+
+                                            <span class="pickup-status">
+                                                <i class="bi bi-check-circle-fill"></i>
+                                                Pickup Confirmed
+                                            </span>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- ADDRESS -->
+
+                                <div class="col-12">
+
+                                    <div class="pickup-detail-card">
+
+                                        <div class="pickup-detail-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+
+                                        <div class="pickup-detail-title">
+                                            Pickup Address
+                                        </div>
+
+                                        <div class="pickup-detail-value">
+                                            {{ return_request.pickup_address }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- DATE -->
+
+                                <div class="col-md-4">
+
+                                    <div class="pickup-detail-card">
+
+                                        <div class="pickup-detail-icon">
+                                            <i class="bi bi-calendar-check"></i>
+                                        </div>
+
+                                        <div class="pickup-detail-title">
+                                            Pickup Date
+                                        </div>
+
+                                        <div class="pickup-detail-value">
+                                            {{ return_request.pickup_date }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- TIME -->
+
+                                <div class="col-md-4">
+
+                                    <div class="pickup-detail-card">
+
+                                        <div class="pickup-detail-icon">
+                                            <i class="bi bi-clock-fill"></i>
+                                        </div>
+
+                                        <div class="pickup-detail-title">
+                                            Time Slot
+                                        </div>
+
+                                        <div class="pickup-detail-value">
+                                            {{ return_request.pickup_time_slot }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- REASON -->
+
+                                <div class="col-md-4">
+
+                                    <div class="pickup-detail-card">
+
+                                        <div class="pickup-detail-icon">
+                                            <i class="bi bi-chat-left-text-fill"></i>
+                                        </div>
+
+                                        <div class="pickup-detail-title">
+                                            Pickup Reason
+                                        </div>
+
+                                        <div class="pickup-detail-value">
+                                            {{ return_request.pickup_reason }}
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="alert alert-success modern-alert mt-4 mb-0">
+
+                                <i class="bi bi-info-circle-fill me-2"></i>
+
+                                Pickup details are already saved. No further action is required at this stage.
+
+                            </div>
+
+                        </div>
+
+
+                    <!-- =================================================
+                         PICKUP FORM
+                    ================================================== -->
+
+                    {% else %}
+
+                        <div class="mb-4">
+
+                            <h5 class="fw-bold mb-1">
+                                Enter Pickup Details
+                            </h5>
+
+                            <p class="text-muted small mb-0">
+                                Provide the pickup address, date, time slot and reason to confirm the return pickup.
+                            </p>
+
+                        </div>
+
+
+                        <form method="POST" id="pickupForm">
+
+                            {% csrf_token %}
+
+                            <div class="row g-4">
+
+
+                                <!-- PRODUCT -->
+
+                                <div class="col-12">
+
+                                    <label class="form-label">
+                                        <i class="bi bi-box-seam me-1"></i>
+                                        Product Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        value="{{ return_request.product_name }}"
+                                        readonly
+                                    >
+
+                                </div>
+
+
+                                <!-- ADDRESS -->
+
+                                <div class="col-12">
+
+                                    <label class="form-label">
+                                        <i class="bi bi-geo-alt me-1"></i>
+                                        Pickup Address
+                                    </label>
+
+                                    <textarea
+                                        name="pickup_address"
+                                        rows="4"
+                                        class="form-control"
+                                        placeholder="Enter complete pickup address"
+                                        required
+                                    ></textarea>
+
+                                </div>
+
+
+                                <!-- DATE -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">
+                                        <i class="bi bi-calendar3 me-1"></i>
+                                        Pickup Date
+                                    </label>
+
+                                    <input
+                                        type="date"
+                                        name="pickup_date"
+                                        class="form-control"
+                                        required
+                                    >
+
+                                </div>
+
+
+                                <!-- TIME -->
+
+                                <div class="col-md-6">
+
+                                    <label class="form-label">
+                                        <i class="bi bi-clock me-1"></i>
+                                        Pickup Time Slot
+                                    </label>
+
+                                    <select
+                                        name="pickup_time_slot"
+                                        class="form-select"
+                                        required
+                                    >
+
+                                        <option value="">
+                                            Select Time Slot
+                                        </option>
+
+                                        <option value="9AM - 12PM">
+                                            9AM - 12PM
+                                        </option>
+
+                                        <option value="12PM - 3PM">
+                                            12PM - 3PM
+                                        </option>
+
+                                        <option value="3PM - 6PM">
+                                            3PM - 6PM
+                                        </option>
+
+                                        <option value="6PM - 9PM">
+                                            6PM - 9PM
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- REASON -->
+
+                                <div class="col-12">
+
+                                    <label class="form-label">
+                                        <i class="bi bi-chat-left-text me-1"></i>
+                                        Pickup Reason
+                                    </label>
+
+                                    <textarea
+                                        name="pickup_reason"
+                                        rows="4"
+                                        class="form-control"
+                                        placeholder="Explain the pickup reason"
+                                        required
+                                    ></textarea>
+
+                                </div>
+
+
+                                <!-- SAVE BUTTON -->
+
+                                <div class="col-12">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-primary btn-modern w-100"
+                                        id="pickupSubmitButton"
+                                    >
+
+                                        <i class="bi bi-calendar-check-fill me-2"></i>
+                                        Save & Confirm Pickup
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </form>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- =====================================================
+                 REFUND SECTION
+            ====================================================== -->
+
+            {% if return_request.status == "refunded" %}
+
+            <div class="action-card">
+
+                <div class="action-header success-header">
+
+                    <h4>
+                        <i class="bi bi-cash-coin me-2"></i>
+                        Refund Details
+                    </h4>
+
+                    <p>
+                        Complete information about the processed refund.
+                    </p>
+
+                </div>
+
+
+                <div class="action-body">
+
+                    <div class="row g-4">
+
+                        <!-- CUSTOMER REFUND -->
+
+                        <div class="col-lg-6">
+
+                            <div class="refund-box">
+
+                                <div class="d-flex justify-content-between align-items-start mb-4">
+
+                                    <div>
+
+                                        <h5 class="fw-bold mb-1">
+                                            Customer Refund
+                                        </h5>
+
+                                        <small class="text-muted">
+                                            Payment information
+                                        </small>
+
+                                    </div>
+
+                                    <div class="text-success fs-4">
+                                        <i class="bi bi-wallet2"></i>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="refund-amount mb-4">
+                                    ₹ {{ return_request.refund_amount }}
+                                </div>
+
+
+                                <div class="refund-item">
+
+                                    <span>
+                                        Refund Method
+                                    </span>
+
+                                    <span>
+                                        {{ return_request.refund_method }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="refund-item">
+
+                                    <span>
+                                        Transaction ID
+                                    </span>
+
+                                    <span>
+                                        {{ return_request.refund_transaction_id }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="refund-item">
+
+                                    <span>
+                                        Refund Date
+                                    </span>
+
+                                    <span>
+                                        {{ return_request.refund_date }}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- SELLER REFUND -->
+
+                        <div class="col-lg-6">
+
+                            <div class="refund-box">
+
+                                <div class="d-flex justify-content-between align-items-start mb-4">
+
+                                    <div>
+
+                                        <h5 class="fw-bold mb-1">
+                                            Seller Information
+                                        </h5>
+
+                                        <small class="text-muted">
+                                            Refund authorization details
+                                        </small>
+
+                                    </div>
+
+                                    <div class="text-success fs-4">
+                                        <i class="bi bi-shop"></i>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="refund-item">
+
+                                    <span>
+                                        Seller Name
+                                    </span>
+
+                                    <span>
+                                        {{ return_request.seller_name }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="refund-item">
+
+                                    <span>
+                                        Seller Email
+                                    </span>
+
+                                    <span>
+                                        {{ return_request.seller_email }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="refund-item">
+
+                                    <span>
+                                        Approved By
+                                    </span>
+
+                                    <span>
+                                        {{ return_request.refund_approved_by }}
+                                    </span>
+
+                                </div>
+
+
+                                <div class="refund-item">
+
+                                    <span>
+                                        Refund Status
+                                    </span>
+
+                                    <span class="text-success">
+
+                                        <i class="bi bi-check-circle-fill me-1"></i>
+                                        Successfully Refunded
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="alert alert-success modern-alert mt-4 mb-0">
+
+                        <div class="d-flex gap-3">
+
+                            <i class="bi bi-check-circle-fill fs-4"></i>
+
+                            <div>
+
+                                <h6 class="fw-bold mb-1">
+                                    Refund Completed Successfully
+                                </h6>
+
+                                <p class="mb-0">
+                                    Your refund has been processed successfully.
+                                    The amount has been transferred to the original payment method.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     BOOTSTRAP ICONS
+========================================================= -->
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+
+<!-- =========================================================
+     PAGE JAVASCRIPT
+========================================================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* ============================================
+       PREVENT PAST PICKUP DATES
+    ============================================ */
+
+    const pickupDate = document.querySelector(
+        'input[name="pickup_date"]'
+    );
+
+    if (pickupDate) {
+
+        const today = new Date();
+
+        const year = today.getFullYear();
+
+        const month = String(
+            today.getMonth() + 1
+        ).padStart(2, "0");
+
+        const day = String(
+            today.getDate()
+        ).padStart(2, "0");
+
+        pickupDate.min =
+            `${year}-${month}-${day}`;
+    }
+
+
+    /* ============================================
+       IMAGE VALIDATION
+    ============================================ */
+
+    const imageInput = document.querySelector(
+        'input[name="resubmit_image"]'
+    );
+
+    if (imageInput) {
+
+        imageInput.addEventListener(
+            "change",
+            function () {
+
+                const file = this.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                const maxSize =
+                    10 * 1024 * 1024;
+
+                if (file.size > maxSize) {
+
+                    alert(
+                        "Image size should be less than 10MB."
+                    );
+
+                    this.value = "";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ============================================
+       VIDEO VALIDATION
+    ============================================ */
+
+    const videoInput = document.querySelector(
+        'input[name="resubmit_video"]'
+    );
+
+    if (videoInput) {
+
+        videoInput.addEventListener(
+            "change",
+            function () {
+
+                const file = this.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                const maxSize =
+                    100 * 1024 * 1024;
+
+                if (file.size > maxSize) {
+
+                    alert(
+                        "Video size should be less than 100MB."
+                    );
+
+                    this.value = "";
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ============================================
+       PICKUP FORM SUBMIT
+    ============================================ */
+
+    const pickupForm =
+        document.getElementById("pickupForm");
+
+    if (pickupForm) {
+
+        pickupForm.addEventListener(
+            "submit",
+            function () {
+
+                const button =
+                    document.getElementById(
+                        "pickupSubmitButton"
+                    );
+
+                if (button) {
+
+                    button.disabled = true;
+
+                    button.innerHTML =
+                        '<span class="spinner-border spinner-border-sm me-2"></span>' +
+                        'Saving Pickup Details...';
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ============================================
+       RESUBMISSION FORM
+    ============================================ */
+
+    const resubmitImage =
+        document.querySelector(
+            'input[name="resubmit_image"]'
+        );
+
+    const resubmitForm =
+        resubmitImage
+            ? resubmitImage.closest("form")
+            : null;
+
+    if (resubmitForm) {
+
+        resubmitForm.addEventListener(
+            "submit",
+            function () {
+
+                const button =
+                    this.querySelector(
+                        'button[type="submit"]'
+                    );
+
+                if (button) {
+
+                    button.disabled = true;
+
+                    button.innerHTML =
+                        '<span class="spinner-border spinner-border-sm me-2"></span>' +
+                        'Submitting...';
+
+                }
+
+            }
+        );
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

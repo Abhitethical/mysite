@@ -1,0 +1,1383 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order #{{ order.id }} | Customer Order Details</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+
+    .modern-card {
+        background: #ffffff;
+        border: 1px solid #e8edf5;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 8px 28px rgba(15, 23, 42, 0.05);
+        transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+
+    .modern-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 35px rgba(15, 23, 42, 0.09);
+    }
+
+    .card-header-modern {
+        padding: 20px 22px;
+        background: linear-gradient(135deg, #eff6ff, #f8fafc);
+        border-bottom: 1px solid #e5eaf2;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 0;
+        font-size: 18px;
+        font-weight: 750;
+        color: #0f172a;
+    }
+
+    .section-icon {
+        width: 42px;
+        height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        background: #2563eb;
+        color: #ffffff;
+        font-size: 19px;
+        flex-shrink: 0;
+    }
+
+    .info-list {
+        list-style: none;
+        padding: 8px 22px 18px;
+        margin: 0;
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        padding: 15px 0;
+        border-bottom: 1px solid #eef2f7;
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 600;
+        min-width: 0;
+    }
+
+    .info-label i {
+        color: #2563eb;
+        font-size: 17px;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+
+    .info-value {
+        color: #0f172a;
+        font-size: 13px;
+        font-weight: 700;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .coupon-code {
+        display: inline-block;
+        padding: 5px 10px;
+        background: #f0fdf4;
+        border: 1px dashed #86efac;
+        border-radius: 7px;
+        color: #15803d;
+        letter-spacing: 0.5px;
+    }
+
+    .total-row {
+        margin-top: 8px;
+        padding: 16px 12px;
+        background: #eff6ff;
+        border: 1px solid #dbeafe;
+        border-radius: 12px;
+    }
+
+    .total-row .info-label,
+    .total-row .info-value {
+        color: #1d4ed8;
+    }
+
+    .total-amount {
+        font-size: 17px;
+        font-weight: 800;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 12px;
+        border-radius: 30px;
+        background: #ecfdf5;
+        color: #047857;
+        border: 1px solid #a7f3d0;
+        font-size: 11px;
+        font-weight: 750;
+        text-transform: capitalize;
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        background: #10b981;
+        border-radius: 50%;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+    }
+
+    @media (max-width: 576px) {
+        .card-header-modern {
+            padding: 16px;
+        }
+
+        .info-list {
+            padding: 6px 15px 14px;
+        }
+
+        .info-row {
+            gap: 8px;
+            padding: 13px 0;
+        }
+
+        .info-label,
+        .info-value {
+            font-size: 12px;
+        }
+
+        .total-amount {
+            font-size: 15px;
+        }
+    }
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --dark: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --bg: #f5f7fb;
+            --success: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+        }
+
+        /* =========================
+           TOP NAVIGATION
+        ========================= */
+
+        .top-navbar {
+            background: #ffffff;
+            border-bottom: 1px solid var(--border);
+            height: 72px;
+            display: flex;
+            align-items: center;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            color: white;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                #7c3aed
+            );
+            margin-right: 10px;
+        }
+
+        /* =========================
+           PAGE HEADER
+        ========================= */
+
+        .page-header {
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(124, 58, 237, 0.35),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #111827,
+                    #1e1b4b
+                );
+
+            color: white;
+            padding: 38px 0;
+            margin-bottom: 30px;
+        }
+
+        .breadcrumb-custom {
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .breadcrumb-custom a {
+            color: rgba(255,255,255,.65);
+            text-decoration: none;
+        }
+
+        .breadcrumb-custom span {
+            color: rgba(255,255,255,.45);
+            margin: 0 8px;
+        }
+
+        .page-title {
+            font-size: 30px;
+            font-weight: 800;
+            margin-bottom: 7px;
+        }
+
+        .page-subtitle {
+            color: rgba(255,255,255,.65);
+            margin: 0;
+        }
+
+        .order-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 14px;
+            border-radius: 50px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.15);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           MAIN CARDS
+        ========================= */
+
+        .modern-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            box-shadow:
+                0 8px 25px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+            transition: all .25s ease;
+        }
+
+        .modern-card:hover {
+            box-shadow:
+                0 14px 35px rgba(15, 23, 42, 0.08);
+        }
+
+        .card-header-modern {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            background: #fff;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0;
+            color: var(--dark);
+            font-size: 17px;
+            font-weight: 750;
+        }
+
+        .section-icon {
+            width: 38px;
+            height: 38px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            color: var(--primary);
+            background: #eef2ff;
+        }
+
+        /* =========================
+           PRODUCT CARD
+        ========================= */
+
+        .product-card {
+            position: relative;
+            height: 100%;
+        }
+
+        .product-image-wrapper {
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eef2ff
+                );
+            min-height: 360px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .product-image {
+            width: 100%;
+            max-width: 320px;
+            height: 320px;
+            object-fit: contain;
+            border-radius: 15px;
+            transition: transform .35s ease;
+            filter: drop-shadow(
+                0 18px 20px rgba(0,0,0,.12)
+            );
+        }
+
+        .product-image:hover {
+            transform: scale(1.04);
+        }
+
+        .product-info {
+            padding: 24px;
+        }
+
+        .product-label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        .product-name {
+            color: var(--dark);
+            font-size: 22px;
+            font-weight: 800;
+            margin: 5px 0 15px;
+        }
+
+        .quantity-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 12px;
+            background: #f3f4f6;
+            color: #374151;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 13px;
+            border-radius: 50px;
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--success);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(16,185,129,.12);
+        }
+
+        /* =========================
+           INFORMATION LIST
+        ========================= */
+
+        .info-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 17px 24px;
+            border-bottom: 1px solid #f0f1f3;
+        }
+
+        .info-row:last-child {
+            border-bottom: 0;
+        }
+
+        .info-label {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            min-width: 145px;
+        }
+
+        .info-label i {
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .info-value {
+            color: var(--dark);
+            font-size: 14px;
+            font-weight: 650;
+            text-align: right;
+            word-break: break-word;
+        }
+
+        /* =========================
+           ORDER SUMMARY
+        ========================= */
+
+        .summary-box {
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f5f3ff
+                );
+            border: 1px solid #e0e7ff;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .summary-number {
+            font-size: 25px;
+            font-weight: 850;
+            color: var(--dark);
+        }
+
+        .summary-label {
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        /* =========================
+           ADDRESS
+        ========================= */
+
+        .address-box {
+            padding: 22px 24px;
+        }
+
+        .address-content {
+            display: flex;
+            gap: 15px;
+            padding: 18px;
+            background: #f9fafb;
+            border: 1px solid #eef0f2;
+            border-radius: 13px;
+        }
+
+        .address-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef2ff;
+            color: var(--primary);
+            font-size: 19px;
+        }
+
+        .address-text {
+            line-height: 1.7;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        /* =========================
+           ACTION BUTTONS
+        ========================= */
+
+        .btn-modern {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 10px;
+            padding: 11px 17px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all .2s ease;
+        }
+
+        .btn-primary-modern {
+            color: white;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                #6366f1
+            );
+            border: none;
+        }
+
+        .btn-primary-modern:hover {
+            color: white;
+            transform: translateY(-1px);
+            box-shadow:
+                0 8px 18px rgba(79,70,229,.25);
+        }
+
+        .btn-light-modern {
+            color: #374151;
+            background: white;
+            border: 1px solid var(--border);
+        }
+
+        .btn-light-modern:hover {
+            color: var(--dark);
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .page-footer {
+            color: #9ca3af;
+            font-size: 13px;
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        /* =========================
+           PRINT
+        ========================= */
+
+        @media print {
+
+            body {
+                background: white !important;
+            }
+
+            .top-navbar,
+            .page-header,
+            .action-buttons,
+            .page-footer {
+                display: none !important;
+            }
+
+            .container {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+
+            .modern-card {
+                box-shadow: none !important;
+                border: 1px solid #ddd;
+            }
+
+            .page-content {
+                margin-top: 20px;
+            }
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 767px) {
+
+            .top-navbar {
+                height: 62px;
+            }
+
+            .page-header {
+                padding: 28px 0;
+            }
+
+            .page-title {
+                font-size: 23px;
+            }
+
+            .product-image-wrapper {
+                min-height: 260px;
+            }
+
+            .product-image {
+                height: 230px;
+            }
+
+            .info-row {
+                flex-direction: column;
+                gap: 6px;
+                padding: 15px 18px;
+            }
+
+            .info-value {
+                text-align: left;
+            }
+
+            .info-label {
+                min-width: auto;
+            }
+
+            .card-header-modern {
+                padding: 17px 18px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .action-buttons .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================
+     NAVBAR
+========================= -->
+
+<nav class="top-navbar">
+    <div class="container">
+
+        <div class="d-flex align-items-center justify-content-between">
+
+            <a href="{% url 'orderlist' %}" class="brand">
+                <span class="brand-icon">
+                    <i class="bi bi-box-seam"></i>
+                </span>
+                OrderHub
+            </a>
+
+            <div class="d-flex align-items-center gap-2">
+                <span class="text-muted small d-none d-sm-inline">
+                    Order Management
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- =========================
+     PAGE HEADER
+========================= -->
+
+<header class="page-header">
+
+    <div class="container">
+
+        <div class="breadcrumb-custom">
+            <a href="">
+                Orders
+            </a>
+
+            <span>/</span>
+
+            <span>
+                Order Details
+            </span>
+        </div>
+
+        <div class="d-flex flex-column flex-md-row
+                    align-items-md-end
+                    justify-content-between gap-3">
+
+            <div>
+                <h1 class="page-title">
+                    Customer Order Details
+                </h1>
+
+                <p class="page-subtitle">
+                    Complete information and delivery details for this order.
+                </p>
+            </div>
+
+            <div>
+                <span class="order-badge">
+                    <i class="bi bi-receipt"></i>
+                    Order #{{ order.id }}
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+     MAIN CONTENT
+========================= -->
+
+<main class="container page-content pb-4">
+
+    <!-- TOP ACTIONS -->
+
+    <div class="d-flex flex-column flex-sm-row
+                justify-content-between
+                align-items-sm-center
+                gap-3
+                mb-4
+                action-buttons">
+
+        <div>
+            <div class="status-badge">
+                <span class="status-dot"></span>
+                Order Received
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <button
+                type="button"
+                onclick="window.print()"
+                class="btn btn-modern btn-light-modern">
+
+                <i class="bi bi-printer"></i>
+                Print Order
+
+            </button>
+
+            
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SUMMARY CARDS
+    ========================= -->
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="summary-box h-100">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="section-icon">
+                        <i class="bi bi-hash"></i>
+                    </div>
+
+                    <div>
+                        <div class="summary-number">
+                            #{{ order.id }}
+                        </div>
+
+                        <div class="summary-label">
+                            ORDER NUMBER
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="summary-box h-100">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="section-icon">
+                        <i class="bi bi-box"></i>
+                    </div>
+
+                    <div>
+                        <div class="summary-number">
+                            {{ order.quantity }}
+                        </div>
+
+                        <div class="summary-label">
+                            ITEMS ORDERED
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="summary-box h-100">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="section-icon">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+
+                    <div>
+                        <div class="summary-number">
+                            {{ order.created_at|date:"d M Y" }}
+                        </div>
+
+                        <div class="summary-label">
+                            ORDER DATE
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         PRODUCT + CUSTOMER
+    ========================= -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- PRODUCT -->
+
+        <div class="col-lg-5">
+
+            <div class="modern-card product-card">
+
+                <div class="product-image-wrapper">
+
+                    {% if order.product.product_image %}
+                        <img
+                            src="{{ order.product.product_image.url }}"
+                            class="product-image"
+                            alt="{{ order.product.name }}"
+                        >
+                    {% else %}
+
+                        <div class="text-center text-muted">
+
+                            <i
+                                class="bi bi-image"
+                                style="font-size: 70px;">
+                            </i>
+
+                            <p class="mt-3 mb-0">
+                                No product image available
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="product-info">
+
+                    <div class="product-label">
+                        Product
+                    </div>
+
+                    <div class="product-name">
+                        {{ order.product.name }}
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2">
+
+                        <span class="quantity-badge">
+                            <i class="bi bi-box-seam"></i>
+                            Quantity: {{ order.quantity }}
+                        </span>
+
+                        <span class="quantity-badge">
+                            <i class="bi bi-check-circle"></i>
+                            Confirmed
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CUSTOMER DETAILS -->
+
+        <div class="col-lg-7">
+
+            <div class="modern-card h-100">
+
+                <div class="card-header-modern">
+
+                    <h2 class="section-title">
+
+                        <span class="section-icon">
+                            <i class="bi bi-person"></i>
+                        </span>
+
+                        Customer Information
+
+                    </h2>
+
+                </div>
+
+
+                <ul class="info-list">
+
+                    <li class="info-row">
+
+                        <div class="info-label">
+                            <i class="bi bi-person"></i>
+                            Full Name
+                        </div>
+
+                        <div class="info-value">
+                            {{ order.name }}
+                        </div>
+
+                    </li>
+
+
+                    <li class="info-row">
+
+                        <div class="info-label">
+                            <i class="bi bi-envelope"></i>
+                            Email
+                        </div>
+
+                        <div class="info-value">
+                            {{ order.user.email }}
+                        </div>
+
+                    </li>
+
+
+                    <li class="info-row">
+
+                        <div class="info-label">
+                            <i class="bi bi-telephone"></i>
+                            Phone
+                        </div>
+
+                        <div class="info-value">
+                            {{ order.phone }}
+                        </div>
+
+                    </li>
+
+
+                    <li class="info-row">
+
+                        <div class="info-label">
+                            <i class="bi bi-geo-alt"></i>
+                            City
+                        </div>
+
+                        <div class="info-value">
+                            {{ order.city }}
+                        </div>
+
+                    </li>
+
+
+                    <li class="info-row">
+
+                        <div class="info-label">
+                            <i class="bi bi-map"></i>
+                            State
+                        </div>
+
+                        <div class="info-value">
+                            {{ order.state }}
+                        </div>
+
+                    </li>
+
+
+                    <li class="info-row">
+
+                        <div class="info-label">
+                            <i class="bi bi-mailbox"></i>
+                            Postal Code
+                        </div>
+
+                        <div class="info-value">
+                            {{ order.postal_code }}
+                        </div>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SHIPPING + ORDER DETAILS
+    ========================= -->
+
+    <div class="row g-4">
+
+        <!-- SHIPPING ADDRESS -->
+
+        <div class="col-lg-7">
+
+            <div class="modern-card h-100">
+
+                <div class="card-header-modern">
+
+                    <h2 class="section-title">
+
+                        <span class="section-icon">
+                            <i class="bi bi-truck"></i>
+                        </span>
+
+                        Shipping Address
+
+                    </h2>
+
+                </div>
+
+
+                <div class="address-box">
+
+                    <div class="address-content">
+
+                        <div class="address-icon">
+                            <i class="bi bi-geo-alt-fill"></i>
+                        </div>
+
+                        <div class="address-text">
+
+                            <strong class="d-block text-dark mb-1">
+                                {{ order.name }}
+                            </strong>
+
+                            {{ order.address }}<br>
+
+                            {{ order.city }},
+                            {{ order.state }} -
+                            {{ order.postal_code }}<br>
+
+                            <span class="text-muted">
+                                <i class="bi bi-telephone me-1"></i>
+                                {{ order.phone }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ORDER DETAILS -->
+
+       <div class="col-lg-5">
+    <div class="modern-card h-100">
+
+        <!-- Card Header -->
+        <div class="card-header-modern">
+            <h2 class="section-title">
+                <span class="section-icon">
+                    <i class="bi bi-info-circle-fill"></i>
+                </span>
+                Order Information and GST (0.03%)
+            </h2>
+        </div>
+
+        <!-- Order Details -->
+        <ul class="info-list">
+
+            <!-- Order ID -->
+            <li class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-receipt-cutoff"></i>
+                    Order ID
+                </div>
+                <div class="info-value">
+                    #{{ order.id }}
+                </div>
+            </li>
+
+            <!-- Size -->
+            <li class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-rulers"></i>
+                    Size
+                </div>
+                <div class="info-value">
+                    {{ order.size|default:"N/A" }}
+                </div>
+            </li>
+
+            <!-- Product -->
+            <li class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-box-seam"></i>
+                    Product
+                </div>
+                <div class="info-value">
+                    {{ order.product.name|default:"N/A" }}
+                </div>
+            </li>
+
+            <!-- Quantity -->
+            <li class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-stack"></i>
+                    Quantity
+                </div>
+                <div class="info-value">
+                    {{ order.quantity|default:"0" }} units
+                </div>
+            </li>
+
+            <!-- Product Price -->
+            <li class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-tag-fill"></i>
+                    Product Price
+                </div>
+                <div class="info-value">
+                    ₹{{ order.product_price|default:"0.00" }}
+                </div>
+            </li>
+
+            <!-- Order Date -->
+            <li class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-calendar2-check"></i>
+                    Ordered On
+                </div>
+                <div class="info-value">
+                    {{ order.created_at|date:"d M Y, h:i A" }}
+                </div>
+            </li>
+
+            <!-- Coupon Code -->
+            <li class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-ticket-perforated-fill"></i>
+                    Coupon Code
+                </div>
+                <div class="info-value">
+                    {% if order.coupon_code %}
+                        <span class="coupon-code">
+                            {{ order.coupon_code }}
+                        </span>
+                    {% else %}
+                        <span class="text-muted">Not applied</span>
+                    {% endif %}
+                </div>
+            </li>
+
+            <!-- Coupon Discount -->
+            <li class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-percent"></i>
+                    Coupon Discount
+                </div>
+                <div class="info-value">
+                    ₹{{ order.coupon_discount|default:"0.00" }}
+                </div>
+            </li>
+
+            <!-- Total Amount -->
+            <li class="info-row total-row">
+                <div class="info-label">
+                    <i class="bi bi-wallet2"></i>
+                    Total Amount
+                </div>
+                <div class="info-value total-amount">
+                    ₹{{ order.total_amount|default:"0.00" }}
+                </div>
+            </li>
+
+            <!-- Order Status -->
+            <li class="info-row">
+                <div class="info-label">
+                    <i class="bi bi-clipboard2-check"></i>
+                    Status
+                </div>
+                <div class="info-value">
+                    <span class="status-badge">
+                        <span class="status-dot"></span>
+                        {{ order.status|default:"Received"|title }}
+                    </span>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+</div>
+
+
+
+    </div>
+
+
+    <!-- =========================
+         BOTTOM ACTION
+    ========================= -->
+
+    <div class="modern-card mt-4">
+
+        <div class="p-4">
+
+            <div class="d-flex flex-column flex-md-row
+                        align-items-md-center
+                        justify-content-between
+                        gap-3">
+
+                <div>
+
+                    <h5 class="mb-1 fw-bold text-dark">
+                        Need to manage this order?
+                    </h5>
+
+                    <p class="mb-0 text-muted small">
+                        Return to the order management dashboard to view
+                        other customer orders.
+                    </p>
+
+                </div>
+
+                <a
+                    href="{% url 'saller_customer_orders' %}"
+                    class="btn btn-modern btn-primary-modern">
+
+                    View All Orders
+                    <i class="bi bi-arrow-right"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- =========================
+     FOOTER
+========================= -->
+
+<footer class="page-footer">
+
+    <div class="container">
+
+        <div>
+            Order Management System
+            <span class="mx-1">•</span>
+            Customer Order #{{ order.id }}
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- Bootstrap JS -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
+{% endblock %}

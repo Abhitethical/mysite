@@ -1,0 +1,399 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <!-- Main Card -->
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+                <!-- Header -->
+                <div class="card-header bg-success text-white p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <h3 class="mb-1 fw-bold">
+                                <i class="bi bi-credit-card me-2"></i>
+                                Advertisement Payment
+                            </h3>
+
+                            <p class="mb-0 opacity-75">
+                                Complete your advertisement payment securely
+                            </p>
+                        </div>
+
+                        <div>
+                            {% if advertisement.payment_status == "PAID" %}
+                                <span class="badge bg-light text-success px-3 py-2 rounded-pill">
+                                    <i class="bi bi-check-circle-fill me-1"></i>
+                                    Paid
+                                </span>
+
+                            {% elif advertisement.payment_status == "FAILED" %}
+                                <span class="badge bg-light text-danger px-3 py-2 rounded-pill">
+                                    <i class="bi bi-x-circle-fill me-1"></i>
+                                    Failed
+                                </span>
+
+                            {% else %}
+                                <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">
+                                    <i class="bi bi-clock-fill me-1"></i>
+                                    Pending
+                                </span>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="card-body p-4 p-md-5">
+
+                    <!-- Advertisement Information -->
+                    <div class="mb-4">
+
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-megaphone-fill text-success me-2"></i>
+                            Advertisement Details
+                        </h5>
+
+                        <div class="bg-light rounded-3 p-4">
+
+                            <div class="row g-4">
+
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">
+                                        Advertisement
+                                    </small>
+
+                                    <strong class="fs-5">
+                                        {{ advertisement.title }}
+                                    </strong>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">
+                                        Plan
+                                    </small>
+
+                                    <span class="badge bg-success-subtle text-success fs-6">
+                                        {{ advertisement.plan }}
+                                    </span>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">
+                                        Duration
+                                    </small>
+
+                                    <strong>
+                                        <i class="bi bi-calendar3 text-success me-1"></i>
+                                        {{ advertisement.duration }} Days
+                                    </strong>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <small class="text-muted d-block">
+                                        Amount
+                                    </small>
+
+                                    <strong class="text-success fs-4">
+                                        ₹ {{ advertisement.amount }}
+                                    </strong>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <hr class="my-4">
+
+
+                    <!-- Payment Information -->
+                    <div class="mb-4">
+
+                        <h5 class="fw-bold mb-3">
+                            <i class="bi bi-info-circle-fill text-success me-2"></i>
+                            Payment Information
+                        </h5>
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle mb-0">
+
+                                <tbody>
+
+                                    <tr>
+                                        <th class="text-muted" style="width:35%;">
+                                            Payment Status
+                                        </th>
+
+                                        <td>
+                                            {% if advertisement.payment_status == "PAID" %}
+
+                                                <span class="badge bg-success rounded-pill px-3 py-2">
+                                                    <i class="bi bi-check-circle me-1"></i>
+                                                    Paid
+                                                </span>
+
+                                            {% elif advertisement.payment_status == "FAILED" %}
+
+                                                <span class="badge bg-danger rounded-pill px-3 py-2">
+                                                    <i class="bi bi-x-circle me-1"></i>
+                                                    Failed
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2">
+                                                    <i class="bi bi-clock me-1"></i>
+                                                    Pending
+                                                </span>
+
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th class="text-muted">
+                                            Payment Method
+                                        </th>
+
+                                        <td>
+                                            {{ advertisement.payment_method|default:"Not Paid" }}
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th class="text-muted">
+                                            Payment ID
+                                        </th>
+
+                                        <td>
+                                            <code>
+                                                {{ advertisement.payment_id|default:"-" }}
+                                            </code>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th class="text-muted">
+                                            Paid At
+                                        </th>
+
+                                        <td>
+                                            {% if advertisement.paid_at %}
+                                                {{ advertisement.paid_at }}
+                                            {% else %}
+                                                <span class="text-muted">
+                                                    Not Paid
+                                                </span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if advertisement.payment_status != "PAID" %}
+
+                    <hr class="my-4">
+
+
+                    <!-- Payment Form -->
+                    <div class="payment-section">
+
+                        <h5 class="fw-bold mb-2">
+                            <i class="bi bi-wallet2 text-success me-2"></i>
+                            Make Payment
+                        </h5>
+
+                        <p class="text-muted mb-4">
+                            Select your preferred payment method to continue.
+                        </p>
+
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+                            <div class="mb-4">
+
+                                <label class="form-label fw-semibold">
+                                    Select Payment Method
+                                </label>
+
+                                <select
+                                    name="payment_method"
+                                    class="form-select form-select-lg"
+                                    required>
+
+                                    <option value="">
+                                        Choose Payment Method
+                                    </option>
+
+                                    <option value="RAZORPAY">
+                                        Razorpay
+                                    </option>
+
+                                    <option value="STRIPE">
+                                        Stripe
+                                    </option>
+
+                                    <option value="PAYPAL">
+                                        PayPal
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <input
+                                type="hidden"
+                                name="payment_id"
+                                id="payment_id">
+
+
+                            <input
+                                type="hidden"
+                                name="payment_result"
+                                id="payment_result">
+
+
+                            <!-- Buttons -->
+                            <div class="d-flex flex-column flex-md-row gap-3">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-success btn-lg px-4"
+                                    onclick="paymentSuccess()">
+
+                                    <i class="bi bi-check-circle-fill me-2"></i>
+                                    Pay Successfully
+
+                                </button>
+
+
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-danger btn-lg px-4"
+                                    onclick="paymentFailed()">
+
+                                    <i class="bi bi-x-circle-fill me-2"></i>
+                                    Mark Payment Failed
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+                    {% else %}
+
+                    <!-- Success Message -->
+
+                    <div class="alert alert-success border-0 rounded-3 mt-4">
+
+                        <div class="d-flex align-items-center">
+
+                            <i class="bi bi-check-circle-fill fs-3 me-3"></i>
+
+                            <div>
+                                <h6 class="fw-bold mb-1">
+                                    Payment Completed Successfully
+                                </h6>
+
+                                <p class="mb-0">
+                                    Your advertisement payment has been received.
+                                </p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Footer -->
+
+                <div class="card-footer bg-light border-0 text-center py-3">
+
+                    <small class="text-muted">
+                        <i class="bi bi-shield-check me-1"></i>
+                        Your payment information is securely processed.
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+
+function paymentSuccess() {
+
+    const paymentMethod =
+        document.querySelector('[name="payment_method"]').value;
+
+    if (!paymentMethod) {
+        alert("Please select a payment method.");
+        return;
+    }
+
+    document.getElementById("payment_result").value = "SUCCESS";
+
+    document.getElementById("payment_id").value =
+        "PAY_" + Date.now();
+
+    document.querySelector("form").submit();
+}
+
+
+function paymentFailed() {
+
+    const paymentMethod =
+        document.querySelector('[name="payment_method"]').value;
+
+    if (!paymentMethod) {
+        alert("Please select a payment method.");
+        return;
+    }
+
+    document.getElementById("payment_result").value = "FAILED";
+
+    document.getElementById("payment_id").value =
+        "FAIL_" + Date.now();
+
+    document.querySelector("form").submit();
+}
+
+</script>
+
+{% endblock %}

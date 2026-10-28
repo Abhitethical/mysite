@@ -1,0 +1,1180 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %}
+  Login | ShopKart
+{% endblock title %}
+
+{% block content %}
+
+
+<style>
+  /* ================================
+     SHOPKART LOGIN PAGE
+     ================================ */
+
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --secondary: #7c3aed;
+    --dark: #0f172a;
+    --text: #334155;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --light: #f8fafc;
+    --white: #ffffff;
+    --danger: #dc2626;
+    --shadow: 0 25px 60px rgba(15, 23, 42, 0.14);
+  }
+
+  .shopkart-login-wrapper {
+    min-height: calc(100vh - 80px);
+    padding: 70px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+
+    background:
+      radial-gradient(
+        circle at 10% 20%,
+        rgba(37, 99, 235, 0.10),
+        transparent 30%
+      ),
+      radial-gradient(
+        circle at 90% 80%,
+        rgba(124, 58, 237, 0.10),
+        transparent 30%
+      ),
+      linear-gradient(
+        135deg,
+        #f8fafc 0%,
+        #eef4ff 50%,
+        #faf5ff 100%
+      );
+  }
+
+  /* Background decorations */
+
+  .login-decoration {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(1px);
+    pointer-events: none;
+  }
+
+  .decoration-one {
+    width: 280px;
+    height: 280px;
+    top: -120px;
+    left: -100px;
+    background: rgba(37, 99, 235, 0.08);
+  }
+
+  .decoration-two {
+    width: 350px;
+    height: 350px;
+    right: -150px;
+    bottom: -170px;
+    background: rgba(124, 58, 237, 0.08);
+  }
+
+  /* Main card */
+
+  .login-card {
+    width: 100%;
+    max-width: 1050px;
+    min-height: 600px;
+
+    display: grid;
+    grid-template-columns: 0.95fr 1.05fr;
+
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 28px;
+    overflow: hidden;
+
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(18px);
+
+    position: relative;
+    z-index: 2;
+
+    animation: cardFadeIn 0.6s ease-out;
+  }
+
+  /* ================================
+     BRAND PANEL
+     ================================ */
+
+  .login-brand-panel {
+    position: relative;
+    padding: 55px 48px;
+
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    overflow: hidden;
+
+    background:
+      linear-gradient(
+        145deg,
+        rgba(15, 23, 42, 0.98),
+        rgba(37, 99, 235, 0.96)
+      ),
+      linear-gradient(
+        135deg,
+        #1e3a8a,
+        #7c3aed
+      );
+  }
+
+  .brand-pattern {
+    position: absolute;
+    inset: 0;
+
+    opacity: 0.15;
+
+    background-image:
+      linear-gradient(
+        rgba(255,255,255,.15) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        90deg,
+        rgba(255,255,255,.15) 1px,
+        transparent 1px
+      );
+
+    background-size: 40px 40px;
+  }
+
+  .brand-circle {
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+
+    right: -120px;
+    top: -80px;
+  }
+
+  .brand-circle::after {
+    content: "";
+
+    position: absolute;
+
+    width: 210px;
+    height: 210px;
+
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50%;
+
+    top: 45px;
+    left: 45px;
+  }
+
+  .brand-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .brand-logo {
+    width: 58px;
+    height: 58px;
+
+    border-radius: 17px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 30px;
+
+    font-size: 27px;
+    font-weight: 800;
+
+    color: white;
+
+    background:
+      linear-gradient(
+        135deg,
+        #60a5fa,
+        #818cf8
+      );
+
+    box-shadow:
+      0 12px 30px rgba(0,0,0,0.2);
+  }
+
+  .brand-title {
+    font-size: 42px;
+    font-weight: 800;
+
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+
+    margin-bottom: 18px;
+  }
+
+  .brand-title span {
+    color: #93c5fd;
+  }
+
+  .brand-description {
+    max-width: 390px;
+
+    color: rgba(255,255,255,0.76);
+
+    font-size: 15px;
+    line-height: 1.8;
+
+    margin-bottom: 35px;
+  }
+
+  .brand-features {
+    list-style: none;
+
+    padding: 0;
+    margin: 0;
+  }
+
+  .brand-features li {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 17px;
+
+    color: rgba(255,255,255,0.9);
+
+    font-size: 14px;
+  }
+
+  .feature-icon {
+    width: 28px;
+    height: 28px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255,255,255,0.12);
+
+    color: #bfdbfe;
+
+    font-size: 13px;
+
+    flex-shrink: 0;
+  }
+
+  .brand-footer {
+    position: relative;
+    z-index: 2;
+
+    color: rgba(255,255,255,0.5);
+
+    font-size: 12px;
+  }
+
+  /* ================================
+     FORM PANEL
+     ================================ */
+
+  .login-form-panel {
+    padding: 55px 65px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(255,255,255,0.96);
+  }
+
+  .login-form-container {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .login-heading {
+    margin-bottom: 35px;
+  }
+
+  .login-heading .small-title {
+    color: var(--primary);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+
+    margin-bottom: 9px;
+  }
+
+  .login-heading h1 {
+    color: var(--dark);
+
+    font-size: 32px;
+    font-weight: 800;
+
+    letter-spacing: -0.8px;
+
+    margin: 0 0 10px;
+  }
+
+  .login-heading p {
+    color: var(--muted);
+
+    font-size: 14px;
+
+    margin: 0;
+  }
+
+  /* Messages */
+
+  .login-messages {
+    margin-bottom: 22px;
+  }
+
+  .login-messages ul {
+    margin-bottom: 0;
+  }
+
+  /* Input groups */
+
+  .form-group {
+    margin-bottom: 23px;
+  }
+
+  .form-label {
+    color: #1e293b;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    margin-bottom: 9px;
+  }
+
+  .input-wrapper {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+
+    left: 16px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #94a3b8;
+
+    font-size: 16px;
+
+    pointer-events: none;
+
+    z-index: 3;
+  }
+
+  .login-input {
+    width: 100%;
+    height: 54px;
+
+    padding: 0 48px;
+
+    border: 1.5px solid var(--border);
+    border-radius: 13px;
+
+    outline: none;
+
+    color: var(--dark);
+
+    background: #f8fafc;
+
+    font-size: 14px;
+
+    transition: all 0.25s ease;
+
+    box-sizing: border-box;
+  }
+
+  .login-input::placeholder {
+    color: #94a3b8;
+  }
+
+  .login-input:hover {
+    border-color: #cbd5e1;
+    background: #ffffff;
+  }
+
+  .login-input:focus {
+    border-color: var(--primary);
+
+    background: #ffffff;
+
+    box-shadow:
+      0 0 0 4px rgba(37, 99, 235, 0.10);
+  }
+
+  /* Password toggle */
+
+  .password-toggle {
+    position: absolute;
+
+    right: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    border: none;
+
+    background: transparent;
+
+    color: #94a3b8;
+
+    cursor: pointer;
+
+    width: 32px;
+    height: 32px;
+
+    border-radius: 8px;
+
+    transition: 0.2s ease;
+  }
+
+  .password-toggle:hover {
+    color: var(--primary);
+
+    background: #eff6ff;
+  }
+
+  /* Login button */
+
+  .login-button {
+    width: 100%;
+    height: 54px;
+
+    border: none;
+    border-radius: 13px;
+
+    color: white;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    letter-spacing: 0.2px;
+
+    cursor: pointer;
+
+    position: relative;
+    overflow: hidden;
+
+    background:
+      linear-gradient(
+        135deg,
+        var(--primary),
+        var(--secondary)
+      );
+
+    box-shadow:
+      0 10px 24px rgba(37, 99, 235, 0.25);
+
+    transition: all 0.25s ease;
+  }
+
+  .login-button::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 100%;
+    height: 100%;
+
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.22),
+        transparent
+      );
+
+    transition: 0.5s ease;
+  }
+
+  .login-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+      0 14px 30px rgba(37, 99, 235, 0.32);
+  }
+
+  .login-button:hover::before {
+    left: 100%;
+  }
+
+  .login-button:active {
+    transform: translateY(0);
+  }
+
+  .login-button:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* Forgot password */
+
+  .forgot-password {
+    text-align: center;
+
+    margin-top: 22px;
+  }
+
+  .forgot-password span {
+    color: var(--muted);
+
+    font-size: 13px;
+  }
+
+  .forgot-password a {
+    color: var(--primary);
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    margin-left: 4px;
+
+    transition: color 0.2s ease;
+  }
+
+  .forgot-password a:hover {
+    color: var(--primary-dark);
+
+    text-decoration: underline;
+  }
+
+  /* Divider */
+
+  .login-divider {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    margin: 28px 0 0;
+  }
+
+  .login-divider::before,
+  .login-divider::after {
+    content: "";
+
+    height: 1px;
+
+    background: #e2e8f0;
+
+    flex: 1;
+  }
+
+  .login-divider span {
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+  }
+
+  /* Security note */
+
+  .security-note {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 7px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    margin-top: 20px;
+  }
+
+  .security-note i {
+    color: #22c55e;
+  }
+
+  /* ================================
+     RESPONSIVE
+     ================================ */
+
+  @media (max-width: 900px) {
+
+    .login-card {
+      max-width: 600px;
+
+      grid-template-columns: 1fr;
+    }
+
+    .login-brand-panel {
+      min-height: 300px;
+
+      padding: 40px;
+    }
+
+    .brand-title {
+      font-size: 34px;
+    }
+
+    .brand-description {
+      margin-bottom: 20px;
+    }
+
+    .brand-features {
+      display: none;
+    }
+
+    .brand-footer {
+      margin-top: 20px;
+    }
+
+    .login-form-panel {
+      padding: 45px 40px;
+    }
+  }
+
+  @media (max-width: 576px) {
+
+    .shopkart-login-wrapper {
+      min-height: 100vh;
+
+      padding: 25px 14px;
+    }
+
+    .login-card {
+      border-radius: 20px;
+    }
+
+    .login-brand-panel {
+      min-height: auto;
+
+      padding: 32px 26px;
+    }
+
+    .brand-logo {
+      width: 50px;
+      height: 50px;
+
+      font-size: 22px;
+
+      margin-bottom: 20px;
+    }
+
+    .brand-title {
+      font-size: 29px;
+    }
+
+    .brand-description {
+      font-size: 13px;
+
+      line-height: 1.6;
+
+      margin-bottom: 0;
+    }
+
+    .brand-footer {
+      display: none;
+    }
+
+    .login-form-panel {
+      padding: 35px 25px 40px;
+    }
+
+    .login-heading {
+      margin-bottom: 27px;
+    }
+
+    .login-heading h1 {
+      font-size: 27px;
+    }
+
+    .login-input,
+    .login-button {
+      height: 52px;
+    }
+  }
+
+  /* Animation */
+
+  @keyframes cardFadeIn {
+
+    from {
+      opacity: 0;
+
+      transform: translateY(25px);
+    }
+
+    to {
+      opacity: 1;
+
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+
+    .login-card {
+      animation: none;
+    }
+  }
+</style>
+
+
+<div class="shopkart-login-wrapper">
+
+  <!-- Background Decorations -->
+
+  <div class="login-decoration decoration-one"></div>
+
+  <div class="login-decoration decoration-two"></div>
+
+
+  <!-- Main Login Card -->
+
+  <div class="login-card">
+
+
+    <!-- ================================
+         LEFT BRAND PANEL
+         ================================ -->
+
+    <div class="login-brand-panel">
+
+      <div class="brand-pattern"></div>
+
+      <div class="brand-circle"></div>
+
+
+      <div class="brand-content">
+
+        <!-- Logo -->
+
+        <div class="brand-logo">
+          S
+        </div>
+
+
+        <!-- Brand -->
+
+        <h2 class="brand-title">
+          Welcome to <span>ShopKart</span>
+        </h2>
+
+
+        <p class="brand-description">
+          Your trusted online shopping destination.
+          Sign in to access your account, manage your
+          orders, and enjoy a faster shopping experience.
+        </p>
+
+
+        <!-- Features -->
+
+        <ul class="brand-features">
+
+          <li>
+
+            <span class="feature-icon">
+              <i class="fas fa-shopping-bag"></i>
+            </span>
+
+            Easy & secure shopping
+
+          </li>
+
+
+          <li>
+
+            <span class="feature-icon">
+              <i class="fas fa-box"></i>
+            </span>
+
+            Track all your orders
+
+          </li>
+
+
+          <li>
+
+            <span class="feature-icon">
+              <i class="fas fa-user-shield"></i>
+            </span>
+
+            Secure account protection
+
+          </li>
+
+        </ul>
+
+      </div>
+
+
+      <div class="brand-footer">
+        © {% now "Y" %} ShopKart. All rights reserved.
+      </div>
+
+    </div>
+
+
+    <!-- ================================
+         RIGHT FORM PANEL
+         ================================ -->
+
+    <div class="login-form-panel">
+
+      <div class="login-form-container">
+
+
+        <!-- Heading -->
+
+        <div class="login-heading">
+
+          <div class="small-title">
+            Account Access
+          </div>
+
+          <h1>
+            Sign in to your account
+          </h1>
+
+          <p>
+            Enter your credentials to continue to ShopKart.
+          </p>
+
+        </div>
+
+
+        <!-- Django Messages -->
+
+        <div class="login-messages">
+          {% include 'inc/message.html' %}
+        </div>
+
+
+        <!-- ================================
+             LOGIN FORM
+             ================================ -->
+
+        <form
+          method="post"
+          action=""
+          autocomplete="off"
+          novalidate
+        >
+
+          {% csrf_token %}
+
+
+          <!-- Username -->
+
+          <div class="form-group">
+
+            <label
+              for="username"
+              class="form-label"
+            >
+              User Name
+            </label>
+
+
+            <div class="input-wrapper">
+
+              <i class="fas fa-user input-icon"></i>
+
+
+              <input
+                type="text"
+                name="username"
+                id="username"
+                class="login-input"
+
+                placeholder="Enter your username"
+
+                autocomplete="off"
+
+                autocapitalize="none"
+                autocorrect="off"
+                spellcheck="false"
+
+                required
+                autofocus
+              >
+
+            </div>
+
+          </div>
+
+
+          <!-- Password -->
+
+          <div class="form-group">
+
+            <label
+              for="password"
+              class="form-label"
+            >
+              Password
+            </label>
+
+
+            <div class="input-wrapper">
+
+              <i class="fas fa-lock input-icon"></i>
+
+
+              <input
+                type="password"
+                name="password"
+                id="password"
+                class="login-input"
+
+                placeholder="Enter your password"
+
+                autocomplete="new-password"
+
+                required
+              >
+
+
+              <button
+                type="button"
+                class="password-toggle"
+                id="togglePassword"
+
+                aria-label="Show password"
+                title="Show password"
+              >
+
+                <i
+                  class="fas fa-eye"
+                  id="passwordIcon"
+                ></i>
+
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- Login Button -->
+
+          <button
+            type="submit"
+            class="login-button"
+            id="loginButton"
+          >
+
+            <i class="fas fa-sign-in-alt me-2"></i>
+
+            Sign In
+
+          </button>
+
+        </form>
+
+
+        <!-- Forgot Password -->
+
+        <div class="forgot-password">
+
+          <span>
+            Forgot your password?
+          </span>
+
+
+          <a href="{% url 'forgotpassword' %}">
+            Reset Password
+          </a>
+
+        </div>
+
+
+        <!-- Divider -->
+
+        <div class="login-divider">
+
+          <span>
+            Secure Login
+          </span>
+
+        </div>
+
+
+        <!-- Security Message -->
+
+        <div class="security-note">
+
+          <i class="fas fa-shield-alt"></i>
+
+          Your login information is securely protected.
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ================================
+     JAVASCRIPT
+     ================================ -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+  /* ================================
+     PASSWORD VISIBILITY TOGGLE
+     ================================ */
+
+  const passwordInput =
+    document.getElementById("password");
+
+  const togglePassword =
+    document.getElementById("togglePassword");
+
+  const passwordIcon =
+    document.getElementById("passwordIcon");
+
+
+  if (togglePassword && passwordInput) {
+
+    togglePassword.addEventListener(
+      "click",
+      function () {
+
+        const isPassword =
+          passwordInput.type === "password";
+
+
+        passwordInput.type =
+          isPassword ? "text" : "password";
+
+
+        if (isPassword) {
+
+          passwordIcon.classList.remove(
+            "fa-eye"
+          );
+
+          passwordIcon.classList.add(
+            "fa-eye-slash"
+          );
+
+
+          togglePassword.setAttribute(
+            "aria-label",
+            "Hide password"
+          );
+
+          togglePassword.setAttribute(
+            "title",
+            "Hide password"
+          );
+
+        } else {
+
+          passwordIcon.classList.remove(
+            "fa-eye-slash"
+          );
+
+          passwordIcon.classList.add(
+            "fa-eye"
+          );
+
+
+          togglePassword.setAttribute(
+            "aria-label",
+            "Show password"
+          );
+
+          togglePassword.setAttribute(
+            "title",
+            "Show password"
+          );
+
+        }
+
+      }
+    );
+
+  }
+
+
+  /* ================================
+     LOGIN BUTTON LOADING STATE
+     ================================ */
+
+  const loginForm =
+    document.querySelector(
+      ".login-form-container form"
+    );
+
+
+  const loginButton =
+    document.getElementById(
+      "loginButton"
+    );
+
+
+  if (loginForm && loginButton) {
+
+    loginForm.addEventListener(
+      "submit",
+      function () {
+
+        if (!loginForm.checkValidity()) {
+          return;
+        }
+
+
+        loginButton.disabled = true;
+
+
+        loginButton.innerHTML =
+          '<i class="fas fa-spinner fa-spin me-2"></i> Signing In...';
+
+      }
+    );
+
+  }
+
+});
+
+</script>
+
+{% endblock content %}
+
+

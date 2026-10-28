@@ -1,0 +1,1796 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<style>
+    /* =========================================================
+       PREMIUM ADVERTISEMENT UPDATE PAGE
+    ========================================================= */
+
+    :root {
+        --primary: #4f46e5;
+        --primary-dark: #3730a3;
+        --primary-soft: #eef2ff;
+
+        --success: #16a34a;
+        --success-soft: #dcfce7;
+
+        --warning: #d97706;
+        --warning-soft: #fef3c7;
+
+        --danger: #dc2626;
+        --danger-soft: #fee2e2;
+
+        --secondary: #64748b;
+        --dark: #0f172a;
+        --text: #475569;
+        --muted: #94a3b8;
+
+        --border: #e2e8f0;
+        --background: #f8fafc;
+        --white: #ffffff;
+    }
+
+    .advertisement-page {
+        min-height: calc(100vh - 80px);
+        padding: 35px 15px 60px;
+
+        background:
+            radial-gradient(
+                circle at 0% 0%,
+                rgba(79, 70, 229, .08),
+                transparent 28%
+            ),
+            radial-gradient(
+                circle at 100% 100%,
+                rgba(16, 185, 129, .07),
+                transparent 28%
+            ),
+            var(--background);
+    }
+
+    /* =========================================================
+       MAIN CONTAINER
+    ========================================================= */
+
+    .update-container {
+        max-width: 1180px;
+        margin: auto;
+    }
+
+    /* =========================================================
+       PAGE HEADER
+    ========================================================= */
+
+    .page-heading {
+        margin-bottom: 25px;
+    }
+
+    .page-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        color: var(--primary);
+        font-size: 11px;
+        font-weight: 800;
+
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+
+        margin-bottom: 8px;
+    }
+
+    .page-heading h1 {
+        margin: 0;
+
+        color: var(--dark);
+        font-size: clamp(28px, 4vw, 40px);
+        font-weight: 800;
+        letter-spacing: -1px;
+    }
+
+    .page-heading p {
+        margin: 8px 0 0;
+
+        color: var(--text);
+        font-size: 14px;
+    }
+
+    /* =========================================================
+       MAIN CARD
+    ========================================================= */
+
+    .premium-card {
+        overflow: hidden;
+
+        background: var(--white);
+
+        border: 1px solid var(--border);
+        border-radius: 24px;
+
+        box-shadow:
+            0 25px 70px rgba(15, 23, 42, .09);
+    }
+
+    /* =========================================================
+       CARD HEADER
+    ========================================================= */
+
+    .premium-header {
+        position: relative;
+        overflow: hidden;
+
+        padding: 28px 32px;
+
+        color: #fff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #312e81,
+                #4f46e5,
+                #6366f1
+            );
+    }
+
+    .premium-header::before,
+    .premium-header::after {
+        content: "";
+
+        position: absolute;
+
+        border-radius: 50%;
+
+        background: rgba(255,255,255,.08);
+    }
+
+    .premium-header::before {
+        width: 320px;
+        height: 320px;
+
+        right: -130px;
+        top: -210px;
+    }
+
+    .premium-header::after {
+        width: 180px;
+        height: 180px;
+
+        left: 45%;
+        bottom: -150px;
+    }
+
+    .header-inner {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .header-icon {
+        width: 52px;
+        height: 52px;
+
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 15px;
+
+        color: #fff;
+
+        background: rgba(255,255,255,.15);
+
+        border: 1px solid rgba(255,255,255,.2);
+
+        font-size: 22px;
+    }
+
+    .header-title {
+        margin: 0;
+
+        font-size: 21px;
+        font-weight: 800;
+    }
+
+    .header-subtitle {
+        margin: 4px 0 0;
+
+        font-size: 12px;
+
+        opacity: .78;
+    }
+
+    /* =========================================================
+       STATUS BADGE
+    ========================================================= */
+
+    .premium-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        padding: 8px 13px;
+
+        border-radius: 999px;
+
+        font-size: 11px;
+        font-weight: 800;
+
+        letter-spacing: .4px;
+
+        border: 1px solid transparent;
+
+        white-space: nowrap;
+    }
+
+    .premium-status .status-dot {
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+
+        background: currentColor;
+    }
+
+    /* =========================================================
+       CONTENT
+    ========================================================= */
+
+    .premium-body {
+        padding: 32px;
+    }
+
+    /* =========================================================
+       INFORMATION GRID
+    ========================================================= */
+
+    .info-grid {
+        display: grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 16px;
+
+        margin-bottom: 30px;
+    }
+
+    .info-box {
+        position: relative;
+
+        padding: 19px;
+
+        background: #fff;
+
+        border: 1px solid var(--border);
+
+        border-radius: 16px;
+
+        transition: .25s ease;
+    }
+
+    .info-box:hover {
+        transform: translateY(-2px);
+
+        border-color: #c7d2fe;
+
+        box-shadow:
+            0 10px 28px rgba(79,70,229,.07);
+    }
+
+    .info-label {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+
+        margin-bottom: 8px;
+
+        color: var(--muted);
+
+        font-size: 10px;
+        font-weight: 800;
+
+        text-transform: uppercase;
+        letter-spacing: .8px;
+    }
+
+    .info-label i {
+        color: var(--primary);
+        font-size: 13px;
+    }
+
+    .info-value {
+        min-height: 23px;
+
+        color: var(--dark);
+
+        font-size: 14px;
+        font-weight: 700;
+
+        word-break: break-word;
+    }
+
+    .amount-value {
+        color: var(--primary-dark);
+        font-size: 19px;
+    }
+
+    /* =========================================================
+       DIVIDER
+    ========================================================= */
+
+    .section-divider {
+        height: 1px;
+
+        margin: 30px 0;
+
+        background: var(--border);
+    }
+
+    /* =========================================================
+       CURRENT STATUS PANEL
+    ========================================================= */
+
+    .current-status-panel {
+        position: relative;
+        overflow: hidden;
+
+        padding: 22px;
+
+        margin-bottom: 30px;
+
+        border: 1px solid var(--border);
+        border-radius: 18px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #ffffff,
+                #f8fafc
+            );
+    }
+
+    .current-status-panel::after {
+        content: "";
+
+        position: absolute;
+
+        width: 150px;
+        height: 150px;
+
+        right: -75px;
+        top: -75px;
+
+        border-radius: 50%;
+
+        background: rgba(79,70,229,.05);
+    }
+
+    .status-panel-content {
+        position: relative;
+        z-index: 2;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 20px;
+    }
+
+    .status-heading {
+        margin: 0;
+
+        color: var(--dark);
+
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    .status-description {
+        margin: 5px 0 0;
+
+        color: var(--text);
+
+        font-size: 12px;
+    }
+
+    .large-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+
+        padding: 10px 16px;
+
+        border-radius: 999px;
+
+        font-size: 12px;
+        font-weight: 800;
+
+        white-space: nowrap;
+    }
+
+    /* =========================================================
+       FORM SECTION
+    ========================================================= */
+
+    .form-section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        margin-bottom: 20px;
+
+        color: var(--dark);
+
+        font-size: 15px;
+        font-weight: 800;
+    }
+
+    .form-section-title .section-icon {
+        width: 34px;
+        height: 34px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 10px;
+
+        color: var(--primary);
+
+        background: var(--primary-soft);
+    }
+
+    .form-label {
+        margin-bottom: 8px;
+
+        color: #334155;
+
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    /* Style Django rendered inputs */
+
+    .premium-body input[type="text"],
+    .premium-body input[type="datetime-local"],
+    .premium-body input[type="date"],
+    .premium-body input[type="time"],
+    .premium-body select,
+    .premium-body textarea {
+        width: 100%;
+
+        min-height: 46px;
+
+        padding: 10px 13px;
+
+        color: var(--dark);
+
+        background: #fff;
+
+        border: 1px solid #cbd5e1;
+
+        border-radius: 11px;
+
+        outline: none;
+
+        font-size: 13px;
+
+        transition:
+            border-color .2s ease,
+            box-shadow .2s ease;
+    }
+
+    .premium-body textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .premium-body input:focus,
+    .premium-body select:focus,
+    .premium-body textarea:focus {
+        border-color: var(--primary);
+
+        box-shadow:
+            0 0 0 4px rgba(79,70,229,.10);
+    }
+
+    .field-error {
+        margin-top: 6px;
+
+        color: var(--danger);
+
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    /* =========================================================
+       DATE STATUS INFORMATION
+    ========================================================= */
+
+    .automatic-status-card {
+        position: relative;
+
+        margin-top: 25px;
+        padding: 22px;
+
+        border: 1px solid #e2e8f0;
+
+        border-radius: 18px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f8fafc,
+                #ffffff
+            );
+    }
+
+    .automatic-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+
+        margin-bottom: 20px;
+
+        color: var(--dark);
+
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    .automatic-title i {
+        color: var(--primary);
+    }
+
+    /* =========================================================
+       STATUS TIMELINE
+    ========================================================= */
+
+    .status-timeline {
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        gap: 15px;
+    }
+
+    .timeline-item {
+        position: relative;
+
+        padding: 16px;
+
+        border-radius: 14px;
+
+        background: #fff;
+
+        border: 1px solid var(--border);
+    }
+
+    .timeline-top {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+
+        margin-bottom: 9px;
+    }
+
+    .timeline-icon {
+        width: 30px;
+        height: 30px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        font-size: 13px;
+    }
+
+    .timeline-item.approved .timeline-icon {
+        color: #2563eb;
+        background: #dbeafe;
+    }
+
+    .timeline-item.running .timeline-icon {
+        color: var(--success);
+        background: var(--success-soft);
+    }
+
+    .timeline-item.expired .timeline-icon {
+        color: var(--danger);
+        background: var(--danger-soft);
+    }
+
+    .timeline-status {
+        font-size: 11px;
+        font-weight: 800;
+    }
+
+    .timeline-description {
+        margin: 0;
+
+        color: var(--text);
+
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    /* =========================================================
+       VALIDATION ALERT
+    ========================================================= */
+
+    .date-validation {
+        display: none;
+
+        margin-top: 12px;
+
+        padding: 12px 14px;
+
+        color: #991b1b;
+
+        background: #fef2f2;
+
+        border: 1px solid #fecaca;
+
+        border-radius: 10px;
+
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* =========================================================
+       ACTION BAR
+    ========================================================= */
+
+    .action-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-top: 30px;
+        padding-top: 25px;
+
+        border-top: 1px solid var(--border);
+    }
+
+    .action-note {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        color: var(--muted);
+
+        font-size: 11px;
+    }
+
+    .action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .premium-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+
+        min-height: 44px;
+
+        padding: 10px 18px;
+
+        border-radius: 11px;
+
+        text-decoration: none;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        transition: .25s ease;
+    }
+
+    .btn-back {
+        color: #334155;
+
+        background: #f1f5f9;
+
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-back:hover {
+        color: var(--dark);
+
+        background: #e2e8f0;
+
+        transform: translateY(-1px);
+    }
+
+    .btn-save {
+        border: 0;
+
+        color: #fff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #15803d,
+                #16a34a
+            );
+
+        box-shadow:
+            0 8px 20px rgba(22,163,74,.22);
+    }
+
+    .btn-save:hover {
+        color: #fff;
+
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 12px 27px rgba(22,163,74,.32);
+    }
+
+    .btn-save:active {
+        transform: translateY(0);
+    }
+
+    /* =========================================================
+       LOADING STATE
+    ========================================================= */
+
+    .btn-save.loading {
+        pointer-events: none;
+        opacity: .75;
+    }
+
+    .btn-save.loading .save-text {
+        display: none;
+    }
+
+    .btn-save.loading .loading-text {
+        display: inline-flex;
+    }
+
+    .loading-text {
+        display: none;
+        align-items: center;
+        gap: 7px;
+    }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 900px) {
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .status-timeline {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 650px) {
+
+        .advertisement-page {
+            padding: 20px 10px 40px;
+        }
+
+        .premium-header,
+        .premium-body {
+            padding: 22px;
+        }
+
+        .header-inner {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .status-panel-content {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .action-bar {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .action-buttons {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .premium-btn {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 450px) {
+
+        .premium-card {
+            border-radius: 18px;
+        }
+
+        .header-title {
+            font-size: 18px;
+        }
+
+        .page-heading h1 {
+            font-size: 29px;
+        }
+    }
+</style>
+
+<div class="advertisement-page">
+
+<div class="update-container">
+
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-heading">
+
+        <div class="page-eyebrow">
+
+            <i class="bi bi-sliders"></i>
+
+            Advertisement Management
+
+        </div>
+
+        <h1>
+            Update Advertisement
+        </h1>
+
+        <p>
+            Manage the campaign schedule and review its current status.
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN CARD
+    ====================================================== -->
+
+    <div class="premium-card">
+
+
+        <!-- =================================================
+             HEADER
+        ================================================== -->
+
+        <div class="premium-header">
+
+            <div class="header-inner">
+
+                <div class="header-left">
+
+                    <div class="header-icon">
+
+                        <i class="bi bi-pencil-square"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h2 class="header-title">
+                            Advertisement Configuration
+                        </h2>
+
+                        <p class="header-subtitle">
+                            Update schedule and approval settings
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Header Status -->
+
+                <span
+                    id="statusBadge"
+                    class="premium-status"
+                >
+
+                    <span class="status-dot"></span>
+
+                    <span id="statusBadgeText">
+                        {{ advertisement.current_status }}
+                    </span>
+
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             BODY
+        ================================================== -->
+
+        <div class="premium-body">
+
+
+            <!-- =================================================
+                 ADVERTISEMENT INFORMATION
+            ================================================== -->
+
+            <div class="info-grid">
+
+
+                <!-- Seller -->
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="bi bi-person-circle"></i>
+
+                        Seller
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ advertisement.seller.username }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Advertisement -->
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="bi bi-megaphone"></i>
+
+                        Advertisement
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ advertisement.title }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Plan -->
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="bi bi-box-seam"></i>
+
+                        Plan
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ advertisement.get_plan_display }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Amount -->
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="bi bi-currency-rupee"></i>
+
+                        Amount
+
+                    </div>
+
+                    <div class="info-value amount-value">
+
+                        ₹ {{ advertisement.amount }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Payment Status -->
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="bi bi-credit-card"></i>
+
+                        Payment Status
+
+                    </div>
+
+                    <div class="info-value">
+
+                        {{ advertisement.get_payment_status_display }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Advertisement ID -->
+
+                <div class="info-box">
+
+                    <div class="info-label">
+
+                        <i class="bi bi-fingerprint"></i>
+
+                        Advertisement ID
+
+                    </div>
+
+                    <div class="info-value">
+
+                        #{{ advertisement.id }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CURRENT STATUS
+            ================================================== -->
+
+            <div class="current-status-panel">
+
+                <div class="status-panel-content">
+
+                    <div>
+
+                        <h3 class="status-heading">
+                            Current Advertisement Status
+                        </h3>
+
+                        <p class="status-description">
+                            Status is calculated automatically from the selected schedule.
+                        </p>
+
+                    </div>
+
+
+                    <span
+                        id="largeStatusBadge"
+                        class="large-status"
+                    >
+
+                        <span class="status-dot"></span>
+
+                        <span id="largeStatusText">
+                            {{ advertisement.current_status }}
+                        </span>
+
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORM
+            ================================================== -->
+
+            <form
+                method="POST"
+                id="advertisementForm"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- Non Field Errors -->
+
+                {% if form.non_field_errors %}
+
+                    <div class="alert alert-danger border-0 shadow-sm">
+
+                        <div class="d-flex gap-2">
+
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+
+                            <div>
+
+                                {{ form.non_field_errors }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- =================================================
+                     FORM TITLE
+                ================================================== -->
+
+                <div class="form-section-title">
+
+                    <span class="section-icon">
+
+                        <i class="bi bi-calendar2-week"></i>
+
+                    </span>
+
+                    Campaign Schedule
+
+                </div>
+
+
+                <!-- =================================================
+                     START / END
+                ================================================== -->
+
+                <div class="row g-4">
+
+
+                    <!-- Start -->
+
+                    <div class="col-lg-6">
+
+                        <label
+                            for="{{ form.start_datetime.id_for_label }}"
+                            class="form-label"
+                        >
+
+                            <i class="bi bi-calendar-plus me-1 text-primary"></i>
+
+                            Start Date & Time
+
+                        </label>
+
+                        {{ form.start_datetime }}
+
+                        {% if form.start_datetime.errors %}
+
+                            <div class="field-error">
+
+                                <i class="bi bi-exclamation-circle me-1"></i>
+
+                                {{ form.start_datetime.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- End -->
+
+                    <div class="col-lg-6">
+
+                        <label
+                            for="{{ form.end_datetime.id_for_label }}"
+                            class="form-label"
+                        >
+
+                            <i class="bi bi-calendar-check me-1 text-primary"></i>
+
+                            End Date & Time
+
+                        </label>
+
+                        {{ form.end_datetime }}
+
+                        {% if form.end_datetime.errors %}
+
+                            <div class="field-error">
+
+                                <i class="bi bi-exclamation-circle me-1"></i>
+
+                                {{ form.end_datetime.errors }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- Date Validation -->
+
+                <div
+                    id="dateValidation"
+                    class="date-validation"
+                >
+
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+
+                    End date and time must be later than the start date and time.
+
+                </div>
+
+
+                <!-- =================================================
+                     AUTOMATIC STATUS
+                ================================================== -->
+
+                <div class="automatic-status-card">
+
+                    <div class="automatic-title">
+
+                        <i class="bi bi-lightning-charge-fill"></i>
+
+                        Automatic Advertisement Status
+
+                    </div>
+
+
+                    <div class="status-timeline">
+
+
+                        <!-- APPROVED -->
+
+                        <div class="timeline-item approved">
+
+                            <div class="timeline-top">
+
+                                <div class="timeline-icon">
+
+                                    <i class="bi bi-clock-history"></i>
+
+                                </div>
+
+                                <span class="timeline-status text-primary">
+                                    APPROVED
+                                </span>
+
+                            </div>
+
+                            <p class="timeline-description">
+                                The advertisement is approved and waiting for its scheduled start time.
+                            </p>
+
+                        </div>
+
+
+                        <!-- RUNNING -->
+
+                        <div class="timeline-item running">
+
+                            <div class="timeline-top">
+
+                                <div class="timeline-icon">
+
+                                    <i class="bi bi-play-fill"></i>
+
+                                </div>
+
+                                <span class="timeline-status text-success">
+                                    RUNNING
+                                </span>
+
+                            </div>
+
+                            <p class="timeline-description">
+                                The advertisement is currently active between its start and end time.
+                            </p>
+
+                        </div>
+
+
+                        <!-- EXPIRED -->
+
+                        <div class="timeline-item expired">
+
+                            <div class="timeline-top">
+
+                                <div class="timeline-icon">
+
+                                    <i class="bi bi-calendar-x"></i>
+
+                                </div>
+
+                                <span class="timeline-status text-danger">
+                                    EXPIRED
+                                </span>
+
+                            </div>
+
+                            <p class="timeline-description">
+                                The advertisement has passed its scheduled end date and time.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTIONS
+                ================================================== -->
+
+                <div class="action-bar">
+
+
+                    <div class="action-note">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        Status updates automatically based on the schedule.
+
+                    </div>
+
+
+                    <div class="action-buttons">
+
+
+                        <a
+                            href="{% url 'advertisement_dashboard' %}"
+                            class="premium-btn btn-back"
+                        >
+
+                            <i class="bi bi-arrow-left"></i>
+
+                            Back to Dashboard
+
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            id="saveButton"
+                            class="premium-btn btn-save"
+                        >
+
+                            <span class="save-text">
+
+                                <i class="bi bi-check-circle-fill"></i>
+
+                                Save & Approve
+
+                            </span>
+
+
+                            <span class="loading-text">
+
+                                <span
+                                    class="spinner-border spinner-border-sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                ></span>
+
+                                Saving...
+
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- =============================================================
+     ADVANCED FRONTEND STATUS SYSTEM
+============================================================== -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const startInput =
+        document.getElementById("id_start_datetime");
+
+    const endInput =
+        document.getElementById("id_end_datetime");
+
+    const statusBadge =
+        document.getElementById("statusBadge");
+
+    const statusBadgeText =
+        document.getElementById("statusBadgeText");
+
+    const largeStatusBadge =
+        document.getElementById("largeStatusBadge");
+
+    const largeStatusText =
+        document.getElementById("largeStatusText");
+
+    const dateValidation =
+        document.getElementById("dateValidation");
+
+    const form =
+        document.getElementById("advertisementForm");
+
+    const saveButton =
+        document.getElementById("saveButton");
+
+
+    /* =========================================================
+       STATUS CONFIGURATION
+    ========================================================== */
+
+    const statusConfig = {
+
+        APPROVED: {
+            background: "#dbeafe",
+            color: "#2563eb"
+        },
+
+        RUNNING: {
+            background: "#dcfce7",
+            color: "#16a34a"
+        },
+
+        EXPIRED: {
+            background: "#fee2e2",
+            color: "#dc2626"
+        },
+
+        WAITING_APPROVAL: {
+            background: "#fef3c7",
+            color: "#92400e"
+        },
+
+        REJECTED: {
+            background: "#fee2e2",
+            color: "#dc2626"
+        },
+
+        CANCELLED: {
+            background: "#e2e8f0",
+            color: "#475569"
+        },
+
+        DEFAULT: {
+            background: "#e2e8f0",
+            color: "#334155"
+        }
+
+    };
+
+
+    /* =========================================================
+       SET STATUS
+    ========================================================== */
+
+    function setStatus(status) {
+
+        const config =
+            statusConfig[status] ||
+            statusConfig.DEFAULT;
+
+
+        if (statusBadge) {
+
+            statusBadge.style.background =
+                config.background;
+
+            statusBadge.style.color =
+                config.color;
+
+            statusBadge.style.borderColor =
+                config.background;
+
+        }
+
+
+        if (statusBadgeText) {
+
+            statusBadgeText.textContent =
+                status;
+
+        }
+
+
+        if (largeStatusBadge) {
+
+            largeStatusBadge.style.background =
+                config.background;
+
+            largeStatusBadge.style.color =
+                config.color;
+
+        }
+
+
+        if (largeStatusText) {
+
+            largeStatusText.textContent =
+                status;
+
+        }
+
+    }
+
+
+    /* =========================================================
+       GET DATETIME
+    ========================================================== */
+
+    function getDateValue(input) {
+
+        if (!input || !input.value) {
+            return null;
+        }
+
+        const date =
+            new Date(input.value);
+
+        if (isNaN(date.getTime())) {
+            return null;
+        }
+
+        return date;
+
+    }
+
+
+    /* =========================================================
+       UPDATE AUTOMATIC STATUS
+    ========================================================== */
+
+    function updateStatus() {
+
+        const start =
+            getDateValue(startInput);
+
+        const end =
+            getDateValue(endInput);
+
+
+        /*
+         * No schedule
+         */
+
+        if (!start || !end) {
+
+            setStatus("WAITING_APPROVAL");
+
+            return;
+
+        }
+
+
+        /*
+         * Invalid date range
+         */
+
+        if (end <= start) {
+
+            setStatus("WAITING_APPROVAL");
+
+            if (dateValidation) {
+                dateValidation.style.display =
+                    "block";
+            }
+
+            return;
+
+        }
+
+
+        if (dateValidation) {
+
+            dateValidation.style.display =
+                "none";
+
+        }
+
+
+        const now =
+            new Date();
+
+
+        /*
+         * Before start
+         */
+
+        if (now < start) {
+
+            setStatus("APPROVED");
+
+            return;
+
+        }
+
+
+        /*
+         * Running
+         */
+
+        if (
+            now >= start &&
+            now < end
+        ) {
+
+            setStatus("RUNNING");
+
+            return;
+
+        }
+
+
+        /*
+         * Expired
+         */
+
+        if (now >= end) {
+
+            setStatus("EXPIRED");
+
+        }
+
+    }
+
+
+    /* =========================================================
+       INPUT EVENTS
+    ========================================================== */
+
+    if (startInput) {
+
+        startInput.addEventListener(
+            "input",
+            updateStatus
+        );
+
+        startInput.addEventListener(
+            "change",
+            updateStatus
+        );
+
+    }
+
+
+    if (endInput) {
+
+        endInput.addEventListener(
+            "input",
+            updateStatus
+        );
+
+        endInput.addEventListener(
+            "change",
+            updateStatus
+        );
+
+    }
+
+
+    /* =========================================================
+       FORM VALIDATION
+    ========================================================== */
+
+    if (form) {
+
+        form.addEventListener(
+            "submit",
+            function (event) {
+
+                const start =
+                    getDateValue(startInput);
+
+                const end =
+                    getDateValue(endInput);
+
+
+                if (
+                    start &&
+                    end &&
+                    end <= start
+                ) {
+
+                    event.preventDefault();
+
+                    if (dateValidation) {
+
+                        dateValidation.style.display =
+                            "block";
+
+                        dateValidation.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center"
+                        });
+
+                    }
+
+                    return;
+
+                }
+
+
+                /*
+                 * Loading state
+                 */
+
+                if (saveButton) {
+
+                    saveButton.classList.add(
+                        "loading"
+                    );
+
+                    saveButton.disabled =
+                        true;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       INITIAL STATUS
+    ========================================================== */
+
+    updateStatus();
+
+
+    /* =========================================================
+       LIVE STATUS CLOCK
+       Updates every second
+    ========================================================== */
+
+    setInterval(
+        updateStatus,
+        1000
+    );
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<table class="table">
+
+<tr>
+<th>Title</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+
+{% for ad in advertisements %}
+
+<tr>
+
+<td>
+{{ad.title}}
+</td>
+
+
+<td>
+{{ad.status}}
+</td>
+
+
+<td>
+
+{% if ad.status == "EXPIRED" %}
+
+<a href="{% url 'renew_advertisement' ad.id %}"
+class="btn btn-success">
+
+Renew Advertisement
+
+</a>
+
+
+{% endif %}
+
+
+<a href="{% url 'renewal_history' ad.id %}"
+class="btn btn-primary">
+
+Renewal History
+
+</a>
+
+
+</td>
+
+
+</tr>
+
+{% endfor %}
+
+
+</table>
+{% endblock %}

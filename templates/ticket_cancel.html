@@ -1,0 +1,623 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Cancel Ticket | {{ ticket.ticket_number }}</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --dark: #111827;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --bg: #f4f6fb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, .12), transparent 30%),
+                radial-gradient(circle at 90% 90%, rgba(239, 68, 68, .10), transparent 30%),
+                var(--bg);
+            color: var(--dark);
+        }
+
+        /* Background decoration */
+        .background-circle {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(2px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .circle-one {
+            width: 280px;
+            height: 280px;
+            top: -100px;
+            left: -80px;
+            background: rgba(99, 102, 241, .08);
+        }
+
+        .circle-two {
+            width: 350px;
+            height: 350px;
+            bottom: -150px;
+            right: -120px;
+            background: rgba(239, 68, 68, .08);
+        }
+
+        /* Main wrapper */
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Main card */
+        .cancel-card {
+            width: 100%;
+            max-width: 570px;
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid rgba(255, 255, 255, .8);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow:
+                0 25px 60px rgba(15, 23, 42, .12),
+                0 8px 20px rgba(15, 23, 42, .06);
+            backdrop-filter: blur(15px);
+            animation: cardAppear .55s ease-out;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(25px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Header */
+        .card-header-custom {
+            position: relative;
+            padding: 32px 35px;
+            color: white;
+            background:
+                linear-gradient(
+                    135deg,
+                    #ef4444 0%,
+                    #dc2626 50%,
+                    #b91c1c 100%
+                );
+            overflow: hidden;
+        }
+
+        .card-header-custom::before {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .08);
+            right: -80px;
+            top: -100px;
+        }
+
+        .card-header-custom::after {
+            content: "";
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .06);
+            left: -60px;
+            bottom: -80px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .danger-icon {
+            width: 62px;
+            height: 62px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .16);
+            border: 1px solid rgba(255, 255, 255, .25);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .12);
+            font-size: 28px;
+        }
+
+        .header-title {
+            font-size: 25px;
+            font-weight: 750;
+            margin-bottom: 7px;
+            letter-spacing: -.4px;
+        }
+
+        .header-subtitle {
+            margin: 0;
+            font-size: 14px;
+            color: rgba(255, 255, 255, .82);
+        }
+
+        /* Body */
+        .card-body-custom {
+            padding: 32px 35px 35px;
+        }
+
+        /* Ticket info */
+        .ticket-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 16px 18px;
+            margin-bottom: 26px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+        }
+
+        .ticket-label {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .ticket-label i {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .ticket-number {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--dark);
+            background: white;
+            border: 1px solid var(--border);
+            padding: 7px 11px;
+            border-radius: 9px;
+            word-break: break-all;
+        }
+
+        /* Form */
+        .form-label-custom {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 14px;
+            font-weight: 650;
+            color: #374151;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        .textarea-wrapper {
+            position: relative;
+        }
+
+        .reason-textarea {
+            width: 100%;
+            min-height: 135px;
+            resize: vertical;
+            padding: 15px 16px 35px;
+            border: 1.5px solid #dfe3ea;
+            border-radius: 13px;
+            background: #fff;
+            color: #111827;
+            font-size: 14px;
+            outline: none;
+            transition: all .2s ease;
+        }
+
+        .reason-textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        .reason-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, .10);
+        }
+
+        .character-count {
+            position: absolute;
+            right: 13px;
+            bottom: 10px;
+            color: #9ca3af;
+            font-size: 11px;
+            pointer-events: none;
+        }
+
+        /* Warning */
+        .warning-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 13px;
+            margin-top: 22px;
+            padding: 16px;
+            border-radius: 13px;
+            border: 1px solid #fed7aa;
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+        .warning-icon {
+            flex-shrink: 0;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9px;
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .warning-title {
+            margin-bottom: 3px;
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .warning-text {
+            margin: 0;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #9a3412;
+        }
+
+        /* Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn-custom {
+            min-height: 48px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 650;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all .2s ease;
+        }
+
+        .btn-back {
+            flex: 1;
+            color: #374151;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-back:hover {
+            color: #111827;
+            background: #e5e7eb;
+            transform: translateY(-1px);
+        }
+
+        .btn-cancel {
+            flex: 1.5;
+            border: none;
+            color: white;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 8px 18px rgba(220, 38, 38, .22);
+        }
+
+        .btn-cancel:hover {
+            color: white;
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(220, 38, 38, .28);
+        }
+
+        .btn-cancel:active {
+            transform: translateY(0);
+        }
+
+        /* Footer */
+        .secure-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            margin-top: 22px;
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        .secure-footer i {
+            color: #22c55e;
+        }
+
+        /* Responsive */
+        @media (max-width: 576px) {
+            .page-wrapper {
+                padding: 15px;
+            }
+
+            .cancel-card {
+                border-radius: 19px;
+            }
+
+            .card-header-custom {
+                padding: 28px 22px;
+            }
+
+            .card-body-custom {
+                padding: 25px 20px 24px;
+            }
+
+            .header-title {
+                font-size: 22px;
+            }
+
+            .ticket-info {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .ticket-number {
+                width: 100%;
+            }
+
+            .action-buttons {
+                flex-direction: column-reverse;
+            }
+
+            .btn-custom {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Decorative Background -->
+    <div class="background-circle circle-one"></div>
+    <div class="background-circle circle-two"></div>
+
+    <main class="page-wrapper">
+
+        <section class="cancel-card">
+
+            <!-- Header -->
+            <header class="card-header-custom text-center">
+                <div class="header-content">
+
+                    <div class="danger-icon">
+                        <i class="bi bi-shield-exclamation"></i>
+                    </div>
+
+                    <h1 class="header-title">
+                        Cancel Ticket
+                    </h1>
+
+                    <p class="header-subtitle">
+                        Please review the information before confirming cancellation.
+                    </p>
+
+                </div>
+            </header>
+
+            <!-- Body -->
+            <div class="card-body-custom">
+
+                <form method="POST" id="cancelForm">
+
+                    {% csrf_token %}
+
+                    <!-- Ticket Information -->
+                    <div class="ticket-info">
+
+                        <div class="ticket-label">
+                            <i class="bi bi-ticket-perforated-fill"></i>
+                            <span>Ticket Number</span>
+                        </div>
+
+                        <div class="ticket-number">
+                            {{ ticket.ticket_number }}
+                        </div>
+
+                    </div>
+
+                    <!-- Cancellation Reason -->
+                    <div class="mb-0">
+
+                        <label for="reason" class="form-label-custom">
+                            Cancellation Reason
+                            <span class="required">*</span>
+                        </label>
+
+                        <div class="textarea-wrapper">
+
+                            <textarea
+                                id="reason"
+                                name="reason"
+                                class="reason-textarea"
+                                rows="5"
+                                maxlength="500"
+                                placeholder="Please tell us why you want to cancel this ticket..."
+                                required
+                            ></textarea>
+
+                            <span class="character-count">
+                                <span id="charCount">0</span>/500
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Warning -->
+                    <div class="warning-box">
+
+                        <div class="warning-icon">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </div>
+
+                        <div>
+                            <div class="warning-title">
+                                Important Notice
+                            </div>
+
+                            <p class="warning-text">
+                                Cancelling this ticket is a permanent action and
+                                cannot be undone. Please make sure you want to
+                                continue before confirming.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="action-buttons">
+
+                        <a
+                            href=""
+                            class="btn btn-custom btn-back"
+                        >
+                            <i class="bi bi-arrow-left"></i>
+                            Back to Ticket
+                        </a>
+
+                        <button
+                            type="submit"
+                            class="btn btn-custom btn-cancel"
+                            id="cancelButton"
+                        >
+                            <i class="bi bi-x-circle-fill"></i>
+                            Confirm Cancellation
+                        </button>
+
+                    </div>
+
+                    <!-- Security Footer -->
+                    <div class="secure-footer">
+                        <i class="bi bi-shield-check"></i>
+                        <span>Your request is securely processed</span>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const reasonInput = document.getElementById("reason");
+        const charCount = document.getElementById("charCount");
+        const cancelForm = document.getElementById("cancelForm");
+        const cancelButton = document.getElementById("cancelButton");
+
+        // Character counter
+        reasonInput.addEventListener("input", function () {
+            charCount.textContent = this.value.length;
+
+            if (this.value.length >= 450) {
+                charCount.style.color = "#ef4444";
+            } else {
+                charCount.style.color = "#9ca3af";
+            }
+        });
+
+        // Confirmation before submitting
+        cancelForm.addEventListener("submit", function (event) {
+
+            const reason = reasonInput.value.trim();
+
+            if (!reason) {
+                event.preventDefault();
+
+                reasonInput.focus();
+                reasonInput.style.borderColor = "#ef4444";
+
+                return;
+            }
+
+            const confirmed = confirm(
+                "Are you sure you want to cancel this ticket?\n\n" +
+                "This action cannot be undone."
+            );
+
+            if (!confirmed) {
+                event.preventDefault();
+                return;
+            }
+
+            // Prevent double submission
+            cancelButton.disabled = true;
+
+            cancelButton.innerHTML =
+                '<span class="spinner-border spinner-border-sm" role="status"></span>' +
+                ' Cancelling...';
+        });
+    </script>
+
+</body>
+</html>
+
+
+
+{% endblock %}

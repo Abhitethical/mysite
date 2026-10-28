@@ -1,0 +1,888 @@
+{% extends 'layouts/main.html' %}
+
+
+
+{% block content %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact Us | ShopEase</title>
+
+    <style>
+        /* =========================
+           RESET
+        ========================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+        .navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #eee;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            color: #635bff;
+        }
+
+        .logo span {
+            color: #111;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #333;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #635bff;
+        }
+
+        .cart {
+            background: #635bff;
+            color: white !important;
+            padding: 9px 16px;
+            border-radius: 7px;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+        .hero {
+            background: linear-gradient(135deg, #635bff, #8c52ff);
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 60px auto;
+        }
+
+        /* =========================
+           CONTACT GRID
+        ========================= */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+        }
+
+        /* =========================
+           CONTACT INFO
+        ========================= */
+        .contact-info {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        .contact-info h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .contact-info > p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .info-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: #eeeaff;
+            color: #635bff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 21px;
+            flex-shrink: 0;
+        }
+
+        .info-item h3 {
+            font-size: 16px;
+            margin-bottom: 3px;
+        }
+
+        .info-item p {
+            color: #666;
+        }
+
+        /* =========================
+           CONTACT FORM
+        ========================= */
+        .contact-form {
+            background: white;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        .contact-form h2 {
+            font-size: 28px;
+            margin-bottom: 25px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #635bff;
+            box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.1);
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #635bff;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .submit-btn:hover {
+            background: #5148e5;
+            transform: translateY(-1px);
+        }
+
+        /* =========================
+           SUCCESS MESSAGE
+        ========================= */
+        #successMessage {
+            display: none;
+            background: #e8f8ee;
+            color: #16763c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* =========================
+           FAQ
+        ========================= */
+        .faq-section {
+            margin-top: 70px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .section-title h2 {
+            font-size: 34px;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #666;
+        }
+
+        .faq-container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .faq {
+            background: white;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .faq-question {
+            width: 100%;
+            border: none;
+            background: white;
+            padding: 20px;
+            text-align: left;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 0 20px 20px;
+            color: #666;
+        }
+
+        .faq.active .faq-answer {
+            display: block;
+        }
+
+        .faq-icon {
+            font-size: 22px;
+            color: #635bff;
+        }
+
+        /* =========================
+           MAP
+        ========================= */
+        .map-section {
+            margin-top: 70px;
+        }
+
+        .map {
+            height: 300px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #e9e9e9 25%,
+                    #f6f6f6 25%,
+                    #f6f6f6 50%,
+                    #e9e9e9 50%,
+                    #e9e9e9 75%,
+                    #f6f6f6 75%
+                );
+            background-size: 60px 60px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #555;
+            font-size: 20px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+        footer {
+            background: #111827;
+            color: white;
+            margin-top: 80px;
+            padding: 50px 6% 20px;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            font-size: 25px;
+            font-weight: bold;
+            color: #8c83ff;
+            margin-bottom: 15px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 15px;
+            font-size: 17px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 10px;
+            color: #bbb;
+        }
+
+        .footer-column li:hover {
+            color: white;
+        }
+
+        .footer-description {
+            color: #aaa;
+            max-width: 350px;
+        }
+
+        .copyright {
+            border-top: 1px solid #2d3748;
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            color: #999;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+        @media (max-width: 900px) {
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .container {
+                width: 94%;
+                margin: 40px auto;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .contact-info,
+            .contact-form {
+                padding: 25px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+
+    <!-- =========================
+         HERO
+    ========================== -->
+    <section class="hero">
+
+        <h1>Contact Us</h1>
+
+        <p>
+            Have a question about your order, our products, or your shopping
+            experience? Our support team is here to help.
+        </p>
+
+    </section>
+
+
+    <!-- =========================
+         CONTACT SECTION
+    ========================== -->
+    <main class="container" id="contact">
+
+        <div class="contact-grid">
+
+            <!-- CONTACT INFORMATION -->
+            <section class="contact-info">
+
+                <h2>Get in Touch</h2>
+
+                <p>
+                    We'd love to hear from you. Reach out to us using any of
+                    the contact methods below.
+                </p>
+
+
+                <div class="info-item">
+
+                    <div class="info-icon">📍</div>
+
+                    <div>
+                        <h3>Our Address</h3>
+                        <p>
+                            123 Market Street<br>
+                            New York, NY 10001
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="info-icon">📞</div>
+
+                    <div>
+                        <h3>Phone</h3>
+                        <p>+1 (800) 123-4567</p>
+                        <p>Mon - Fri, 9:00 AM - 6:00 PM</p>
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="info-icon">✉️</div>
+
+                    <div>
+                        <h3>Email</h3>
+                        <p>support@shopease.com</p>
+                        <p>We usually reply within 24 hours.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="info-icon">💬</div>
+
+                    <div>
+                        <h3>Live Chat</h3>
+                        <p>Available 24/7</p>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CONTACT FORM -->
+            <section class="contact-form">
+
+                <h2>Send Us a Message</h2>
+
+                <form id="contactForm">
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+
+                            <input
+                                type="text"
+                                id="firstName"
+                                name="firstName"
+                                placeholder="Enter your first name"
+                                required
+                            >
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+
+                            <input
+                                type="text"
+                                id="lastName"
+                                name="lastName"
+                                placeholder="Enter your last name"
+                                required
+                            >
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="email">Email Address *</label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="phone">Phone Number</label>
+
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                placeholder="+1 234 567 890"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="subject">Subject *</label>
+
+                        <select id="subject" name="subject" required>
+
+                            <option value="">Select a subject</option>
+                            <option value="order">Order Problem</option>
+                            <option value="shipping">Shipping & Delivery</option>
+                            <option value="return">Returns & Refunds</option>
+                            <option value="product">Product Question</option>
+                            <option value="payment">Payment Problem</option>
+                            <option value="other">Other</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="orderNumber">
+                            Order Number
+                        </label>
+
+                        <input
+                            type="text"
+                            id="orderNumber"
+                            name="orderNumber"
+                            placeholder="Example: ORD-12345"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="message">Your Message *</label>
+
+                        <textarea
+                            id="message"
+                            name="message"
+                            placeholder="How can we help you?"
+                            required
+                            minlength="10"
+                        ></textarea>
+
+                    </div>
+
+
+                    <button type="submit" class="submit-btn">
+                        Send Message
+                    </button>
+
+
+                    <div id="successMessage">
+                        ✓ Thank you! Your message has been submitted successfully.
+                    </div>
+
+                </form>
+
+            </section>
+
+        </div>
+
+
+        <!-- =========================
+             FAQ
+        ========================== -->
+        <section class="faq-section">
+
+            <div class="section-title">
+
+                <h2>Frequently Asked Questions</h2>
+
+                <p>
+                    Find quick answers to common questions.
+                </p>
+
+            </div>
+
+
+            <div class="faq-container">
+
+                <div class="faq">
+
+                    <button class="faq-question">
+                        Where is my order?
+                        <span class="faq-icon">+</span>
+                    </button>
+
+                    <div class="faq-answer">
+                        You can check your order status from your account
+                        dashboard using your order number and email address.
+                    </div>
+
+                </div>
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+                        How can I return a product?
+                        <span class="faq-icon">+</span>
+                    </button>
+
+                    <div class="faq-answer">
+                        Products can be returned according to our return
+                        policy. Contact our support team if you need help
+                        starting a return.
+                    </div>
+
+                </div>
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+                        How long does shipping take?
+                        <span class="faq-icon">+</span>
+                    </button>
+
+                    <div class="faq-answer">
+                        Standard delivery normally takes 3–7 business days.
+                        Delivery times may vary depending on your location.
+                    </div>
+
+                </div>
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+                        What payment methods do you accept?
+                        <span class="faq-icon">+</span>
+                    </button>
+
+                    <div class="faq-answer">
+                        We accept major credit cards, debit cards and other
+                        supported online payment methods.
+                    </div>
+
+                </div>
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+                        How quickly will you reply?
+                        <span class="faq-icon">+</span>
+                    </button>
+
+                    <div class="faq-answer">
+                        Our support team generally responds to messages within
+                        24 hours during business days.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             MAP
+        ========================== -->
+        <section class="map-section">
+
+            <div class="section-title">
+
+                <h2>Find Our Store</h2>
+
+                <p>
+                    Visit us at our retail location.
+                </p>
+
+            </div>
+
+            <div class="map">
+                📍 ShopEase Store — 123 Market Street, New York
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+    <script>
+
+        /* CONTACT FORM */
+
+        const contactForm = document.getElementById("contactForm");
+        const successMessage = document.getElementById("successMessage");
+
+        contactForm.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            successMessage.style.display = "block";
+
+            contactForm.reset();
+
+            setTimeout(function() {
+                successMessage.style.display = "none";
+            }, 5000);
+
+        });
+
+
+        /* FAQ ACCORDION */
+
+        const faqQuestions =
+            document.querySelectorAll(".faq-question");
+
+        faqQuestions.forEach(function(question) {
+
+            question.addEventListener("click", function() {
+
+                const faq = this.parentElement;
+                const icon = this.querySelector(".faq-icon");
+
+                faq.classList.toggle("active");
+
+                if (faq.classList.contains("active")) {
+
+                    icon.textContent = "−";
+
+                } else {
+
+                    icon.textContent = "+";
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>
+
+
+{% endblock content %}

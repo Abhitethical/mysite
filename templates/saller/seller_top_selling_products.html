@@ -1,0 +1,1166 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Top Selling Products | Analytics Dashboard</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+    <!-- Chart.js Data Labels -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6d28d9;
+            --primary-light: #8b5cf6;
+            --primary-dark: #4c1d95;
+            --accent: #a855f7;
+
+            --background: #f5f7fb;
+            --card: #ffffff;
+            --text: #111827;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+
+            --success: #10b981;
+            --danger: #ef4444;
+
+            --shadow:
+                0 10px 30px rgba(31, 41, 55, 0.07);
+        }
+
+        body {
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(124, 58, 237, 0.08),
+                    transparent 30%
+                ),
+                var(--background);
+
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* =========================
+           Dashboard
+        ========================= */
+
+        .dashboard {
+            max-width: 1400px;
+            margin: auto;
+            padding: 35px;
+        }
+
+        /* =========================
+           Header
+        ========================= */
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .header-left h1 {
+            font-size: 30px;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+            color: #111827;
+        }
+
+        .header-left p {
+            color: var(--muted);
+            margin-top: 7px;
+            font-size: 14px;
+        }
+
+        .header-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            background: #ffffff;
+            border: 1px solid var(--border);
+
+            padding: 10px 15px;
+            border-radius: 12px;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            box-shadow: 0 5px 20px rgba(0,0,0,0.04);
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+            background: #10b981;
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 0 4px rgba(16,185,129,0.12);
+        }
+
+        /* =========================
+           Stats
+        ========================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+
+            background: var(--card);
+            border: 1px solid var(--border);
+
+            border-radius: 18px;
+            padding: 22px;
+
+            box-shadow: var(--shadow);
+
+            transition:
+                transform 0.25s ease,
+                box-shadow 0.25s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 18px 40px rgba(31,41,55,0.10);
+        }
+
+        .stat-card::after {
+            content: "";
+
+            position: absolute;
+            width: 100px;
+            height: 100px;
+
+            right: -40px;
+            top: -40px;
+
+            background: rgba(109,40,217,0.08);
+            border-radius: 50%;
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-title {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ede9fe,
+                    #ddd6fe
+                );
+
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .stat-value {
+            margin-top: 12px;
+
+            font-size: 28px;
+            font-weight: 800;
+
+            letter-spacing: -0.5px;
+        }
+
+        .stat-change {
+            margin-top: 7px;
+
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+
+            font-size: 12px;
+            font-weight: 700;
+
+            color: var(--success);
+        }
+
+        /* =========================
+           Main Grid
+        ========================= */
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 22px;
+        }
+
+        /* =========================
+           Chart Card
+        ========================= */
+
+        .chart-card {
+            background: var(--card);
+
+            border: 1px solid var(--border);
+            border-radius: 20px;
+
+            padding: 25px;
+
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .card-title h2 {
+            font-size: 18px;
+            font-weight: 750;
+        }
+
+        .card-title p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .chart-filter {
+            border: 1px solid var(--border);
+            background: #fafafa;
+
+            padding: 8px 12px;
+            border-radius: 9px;
+
+            font-size: 12px;
+            font-weight: 600;
+            color: #374151;
+
+            outline: none;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 430px;
+        }
+
+        /* =========================
+           Ranking Card
+        ========================= */
+
+        .ranking-card {
+            background: var(--card);
+
+            border: 1px solid var(--border);
+            border-radius: 20px;
+
+            padding: 25px;
+
+            box-shadow: var(--shadow);
+        }
+
+        .ranking-title {
+            font-size: 18px;
+            font-weight: 750;
+        }
+
+        .ranking-subtitle {
+            margin-top: 5px;
+            margin-bottom: 22px;
+
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .ranking-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ranking-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .rank-number {
+            width: 30px;
+            height: 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            background: #f3f4f6;
+
+            color: #6b7280;
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .rank-number.top {
+            background:
+                linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #a855f7
+                );
+
+            color: white;
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .product-name {
+            font-size: 13px;
+            font-weight: 700;
+
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .product-bar {
+            height: 5px;
+            background: #f1f5f9;
+
+            border-radius: 10px;
+
+            margin-top: 7px;
+            overflow: hidden;
+        }
+
+        .product-bar-fill {
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--primary),
+                    var(--accent)
+                );
+
+            border-radius: inherit;
+        }
+
+        .product-value {
+            font-size: 12px;
+            font-weight: 750;
+            color: #374151;
+        }
+
+        /* =========================
+           Footer
+        ========================= */
+
+        .footer {
+            margin-top: 22px;
+
+            display: flex;
+            justify-content: space-between;
+
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        /* =========================
+           Responsive
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .dashboard {
+                padding: 20px 15px;
+            }
+
+            .header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .header-left h1 {
+                font-size: 24px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-card,
+            .ranking-card {
+                padding: 18px;
+            }
+
+            .chart-wrapper {
+                height: 350px;
+            }
+
+            .card-header {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+
+            .footer {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- =========================
+         Header
+    ========================== -->
+
+    <header class="header">
+
+        <div class="header-left">
+            <h1>Top Selling Products</h1>
+
+            <p>
+                Sales performance overview and product analytics
+            </p>
+        </div>
+
+        <div class="header-badge">
+            <span class="status-dot"></span>
+            Live Analytics
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         Statistics
+    ========================== -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+                <span class="stat-title">
+                    Total Units Sold
+                </span>
+
+                <div class="stat-icon">
+                    📦
+                </div>
+            </div>
+
+            <div class="stat-value" id="totalUnits">
+                0
+            </div>
+
+            <div class="stat-change">
+                ↑ 12.8% this month
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+                <span class="stat-title">
+                    Top Product
+                </span>
+
+                <div class="stat-icon">
+                    🏆
+                </div>
+            </div>
+
+            <div class="stat-value"
+                 id="topProduct"
+                 style="font-size:20px;">
+                —
+            </div>
+
+            <div class="stat-change">
+                Best performer
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+                <span class="stat-title">
+                    Products Sold
+                </span>
+
+                <div class="stat-icon">
+                    📊
+                </div>
+            </div>
+
+            <div class="stat-value" id="productCount">
+                0
+            </div>
+
+            <div class="stat-change">
+                ↑ Active products
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-top">
+                <span class="stat-title">
+                    Average Sales
+                </span>
+
+                <div class="stat-icon">
+                    📈
+                </div>
+            </div>
+
+            <div class="stat-value" id="averageSales">
+                0
+            </div>
+
+            <div class="stat-change">
+                Units per product
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         Main Content
+    ========================== -->
+
+    <section class="main-grid">
+
+
+        <!-- Chart -->
+
+        <div class="chart-card">
+
+            <div class="card-header">
+
+                <div class="card-title">
+
+                    <h2>
+                        Product Sales Performance
+                    </h2>
+
+                    <p>
+                        Comparison of units sold across products
+                    </p>
+
+                </div>
+
+                <select class="chart-filter">
+                    <option>All Products</option>
+                    <option>Top 5</option>
+                    <option>Top 10</option>
+                </select>
+
+            </div>
+
+
+            <div class="chart-wrapper">
+
+                <canvas id="topSellingChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <!-- Ranking -->
+
+        <aside class="ranking-card">
+
+            <h2 class="ranking-title">
+                Top Performers
+            </h2>
+
+            <p class="ranking-subtitle">
+                Highest selling products
+            </p>
+
+            <div class="ranking-list" id="rankingList">
+                <!-- Generated dynamically -->
+            </div>
+
+        </aside>
+
+    </section>
+
+
+    <!-- Footer -->
+
+    <footer class="footer">
+
+        <span>
+            Sales Analytics Dashboard
+        </span>
+
+        <span>
+            Updated automatically
+        </span>
+
+    </footer>
+
+</div>
+
+
+<script>
+
+    /*
+     * =====================================================
+     * Django / Flask Data
+     * =====================================================
+     *
+     * Keep your existing backend variables:
+     *
+     * labels|safe
+     * values|safe
+     *
+     */
+
+    const labels = {{ labels|safe }};
+    const values = {{ values|safe }};
+
+
+    /*
+     * =====================================================
+     * Statistics
+     * =====================================================
+     */
+
+    const totalUnits =
+        values.reduce(
+            (total, value) => total + Number(value),
+            0
+        );
+
+    const productCount =
+        values.length;
+
+    const averageSales =
+        productCount
+            ? Math.round(totalUnits / productCount)
+            : 0;
+
+
+    let topIndex = 0;
+
+    values.forEach((value, index) => {
+
+        if (
+            Number(value) >
+            Number(values[topIndex] || 0)
+        ) {
+            topIndex = index;
+        }
+
+    });
+
+
+    document.getElementById("totalUnits")
+        .textContent =
+        totalUnits.toLocaleString();
+
+
+    document.getElementById("productCount")
+        .textContent =
+        productCount.toLocaleString();
+
+
+    document.getElementById("averageSales")
+        .textContent =
+        averageSales.toLocaleString();
+
+
+    document.getElementById("topProduct")
+        .textContent =
+        labels[topIndex] || "—";
+
+
+    /*
+     * =====================================================
+     * Ranking
+     * =====================================================
+     */
+
+    const rankingList =
+        document.getElementById("rankingList");
+
+
+    const products =
+        labels.map((name, index) => ({
+            name: name,
+            value: Number(values[index] || 0)
+        }));
+
+
+    products.sort(
+        (a, b) => b.value - a.value
+    );
+
+
+    const maxValue =
+        products.length
+            ? products[0].value
+            : 1;
+
+
+    products
+        .slice(0, 6)
+        .forEach((product, index) => {
+
+            const percentage =
+                (product.value / maxValue) * 100;
+
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "ranking-item";
+
+
+            item.innerHTML = `
+
+                <div class="rank-number ${index === 0 ? "top" : ""}">
+                    ${index + 1}
+                </div>
+
+                <div class="product-info">
+
+                    <div class="product-name"
+                         title="${product.name}">
+                        ${product.name}
+                    </div>
+
+                    <div class="product-bar">
+                        <div
+                            class="product-bar-fill"
+                            style="width:${percentage}%">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="product-value">
+                    ${product.value.toLocaleString()}
+                </div>
+
+            `;
+
+            rankingList.appendChild(item);
+
+        });
+
+
+    /*
+     * =====================================================
+     * Chart
+     * =====================================================
+     */
+
+    const ctx =
+        document
+            .getElementById("topSellingChart")
+            .getContext("2d");
+
+
+    /*
+     * Gradient
+     */
+
+    const gradient =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
+            430
+        );
+
+
+    gradient.addColorStop(
+        0,
+        "rgba(124, 58, 237, 0.95)"
+    );
+
+
+    gradient.addColorStop(
+        1,
+        "rgba(168, 85, 247, 0.55)"
+    );
+
+
+    /*
+     * Chart
+     */
+
+    new Chart(ctx, {
+
+        type: "bar",
+
+        plugins: [
+            ChartDataLabels
+        ],
+
+        data: {
+
+            labels: labels,
+
+            datasets: [{
+
+                label: "Units Sold",
+
+                data: values,
+
+                backgroundColor: gradient,
+
+                borderColor:
+                    "#7c3aed",
+
+                borderWidth: 1,
+
+                borderRadius: 9,
+
+                borderSkipped: false,
+
+                maxBarThickness: 55,
+
+                hoverBackgroundColor:
+                    "#6d28d9",
+
+                hoverBorderColor:
+                    "#4c1d95",
+
+                hoverBorderWidth: 2
+
+            }]
+
+        },
+
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+
+            interaction: {
+
+                mode: "index",
+
+                intersect: false
+
+            },
+
+
+            plugins: {
+
+                legend: {
+
+                    display: false
+
+                },
+
+
+                datalabels: {
+
+                    color: "#4c1d95",
+
+                    anchor: "end",
+
+                    align: "top",
+
+                    offset: 3,
+
+                    font: {
+
+                        weight: "700",
+
+                        size: 11
+
+                    },
+
+                    formatter: function(value) {
+
+                        return Number(value)
+                            .toLocaleString();
+
+                    }
+
+                },
+
+
+                tooltip: {
+
+                    backgroundColor:
+                        "rgba(17, 24, 39, 0.96)",
+
+                    titleColor: "#ffffff",
+
+                    bodyColor: "#e5e7eb",
+
+                    padding: 14,
+
+                    cornerRadius: 10,
+
+                    displayColors: false,
+
+                    titleFont: {
+
+                        size: 13,
+
+                        weight: "700"
+
+                    },
+
+                    bodyFont: {
+
+                        size: 13
+
+                    },
+
+                    callbacks: {
+
+                        label: function(context) {
+
+                            return (
+                                " Units Sold: " +
+                                Number(context.raw)
+                                    .toLocaleString()
+                            );
+
+                        }
+
+                    }
+
+                }
+
+            },
+
+
+            scales: {
+
+                y: {
+
+                    beginAtZero: true,
+
+                    border: {
+
+                        display: false
+
+                    },
+
+                    grid: {
+
+                        color:
+                            "rgba(107,114,128,0.10)",
+
+                        drawTicks: false
+
+                    },
+
+                    ticks: {
+
+                        color: "#9ca3af",
+
+                        font: {
+
+                            size: 11
+
+                        },
+
+                        padding: 10,
+
+                        callback: function(value) {
+
+                            return Number(value)
+                                .toLocaleString();
+
+                        }
+
+                    },
+
+                    title: {
+
+                        display: true,
+
+                        text: "UNITS SOLD",
+
+                        color: "#9ca3af",
+
+                        font: {
+
+                            size: 10,
+
+                            weight: "700"
+
+                        }
+
+                    }
+
+                },
+
+
+                x: {
+
+                    border: {
+
+                        display: false
+
+                    },
+
+                    grid: {
+
+                        display: false
+
+                    },
+
+                    ticks: {
+
+                        color: "#6b7280",
+
+                        font: {
+
+                            size: 11,
+
+                            weight: "600"
+
+                        },
+
+                        maxRotation: 35,
+
+                        minRotation: 0
+
+                    },
+
+                    title: {
+
+                        display: true,
+
+                        text: "PRODUCTS",
+
+                        color: "#9ca3af",
+
+                        font: {
+
+                            size: 10,
+
+                            weight: "700"
+
+                        },
+
+                        padding: {
+
+                            top: 12
+
+                        }
+
+                    }
+
+                }
+
+            },
+
+            animation: {
+
+                duration: 1000,
+
+                easing: "easeOutQuart"
+
+            }
+
+        }
+
+    });
+
+</script>
+
+</body>
+</html>
+
+
+
+{% endblock %}

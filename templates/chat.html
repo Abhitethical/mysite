@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot</title>
+    <script>
+        function sendMessage() {
+            let userMessage = document.getElementById("userInput").value;
+            document.getElementById("chatBox").innerHTML += "<p><b>You:</b> " + userMessage + "</p>";
+
+            fetch('/chat/get-response/?message=' + encodeURIComponent(userMessage))
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("chatBox").innerHTML += "<p><b>Bot:</b> " + data.response + "</p>";
+                document.getElementById("userInput").value = "";
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Customer Support Chatbot</h1>
+    <div id="chatBox" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:scroll;"></div>
+    <input type="text" id="userInput" placeholder="Ask a question..." />
+    <button onclick="sendMessage()">Send</button>
+</body>
+</html>

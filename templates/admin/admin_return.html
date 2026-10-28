@@ -1,0 +1,22 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<h2>Admin - Update Return</h2>
+
+<form method="POST">
+  {% csrf_token %}
+
+  <button name="action" value="approve">Approve</button>
+  <button name="action" value="reject">Reject</button>
+  <button name="action" value="pickup">Schedule Pickup</button>
+  <button name="action" value="received">Mark Received</button>
+
+  <textarea name="note" placeholder="Admin note"></textarea>
+
+  <button type="submit">Update</button>
+</form>
+
+
+
+{% endblock %}

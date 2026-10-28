@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.otp }}
+  <button type="submit">Verify OTP</button>
+  {% for message in messages %}
+    <p>{{ message }}</p>
+  {% endfor %}
+</form>
+
+
+{% endblock %}

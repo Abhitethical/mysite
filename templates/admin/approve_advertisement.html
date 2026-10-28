@@ -1,0 +1,86 @@
+
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>
+Approve Advertisement
+</title>
+
+
+</head>
+
+
+<body>
+
+
+<h2>
+Approve {{ad.title}}
+</h2>
+
+
+
+<form method="POST">
+
+
+{% csrf_token %}
+
+
+<label>
+Start Date Time
+</label>
+
+
+<input 
+type="datetime-local"
+name="start_datetime"
+required
+>
+
+
+
+<br><br>
+
+
+
+<label>
+End Date Time
+</label>
+
+
+<input
+type="datetime-local"
+name="end_datetime"
+required
+>
+
+
+
+<br><br>
+
+
+
+<button type="submit">
+
+Approve Advertisement
+
+</button>
+
+
+
+</form>
+
+
+
+</body>
+
+</html>
+
+
+{% endblock %}

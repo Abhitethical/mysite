@@ -1,0 +1,1810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Seller Login | Seller Portal</title>
+
+    <style>
+        /* =========================================================
+           ROOT VARIABLES
+        ========================================================= */
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+
+            --success: #10b981;
+            --danger: #ef4444;
+
+            --dark: #111827;
+            --dark-soft: #1f2937;
+
+            --text: #1f2937;
+            --text-muted: #6b7280;
+
+            --white: #ffffff;
+            --border: rgba(255, 255, 255, 0.35);
+
+            --shadow:
+                0 25px 60px rgba(15, 23, 42, 0.25),
+                0 8px 25px rgba(15, 23, 42, 0.12);
+
+            --radius: 24px;
+        }
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+
+            color: var(--text);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px;
+
+            overflow-x: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 10% 20%,
+                    rgba(99, 102, 241, 0.55),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 90% 10%,
+                    rgba(139, 92, 246, 0.5),
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at 80% 90%,
+                    rgba(14, 165, 233, 0.4),
+                    transparent 35%
+                ),
+                linear-gradient(
+                    135deg,
+                    #0f172a 0%,
+                    #1e1b4b 50%,
+                    #312e81 100%
+                );
+
+            position: relative;
+        }
+
+        /* =========================================================
+           BACKGROUND DECORATION
+        ========================================================= */
+        body::before,
+        body::after {
+            content: "";
+
+            position: fixed;
+
+            border-radius: 50%;
+
+            filter: blur(2px);
+
+            pointer-events: none;
+
+            z-index: 0;
+        }
+
+        body::before {
+            width: 280px;
+            height: 280px;
+
+            top: -100px;
+            left: -80px;
+
+            background: rgba(99, 102, 241, 0.35);
+
+            box-shadow:
+                500px 100px 0 rgba(139, 92, 246, 0.2),
+                800px 500px 0 rgba(14, 165, 233, 0.2);
+        }
+
+        body::after {
+            width: 220px;
+            height: 220px;
+
+            right: -70px;
+            bottom: -80px;
+
+            background: rgba(129, 140, 248, 0.3);
+        }
+
+        /* =========================================================
+           MAIN CONTAINER
+        ========================================================= */
+        .page-wrapper {
+            width: 100%;
+            max-width: 1050px;
+
+            min-height: 650px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            position: relative;
+            z-index: 2;
+
+            border-radius: var(--radius);
+
+            overflow: hidden;
+
+            background: rgba(255, 255, 255, 0.12);
+
+            border: 1px solid rgba(255, 255, 255, 0.25);
+
+            box-shadow: var(--shadow);
+
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+        }
+
+        /* =========================================================
+           LEFT BRAND SECTION
+        ========================================================= */
+        .brand-section {
+            position: relative;
+
+            padding: 55px;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(99, 102, 241, 0.92),
+                    rgba(79, 70, 229, 0.78)
+                );
+        }
+
+        .brand-section::before {
+            content: "";
+
+            position: absolute;
+
+            width: 260px;
+            height: 260px;
+
+            border-radius: 50%;
+
+            right: -100px;
+            top: -90px;
+
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-section::after {
+            content: "";
+
+            position: absolute;
+
+            width: 180px;
+            height: 180px;
+
+            border-radius: 50%;
+
+            left: -70px;
+            bottom: -60px;
+
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* =========================================================
+           LOGO
+        ========================================================= */
+        .logo {
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 17px;
+
+            background: rgba(255, 255, 255, 0.18);
+
+            border: 1px solid rgba(255, 255, 255, 0.25);
+
+            font-size: 25px;
+            font-weight: 800;
+
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, 0.12);
+
+            margin-bottom: 35px;
+        }
+
+        .brand-title {
+            font-size: clamp(32px, 4vw, 48px);
+
+            line-height: 1.08;
+
+            font-weight: 800;
+
+            letter-spacing: -1.5px;
+
+            margin-bottom: 20px;
+        }
+
+        .brand-description {
+            max-width: 410px;
+
+            font-size: 16px;
+
+            line-height: 1.75;
+
+            color: rgba(255, 255, 255, 0.82);
+        }
+
+        /* =========================================================
+           FEATURES
+        ========================================================= */
+        .features {
+            margin-top: 35px;
+
+            display: flex;
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+
+            font-size: 14px;
+
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .feature-icon {
+            width: 30px;
+            height: 30px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            background: rgba(255, 255, 255, 0.14);
+
+            font-size: 14px;
+        }
+
+        .copyright {
+            position: relative;
+            z-index: 2;
+
+            font-size: 12px;
+
+            color: rgba(255, 255, 255, 0.55);
+
+            margin-top: 40px;
+        }
+
+        /* =========================================================
+           LOGIN SECTION
+        ========================================================= */
+        .login-section {
+            background: rgba(255, 255, 255, 0.96);
+
+            padding: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 390px;
+        }
+
+        .login-header {
+            margin-bottom: 35px;
+        }
+
+        .login-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 7px 12px;
+
+            border-radius: 100px;
+
+            background: #eef2ff;
+
+            color: var(--primary);
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            margin-bottom: 18px;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--success);
+
+            box-shadow:
+                0 0 0 4px rgba(16, 185, 129, 0.12);
+        }
+
+        .login-title {
+            font-size: 32px;
+
+            font-weight: 800;
+
+            letter-spacing: -0.8px;
+
+            color: #111827;
+
+            margin-bottom: 9px;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+
+            line-height: 1.6;
+
+            color: var(--text-muted);
+        }
+
+        /* =========================================================
+           FORM
+        ========================================================= */
+        .form-group {
+            margin-bottom: 21px;
+        }
+
+        .form-label {
+            display: block;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            color: #374151;
+
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+
+            left: 15px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            width: 20px;
+
+            color: #9ca3af;
+
+            pointer-events: none;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-control {
+            width: 100%;
+
+            height: 54px;
+
+            padding: 0 46px;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 13px;
+
+            outline: none;
+
+            background: #f9fafb;
+
+            color: #111827;
+
+            font-size: 14px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .form-control::placeholder {
+            color: #9ca3af;
+        }
+
+        .form-control:hover {
+            background: #ffffff;
+
+            border-color: #d1d5db;
+        }
+
+        .form-control:focus {
+            background: #ffffff;
+
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 4px rgba(99, 102, 241, 0.11);
+        }
+
+        .form-control:focus + .input-icon {
+            color: var(--primary);
+        }
+
+        /* =========================================================
+           PASSWORD TOGGLE
+        ========================================================= */
+        .password-toggle {
+            position: absolute;
+
+            right: 13px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: none;
+
+            background: transparent;
+
+            color: #9ca3af;
+
+            cursor: pointer;
+
+            width: 32px;
+            height: 32px;
+
+            border-radius: 8px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            transition: 0.2s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+
+            background: #eef2ff;
+        }
+
+        /* =========================================================
+           OPTIONS
+        ========================================================= */
+        .form-options {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            margin: 2px 0 25px;
+        }
+
+        .remember {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 13px;
+
+            color: #6b7280;
+
+            cursor: pointer;
+        }
+
+        .remember input {
+            width: 16px;
+            height: 16px;
+
+            accent-color: var(--primary);
+
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: var(--primary);
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            transition: 0.2s ease;
+        }
+
+        .forgot-link:hover {
+            color: var(--primary-dark);
+
+            text-decoration: underline;
+        }
+
+        /* =========================================================
+           LOGIN BUTTON
+        ========================================================= */
+        .login-button {
+            width: 100%;
+
+            height: 54px;
+
+            border: none;
+
+            border-radius: 13px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    var(--secondary)
+                );
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            position: relative;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 10px 20px rgba(99, 102, 241, 0.25);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+        .login-button::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: -100%;
+
+            width: 100%;
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent
+                );
+
+            transition: left 0.5s ease;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 14px 28px rgba(99, 102, 241, 0.32);
+        }
+
+        .login-button:hover::before {
+            left: 100%;
+        }
+
+        .login-button:active {
+            transform: translateY(0);
+        }
+
+        .login-button.loading {
+            pointer-events: none;
+
+            opacity: 0.8;
+        }
+
+        .button-content {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 9px;
+        }
+
+        .spinner {
+            width: 17px;
+            height: 17px;
+
+            border: 2px solid rgba(255, 255, 255, 0.35);
+
+            border-top-color: white;
+
+            border-radius: 50%;
+
+            animation: spin 0.7s linear infinite;
+
+            display: none;
+        }
+
+        .login-button.loading .spinner {
+            display: block;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* =========================================================
+           DIVIDER
+        ========================================================= */
+        .divider {
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            margin: 27px 0;
+
+            color: #9ca3af;
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+
+            flex: 1;
+
+            height: 1px;
+
+            background: #e5e7eb;
+        }
+
+        /* =========================================================
+           REGISTER
+        ========================================================= */
+        .register-box {
+            padding: 17px;
+
+            border-radius: 13px;
+
+            background: #f8fafc;
+
+            border: 1px solid #eef2f7;
+
+            text-align: center;
+
+            font-size: 13px;
+
+            color: #6b7280;
+        }
+
+        .register-link {
+            color: var(--primary);
+
+            text-decoration: none;
+
+            font-weight: 700;
+
+            margin-left: 4px;
+        }
+
+        .register-link:hover {
+            text-decoration: underline;
+        }
+
+        /* =========================================================
+           SECURITY NOTE
+        ========================================================= */
+        .security-note {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+
+            margin-top: 20px;
+
+            font-size: 11px;
+
+            color: #9ca3af;
+
+            text-align: center;
+        }
+
+        /* =========================================================
+           MODAL
+        ========================================================= */
+        .modal-overlay {
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(15, 23, 42, 0.65);
+
+            backdrop-filter: blur(8px);
+
+            -webkit-backdrop-filter: blur(8px);
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 20px;
+
+            z-index: 9999;
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            transition:
+                opacity 0.25s ease,
+                visibility 0.25s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+
+            visibility: visible;
+        }
+
+        .modal {
+            width: 100%;
+
+            max-width: 430px;
+
+            background: white;
+
+            border-radius: 22px;
+
+            padding: 30px;
+
+            box-shadow:
+                0 30px 80px rgba(0, 0, 0, 0.3);
+
+            transform: translateY(20px) scale(0.96);
+
+            transition: transform 0.25s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-icon {
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 16px;
+
+            background: #fef2f2;
+
+            color: var(--danger);
+
+            font-size: 25px;
+
+            margin-bottom: 18px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+
+            font-weight: 800;
+
+            margin-bottom: 10px;
+
+            color: #111827;
+        }
+
+        .modal-message {
+            color: #6b7280;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+
+            margin-bottom: 24px;
+        }
+
+        .modal-button {
+            width: 100%;
+
+            height: 46px;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background: #111827;
+
+            color: white;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .modal-button:hover {
+            background: #374151;
+        }
+
+        /* =========================================================
+           RESPONSIVE DESIGN
+        ========================================================= */
+        @media (max-width: 850px) {
+
+            body {
+                padding: 20px;
+            }
+
+            .page-wrapper {
+                grid-template-columns: 1fr;
+
+                max-width: 500px;
+
+                min-height: auto;
+            }
+
+            .brand-section {
+                padding: 35px;
+
+                min-height: 300px;
+            }
+
+            .brand-title {
+                font-size: 34px;
+            }
+
+            .brand-description {
+                font-size: 14px;
+            }
+
+            .features {
+                display: none;
+            }
+
+            .copyright {
+                margin-top: 30px;
+            }
+
+            .login-section {
+                padding: 40px 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .page-wrapper {
+                border-radius: 18px;
+            }
+
+            .brand-section {
+                padding: 28px;
+
+                min-height: 245px;
+            }
+
+            .logo {
+                width: 50px;
+                height: 50px;
+
+                margin-bottom: 25px;
+            }
+
+            .brand-title {
+                font-size: 29px;
+            }
+
+            .login-section {
+                padding: 32px 22px;
+            }
+
+            .login-title {
+                font-size: 27px;
+            }
+
+            .form-options {
+                align-items: flex-start;
+
+                gap: 10px;
+
+                flex-direction: column;
+            }
+        }
+
+        /* =========================================================
+           ACCESSIBILITY
+        ========================================================= */
+        :focus-visible {
+            outline: 3px solid rgba(99, 102, 241, 0.35);
+
+            outline-offset: 2px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+
+                animation-iteration-count: 1 !important;
+
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =========================================================
+         MAIN LOGIN CARD
+    ========================================================== -->
+    <main class="page-wrapper">
+
+        <!-- =====================================================
+             BRANDING / LEFT SIDE
+        ====================================================== -->
+        <section class="brand-section">
+
+            <div class="brand-content">
+
+                <div
+                    class="logo"
+                    aria-label="Seller Portal Logo"
+                >
+                    SP
+                </div>
+
+                <h1 class="brand-title">
+                    Grow your business.<br>
+                    Sell with confidence.
+                </h1>
+
+                <p class="brand-description">
+                    Welcome to your professional seller portal.
+                    Manage your products, orders, customers and
+                    business performance from one secure dashboard.
+                </p>
+
+                <div class="features">
+
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+
+                        <span>
+                            Secure seller authentication
+                        </span>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+
+                        <span>
+                            Manage your products and orders
+                        </span>
+                    </div>
+
+                    <div class="feature">
+                        <span class="feature-icon">✓</span>
+
+                        <span>
+                            Powerful business dashboard
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="copyright">
+                © 2026 Seller Portal. All rights reserved.
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             LOGIN FORM / RIGHT SIDE
+        ====================================================== -->
+        <section class="login-section">
+
+            <div class="login-container">
+
+                <div class="login-header">
+
+                    <div class="login-badge">
+
+                        <span class="status-dot"></span>
+
+                        Seller Portal
+
+                    </div>
+
+                    <h2 class="login-title">
+                        Welcome back
+                    </h2>
+
+                    <p class="login-subtitle">
+                        Sign in to access your seller dashboard
+                        and manage your business.
+                    </p>
+
+                </div>
+
+
+                <!-- =================================================
+                     DJANGO LOGIN FORM
+                ================================================== -->
+
+                <form
+                    method="POST"
+                    id="loginForm"
+                    autocomplete="off"
+                    novalidate
+                >
+
+                    {% csrf_token %}
+
+                    <!-- Username -->
+                    <div class="form-group">
+
+                        <label
+                            class="form-label"
+                            for="username"
+                        >
+                            Username
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input
+                                type="text"
+                                id="username"
+                                name="username"
+                                class="form-control"
+                                placeholder="Enter your username"
+                                autocomplete="off"
+                                autocorrect="off"
+                                autocapitalize="none"
+                                spellcheck="false"
+                                readonly
+                                required
+                            >
+
+                            <span class="input-icon">
+
+                                <svg
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path d="M20 21a8 8 0 0 0-16 0"/>
+                                    <circle
+                                        cx="12"
+                                        cy="7"
+                                        r="4"
+                                    />
+                                </svg>
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Password -->
+                    <div class="form-group">
+
+                        <label
+                            class="form-label"
+                            for="password"
+                        >
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control"
+                                placeholder="Enter your password"
+                                autocomplete="new-password"
+                                readonly
+                                required
+                            >
+
+                            <span class="input-icon">
+
+                                <svg
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <rect
+                                        x="3"
+                                        y="11"
+                                        width="18"
+                                        height="10"
+                                        rx="2"
+                                    />
+
+                                    <path
+                                        d="M7 11V7a5 5 0 0 1 10 0v4"
+                                    />
+
+                                </svg>
+
+                            </span>
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                id="togglePassword"
+                                aria-label="Show password"
+                            >
+
+                                <svg
+                                    id="eyeIcon"
+                                    width="18"
+                                    height="18"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+
+                                    <path
+                                        d="M2 12s3.5-7 10-7
+                                           10 7 10 7-3.5 7-10 7
+                                           -10-7-10-7Z"
+                                    />
+
+                                    <circle
+                                        cx="12"
+                                        cy="12"
+                                        r="3"
+                                    />
+
+                                </svg>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Options -->
+                    <div class="form-options">
+
+                        <label class="remember">
+
+                            <input
+                                type="checkbox"
+                                name="remember"
+                                autocomplete="off"
+                            >
+
+                            <span>
+                                Remember me
+                            </span>
+
+                        </label>
+
+                        <a
+                            href="{% url 'unlock_username' %}"
+                            class="forgot-link"
+                        >
+                            Unlock password?
+                        </a>
+                        <br>
+                            <a
+                            href="{% url 'seller_forgot_password' %}"
+                            class="forgot-link"
+                        >
+                            Forgot password?
+                        </a>
+                    </div>
+
+
+                    <!-- Login Button -->
+                    <button
+                        type="submit"
+                        class="login-button"
+                        id="loginButton"
+                    >
+
+                        <span class="button-content">
+
+                            <span
+                                class="spinner"
+                                aria-hidden="true"
+                            ></span>
+
+                            <span id="buttonText">
+                                Sign in to Seller Portal
+                            </span>
+
+                        </span>
+
+                    </button>
+
+                </form>
+
+
+                <!-- Divider -->
+                <div class="divider">
+                    Account
+                </div>
+
+
+                <!-- Register -->
+                <div class="register-box">
+
+                    Don't have a seller account?
+
+                    <a
+                        href="{% url 'seller_register_step1' %}"
+                        class="register-link"
+                    >
+                        Create account
+                    </a>
+
+                </div>
+
+
+                <!-- Security -->
+                <div class="security-note">
+
+                    <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                    >
+
+                        <rect
+                            x="3"
+                            y="11"
+                            width="18"
+                            height="10"
+                            rx="2"
+                        />
+
+                        <path
+                            d="M7 11V7a5 5 0 0 1 10 0v4"
+                        />
+
+                    </svg>
+
+                    Your connection is protected and secure
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================================================
+         DJANGO MESSAGE MODAL
+    ========================================================== -->
+
+    {% if messages %}
+
+    <div
+        class="modal-overlay"
+        id="messageModal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+    >
+
+        <div class="modal">
+
+            <div class="modal-icon">
+                ⚠
+            </div>
+
+            <h3
+                class="modal-title"
+                id="modalTitle"
+            >
+                Login Alert
+            </h3>
+
+            <div class="modal-message">
+
+                {% for message in messages %}
+
+                    <p>
+                        {{ message }}
+                    </p>
+
+                {% endfor %}
+
+            </div>
+
+            <button
+                type="button"
+                class="modal-button"
+                id="closeModal"
+            >
+                Continue
+            </button>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+    <script>
+
+        /* =========================================================
+           DISABLE BROWSER AUTOFILL
+        ========================================================= */
+
+        const usernameInput =
+            document.getElementById("username");
+
+        const passwordInput =
+            document.getElementById("password");
+
+
+        /*
+         * readonly prevents most browsers from automatically
+         * inserting saved credentials before the user interacts.
+         *
+         * Once the user focuses the field, readonly is removed.
+         */
+
+        function enableInput(input) {
+
+            if (!input) {
+                return;
+            }
+
+            input.removeAttribute("readonly");
+
+        }
+
+
+        if (usernameInput) {
+
+            usernameInput.addEventListener(
+                "focus",
+                function () {
+
+                    enableInput(usernameInput);
+
+                },
+                {
+                    once: true
+                }
+            );
+
+        }
+
+
+        if (passwordInput) {
+
+            passwordInput.addEventListener(
+                "focus",
+                function () {
+
+                    enableInput(passwordInput);
+
+                },
+                {
+                    once: true
+                }
+            );
+
+        }
+
+
+        /*
+         * Extra protection against browsers trying to restore
+         * previous form values when the page is loaded.
+         */
+
+        window.addEventListener(
+            "pageshow",
+            function () {
+
+                if (usernameInput) {
+                    usernameInput.value = "";
+                }
+
+                if (passwordInput) {
+                    passwordInput.value = "";
+                }
+
+            }
+        );
+
+
+        /* =========================================================
+           PASSWORD VISIBILITY
+        ========================================================= */
+
+        const togglePassword =
+            document.getElementById("togglePassword");
+
+        const eyeIcon =
+            document.getElementById("eyeIcon");
+
+
+        if (togglePassword && passwordInput) {
+
+            togglePassword.addEventListener(
+                "click",
+                function () {
+
+                    enableInput(passwordInput);
+
+                    const isPassword =
+                        passwordInput.type === "password";
+
+                    passwordInput.type =
+                        isPassword
+                            ? "text"
+                            : "password";
+
+
+                    togglePassword.setAttribute(
+                        "aria-label",
+                        isPassword
+                            ? "Hide password"
+                            : "Show password"
+                    );
+
+
+                    /* Change eye icon */
+
+                    if (isPassword) {
+
+                        eyeIcon.innerHTML = `
+                            <path d="M3 3l18 18" />
+
+                            <path
+                                d="M10.6 10.6
+                                   a2 2 0 0 0 2.8 2.8"
+                            />
+
+                            <path
+                                d="M9.9 5.2
+                                   A10.7 10.7 0 0 1 12 5
+                                   c6.5 0 10 7 10 7
+                                   a18.4 18.4 0 0 1-3.1 4.1"
+                            />
+
+                            <path
+                                d="M6.6 6.6
+                                   C3.7 8.8 2 12 2 12
+                                   s3.5 7 10 7
+                                   c1.5 0 2.8-.3 4-.8"
+                            />
+                        `;
+
+                    } else {
+
+                        eyeIcon.innerHTML = `
+                            <path
+                                d="M2 12s3.5-7 10-7
+                                   10 7 10 7
+                                   -3.5 7-10 7
+                                   -10-7-10-7Z"
+                            />
+
+                            <circle
+                                cx="12"
+                                cy="12"
+                                r="3"
+                            />
+                        `;
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           LOGIN BUTTON LOADING STATE
+        ========================================================= */
+
+        const loginForm =
+            document.getElementById("loginForm");
+
+        const loginButton =
+            document.getElementById("loginButton");
+
+        const buttonText =
+            document.getElementById("buttonText");
+
+
+        if (loginForm) {
+
+            loginForm.addEventListener(
+                "submit",
+                function (event) {
+
+                    if (!loginForm.checkValidity()) {
+
+                        return;
+
+                    }
+
+
+                    loginButton.classList.add("loading");
+
+                    buttonText.textContent =
+                        "Signing in...";
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           MESSAGE MODAL
+        ========================================================= */
+
+        const messageModal =
+            document.getElementById("messageModal");
+
+        const closeModal =
+            document.getElementById("closeModal");
+
+
+        function hideModal() {
+
+            if (messageModal) {
+
+                messageModal.classList.remove("active");
+
+                document.body.style.overflow = "";
+
+            }
+
+        }
+
+
+        if (messageModal) {
+
+            /* Automatically show modal */
+
+            setTimeout(
+                function () {
+
+                    messageModal.classList.add("active");
+
+                    document.body.style.overflow =
+                        "hidden";
+
+                },
+                100
+            );
+
+
+            /* Close button */
+
+            if (closeModal) {
+
+                closeModal.addEventListener(
+                    "click",
+                    hideModal
+                );
+
+            }
+
+
+            /* Click outside modal */
+
+            messageModal.addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        event.target === messageModal
+                    ) {
+
+                        hideModal();
+
+                    }
+
+                }
+            );
+
+
+            /* Escape key */
+
+            document.addEventListener(
+                "keydown",
+                function (event) {
+
+                    if (
+                        event.key === "Escape"
+                    ) {
+
+                        hideModal();
+
+                    }
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           INPUT VALIDATION
+        ========================================================= */
+
+        const inputs =
+            document.querySelectorAll(".form-control");
+
+
+        inputs.forEach(
+            function (input) {
+
+                input.addEventListener(
+                    "blur",
+                    function () {
+
+                        if (
+                            input.value.length > 0 &&
+                            !input.checkValidity()
+                        ) {
+
+                            input.style.borderColor =
+                                "#ef4444";
+
+                            input.style.boxShadow =
+                                "0 0 0 4px rgba(239,68,68,0.10)";
+
+                        } else {
+
+                            input.style.borderColor =
+                                "";
+
+                            input.style.boxShadow =
+                                "";
+
+                        }
+
+                    }
+                );
+
+
+                input.addEventListener(
+                    "input",
+                    function () {
+
+                        input.style.borderColor =
+                            "";
+
+                        input.style.boxShadow =
+                            "";
+
+                    }
+                );
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

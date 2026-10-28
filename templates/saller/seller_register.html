@@ -1,0 +1,381 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Aadhaar & PAN Verification</title>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    max-width:800px;
+    margin:auto;
+    padding:20px;
+}
+
+.section{
+    border:1px solid #ddd;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:8px;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin-bottom:10px;
+}
+
+button{
+    padding:12px 20px;
+    border:none;
+    color:white;
+    cursor:pointer;
+    border-radius:5px;
+}
+
+.verify-btn{
+    background:#28a745;
+}
+
+.verify-btn:disabled{
+    background:gray;
+}
+
+.success{
+    color:green;
+    font-weight:bold;
+}
+
+.error{
+    color:red;
+    font-weight:bold;
+}
+
+.verified-box{
+    background:#f0fff0;
+    border:1px solid green;
+    padding:15px;
+    margin-top:10px;
+}
+
+.hidden{
+    display:none;
+}
+</style>
+</head>
+<body>
+
+<h2>Seller Registration Verification</h2>
+
+<!-- Aadhaar Section -->
+<div class="section">
+
+<h3>Aadhaar Verification</h3>
+
+<div id="aadhaarForm">
+
+<input
+type="text"
+id="aadhaar_name"
+placeholder="Enter Aadhaar Name">
+
+<input
+type="text"
+id="aadhaar_number"
+placeholder="Enter Aadhaar Number">
+
+<input
+type="file"
+id="aadhaar_file"
+accept="image/*">
+
+<button
+class="verify-btn"
+onclick="verifyAadhaar()">
+Verify Aadhaar
+</button>
+
+</div>
+
+<div id="aadhaar_result"></div>
+
+<div
+id="aadhaar_verified"
+class="verified-box hidden">
+</div>
+
+</div>
+
+<!-- PAN Section -->
+<div class="section">
+
+<h3>PAN Verification</h3>
+
+<div id="panForm">
+
+<input
+type="text"
+id="pan_name"
+placeholder="Enter PAN Name">
+
+<input
+type="text"
+id="pan_number"
+placeholder="Enter PAN Number">
+
+<input
+type="file"
+id="pan_file"
+accept="image/*">
+
+<button
+id="panBtn"
+class="verify-btn"
+disabled
+onclick="verifyPAN()">
+Verify PAN
+</button>
+
+</div>
+
+<div id="pan_result"></div>
+
+<div
+id="pan_verified"
+class="verified-box hidden">
+</div>
+
+</div>
+
+<script>
+
+let aadhaarVerified=false;
+let panVerified=false;
+
+async function extractText(file)
+{
+    const result = await Tesseract.recognize(
+        file,
+        "eng"
+    );
+
+    return result.data.text.toUpperCase();
+}
+
+function findAadhaar(text)
+{
+    const match =
+    text.match(/\d{4}\s?\d{4}\s?\d{4}/);
+
+    return match
+    ? match[0].replace(/\s/g,"")
+    : "";
+}
+
+function findPAN(text)
+{
+    const match =
+    text.match(/[A-Z]{5}[0-9]{4}[A-Z]/);
+
+    return match
+    ? match[0]
+    : "";
+}
+
+async function verifyAadhaar()
+{
+    const name =
+    document.getElementById("aadhaar_name")
+    .value.trim().toUpperCase();
+
+    const number =
+    document.getElementById("aadhaar_number")
+    .value.replace(/\s/g,'');
+
+    const file =
+    document.getElementById("aadhaar_file")
+    .files[0];
+
+    if(!name || !number || !file)
+    {
+        showError(
+        "aadhaar_result",
+        "Please fill all Aadhaar details");
+        return;
+    }
+
+    document.getElementById("aadhaar_result")
+    .innerHTML="Reading Aadhaar...";
+
+    const text = await extractText(file);
+
+    const scannedNumber =
+    findAadhaar(text);
+
+    const nameFound =
+    text.includes(name);
+
+    if(!scannedNumber)
+    {
+        showError(
+        "aadhaar_result",
+        "Aadhaar number not found in database");
+        return;
+    }
+
+    if(scannedNumber!==number)
+    {
+        showError(
+        "aadhaar_result",
+        "Entered Aadhaar number does not match database");
+        return;
+    }
+
+    if(!nameFound)
+    {
+        showError(
+        "aadhaar_result",
+        "Entered Aadhaar name does not match database");
+        return;
+    }
+
+    aadhaarVerified=true;
+
+    document.getElementById("aadhaar_result")
+    .innerHTML =
+    "<div class='success'>✓ Aadhaar Verified</div>";
+
+    document.getElementById("aadhaarForm")
+    .classList.add("hidden");
+
+    document.getElementById("aadhaar_verified")
+    .classList.remove("hidden");
+
+    document.getElementById("aadhaar_verified")
+    .innerHTML =
+    "<b>✓ Aadhaar Verified</b><br><br>" +
+    "Name : " + name + "<br>" +
+    "Number : " + number;
+
+    document.getElementById("panBtn")
+    .disabled=false;
+}
+
+async function verifyPAN()
+{
+    if(!aadhaarVerified)
+    {
+        alert("Verify Aadhaar first");
+        return;
+    }
+
+    const name =
+    document.getElementById("pan_name")
+    .value.trim().toUpperCase();
+
+    const number =
+    document.getElementById("pan_number")
+    .value.trim().toUpperCase();
+
+    const file =
+    document.getElementById("pan_file")
+    .files[0];
+
+    if(!name || !number || !file)
+    {
+        showError(
+        "pan_result",
+        "Please fill all PAN details");
+        return;
+    }
+
+    document.getElementById("pan_result")
+    .innerHTML="Reading PAN...";
+
+    const text = await extractText(file);
+
+    const scannedPAN =
+    findPAN(text);
+
+    const nameFound =
+    text.includes(name);
+
+    if(!scannedPAN)
+    {
+        showError(
+        "pan_result",
+        "PAN number not found in database");
+        return;
+    }
+
+    if(scannedPAN!==number)
+    {
+        showError(
+        "pan_result",
+        "Entered PAN number does not match database");
+        return;
+    }
+
+    if(!nameFound)
+    {
+        showError(
+        "pan_result",
+        "Entered PAN name does not match database");
+        return;
+    }
+
+    panVerified=true;
+
+    document.getElementById("pan_result")
+    .innerHTML =
+    "<div class='success'>✓ PAN Verified</div>";
+
+    document.getElementById("panForm")
+    .classList.add("hidden");
+
+    document.getElementById("pan_verified")
+    .classList.remove("hidden");
+
+    document.getElementById("pan_verified")
+    .innerHTML =
+    "<b>✓ PAN Verified</b><br><br>" +
+    "Name : " + name + "<br>" +
+    "PAN : " + number;
+
+    if(aadhaarVerified && panVerified)
+    {
+        alert(
+        "All Documents Verified Successfully");
+    }
+}
+
+function showError(id,message)
+{
+    document.getElementById(id)
+    .innerHTML =
+    "<div class='error'>✗ "
+    + message +
+    "</div>";
+}
+
+</script>
+
+</body>
+</html>
+
+
+
+{% endblock %}
+
+
+
+
+
+

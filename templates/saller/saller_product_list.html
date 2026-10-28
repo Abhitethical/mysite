@@ -1,0 +1,1070 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Your Products | Seller</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, rgba(99, 102, 241, 0.08), transparent 35%),
+                radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.08), transparent 35%),
+                #f5f7fb;
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+            color: #1e293b;
+        }
+
+        /* Main container */
+        .products-wrapper {
+            width: min(1400px, 94%);
+            margin: 45px auto;
+        }
+
+        /* Header */
+        .page-header {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 22px;
+            padding: 28px 30px;
+            margin-bottom: 22px;
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
+            backdrop-filter: blur(10px);
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 750;
+            letter-spacing: -0.7px;
+            margin: 0;
+            color: #0f172a;
+        }
+
+        .page-subtitle {
+            margin: 7px 0 0;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .product-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 13px;
+            border-radius: 30px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 24px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 480px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 17px;
+        }
+
+        .search-box input {
+            width: 100%;
+            height: 46px;
+            border: 1px solid #e2e8f0;
+            border-radius: 13px;
+            background: #f8fafc;
+            padding: 0 18px 0 45px;
+            outline: none;
+            font-size: 14px;
+            color: #0f172a;
+            transition: 0.2s ease;
+        }
+
+        .search-box input:focus {
+            background: #fff;
+            border-color: #818cf8;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        .filter-select {
+            height: 46px;
+            min-width: 150px;
+            border: 1px solid #e2e8f0;
+            border-radius: 13px;
+            padding: 0 15px;
+            background: #f8fafc;
+            color: #334155;
+            outline: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .add-product-btn {
+            height: 46px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 20px;
+            border: 0;
+            border-radius: 13px;
+            color: white;
+            background: linear-gradient(135deg, #4f46e5, #6366f1);
+            font-weight: 700;
+            font-size: 14px;
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.22);
+            transition: all 0.25s ease;
+        }
+
+        .add-product-btn:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(79, 70, 229, 0.30);
+        }
+
+        /* Table Card */
+        .table-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #e5e7eb;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(15, 23, 42, 0.06);
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .products-table {
+            margin: 0;
+            min-width: 900px;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .products-table thead th {
+            background: #0f172a;
+            color: #cbd5e1;
+            padding: 17px 20px;
+            border: 0;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            white-space: nowrap;
+        }
+
+        .products-table thead th:first-child {
+            padding-left: 25px;
+        }
+
+        .products-table tbody td,
+        .products-table tbody th {
+            padding: 17px 20px;
+            border-bottom: 1px solid #eef2f7;
+            vertical-align: middle;
+            background: #fff;
+        }
+
+        .products-table tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        .products-table tbody tr:hover td,
+        .products-table tbody tr:hover th {
+            background: #f8faff;
+        }
+
+        .products-table tbody tr:last-child td,
+        .products-table tbody tr:last-child th {
+            border-bottom: 0;
+        }
+
+        .row-number {
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* Product Image */
+        .image-wrapper {
+            width: 62px;
+            height: 62px;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.25s ease;
+        }
+
+        .image-wrapper:hover {
+            transform: scale(1.06);
+            border-color: #818cf8;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.18);
+        }
+
+        .image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(15, 23, 42, 0.48);
+            color: #fff;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .image-wrapper:hover .image-overlay {
+            opacity: 1;
+        }
+
+        .image-overlay i {
+            font-size: 19px;
+        }
+
+        /* Product Name */
+        .product-name {
+            color: #0f172a;
+            font-size: 14px;
+            font-weight: 700;
+            max-width: 280px;
+        }
+
+        /* Quantity */
+        .quantity-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 42px;
+            padding: 7px 11px;
+            background: #f1f5f9;
+            border-radius: 9px;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* Price */
+        .price {
+            color: #0f172a;
+            font-size: 14px;
+            font-weight: 750;
+        }
+
+        .currency {
+            color: #64748b;
+            font-size: 12px;
+            margin-right: 2px;
+        }
+
+        /* Status */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 750;
+            white-space: nowrap;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .status-available {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .status-available .status-dot {
+            background: #22c55e;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.12);
+        }
+
+        .status-ordered {
+            color: #a16207;
+            background: #fef3c7;
+        }
+
+        .status-ordered .status-dot {
+            background: #f59e0b;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
+        }
+
+        /* Action buttons */
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn {
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 0 12px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .edit-btn {
+            color: #4f46e5;
+            background: #eef2ff;
+            border-color: #e0e7ff;
+        }
+
+        .edit-btn:hover {
+            color: #4338ca;
+            background: #e0e7ff;
+            transform: translateY(-1px);
+        }
+
+        .delete-btn {
+            color: #dc2626;
+            background: #fef2f2;
+            border-color: #fee2e2;
+        }
+
+        .delete-btn:hover {
+            color: #b91c1c;
+            background: #fee2e2;
+            transform: translateY(-1px);
+        }
+
+        .disabled-btn {
+            color: #94a3b8;
+            background: #f1f5f9;
+            border-color: #e2e8f0;
+            cursor: not-allowed;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 75px 20px !important;
+        }
+
+        .empty-icon {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 18px;
+            border-radius: 20px;
+            background: #eef2ff;
+            color: #6366f1;
+            font-size: 28px;
+        }
+
+        .empty-state h4 {
+            margin-bottom: 7px;
+            color: #0f172a;
+            font-size: 18px;
+            font-weight: 750;
+        }
+
+        .empty-state p {
+            color: #94a3b8;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Image Modal */
+        .image-modal .modal-dialog {
+            max-width: 900px;
+        }
+
+        .image-modal .modal-content {
+            background: #0b1120;
+            border: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+        }
+
+        .image-modal .modal-header {
+            border: 0;
+            padding: 15px 18px;
+            background: #0f172a;
+        }
+
+        .image-modal .modal-title {
+            color: #e2e8f0;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .image-modal .btn-close {
+            filter: invert(1);
+            opacity: 0.8;
+        }
+
+        .image-modal .modal-body {
+            padding: 0;
+            background: #020617;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 400px;
+        }
+
+        #popupImage {
+            max-width: 100%;
+            max-height: 78vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .modal-footer {
+            border: 0;
+            background: #0f172a;
+            color: #94a3b8;
+            font-size: 12px;
+            justify-content: center;
+        }
+
+        /* Footer */
+        .table-footer {
+            padding: 16px 22px;
+            border-top: 1px solid #eef2f7;
+            background: #fafbfc;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .products-wrapper {
+                width: 96%;
+                margin: 25px auto;
+            }
+
+            .page-header {
+                padding: 22px;
+            }
+
+            .toolbar {
+                flex-wrap: wrap;
+            }
+
+            .search-box {
+                max-width: 100%;
+                flex: 100%;
+            }
+
+            .filter-select {
+                flex: 1;
+            }
+
+            .add-product-btn {
+                flex: 1;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-title {
+                font-size: 23px;
+            }
+
+            .page-header {
+                border-radius: 17px;
+            }
+
+            .toolbar {
+                gap: 10px;
+            }
+
+            .filter-select,
+            .add-product-btn {
+                min-width: 0;
+            }
+
+            .image-modal .modal-dialog {
+                margin: 10px;
+            }
+
+            .image-modal .modal-body {
+                min-height: 280px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="products-wrapper">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+
+            <div>
+                <h1 class="page-title">
+                    Your Products
+                </h1>
+
+                <p class="page-subtitle">
+                    Manage, edit and monitor all products listed in your store.
+                </p>
+            </div>
+
+            <div class="product-count">
+                <i class="bi bi-box-seam"></i>
+                <span id="totalProducts">{{ products|length }} Products</span>
+            </div>
+
+        </div>
+
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+
+            <!-- SEARCH -->
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    id="productSearch"
+                    placeholder="Search products..."
+                    autocomplete="off"
+                >
+            </div>
+
+            <!-- FILTER -->
+            <select id="statusFilter" class="filter-select">
+                <option value="all">All Status</option>
+                <option value="available">Available</option>
+                <option value="ordered">Ordered</option>
+            </select>
+
+            <!-- ADD PRODUCT -->
+            <a
+                href="{% url 'saller_product_add' %}"
+                class="add-product-btn"
+            >
+                <i class="bi bi-plus-lg"></i>
+                Add Product
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- PRODUCTS TABLE -->
+    <div class="table-card">
+
+        <div class="table-responsive">
+
+            <table class="table products-table">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Image</th>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="productTableBody">
+
+                {% for product in products %}
+
+                    <tr
+                        class="product-row"
+                        data-name="{{ product.name|lower }}"
+                        data-status="{% if product.is_ordered %}ordered{% else %}available{% endif %}"
+                    >
+
+                        <!-- NUMBER -->
+                        <th class="row-number">
+                            {{ forloop.counter }}
+                        </th>
+
+
+                        <!-- IMAGE -->
+                        <td>
+
+                            {% if product.product_image %}
+
+                                <div
+                                    class="image-wrapper"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#imageModal"
+                                    data-image="{{ product.product_image.url }}"
+                                    data-name="{{ product.name }}"
+                                    onclick="openProductImage(this)"
+                                >
+
+                                    <img
+                                        src="{{ product.product_image.url }}"
+                                        alt="{{ product.name }}"
+                                        loading="lazy"
+                                    >
+
+                                    <div class="image-overlay">
+                                        <i class="bi bi-arrows-fullscreen"></i>
+                                    </div>
+
+                                </div>
+
+                            {% else %}
+
+                                <div
+                                    class="image-wrapper d-flex align-items-center justify-content-center"
+                                    style="cursor: default;"
+                                >
+                                    <i
+                                        class="bi bi-image text-secondary"
+                                        style="font-size: 23px;"
+                                    ></i>
+                                </div>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- NAME -->
+                        <td>
+                            <div class="product-name">
+                                {{ product.name }}
+                            </div>
+                        </td>
+
+
+                        <!-- QUANTITY -->
+                        <td>
+                            <span class="quantity-badge">
+                                {{ product.quantity }}
+                            </span>
+                        </td>
+
+
+                        <!-- PRICE -->
+                        <td>
+                            <span class="price">
+                                <span class="currency">$</span>{{ product.selling_price }}
+                            </span>
+                        </td>
+
+
+                        <!-- STATUS -->
+                        <td>
+
+                            {% if product.is_ordered %}
+
+                                <span class="status-badge status-ordered">
+                                    <span class="status-dot"></span>
+                                    Ordered
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge status-available">
+                                    <span class="status-dot"></span>
+                                    Available
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ACTIONS -->
+                        <td>
+
+                            <div class="actions">
+
+                                <!-- EDIT -->
+                                <a
+                                    href="{% url 'edit_product' product.id %}"
+                                    class="action-btn edit-btn"
+                                    title="Edit product"
+                                >
+                                    <i class="bi bi-pencil-square"></i>
+                                    Edit
+                                </a>
+
+
+                                <!-- DELETE -->
+                                {% if product.is_ordered %}
+
+                                    <button
+                                        type="button"
+                                        class="action-btn disabled-btn"
+                                        disabled
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        title="This product cannot be deleted because it has already been ordered."
+                                    >
+                                        <i class="bi bi-lock"></i>
+                                        Delete
+                                    </button>
+
+                                {% else %}
+
+                                    <a
+                                        href="{% url 'delete_product' product.id %}"
+                                        class="action-btn delete-btn"
+                                        title="Delete product"
+                                        onclick="return confirmDelete('{{ product.name|escapejs }}');"
+                                    >
+                                        <i class="bi bi-trash3"></i>
+                                        Delete
+                                    </a>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr id="emptyProductsRow">
+
+                        <td colspan="7" class="empty-state">
+
+                            <div class="empty-icon">
+                                <i class="bi bi-box-seam"></i>
+                            </div>
+
+                            <h4>No products found</h4>
+
+                            <p>
+                                You haven't added any products yet.
+                            </p>
+
+                            <a
+                                href="{% url 'saller_product_add' %}"
+                                class="add-product-btn mt-4"
+                            >
+                                <i class="bi bi-plus-lg"></i>
+                                Add Your First Product
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="table-footer">
+            <i class="bi bi-shield-check me-1"></i>
+            Product management
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     IMAGE POPUP / LIGHTBOX
+========================================= -->
+
+<div
+    class="modal fade image-modal"
+    id="imageModal"
+    tabindex="-1"
+    aria-labelledby="imageModalLabel"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <div
+                    class="modal-title"
+                    id="imageModalLabel"
+                >
+                    Product Image
+                </div>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <img
+                    id="popupImage"
+                    src=""
+                    alt="Product image"
+                >
+
+            </div>
+
+            <div class="modal-footer">
+                <span>
+                    <i class="bi bi-arrows-fullscreen me-1"></i>
+                    Click outside the image or press close to return
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+
+    /* =========================================
+       IMAGE POPUP
+    ========================================= */
+
+    function openProductImage(element) {
+
+        const imageUrl = element.getAttribute("data-image");
+        const productName = element.getAttribute("data-name");
+
+        const popupImage = document.getElementById("popupImage");
+        const modalTitle = document.getElementById("imageModalLabel");
+
+        popupImage.src = imageUrl;
+        popupImage.alt = productName;
+
+        modalTitle.innerHTML =
+            '<i class="bi bi-image me-2"></i>' + productName;
+    }
+
+
+    /* =========================================
+       SEARCH PRODUCTS
+    ========================================= */
+
+    const searchInput = document.getElementById("productSearch");
+    const statusFilter = document.getElementById("statusFilter");
+    const productRows = document.querySelectorAll(".product-row");
+
+
+    function filterProducts() {
+
+        const searchValue =
+            searchInput.value.toLowerCase().trim();
+
+        const statusValue =
+            statusFilter.value;
+
+        let visibleProducts = 0;
+
+        productRows.forEach(function(row) {
+
+            const productName =
+                row.getAttribute("data-name") || "";
+
+            const productStatus =
+                row.getAttribute("data-status") || "";
+
+            const matchesSearch =
+                productName.includes(searchValue);
+
+            const matchesStatus =
+                statusValue === "all" ||
+                productStatus === statusValue;
+
+            if (matchesSearch && matchesStatus) {
+
+                row.style.display = "";
+
+                visibleProducts++;
+
+            } else {
+
+                row.style.display = "none";
+
+            }
+
+        });
+
+        updateProductCount(visibleProducts);
+    }
+
+
+    function updateProductCount(count) {
+
+        const totalProducts =
+            document.getElementById("totalProducts");
+
+        totalProducts.innerHTML =
+            '<i class="bi bi-box-seam"></i> ' +
+            count +
+            (count === 1 ? " Product" : " Products");
+    }
+
+
+    searchInput.addEventListener(
+        "input",
+        filterProducts
+    );
+
+
+    statusFilter.addEventListener(
+        "change",
+        filterProducts
+    );
+
+
+    /* =========================================
+       DELETE CONFIRMATION
+    ========================================= */
+
+    function confirmDelete(productName) {
+
+        return confirm(
+            "Are you sure you want to delete \"" +
+            productName +
+            "\"?\n\nThis action cannot be undone."
+        );
+
+    }
+
+
+    /* =========================================
+       BOOTSTRAP TOOLTIPS
+    ========================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            const tooltipElements =
+                document.querySelectorAll(
+                    '[data-bs-toggle="tooltip"]'
+                );
+
+            tooltipElements.forEach(function (element) {
+
+                new bootstrap.Tooltip(element);
+
+            });
+
+        }
+    );
+
+
+    /* =========================================
+       CLEAR IMAGE WHEN MODAL CLOSES
+    ========================================= */
+
+    const imageModal =
+        document.getElementById("imageModal");
+
+    imageModal.addEventListener(
+        "hidden.bs.modal",
+        function () {
+
+            const popupImage =
+                document.getElementById("popupImage");
+
+            popupImage.src = "";
+
+        }
+    );
+
+</script>
+
+</body>
+</html>
+
+
+{% endblock %}

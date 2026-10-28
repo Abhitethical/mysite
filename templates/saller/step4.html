@@ -1,0 +1,152 @@
+{% extends "saller/base_steps.html" %}
+
+{% block content %}
+
+<style>
+    .success-wrapper {
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 15px;
+    }
+
+    .success-card {
+        width: 100%;
+        max-width: 600px;
+        background: #fff;
+        border-radius: 24px;
+        padding: 50px 40px;
+        text-align: center;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.12);
+        border: 1px solid #e9ecef;
+        animation: fadeUp 0.7s ease;
+    }
+
+    .success-icon {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto 25px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #198754, #20c997);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 45px;
+        font-weight: bold;
+        box-shadow: 0 10px 25px rgba(25, 135, 84, 0.3);
+    }
+
+    .success-title {
+        color: #198754;
+        font-weight: 700;
+        font-size: 30px;
+        margin-bottom: 15px;
+    }
+
+    .success-text {
+        color: #6c757d;
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 30px;
+    }
+
+    .status-box {
+        background: #f8f9fa;
+        border-radius: 15px;
+        padding: 18px;
+        margin-bottom: 30px;
+        border-left: 4px solid #198754;
+        text-align: left;
+    }
+
+    .status-box strong {
+        color: #212529;
+    }
+
+    .status-box span {
+        color: #198754;
+        font-weight: 600;
+    }
+
+    .home-btn {
+        display: inline-block;
+        padding: 13px 32px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #212529, #343a40);
+        color: white;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .home-btn:hover {
+        color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.22);
+    }
+
+    .small-note {
+        margin-top: 22px;
+        font-size: 13px;
+        color: #adb5bd;
+    }
+
+    @keyframes fadeUp {
+        from {
+            opacity: 0;
+            transform: translateY(25px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .success-card {
+            padding: 40px 22px;
+        }
+
+        .success-title {
+            font-size: 25px;
+        }
+    }
+</style>
+
+<div class="success-wrapper">
+    <div class="success-card">
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+        <h3 class="success-title">
+            Registration Completed!
+        </h3>
+
+        <p class="success-text">
+            Congratulations! Your seller profile has been successfully
+            submitted and is now waiting for admin approval.
+        </p>
+
+        <div class="status-box">
+            <strong>Application Status:</strong>
+            <span> Pending Admin Approval</span>
+        </div>
+
+        <a href="/" class="home-btn">
+            ← Go to Home
+        </a>
+
+        <div class="small-note">
+            You will be able to access your seller features once your
+            application is approved.
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,792 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Seller Order Dashboard</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --info: #06b6d4;
+            --danger: #ef4444;
+            --dark: #111827;
+            --muted: #6b7280;
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --border: #e5e7eb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", Roboto, Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, #eef2ff 0, transparent 30%),
+                radial-gradient(circle at top right, #ecfeff 0, transparent 25%),
+                var(--bg);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+
+        .dashboard-wrapper {
+            max-width: 1400px;
+            margin: auto;
+            padding: 35px 20px 50px;
+        }
+
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 25px;
+            background: linear-gradient(
+                135deg,
+                var(--primary),
+                #7c3aed
+            );
+            box-shadow: 0 10px 25px rgba(79, 70, 229, .25);
+        }
+
+        .header-title h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 750;
+            letter-spacing: -0.6px;
+        }
+
+        .header-title p {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 14px;
+            border-radius: 50px;
+            background: #ecfdf5;
+            color: #047857;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid #d1fae5;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 5px rgba(16, 185, 129, .12);
+        }
+
+        /* KPI cards */
+        .stat-card {
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid rgba(229, 231, 235, .8);
+            border-radius: 20px;
+            padding: 22px;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            transition: all .25s ease;
+            box-shadow: 0 8px 30px rgba(15, 23, 42, .05);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, .10);
+        }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            right: -35px;
+            bottom: -40px;
+            border-radius: 50%;
+            background: rgba(79, 70, 229, .06);
+        }
+
+        .stat-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .stat-icon {
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            font-size: 19px;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: 750;
+            margin-top: 12px;
+            letter-spacing: -1px;
+        }
+
+        .stat-footer {
+            margin-top: 7px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .icon-warning {
+            color: #b45309;
+            background: #fef3c7;
+        }
+
+        .icon-info {
+            color: #0e7490;
+            background: #cffafe;
+        }
+
+        .icon-primary {
+            color: #4338ca;
+            background: #e0e7ff;
+        }
+
+        .icon-success {
+            color: #047857;
+            background: #d1fae5;
+        }
+
+        .icon-dark {
+            color: #374151;
+            background: #f3f4f6;
+        }
+
+        /* Main card */
+        .main-card {
+            margin-top: 28px;
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 12px 40px rgba(15, 23, 42, .06);
+            overflow: hidden;
+        }
+
+        .card-heading {
+            padding: 24px 28px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .card-heading h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .card-heading p {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 5px 0 0;
+        }
+
+        .date-badge {
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            color: #4b5563;
+            border-radius: 10px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .chart-section {
+            padding: 35px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 410px;
+            max-width: 650px;
+            margin: auto;
+        }
+
+        /* Bottom status section */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+            margin-top: 30px;
+        }
+
+        .status-item {
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            padding: 15px;
+            background: #fafafa;
+            transition: .2s;
+        }
+
+        .status-item:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        .status-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 7px;
+        }
+
+        .status-name {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 600;
+        }
+
+        .status-value {
+            display: block;
+            margin-top: 6px;
+            font-size: 21px;
+            font-weight: 750;
+        }
+
+        /* Footer */
+        .dashboard-footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 12px;
+            margin-top: 25px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .status-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-wrapper {
+                padding: 22px 14px 35px;
+            }
+
+            .dashboard-header {
+                align-items: flex-start;
+            }
+
+            .header-title h1 {
+                font-size: 22px;
+            }
+
+            .live-badge {
+                display: none;
+            }
+
+            .chart-section {
+                padding: 20px;
+            }
+
+            .chart-container {
+                height: 330px;
+            }
+
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card-heading {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .status-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .stat-number {
+                font-size: 25px;
+            }
+
+            .chart-container {
+                height: 290px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-wrapper">
+
+    <!-- Header -->
+    <div class="dashboard-header">
+
+        <div class="header-title">
+            <div class="header-icon">
+                <i class="bi bi-bar-chart-fill"></i>
+            </div>
+
+            <div>
+                <h1>Order Analytics</h1>
+                <p>Monitor the performance of orders for your products</p>
+            </div>
+        </div>
+
+        <div class="live-badge">
+            <span class="live-dot"></span>
+            Live Dashboard
+        </div>
+
+    </div>
+
+
+    <!-- Statistics -->
+    <div class="row g-4">
+
+        <!-- Pending -->
+        <div class="col-6 col-lg">
+            <div class="stat-card">
+
+                <div class="stat-top">
+                    <span class="stat-label">Pending</span>
+
+                    <div class="stat-icon icon-warning">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                </div>
+
+                <div class="stat-number" id="pendingCount">0</div>
+
+                <div class="stat-footer">
+                    Awaiting confirmation
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Processing -->
+        <div class="col-6 col-lg">
+            <div class="stat-card">
+
+                <div class="stat-top">
+                    <span class="stat-label">Processing</span>
+
+                    <div class="stat-icon icon-info">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                </div>
+
+                <div class="stat-number" id="processingCount">0</div>
+
+                <div class="stat-footer">
+                    Currently processing
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Shipped -->
+        <div class="col-6 col-lg">
+            <div class="stat-card">
+
+                <div class="stat-top">
+                    <span class="stat-label">Shipped</span>
+
+                    <div class="stat-icon icon-primary">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                </div>
+
+                <div class="stat-number" id="shippedCount">0</div>
+
+                <div class="stat-footer">
+                    In transit
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Delivered -->
+        <div class="col-6 col-lg">
+            <div class="stat-card">
+
+                <div class="stat-top">
+                    <span class="stat-label">Delivered</span>
+
+                    <div class="stat-icon icon-success">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                </div>
+
+                <div class="stat-number" id="deliveredCount">0</div>
+
+                <div class="stat-footer">
+                    Successfully delivered
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Completed -->
+        <div class="col-6 col-lg">
+            <div class="stat-card">
+
+                <div class="stat-top">
+                    <span class="stat-label">Completed</span>
+
+                    <div class="stat-icon icon-dark">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </div>
+                </div>
+
+                <div class="stat-number" id="completedCount">0</div>
+
+                <div class="stat-footer">
+                    Order completed
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Chart Card -->
+    <div class="main-card">
+
+        <div class="card-heading">
+
+            <div>
+                <h2>
+                    <i class="bi bi-pie-chart-fill me-2 text-primary"></i>
+                    Order Status Overview
+                </h2>
+
+                <p>
+                    Visual breakdown of your current product orders
+                </p>
+            </div>
+
+            <div class="date-badge">
+                <i class="bi bi-calendar3 me-1"></i>
+                Current Status
+            </div>
+
+        </div>
+
+
+        <div class="chart-section">
+
+            <div class="chart-container">
+                <canvas id="orderStatusChart"></canvas>
+            </div>
+
+
+            <!-- Status Summary -->
+            <div class="status-grid">
+
+                <div class="status-item">
+                    <span class="status-name">
+                        <span class="status-color"
+                              style="background:#f59e0b"></span>
+                        Pending
+                    </span>
+
+                    <span class="status-value" id="summaryPending">0</span>
+                </div>
+
+
+                <div class="status-item">
+                    <span class="status-name">
+                        <span class="status-color"
+                              style="background:#06b6d4"></span>
+                        Processing
+                    </span>
+
+                    <span class="status-value" id="summaryProcessing">0</span>
+                </div>
+
+
+                <div class="status-item">
+                    <span class="status-name">
+                        <span class="status-color"
+                              style="background:#4f46e5"></span>
+                        Shipped
+                    </span>
+
+                    <span class="status-value" id="summaryShipped">0</span>
+                </div>
+
+
+                <div class="status-item">
+                    <span class="status-name">
+                        <span class="status-color"
+                              style="background:#10b981"></span>
+                        Delivered
+                    </span>
+
+                    <span class="status-value" id="summaryDelivered">0</span>
+                </div>
+
+
+                <div class="status-item">
+                    <span class="status-name">
+                        <span class="status-color"
+                              style="background:#64748b"></span>
+                        Completed
+                    </span>
+
+                    <span class="status-value" id="summaryCompleted">0</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-footer">
+        Seller Analytics Dashboard • Order status updates automatically
+    </div>
+
+</div>
+
+
+<script>
+
+    /*
+     * Django/Jinja values
+     *
+     * Example:
+     * labels = ["Pending", "Processing", "Shipped", "Delivered", "Completed"]
+     * values = [12, 8, 15, 30, 20]
+     */
+
+    const labels = {{ labels|safe }};
+    const values = {{ values|safe }};
+
+
+    /*
+     * Update statistic cards
+     */
+
+    const statusElements = [
+        "pendingCount",
+        "processingCount",
+        "shippedCount",
+        "deliveredCount",
+        "completedCount"
+    ];
+
+    const summaryElements = [
+        "summaryPending",
+        "summaryProcessing",
+        "summaryShipped",
+        "summaryDelivered",
+        "summaryCompleted"
+    ];
+
+
+    values.forEach((value, index) => {
+
+        if (statusElements[index]) {
+            document.getElementById(statusElements[index]).textContent = value;
+        }
+
+        if (summaryElements[index]) {
+            document.getElementById(summaryElements[index]).textContent = value;
+        }
+
+    });
+
+
+    /*
+     * Chart
+     */
+
+    const ctx = document
+        .getElementById("orderStatusChart")
+        .getContext("2d");
+
+
+    const chartColors = [
+        "#f59e0b",
+        "#06b6d4",
+        "#4f46e5",
+        "#10b981",
+        "#64748b"
+    ];
+
+
+    new Chart(ctx, {
+
+        type: "doughnut",
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                data: values,
+
+                backgroundColor: chartColors,
+
+                borderColor: "#ffffff",
+
+                borderWidth: 5,
+
+                hoverOffset: 15,
+
+                hoverBorderWidth: 0
+            }]
+        },
+
+
+        options: {
+
+            responsive: true,
+
+            maintainAspectRatio: false,
+
+            cutout: "68%",
+
+            animation: {
+                animateRotate: true,
+                animateScale: true,
+                duration: 1200
+            },
+
+            plugins: {
+
+                legend: {
+                    position: "bottom",
+
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: "circle",
+                        padding: 22,
+
+                        font: {
+                            size: 13,
+                            weight: "600"
+                        },
+
+                        color: "#374151"
+                    }
+                },
+
+                tooltip: {
+
+                    backgroundColor: "#111827",
+
+                    titleColor: "#ffffff",
+
+                    bodyColor: "#e5e7eb",
+
+                    padding: 14,
+
+                    cornerRadius: 10,
+
+                    displayColors: true,
+
+                    callbacks: {
+
+                        label: function(context) {
+
+                            const total =
+                                context.dataset.data.reduce(
+                                    (sum, value) => sum + value,
+                                    0
+                                );
+
+                            const value = context.raw;
+
+                            const percentage =
+                                total > 0
+                                ? ((value / total) * 100).toFixed(1)
+                                : 0;
+
+                            return ` ${value} orders (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+</script>
+
+</body>
+</html>
+
+
+{% endblock %}
+
+
+
+

@@ -1,0 +1,1136 @@
+{% extends 'layouts/main.html' %} 
+{% block content %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shipping & Delivery | ShopEase</title>
+
+    <style>
+        /* ==============================
+           RESET
+        ============================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f8fc;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* ==============================
+           NAVBAR
+        ============================== */
+
+        .navbar {
+            background: #fff;
+            padding: 18px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            color: #635bff;
+        }
+
+        .logo span {
+            color: #111;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #635bff;
+        }
+
+        .cart-btn {
+            background: #635bff;
+            color: #fff !important;
+            padding: 9px 16px;
+            border-radius: 7px;
+        }
+
+        /* ==============================
+           HERO
+        ============================== */
+
+        .hero {
+            background: linear-gradient(135deg, #635bff, #8c52ff);
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .hero-icon {
+            font-size: 55px;
+            margin-bottom: 10px;
+        }
+
+        .hero h1 {
+            font-size: 46px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            max-width: 700px;
+            margin: auto;
+            font-size: 18px;
+            opacity: 0.95;
+        }
+
+        /* ==============================
+           CONTAINER
+        ============================== */
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 60px auto;
+        }
+
+        /* ==============================
+           SECTION TITLE
+        ============================== */
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-title h2 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .section-title p {
+            color: #666;
+        }
+
+        /* ==============================
+           SHIPPING CARDS
+        ============================== */
+
+        .shipping-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .shipping-card {
+            background: #fff;
+            padding: 32px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+            text-align: center;
+            transition: 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .shipping-card:hover {
+            transform: translateY(-5px);
+            border-color: #635bff;
+        }
+
+        .shipping-icon {
+            width: 65px;
+            height: 65px;
+            margin: auto auto 20px;
+            background: #eeeaff;
+            color: #635bff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+        }
+
+        .shipping-card h3 {
+            margin-bottom: 10px;
+            font-size: 21px;
+        }
+
+        .delivery-time {
+            color: #635bff;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .shipping-price {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .shipping-card p {
+            color: #666;
+        }
+
+        /* ==============================
+           FREE SHIPPING BANNER
+        ============================== */
+
+        .free-shipping {
+            margin-top: 35px;
+            background: #111827;
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .free-shipping strong {
+            color: #9b91ff;
+        }
+
+        /* ==============================
+           DELIVERY PROCESS
+        ============================== */
+
+        .process-section {
+            margin-top: 80px;
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .process-card {
+            position: relative;
+            text-align: center;
+        }
+
+        .process-number {
+            width: 55px;
+            height: 55px;
+            background: #635bff;
+            color: white;
+            border-radius: 50%;
+            margin: auto auto 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .process-card h3 {
+            margin-bottom: 8px;
+        }
+
+        .process-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* ==============================
+           TRACK ORDER
+        ============================== */
+
+        .tracking-section {
+            margin-top: 80px;
+        }
+
+        .tracking-box {
+            background: #fff;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .tracking-box h2 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .tracking-box p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .tracking-form {
+            display: flex;
+            gap: 12px;
+        }
+
+        .tracking-form input {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .tracking-form input:focus {
+            border-color: #635bff;
+        }
+
+        .tracking-form button {
+            padding: 14px 25px;
+            border: none;
+            background: #635bff;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .tracking-form button:hover {
+            background: #5148e5;
+        }
+
+        #trackingResult {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: #eeeaff;
+            color: #4d45c7;
+            border-radius: 8px;
+        }
+
+        /* ==============================
+           SHIPPING POLICY
+        ============================== */
+
+        .policy-section {
+            margin-top: 80px;
+        }
+
+        .policy-box {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+        }
+
+        .policy-item {
+            margin-bottom: 30px;
+        }
+
+        .policy-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .policy-item h3 {
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .policy-item p {
+            color: #666;
+        }
+
+        /* ==============================
+           FAQ
+        ============================== */
+
+        .faq-section {
+            margin-top: 80px;
+        }
+
+        .faq-container {
+            max-width: 850px;
+            margin: auto;
+        }
+
+        .faq {
+            background: #fff;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            width: 100%;
+            border: none;
+            background: white;
+            padding: 20px;
+            text-align: left;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-icon {
+            color: #635bff;
+            font-size: 22px;
+        }
+
+        .faq-answer {
+            display: none;
+            padding: 0 20px 20px;
+            color: #666;
+        }
+
+        .faq.active .faq-answer {
+            display: block;
+        }
+
+        /* ==============================
+           FOOTER
+        ============================== */
+
+        footer {
+            background: #111827;
+            color: white;
+            margin-top: 80px;
+            padding: 55px 6% 20px;
+        }
+
+        .footer-grid {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footer-logo {
+            color: #8c83ff;
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .footer-description {
+            color: #aaa;
+            max-width: 350px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 15px;
+            font-size: 17px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column li {
+            margin-bottom: 10px;
+            color: #aaa;
+        }
+
+        .footer-column a:hover {
+            color: white;
+        }
+
+        .copyright {
+            border-top: 1px solid #2d3748;
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            color: #999;
+        }
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 900px) {
+
+            .shipping-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .process-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .hero {
+                padding: 60px 20px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .shipping-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .process-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tracking-form {
+                flex-direction: column;
+            }
+
+            .tracking-form button {
+                width: 100%;
+            }
+
+            .policy-box,
+            .tracking-box {
+                padding: 25px;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <!-- ==============================
+         HERO
+    ============================== -->
+
+    <section class="hero">
+
+        <div class="hero-icon">
+            🚚
+        </div>
+
+        <h1>Shipping & Delivery</h1>
+
+        <p>
+            Fast, safe and reliable delivery right to your doorstep.
+            Choose the shipping option that works best for you.
+        </p>
+
+    </section>
+
+
+    <main class="container">
+
+
+        <!-- ==============================
+             SHIPPING OPTIONS
+        ============================== -->
+
+        <section>
+
+            <div class="section-title">
+
+                <h2>Shipping Options</h2>
+
+                <p>
+                    Choose from our convenient delivery options.
+                </p>
+
+            </div>
+
+
+            <div class="shipping-grid">
+
+
+                <!-- STANDARD -->
+
+                <div class="shipping-card">
+
+                    <div class="shipping-icon">
+                        📦
+                    </div>
+
+                    <h3>Standard Shipping</h3>
+
+                    <p>
+                        Reliable delivery for everyday orders.
+                    </p>
+
+                    <div class="delivery-time">
+                        3–7 Business Days
+                    </div>
+
+                    <div class="shipping-price">
+                        $4.99
+                    </div>
+
+                </div>
+
+
+                <!-- EXPRESS -->
+
+                <div class="shipping-card">
+
+                    <div class="shipping-icon">
+                        ⚡
+                    </div>
+
+                    <h3>Express Shipping</h3>
+
+                    <p>
+                        Get your order faster with priority delivery.
+                    </p>
+
+                    <div class="delivery-time">
+                        1–3 Business Days
+                    </div>
+
+                    <div class="shipping-price">
+                        $9.99
+                    </div>
+
+                </div>
+
+
+                <!-- NEXT DAY -->
+
+                <div class="shipping-card">
+
+                    <div class="shipping-icon">
+                        🚀
+                    </div>
+
+                    <h3>Next Day Delivery</h3>
+
+                    <p>
+                        Need it quickly? Choose our fastest option.
+                    </p>
+
+                    <div class="delivery-time">
+                        Next Business Day
+                    </div>
+
+                    <div class="shipping-price">
+                        $19.99
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="free-shipping">
+
+                🎉
+                <strong>FREE SHIPPING!</strong>
+                Get free standard shipping on orders over $75.
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================
+             DELIVERY PROCESS
+        ============================== -->
+
+        <section class="process-section">
+
+            <div class="section-title">
+
+                <h2>How Delivery Works</h2>
+
+                <p>
+                    From our warehouse to your doorstep.
+                </p>
+
+            </div>
+
+
+            <div class="process-grid">
+
+
+                <div class="process-card">
+
+                    <div class="process-number">
+                        1
+                    </div>
+
+                    <h3>Place Your Order</h3>
+
+                    <p>
+                        Complete your purchase and choose your preferred
+                        shipping method.
+                    </p>
+
+                </div>
+
+
+                <div class="process-card">
+
+                    <div class="process-number">
+                        2
+                    </div>
+
+                    <h3>Order Processing</h3>
+
+                    <p>
+                        Our team carefully prepares and packs your order.
+                    </p>
+
+                </div>
+
+
+                <div class="process-card">
+
+                    <div class="process-number">
+                        3
+                    </div>
+
+                    <h3>Order Shipped</h3>
+
+                    <p>
+                        Your package is handed over to our delivery partner.
+                    </p>
+
+                </div>
+
+
+                <div class="process-card">
+
+                    <div class="process-number">
+                        4
+                    </div>
+
+                    <h3>Delivered</h3>
+
+                    <p>
+                        Your order arrives safely at your delivery address.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================
+             TRACK ORDER
+        ============================== -->
+
+        <section class="tracking-section">
+
+            <div class="section-title">
+
+                <h2>Track Your Order</h2>
+
+                <p>
+                    Enter your tracking number to check your delivery status.
+                </p>
+
+            </div>
+
+
+            <div class="tracking-box">
+
+                <h2>📍 Order Tracking</h2>
+
+                <p>
+                    Your tracking number can be found in your shipping
+                    confirmation email.
+                </p>
+
+
+                <form class="tracking-form" id="trackingForm">
+
+                    <input
+                        type="text"
+                        id="trackingNumber"
+                        placeholder="Enter tracking number"
+                        required
+                    >
+
+                    <button type="submit">
+                        Track Order
+                    </button>
+
+                </form>
+
+
+                <div id="trackingResult">
+                    🔄 Tracking information will be available after your
+                    order has been shipped.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================
+             SHIPPING POLICY
+        ============================== -->
+
+        <section class="policy-section">
+
+            <div class="section-title">
+
+                <h2>Shipping Policy</h2>
+
+                <p>
+                    Important information about our delivery service.
+                </p>
+
+            </div>
+
+
+            <div class="policy-box">
+
+
+                <div class="policy-item">
+
+                    <h3>📦 Order Processing</h3>
+
+                    <p>
+                        Orders are normally processed within 1–2 business
+                        days. Orders placed during weekends or holidays
+                        will be processed on the next business day.
+                    </p>
+
+                </div>
+
+
+                <div class="policy-item">
+
+                    <h3>🚚 Delivery Times</h3>
+
+                    <p>
+                        Delivery times depend on the shipping method selected
+                        during checkout. Estimated delivery times do not
+                        include order processing time.
+                    </p>
+
+                </div>
+
+
+                <div class="policy-item">
+
+                    <h3>🌍 International Shipping</h3>
+
+                    <p>
+                        International shipping may be available for selected
+                        countries. Additional customs duties, taxes or fees
+                        may apply depending on the destination.
+                    </p>
+
+                </div>
+
+
+                <div class="policy-item">
+
+                    <h3>🏠 Incorrect Address</h3>
+
+                    <p>
+                        Please make sure your shipping address is correct
+                        before completing your order. We may not be able to
+                        change the address after the order has shipped.
+                    </p>
+
+                </div>
+
+
+                <div class="policy-item">
+
+                    <h3>📭 Lost or Damaged Packages</h3>
+
+                    <p>
+                        If your package is lost or arrives damaged, please
+                        contact our customer support team as soon as possible
+                        so we can investigate the issue.
+                    </p>
+
+                </div>
+
+
+                <div class="policy-item">
+
+                    <h3>🎁 Delivery Delays</h3>
+
+                    <p>
+                        Weather, holidays, carrier delays and other
+                        unexpected circumstances may occasionally affect
+                        delivery times.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==============================
+             FAQ
+        ============================== -->
+
+        <section class="faq-section">
+
+            <div class="section-title">
+
+                <h2>Shipping FAQs</h2>
+
+                <p>
+                    Answers to common shipping questions.
+                </p>
+
+            </div>
+
+
+            <div class="faq-container">
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+
+                        How long does shipping take?
+
+                        <span class="faq-icon">+</span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        Standard shipping usually takes 3–7 business days.
+                        Express shipping usually takes 1–3 business days.
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+
+                        Do you offer free shipping?
+
+                        <span class="faq-icon">+</span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        Yes. We offer free standard shipping on qualifying
+                        orders over $75.
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+
+                        Can I track my order?
+
+                        <span class="faq-icon">+</span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        Yes. Once your order has been shipped, you will
+                        receive a tracking number that can be used to follow
+                        your package.
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+
+                        Do you ship internationally?
+
+                        <span class="faq-icon">+</span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        International delivery may be available for selected
+                        locations. Shipping availability is shown during
+                        checkout.
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+
+                        What happens if my package is delayed?
+
+                        <span class="faq-icon">+</span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        Check your tracking information first. If there has
+                        been no update for an extended period, contact our
+                        customer support team.
+
+                    </div>
+
+                </div>
+
+
+                <div class="faq">
+
+                    <button class="faq-question">
+
+                        Can I change my shipping address?
+
+                        <span class="faq-icon">+</span>
+
+                    </button>
+
+                    <div class="faq-answer">
+
+                        Contact customer support as quickly as possible after
+                        placing your order. Address changes may not be
+                        possible after shipment.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ==============================
+         JAVASCRIPT
+    ============================== -->
+
+    <script>
+
+        /* ==============================
+           TRACKING FORM
+        ============================== */
+
+        const trackingForm =
+            document.getElementById("trackingForm");
+
+        const trackingResult =
+            document.getElementById("trackingResult");
+
+        trackingForm.addEventListener("submit", function(event) {
+
+            event.preventDefault();
+
+            const trackingNumber =
+                document.getElementById("trackingNumber").value.trim();
+
+            if (trackingNumber === "") {
+                return;
+            }
+
+            trackingResult.style.display = "block";
+
+            trackingResult.innerHTML =
+                "🔄 Tracking number <strong>" +
+                trackingNumber +
+                "</strong> received. Connect this form to your backend or courier API to display real-time tracking.";
+
+        });
+
+
+        /* ==============================
+           FAQ ACCORDION
+        ============================== */
+
+        const faqQuestions =
+            document.querySelectorAll(".faq-question");
+
+        faqQuestions.forEach(function(question) {
+
+            question.addEventListener("click", function() {
+
+                const faq =
+                    this.parentElement;
+
+                const icon =
+                    this.querySelector(".faq-icon");
+
+                faq.classList.toggle("active");
+
+                if (faq.classList.contains("active")) {
+
+                    icon.textContent = "−";
+
+                } else {
+
+                    icon.textContent = "+";
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+</body>
+</html>
+
+{% endblock content %}

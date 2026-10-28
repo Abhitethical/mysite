@@ -1,0 +1,9 @@
+<h2>My Return Requests</h2>
+
+{% for r in returns %}
+  <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+    <p>Order: {{ r.order.product_name }}</p>
+    <p>Status: {{ r.status }}</p>
+    <p>Reason: {{ r.reason }}</p>
+  </div>
+{% endfor %}

@@ -1,0 +1,2705 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Customer Orders | Admin Dashboard</title>
+
+<!-- Bootstrap 5 -->
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+>
+
+<!-- Bootstrap Icons -->
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+<!-- Google Font -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+
+<style>
+
+:root {
+    --primary: #4f46e5;
+    --primary-dark: #3730a3;
+    --dark: #111827;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --background: #f5f7fb;
+    --white: #ffffff;
+
+    --success: #16a34a;
+    --warning: #d97706;
+    --danger: #dc2626;
+}
+
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: "Inter", sans-serif;
+
+    color: var(--dark);
+
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(79, 70, 229, 0.09),
+            transparent 35%
+        ),
+        var(--background);
+}
+
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.top-navbar {
+    position: sticky;
+    top: 0;
+
+    z-index: 1000;
+
+    background: rgba(255, 255, 255, 0.94);
+
+    backdrop-filter: blur(15px);
+
+    border-bottom: 1px solid var(--border);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    color: var(--dark);
+
+    text-decoration: none;
+
+    font-weight: 800;
+    font-size: 19px;
+}
+
+.brand-icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            #7c3aed
+        );
+
+    box-shadow:
+        0 8px 20px rgba(79, 70, 229, 0.25);
+}
+
+.admin-badge {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 12px;
+
+    border-radius: 50px;
+
+    background: #eef2ff;
+
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   PAGE
+========================================================= */
+
+.page-wrapper {
+    max-width: 1350px;
+
+    margin: auto;
+
+    padding: 45px 20px 60px;
+}
+
+.page-header {
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    margin: 0 0 8px;
+
+    font-size: clamp(28px, 4vw, 38px);
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+}
+
+.page-header p {
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   SUMMARY CARDS
+========================================================= */
+
+.summary-card {
+    height: 100%;
+
+    padding: 21px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    background: var(--white);
+
+    transition: 0.25s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 15px 35px rgba(17, 24, 39, 0.08);
+}
+
+.summary-icon {
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 15px;
+
+    border-radius: 13px;
+
+    font-size: 20px;
+}
+
+.icon-blue {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.icon-orange {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.icon-green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.summary-title {
+    margin-bottom: 5px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.summary-number {
+    font-size: 27px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   ORDERS CARD
+========================================================= */
+
+.orders-card {
+    margin-top: 28px;
+
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    background: var(--white);
+
+    box-shadow:
+        0 10px 35px rgba(17, 24, 39, 0.05);
+}
+
+.orders-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 20px 22px;
+
+    border-bottom: 1px solid var(--border);
+
+    flex-wrap: wrap;
+}
+
+.toolbar-title {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 17px;
+    font-weight: 750;
+}
+
+.toolbar-title i {
+    color: var(--primary);
+}
+
+.search-box {
+    position: relative;
+
+    width: min(350px, 100%);
+}
+
+.search-box i {
+    position: absolute;
+
+    left: 13px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: #9ca3af;
+}
+
+.search-input {
+    width: 100%;
+
+    padding: 10px 14px 10px 38px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-size: 13px;
+
+    transition: 0.2s;
+}
+
+.search-input:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.10);
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-container {
+    overflow-x: auto;
+}
+
+.orders-table {
+    width: 100%;
+
+    margin: 0;
+
+    border-collapse: separate;
+
+    border-spacing: 0;
+
+    min-width: 900px;
+}
+
+.orders-table thead th {
+    padding: 15px 20px;
+
+    background: #f9fafb;
+
+    border-bottom: 1px solid var(--border);
+
+    color: #6b7280;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.6px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.orders-table tbody td {
+    padding: 17px 20px;
+
+    border-bottom: 1px solid #f0f1f3;
+
+    vertical-align: middle;
+}
+
+.orders-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.orders-table tbody tr:hover {
+    background: #fafbff;
+}
+
+.orders-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================================================
+   ORDER ID
+========================================================= */
+
+.order-id {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 9px;
+
+    color: var(--primary);
+
+    font-size: 13px;
+
+    font-weight: 800;
+}
+
+.order-icon {
+    width: 36px;
+    height: 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eef2ff;
+
+    color: var(--primary);
+}
+
+
+/* =========================================================
+   CUSTOMER
+========================================================= */
+
+.user-info {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+
+    min-width: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e0e7ff,
+            #ede9fe
+        );
+
+    color: var(--primary);
+
+    font-weight: 800;
+
+    font-size: 13px;
+}
+
+.customer-button {
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #1f2937;
+
+    font-weight: 700;
+
+    font-size: 13px;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    transition: 0.2s ease;
+}
+
+.customer-button:hover {
+    color: var(--primary);
+
+    text-decoration: underline;
+}
+
+.user-label {
+    margin-top: 3px;
+
+    color: #9ca3af;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   PRODUCT
+========================================================= */
+
+.product-name {
+    color: #1f2937;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+/* IMPORTANT:
+   This is used when the original Product object
+   has been deleted but order.product_name still exists.
+*/
+
+.deleted-product {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 9px;
+
+    border-radius: 8px;
+
+    background: #fff1f2;
+
+    color: #be123c;
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+.deleted-product-name {
+    margin-top: 6px;
+
+    color: #6b7280;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.product-label {
+    margin-top: 3px;
+
+    color: #9ca3af;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   QUANTITY
+========================================================= */
+
+.quantity-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-width: 38px;
+
+    padding: 6px 10px;
+
+    border-radius: 8px;
+
+    background: #f3f4f6;
+
+    color: #374151;
+
+    font-size: 12px;
+
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px 11px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.status-pending .status-dot {
+    background: #f59e0b;
+}
+
+.status-processing {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-processing .status-dot {
+    background: #3b82f6;
+}
+
+.status-shipped {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.status-shipped .status-dot {
+    background: #8b5cf6;
+}
+
+.status-delivered {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-delivered .status-dot {
+    background: #22c55e;
+}
+
+.status-completed {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-completed .status-dot {
+    background: #22c55e;
+}
+
+.status-cancelled {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.status-cancelled .status-dot {
+    background: #ef4444;
+}
+
+.status-default {
+    background: #f3f4f6;
+    color: #4b5563;
+}
+
+.status-default .status-dot {
+    background: #6b7280;
+}
+
+
+/* =========================================================
+   CUSTOMER MODAL OVERLAY
+========================================================= */
+
+.customer-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.66);
+
+    backdrop-filter: blur(7px);
+
+    cursor: pointer;
+}
+
+
+/*
+   IMPORTANT:
+   The modal becomes visible only when .show is added.
+*/
+
+.customer-modal.show {
+    display: flex;
+}
+
+
+/* =========================================================
+   MODAL CARD
+========================================================= */
+
+.customer-modal-card {
+
+    position: relative;
+
+    width: min(700px, 100%);
+
+    max-height: 92vh;
+
+    overflow-y: auto;
+
+    border-radius: 22px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 30px 90px rgba(15, 23, 42, 0.35);
+
+    animation: modalSlide 0.23s ease;
+
+    cursor: default;
+}
+
+
+/* =========================================================
+   MODAL HEADER
+========================================================= */
+
+.customer-modal-header {
+
+    position: relative;
+
+    padding: 28px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #4f46e5,
+            #7c3aed
+        );
+}
+
+.customer-modal-header-content {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding-right: 40px;
+}
+
+.customer-modal-avatar {
+
+    width: 62px;
+    height: 62px;
+
+    min-width: 62px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 17px;
+
+    background: rgba(255,255,255,0.18);
+
+    border: 1px solid rgba(255,255,255,0.30);
+
+    font-size: 22px;
+
+    font-weight: 800;
+}
+
+.customer-modal-title {
+
+    margin: 0;
+
+    font-size: 21px;
+
+    font-weight: 800;
+}
+
+.customer-modal-subtitle {
+
+    margin-top: 5px;
+
+    opacity: 0.82;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
+
+.modal-close-button {
+
+    position: absolute;
+
+    top: 18px;
+
+    right: 18px;
+
+    width: 36px;
+
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 1px solid rgba(255,255,255,0.25);
+
+    border-radius: 10px;
+
+    background: rgba(255,255,255,0.12);
+
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.modal-close-button:hover {
+
+    background: rgba(255,255,255,0.25);
+
+    transform: rotate(90deg);
+}
+
+
+/* =========================================================
+   MODAL BODY
+========================================================= */
+
+.customer-modal-body {
+
+    padding: 25px 28px 20px;
+}
+
+.details-section-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 15px;
+
+    color: #111827;
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+.details-section-title i {
+
+    color: var(--primary);
+}
+
+
+/* =========================================================
+   CUSTOMER DETAILS
+========================================================= */
+
+.customer-detail-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+}
+
+.customer-detail {
+
+    padding: 15px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 13px;
+
+    background: #f9fafb;
+
+    min-width: 0;
+}
+
+.customer-detail.full-width {
+
+    grid-column: 1 / -1;
+}
+
+.customer-detail-label {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-bottom: 7px;
+
+    color: #9ca3af;
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+.customer-detail-label i {
+
+    color: var(--primary);
+
+    font-size: 13px;
+}
+
+.customer-detail-value {
+
+    color: #111827;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    word-break: break-word;
+
+    line-height: 1.5;
+}
+
+.address-value {
+
+    line-height: 1.65;
+
+    white-space: pre-line;
+}
+
+
+/* =========================================================
+   ORDER INFORMATION
+========================================================= */
+
+.order-information {
+
+    margin-top: 22px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.order-summary-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 12px;
+}
+
+.order-summary-box {
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+}
+
+.order-summary-label {
+
+    margin-bottom: 5px;
+
+    color: #9ca3af;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+.order-summary-value {
+
+    color: #111827;
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   MODAL FOOTER
+========================================================= */
+
+.customer-modal-footer {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    padding: 5px 28px 25px;
+}
+
+.modal-done-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 10px 18px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: var(--primary);
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.modal-done-button:hover {
+
+    background: var(--primary-dark);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   BODY LOCK
+========================================================= */
+
+body.modal-open {
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes modalSlide {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(18px)
+            scale(0.97);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+
+    padding: 75px 20px;
+
+    text-align: center;
+}
+
+.empty-icon {
+
+    width: 75px;
+
+    height: 75px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: 0 auto 18px;
+
+    border-radius: 50%;
+
+    background: #eef2ff;
+
+    color: var(--primary);
+
+    font-size: 30px;
+}
+
+.empty-state h4 {
+
+    margin-bottom: 7px;
+
+    font-size: 18px;
+
+    font-weight: 750;
+}
+
+.empty-state p {
+
+    margin: 0;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.page-footer {
+
+    margin-top: 25px;
+
+    text-align: center;
+
+    color: #9ca3af;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .page-wrapper {
+
+        padding: 30px 14px 45px;
+    }
+
+    .page-header h1 {
+
+        font-size: 28px;
+    }
+
+    .orders-toolbar {
+
+        align-items: stretch;
+    }
+
+    .search-box {
+
+        width: 100%;
+    }
+
+    .orders-table thead th,
+    .orders-table tbody td {
+
+        padding: 13px 14px;
+    }
+
+    .customer-detail-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .customer-detail.full-width {
+
+        grid-column: auto;
+    }
+
+    .order-summary-grid {
+
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .brand-text {
+
+        display: none;
+    }
+
+    .admin-badge span {
+
+        display: none;
+    }
+
+    .summary-card {
+
+        padding: 17px;
+    }
+
+    .user-avatar {
+
+        width: 34px;
+
+        height: 34px;
+
+        min-width: 34px;
+    }
+
+    .customer-modal {
+
+        padding: 10px;
+    }
+
+    .customer-modal-header {
+
+        padding: 22px 20px;
+    }
+
+    .customer-modal-body {
+
+        padding: 20px;
+    }
+
+    .customer-modal-footer {
+
+        padding: 5px 20px 20px;
+    }
+}
+
+</style>
+
+
+<!-- =========================================================
+     TOP NAVBAR
+========================================================= -->
+
+<div class="container-fluid px-3 px-md-4">
+
+    <div class="d-flex justify-content-between align-items-center py-3">
+
+        <a href="#" class="brand">
+
+            <div class="brand-icon">
+
+                <i class="bi bi-shop"></i>
+
+            </div>
+
+            <span class="brand-text">
+
+                Store Management
+
+            </span>
+
+        </a>
+
+
+        <div class="admin-badge">
+
+            <i class="bi bi-shield-check"></i>
+
+            <span>
+
+                Admin Panel
+
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     PAGE
+========================================================= -->
+
+<div class="page-wrapper">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <h1>
+
+            Customer Orders
+
+        </h1>
+
+        <p>
+
+            Manage, monitor and track customer orders from one place.
+
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+    <div class="row g-3">
+
+
+        <div class="col-12 col-md-4">
+
+            <div class="summary-card">
+
+                <div class="summary-icon icon-blue">
+
+                    <i class="bi bi-bag-check-fill"></i>
+
+                </div>
+
+                <div class="summary-title">
+
+                    Total Orders
+
+                </div>
+
+                <div class="summary-number">
+
+                    {{ orders|length }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-md-4">
+
+            <div class="summary-card">
+
+                <div class="summary-icon icon-orange">
+
+                    <i class="bi bi-hourglass-split"></i>
+
+                </div>
+
+                <div class="summary-title">
+
+                    Order Management
+
+                </div>
+
+                <div class="summary-number">
+
+                    Active
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-md-4">
+
+            <div class="summary-card">
+
+                <div class="summary-icon icon-green">
+
+                    <i class="bi bi-shield-check"></i>
+
+                </div>
+
+                <div class="summary-title">
+
+                    System Status
+
+                </div>
+
+                <div class="summary-number">
+
+                    Online
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         ORDERS CARD
+    ====================================================== -->
+
+    <div class="orders-card">
+
+
+        <!-- TOOLBAR -->
+
+        <div class="orders-toolbar">
+
+            <div class="toolbar-title">
+
+                <i class="bi bi-receipt-cutoff"></i>
+
+                Recent Customer Orders
+
+            </div>
+
+
+            <div class="search-box">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    id="orderSearch"
+                    class="search-input"
+                    placeholder="Search orders, customers or products..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             TABLE
+        ================================================== -->
+
+        <div class="table-container">
+
+            <table class="orders-table">
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Order
+                        </th>
+
+                        <th>
+                            Customer
+                        </th>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            Quantity
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="orderTableBody">
+
+
+                    <!--
+                        dictsort:"id" guarantees:
+
+                        1
+                        2
+                        3
+                        4
+                        5
+                        ...
+
+                        even if the queryset is currently returned
+                        in descending order.
+                    -->
+
+                    {% for order in orders|dictsort:"id" %}
+
+
+                    <tr
+                        class="order-row"
+                        data-order-id="{{ order.id }}"
+                    >
+
+
+                        <!-- ORDER -->
+
+                        <td>
+
+                            <div class="order-id">
+
+                                <div class="order-icon">
+
+                                    <i class="bi bi-receipt"></i>
+
+                                </div>
+
+                                <span>
+
+                                    #{{ order.id }}
+
+                                </span>
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- CUSTOMER -->
+
+                        <td>
+
+                            <div class="user-info">
+
+
+                                <div class="user-avatar">
+
+                                    {% if order.name %}
+
+                                        {{ order.name|first|upper }}
+
+                                    {% elif order.user %}
+
+                                        {{ order.user.username|first|upper }}
+
+                                    {% else %}
+
+                                        ?
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div>
+
+
+                                    <button
+                                        type="button"
+                                        class="customer-button"
+                                        onclick="openCustomerModal(this)"
+
+                                        data-name="{{ order.name|default:''|escape }}"
+
+                                        data-address="{{ order.address|default:''|escape }}"
+
+                                        data-phone="{{ order.phone|default:''|escape }}"
+
+                                        data-postal="{{ order.postal_code|default:''|escape }}"
+
+                                        data-city="{{ order.city|default:''|escape }}"
+
+                                        data-state="{{ order.state|default:''|escape }}"
+
+                                        data-username="{% if order.user %}{{ order.user.username|escape }}{% endif %}"
+
+                                        data-email="{% if order.user %}{{ order.user.email|escape }}{% endif %}"
+
+                                        data-order-id="{{ order.id }}"
+
+                                        data-order-status="{{ order.status|default:'N/A'|escape }}"
+
+                                        data-quantity="{{ order.quantity|default:'0'|escape }}"
+
+                                        data-created-at="{{ order.created_at|date:'d M Y, h:i A'|default:'N/A'|escape }}"
+
+                                        data-updated-by-admin="{% if order.updated_by_admin %}Yes{% else %}No{% endif %}"
+
+                                    >
+
+
+                                        {% if order.name %}
+
+                                            {{ order.name }}
+
+                                        {% elif order.user %}
+
+                                            {{ order.user.username }}
+
+                                        {% else %}
+
+                                            Customer
+
+                                        {% endif %}
+
+
+                                    </button>
+
+
+                                    <div class="user-label">
+
+                                        Click to view customer details
+
+                                    </div>
+
+
+                                </div>
+
+
+                            </div>
+
+                        </td>
+
+
+
+                        <!-- =================================================
+                             PRODUCT
+                        ================================================== -->
+
+                        <td>
+
+
+                            {% if order.product %}
+
+
+                                <!-- Product still exists -->
+
+                                <div class="product-name">
+
+                                    {{ order.product.name }}
+
+                                </div>
+
+                                <div class="product-label">
+
+                                    Purchased product
+
+                                </div>
+
+
+                            {% elif order.product_name %}
+
+
+                                <!--
+                                    Product was deleted.
+
+                                    The order remains because the product
+                                    relation is SET_NULL / nullable.
+
+                                    product_name is the saved snapshot.
+                                -->
+
+                                <div class="deleted-product">
+
+                                    <i class="bi bi-trash3-fill"></i>
+
+                                    Product Deleted
+
+                                </div>
+
+
+                                <div class="deleted-product-name">
+
+                                    {{ order.product_name }}
+
+                                </div>
+
+
+                                <div class="product-label">
+
+                                    Original product is no longer available
+
+                                </div>
+
+
+                            {% else %}
+
+
+                                <!-- Product deleted and no snapshot name -->
+
+                                <div class="deleted-product">
+
+                                    <i class="bi bi-trash3-fill"></i>
+
+                                    Product Deleted
+
+                                </div>
+
+
+                                <div class="product-label">
+
+                                    Original product is no longer available
+
+                                </div>
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+
+                        <!-- QUANTITY -->
+
+                        <td>
+
+                            <span class="quantity-badge">
+
+                                {{ order.quantity|default:"0" }}
+
+                            </span>
+
+                        </td>
+
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+
+                            {% if order.status == "Pending" %}
+
+                                <span class="status-badge status-pending">
+
+                                    <span class="status-dot"></span>
+
+                                    {{ order.status }}
+
+                                </span>
+
+
+                            {% elif order.status == "Processing" %}
+
+                                <span class="status-badge status-processing">
+
+                                    <span class="status-dot"></span>
+
+                                    {{ order.status }}
+
+                                </span>
+
+
+                            {% elif order.status == "Shipped" %}
+
+                                <span class="status-badge status-shipped">
+
+                                    <span class="status-dot"></span>
+
+                                    {{ order.status }}
+
+                                </span>
+
+
+                            {% elif order.status == "Delivered" %}
+
+                                <span class="status-badge status-delivered">
+
+                                    <span class="status-dot"></span>
+
+                                    {{ order.status }}
+
+                                </span>
+
+
+                            {% elif order.status == "Completed" %}
+
+                                <span class="status-badge status-completed">
+
+                                    <span class="status-dot"></span>
+
+                                    {{ order.status }}
+
+                                </span>
+
+
+                            {% elif order.status == "Cancelled" %}
+
+                                <span class="status-badge status-cancelled">
+
+                                    <span class="status-dot"></span>
+
+                                    {{ order.status }}
+
+                                </span>
+
+
+                            {% else %}
+
+                                <span class="status-badge status-default">
+
+                                    <span class="status-dot"></span>
+
+                                    {{ order.status|default:"Unknown" }}
+
+                                </span>
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% empty %}
+
+
+                    <tr>
+
+                        <td colspan="5">
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+
+                                    <i class="bi bi-inbox"></i>
+
+                                </div>
+
+                                <h4>
+
+                                    No Orders Available
+
+                                </h4>
+
+                                <p>
+
+                                    Customer orders will appear here once they are placed.
+
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="page-footer">
+
+        Customer Order Management • Secure Admin Dashboard
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     CUSTOMER MODAL
+
+     IMPORTANT:
+     This wrapper was missing in the previous code.
+
+     Clicking this dark background closes the popup.
+     Clicking inside .customer-modal-card does NOT close it.
+========================================================= -->
+
+<div
+    id="customerModal"
+    class="customer-modal"
+    onclick="closeCustomerModal(event)"
+>
+
+
+    <!-- =====================================================
+         MODAL CARD
+    ====================================================== -->
+
+    <div
+        class="customer-modal-card"
+        onclick="event.stopPropagation()"
+    >
+
+
+        <!-- =================================================
+             MODAL HEADER
+        ================================================== -->
+
+        <div class="customer-modal-header">
+
+
+            <button
+                type="button"
+                class="modal-close-button"
+                onclick="closeCustomerModal()"
+                aria-label="Close"
+            >
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+
+            <div class="customer-modal-header-content">
+
+
+                <div
+                    class="customer-modal-avatar"
+                    id="modalAvatar"
+                >
+
+                    ?
+
+                </div>
+
+
+                <div>
+
+
+                    <h3
+                        class="customer-modal-title"
+                        id="modalCustomerName"
+                    >
+
+                        Customer Details
+
+                    </h3>
+
+
+                    <div class="customer-modal-subtitle">
+
+                        Saved customer information for this order
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             MODAL BODY
+        ================================================== -->
+
+        <div class="customer-modal-body">
+
+
+            <div class="details-section-title">
+
+                <i class="bi bi-person-vcard-fill"></i>
+
+                Customer Information
+
+            </div>
+
+
+            <div class="customer-detail-grid">
+
+
+                <!-- NAME -->
+
+                <div class="customer-detail">
+
+                    <div class="customer-detail-label">
+
+                        <i class="bi bi-person-fill"></i>
+
+                        Name
+
+                    </div>
+
+                    <div
+                        class="customer-detail-value"
+                        id="modalName"
+                    >
+
+                        N/A
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- PHONE -->
+
+                <div class="customer-detail">
+
+                    <div class="customer-detail-label">
+
+                        <i class="bi bi-telephone-fill"></i>
+
+                        Phone
+
+                    </div>
+
+                    <div
+                        class="customer-detail-value"
+                        id="modalPhone"
+                    >
+
+                        N/A
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- USERNAME -->
+
+                <div class="customer-detail">
+
+                    <div class="customer-detail-label">
+
+                        <i class="bi bi-person-circle"></i>
+
+                        Username
+
+                    </div>
+
+                    <div
+                        class="customer-detail-value"
+                        id="modalUsername"
+                    >
+
+                        N/A
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- EMAIL -->
+
+                <div class="customer-detail">
+
+                    <div class="customer-detail-label">
+
+                        <i class="bi bi-envelope-fill"></i>
+
+                        Email
+
+                    </div>
+
+                    <div
+                        class="customer-detail-value"
+                        id="modalEmail"
+                    >
+
+                        N/A
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- CITY -->
+
+                <div class="customer-detail">
+
+                    <div class="customer-detail-label">
+
+                        <i class="bi bi-buildings-fill"></i>
+
+                        City
+
+                    </div>
+
+                    <div
+                        class="customer-detail-value"
+                        id="modalCity"
+                    >
+
+                        N/A
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- STATE -->
+
+                <div class="customer-detail">
+
+                    <div class="customer-detail-label">
+
+                        <i class="bi bi-map-fill"></i>
+
+                        State
+
+                    </div>
+
+                    <div
+                        class="customer-detail-value"
+                        id="modalState"
+                    >
+
+                        N/A
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- POSTAL CODE -->
+
+                <div class="customer-detail">
+
+                    <div class="customer-detail-label">
+
+                        <i class="bi bi-mailbox2"></i>
+
+                        Postal Code
+
+                    </div>
+
+                    <div
+                        class="customer-detail-value"
+                        id="modalPostal"
+                    >
+
+                        N/A
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ADDRESS -->
+
+                <div class="customer-detail full-width">
+
+                    <div class="customer-detail-label">
+
+                        <i class="bi bi-geo-alt-fill"></i>
+
+                        Delivery Address
+
+                    </div>
+
+                    <div
+                        class="customer-detail-value address-value"
+                        id="modalAddress"
+                    >
+
+                        N/A
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ORDER INFORMATION
+            ================================================== -->
+
+            <div class="order-information">
+
+
+                <div class="details-section-title">
+
+                    <i class="bi bi-receipt-cutoff"></i>
+
+                    Order Information
+
+                </div>
+
+
+                <div class="order-summary-grid">
+
+
+                    <!-- ORDER ID -->
+
+                    <div class="order-summary-box">
+
+                        <div class="order-summary-label">
+
+                            Order ID
+
+                        </div>
+
+                        <div
+                            class="order-summary-value"
+                            id="modalOrderId"
+                        >
+
+                            #
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- QUANTITY -->
+
+                    <div class="order-summary-box">
+
+                        <div class="order-summary-label">
+
+                            Quantity
+
+                        </div>
+
+                        <div
+                            class="order-summary-value"
+                            id="modalQuantity"
+                        >
+
+                            0
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- STATUS -->
+
+                    <div class="order-summary-box">
+
+                        <div class="order-summary-label">
+
+                            Status
+
+                        </div>
+
+                        <div
+                            class="order-summary-value"
+                            id="modalOrderStatus"
+                        >
+
+                            N/A
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- CREATED DATE -->
+
+                    <div class="order-summary-box">
+
+                        <div class="order-summary-label">
+
+                            Order Created
+
+                        </div>
+
+                        <div
+                            class="order-summary-value"
+                            id="modalCreatedAt"
+                        >
+
+                            N/A
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ADMIN UPDATED -->
+
+                    <div class="order-summary-box">
+
+                        <div class="order-summary-label">
+
+                            Updated By Admin
+
+                        </div>
+
+                        <div
+                            class="order-summary-value"
+                            id="modalUpdatedByAdmin"
+                        >
+
+                            No
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             MODAL FOOTER
+        ================================================== -->
+
+        <div class="customer-modal-footer">
+
+
+            <button
+                type="button"
+                class="modal-done-button"
+                onclick="closeCustomerModal()"
+            >
+
+                <i class="bi bi-check2"></i>
+
+                Close
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   CUSTOMER MODAL
+========================================================= */
+
+function openCustomerModal(button) {
+
+    const modal = document.getElementById("customerModal");
+
+    if (!modal || !button) {
+        return;
+    }
+
+
+    const data = button.dataset;
+
+
+    /*
+       Customer information
+    */
+
+    const name =
+        data.name && data.name.trim()
+            ? data.name.trim()
+            : "Customer";
+
+
+    const phone =
+        data.phone && data.phone.trim()
+            ? data.phone.trim()
+            : "N/A";
+
+
+    const username =
+        data.username && data.username.trim()
+            ? data.username.trim()
+            : "N/A";
+
+
+    const email =
+        data.email && data.email.trim()
+            ? data.email.trim()
+            : "N/A";
+
+
+    const city =
+        data.city && data.city.trim()
+            ? data.city.trim()
+            : "N/A";
+
+
+    const state =
+        data.state && data.state.trim()
+            ? data.state.trim()
+            : "N/A";
+
+
+    const postal =
+        data.postal && data.postal.trim()
+            ? data.postal.trim()
+            : "N/A";
+
+
+    const address =
+        data.address && data.address.trim()
+            ? data.address.trim()
+            : "N/A";
+
+
+    /*
+       Order information
+    */
+
+    const orderId =
+        data.orderId && data.orderId.trim()
+            ? data.orderId.trim()
+            : "N/A";
+
+
+    const quantity =
+        data.quantity && data.quantity.trim()
+            ? data.quantity.trim()
+            : "0";
+
+
+    const status =
+        data.orderStatus && data.orderStatus.trim()
+            ? data.orderStatus.trim()
+            : "N/A";
+
+
+    const createdAt =
+        data.createdAt && data.createdAt.trim()
+            ? data.createdAt.trim()
+            : "N/A";
+
+
+    const updatedByAdmin =
+        data.updatedByAdmin && data.updatedByAdmin.trim()
+            ? data.updatedByAdmin.trim()
+            : "No";
+
+
+    /*
+       Put values into modal
+    */
+
+    document.getElementById("modalCustomerName").textContent = name;
+
+    document.getElementById("modalName").textContent = name;
+
+    document.getElementById("modalPhone").textContent = phone;
+
+    document.getElementById("modalUsername").textContent = username;
+
+    document.getElementById("modalEmail").textContent = email;
+
+    document.getElementById("modalCity").textContent = city;
+
+    document.getElementById("modalState").textContent = state;
+
+    document.getElementById("modalPostal").textContent = postal;
+
+    document.getElementById("modalAddress").textContent = address;
+
+    document.getElementById("modalOrderId").textContent =
+        "#" + orderId;
+
+    document.getElementById("modalQuantity").textContent =
+        quantity;
+
+    document.getElementById("modalOrderStatus").textContent =
+        status;
+
+    document.getElementById("modalCreatedAt").textContent =
+        createdAt;
+
+    document.getElementById("modalUpdatedByAdmin").textContent =
+        updatedByAdmin;
+
+
+    /*
+       Avatar
+    */
+
+    const avatar =
+        name && name !== "Customer"
+            ? name.charAt(0).toUpperCase()
+            : "?";
+
+
+    document.getElementById("modalAvatar").textContent =
+        avatar;
+
+
+    /*
+       Open modal
+    */
+
+    modal.classList.add("show");
+
+    document.body.classList.add("modal-open");
+
+
+    /*
+       Accessibility
+    */
+
+    modal.setAttribute("aria-hidden", "false");
+}
+
+
+/* =========================================================
+   CLOSE CUSTOMER MODAL
+
+   If the event comes from the dark overlay itself,
+   close it.
+
+   If called without an event, also close it.
+
+   Clicking inside the modal card is stopped by:
+       onclick="event.stopPropagation()"
+========================================================= */
+
+function closeCustomerModal(event) {
+
+    const modal =
+        document.getElementById("customerModal");
+
+
+    if (!modal) {
+        return;
+    }
+
+
+    /*
+       If an event was supplied, only close when
+       the actual clicked element is the overlay.
+    */
+
+    if (
+        event &&
+        event.target !== modal
+    ) {
+        return;
+    }
+
+
+    modal.classList.remove("show");
+
+    document.body.classList.remove("modal-open");
+
+    modal.setAttribute("aria-hidden", "true");
+}
+
+
+/* =========================================================
+   ESCAPE KEY
+========================================================= */
+
+document.addEventListener("keydown", function(event) {
+
+    if (
+        event.key === "Escape" ||
+        event.key === "Esc"
+    ) {
+
+        const modal =
+            document.getElementById("customerModal");
+
+
+        if (
+            modal &&
+            modal.classList.contains("show")
+        ) {
+
+            closeCustomerModal();
+
+        }
+
+    }
+
+});
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+const searchInput =
+    document.getElementById("orderSearch");
+
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "input",
+        function() {
+
+            const searchValue =
+                this.value
+                    .toLowerCase()
+                    .trim();
+
+
+            const rows =
+                document.querySelectorAll(
+                    "#orderTableBody .order-row"
+                );
+
+
+            rows.forEach(function(row) {
+
+                const rowText =
+                    row.textContent
+                        .toLowerCase();
+
+
+                if (
+                    rowText.includes(searchValue)
+                ) {
+
+                    row.style.display = "";
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+        }
+    );
+
+}
+
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,582 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Advertisement Details</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+<style>
+    :root {
+        --primary: #4f46e5;
+        --primary-dark: #3730a3;
+        --secondary: #64748b;
+        --dark: #0f172a;
+        --light-bg: #f8fafc;
+        --border: #e2e8f0;
+        --success: #16a34a;
+        --danger: #dc2626;
+        --warning: #d97706;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+        color: var(--dark);
+        min-height: 100vh;
+    }
+
+    /* Navbar */
+    .top-navbar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05);
+    }
+
+    .brand {
+        font-weight: 800;
+        font-size: 1.2rem;
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    /* Main */
+    .page-wrapper {
+        max-width: 1250px;
+        margin: 45px auto;
+        padding: 0 20px;
+    }
+
+    .page-heading {
+        margin-bottom: 30px;
+    }
+
+    .page-heading .eyebrow {
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+    }
+
+    .page-heading h1 {
+        font-size: clamp(28px, 4vw, 42px);
+        font-weight: 800;
+        margin-bottom: 8px;
+        color: var(--dark);
+    }
+
+    .page-heading p {
+        color: var(--secondary);
+        margin: 0;
+    }
+
+    /* Main Card */
+    .details-card {
+        background: #ffffff;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08);
+    }
+
+    .card-top {
+        padding: 25px 30px;
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .card-top::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.08);
+        right: -70px;
+        top: -100px;
+    }
+
+    .card-top h3 {
+        margin: 0;
+        font-weight: 800;
+        position: relative;
+        z-index: 1;
+    }
+
+    .card-top p {
+        margin: 6px 0 0;
+        opacity: 0.85;
+        font-size: 14px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .card-content {
+        padding: 30px;
+    }
+
+    /* Advertisement Preview */
+    .preview-section {
+        background: #f8fafc;
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 22px;
+        margin-bottom: 28px;
+    }
+
+    .section-title {
+        font-size: 15px;
+        font-weight: 800;
+        margin-bottom: 18px;
+        color: var(--dark);
+    }
+
+    .media-box {
+        background: #0f172a;
+        border-radius: 15px;
+        overflow: hidden;
+        min-height: 260px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .product-image {
+        width: 100%;
+        max-height: 420px;
+        object-fit: contain;
+        display: block;
+    }
+
+    .video-player {
+        width: 100%;
+        max-height: 420px;
+        display: block;
+    }
+
+    .no-media {
+        color: #94a3b8;
+        font-size: 14px;
+    }
+
+    /* Information */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+    }
+
+    .info-item {
+        background: #ffffff;
+        border: 1px solid var(--border);
+        border-radius: 15px;
+        padding: 18px;
+        transition: all 0.25s ease;
+    }
+
+    .info-item:hover {
+        transform: translateY(-2px);
+        border-color: #c7d2fe;
+        box-shadow: 0 8px 25px rgba(79, 70, 229, 0.08);
+    }
+
+    .info-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: #94a3b8;
+        margin-bottom: 7px;
+    }
+
+    .info-value {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--dark);
+        word-break: break-word;
+    }
+
+    .description-box {
+        grid-column: 1 / -1;
+    }
+
+    .description {
+        line-height: 1.7;
+        color: #475569;
+        font-weight: 400;
+    }
+
+    /* Status */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 13px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+        background: #eef2ff;
+        color: var(--primary);
+    }
+
+    .status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    /* Thumbnail */
+    .thumbnail {
+        width: 100%;
+        max-width: 240px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        display: block;
+    }
+
+    /* Action Area */
+    .action-area {
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .record-id {
+        color: #94a3b8;
+        font-size: 13px;
+    }
+
+    .btn-back {
+        border: 0;
+        padding: 11px 20px;
+        border-radius: 11px;
+        font-weight: 700;
+        color: white;
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+        transition: all 0.25s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-back:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(79, 70, 229, 0.35);
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+
+        .page-wrapper {
+            margin: 25px auto;
+            padding: 0 14px;
+        }
+
+        .card-top,
+        .card-content {
+            padding: 20px;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .description-box {
+            grid-column: auto;
+        }
+
+        .media-box {
+            min-height: 200px;
+        }
+
+        .action-area {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .btn-back {
+            justify-content: center;
+        }
+    }
+</style>
+
+</head>
+
+<body>
+
+<!-- Top Navigation -->
+<nav class="navbar top-navbar">
+    <div class="container">
+        <a href="{% url 'advertisement_dashboard' %}" class="brand">
+            AdManager
+        </a>
+    </div>
+</nav>
+
+<main class="page-wrapper">
+
+    <!-- Page Heading -->
+    <div class="page-heading">
+        <div class="eyebrow">Advertisement Management</div>
+        <h1>Advertisement Details</h1>
+        <p>View complete information and media associated with this advertisement.</p>
+    </div>
+
+    <!-- Details Card -->
+    <div class="details-card">
+
+        <!-- Card Header -->
+        <div class="card-top">
+            <h3>Seller Advertisement</h3>
+            <p>Advertisement ID #{{ advertisement.id }}</p>
+        </div>
+
+        <div class="card-content">
+
+            <!-- Product Preview -->
+            <div class="preview-section">
+
+                <div class="section-title">
+                    Product Media
+                </div>
+
+                <div class="row g-4">
+
+                    <!-- Product Image -->
+                    <div class="col-lg-6">
+
+                        <div class="info-label mb-2">
+                            Product Image
+                        </div>
+
+                        <div class="media-box">
+
+                            {% if advertisement.product_image %}
+                                <img src="{{ advertisement.product_image.url }}"
+                                     alt="{{ advertisement.title }}"
+                                     class="product-image">
+                            {% else %}
+                                <span class="no-media">
+                                    No product image available
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- Video -->
+                    <div class="col-lg-6">
+
+                        <div class="info-label mb-2">
+                            Advertisement Video
+                        </div>
+
+                        <div class="media-box">
+
+                            {% if advertisement.video %}
+                                <video class="video-player" controls>
+                                    <source src="{{ advertisement.video.url }}">
+                                    Your browser does not support video playback.
+                                </video>
+                            {% else %}
+                                <span class="no-media">
+                                    No video available
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Advertisement Information -->
+            <div class="section-title">
+                Advertisement Information
+            </div>
+
+            <div class="info-grid">
+
+                <!-- ID -->
+                <div class="info-item">
+                    <div class="info-label">Advertisement ID</div>
+                    <div class="info-value">
+                        #{{ advertisement.id }}
+                    </div>
+                </div>
+
+                <!-- Seller -->
+                <div class="info-item">
+                    <div class="info-label">Seller</div>
+                    <div class="info-value">
+                        {{ advertisement.seller.username }}
+                    </div>
+                </div>
+
+                <!-- Title -->
+                <div class="info-item">
+                    <div class="info-label">Advertisement Title</div>
+                    <div class="info-value">
+                        {{ advertisement.title }}
+                    </div>
+                </div>
+
+                <!-- Plan -->
+                <div class="info-item">
+                    <div class="info-label">Advertisement Plan</div>
+                    <div class="info-value">
+                        {{ advertisement.plan }}
+                    </div>
+                </div>
+
+                <!-- Amount -->
+                <div class="info-item">
+                    <div class="info-label">Amount</div>
+                    <div class="info-value">
+                        ₹ {{ advertisement.amount }}
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="info-item">
+                    <div class="info-label">Current Status</div>
+                    <div class="info-value">
+
+                        <span class="status-badge">
+                            <span class="status-dot"></span>
+                            {{ advertisement.status }}
+                        </span>
+
+                    </div>
+                </div>
+
+                <!-- Start Date -->
+                <div class="info-item">
+                    <div class="info-label">Start Date</div>
+                    <div class="info-value">
+                        {{ advertisement.start_date }}
+                    </div>
+                </div>
+
+                <!-- End Date -->
+                <div class="info-item">
+                    <div class="info-label">End Date</div>
+                    <div class="info-value">
+                        {{ advertisement.end_date }}
+                    </div>
+                </div>
+
+                <!-- Created At -->
+                <div class="info-item">
+                    <div class="info-label">Created At</div>
+                    <div class="info-value">
+                        {{ advertisement.created_at }}
+                    </div>
+                </div>
+
+                <!-- Thumbnail -->
+                <div class="info-item">
+
+                    <div class="info-label">
+                        Thumbnail
+                    </div>
+
+                    {% if advertisement.thumbnail %}
+
+                        <img src="{{ advertisement.thumbnail.url }}"
+                             alt="Advertisement Thumbnail"
+                             class="thumbnail">
+
+                    {% else %}
+
+                        <div class="info-value text-muted">
+                            No thumbnail available
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                <!-- Description -->
+                <div class="info-item description-box">
+
+                    <div class="info-label">
+                        Description
+                    </div>
+
+                    <div class="info-value description">
+                        {{ advertisement.description|default:"No description provided." }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Actions -->
+            <div class="action-area">
+
+                <div class="record-id">
+                    Advertisement Record #{{ advertisement.id }}
+                </div>
+
+                <a href="{% url 'advertisement_dashboard' %}"
+                   class="btn-back">
+
+                    <span>←</span>
+                    Back to Dashboard
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
+
+{% endblock %}

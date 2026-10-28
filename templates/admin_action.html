@@ -1,0 +1,11 @@
+<h2>Admin Decision</h2>
+
+<form method="POST">
+{% csrf_token %}
+
+<textarea name="comment" placeholder="Reason if reject"></textarea>
+
+<button name="action" value="approve">Approve</button>
+<button name="action" value="reject">Reject</button>
+
+</form>

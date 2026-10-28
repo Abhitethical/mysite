@@ -1,0 +1,4932 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<title>Edit Advertisement #{{ advertisement.pk }}</title>
+
+<style>
+
+/* =========================================================
+   PREMIUM ADVERTISEMENT ADMIN EDITOR
+========================================================= */
+
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-soft: #eff6ff;
+
+    --indigo: #4f46e5;
+
+    --dark: #0f172a;
+    --dark-soft: #1e293b;
+
+    --text: #334155;
+    --text-light: #64748b;
+    --muted: #94a3b8;
+
+    --white: #ffffff;
+
+    --bg: #f4f7fb;
+    --bg-soft: #f8fafc;
+
+    --border: #e2e8f0;
+    --border-dark: #cbd5e1;
+
+    --green: #16a34a;
+    --green-soft: #ecfdf5;
+    --green-border: #bbf7d0;
+
+    --red: #dc2626;
+    --red-soft: #fef2f2;
+    --red-border: #fecaca;
+
+    --yellow: #d97706;
+    --yellow-soft: #fffbeb;
+    --yellow-border: #fde68a;
+
+    --cyan: #0284c7;
+    --cyan-soft: #f0f9ff;
+
+    --radius: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 22px;
+
+    --shadow-sm:
+        0 1px 3px rgba(15,23,42,.05);
+
+    --shadow:
+        0 10px 35px rgba(15,23,42,.07);
+
+    --shadow-lg:
+        0 20px 60px rgba(15,23,42,.11);
+
+    --sidebar: 270px;
+}
+
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    color: var(--text);
+
+    background:
+        radial-gradient(
+            circle at 100% 0%,
+            rgba(37,99,235,.09),
+            transparent 26%
+        ),
+        radial-gradient(
+            circle at 0% 40%,
+            rgba(79,70,229,.045),
+            transparent 25%
+        ),
+        var(--bg);
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    line-height: 1.5;
+
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    border: 0;
+}
+
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    height: 78px;
+
+    background: rgba(255,255,255,.94);
+
+    border-bottom:
+        1px solid rgba(226,232,240,.9);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    box-shadow:
+        0 2px 10px rgba(15,23,42,.035);
+}
+
+.topbar-inner {
+    width: min(1700px, calc(100% - 56px));
+
+    height: 100%;
+
+    margin: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 25px;
+}
+
+.brand-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-logo {
+    width: 46px;
+    height: 46px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 13px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--indigo)
+        );
+
+    box-shadow:
+        0 10px 24px rgba(37,99,235,.25);
+
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.brand-title {
+    color: var(--dark);
+
+    font-size: 15px;
+    font-weight: 850;
+
+    letter-spacing: -.2px;
+}
+
+.brand-subtitle {
+    margin-top: 2px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn {
+    min-height: 44px;
+
+    padding: 10px 17px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    border: 1px solid transparent;
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    transition: .18s ease;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:focus-visible {
+    outline: 3px solid rgba(37,99,235,.16);
+    outline-offset: 3px;
+}
+
+.btn-secondary {
+    color: #475569;
+
+    background: white;
+
+    border-color: var(--border);
+
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+    color: var(--dark);
+
+    background: #f8fafc;
+
+    border-color: var(--border-dark);
+}
+
+.btn-primary {
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--indigo)
+        );
+
+    box-shadow:
+        0 9px 22px rgba(37,99,235,.23);
+}
+
+.btn-primary:hover {
+    box-shadow:
+        0 12px 28px rgba(37,99,235,.31);
+}
+
+.btn:disabled {
+    opacity: .65;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.page-container {
+    width: min(1700px, calc(100% - 56px));
+
+    margin: 0 auto;
+
+    padding: 38px 0 120px;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.page-header {
+    margin-bottom: 30px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 30px;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 12px;
+
+    color: var(--muted);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.breadcrumb a:hover {
+    color: var(--primary);
+}
+
+.breadcrumb-separator {
+    color: #cbd5e1;
+}
+
+.page-title {
+    margin: 0;
+
+    color: var(--dark);
+
+    font-size: clamp(30px, 3vw, 42px);
+
+    line-height: 1.08;
+
+    font-weight: 900;
+
+    letter-spacing: -1.3px;
+}
+
+.page-subtitle {
+    max-width: 800px;
+
+    margin-top: 11px;
+
+    color: var(--text-light);
+
+    font-size: 14px;
+
+    line-height: 1.6;
+}
+
+.advertisement-id {
+    display: inline-flex;
+    align-items: center;
+
+    margin-left: 7px;
+
+    padding: 4px 9px;
+
+    color: #475569;
+
+    background: #e2e8f0;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 850;
+
+    font-family: monospace;
+}
+
+.header-meta {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+.header-badge {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 9px 13px;
+
+    color: #475569;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    box-shadow: var(--shadow-sm);
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.header-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+
+    box-shadow:
+        0 0 0 4px rgba(22,163,74,.10);
+}
+
+
+/* =========================================================
+   ALERTS
+========================================================= */
+
+.alert {
+    position: relative;
+
+    margin-bottom: 20px;
+
+    padding: 15px 48px 15px 17px;
+
+    border: 1px solid;
+
+    border-radius: 12px;
+
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.alert-success {
+    color: #166534;
+    background: var(--green-soft);
+    border-color: var(--green-border);
+}
+
+.alert-warning {
+    color: #92400e;
+    background: var(--yellow-soft);
+    border-color: var(--yellow-border);
+}
+
+.alert-danger {
+    color: #991b1b;
+    background: var(--red-soft);
+    border-color: var(--red-border);
+}
+
+.alert-info {
+    color: #075985;
+    background: var(--cyan-soft);
+    border-color: #bae6fd;
+}
+
+.alert-close {
+    position: absolute;
+
+    top: 50%;
+    right: 12px;
+
+    width: 30px;
+    height: 30px;
+
+    display: grid;
+    place-items: center;
+
+    transform: translateY(-50%);
+
+    color: inherit;
+
+    background: transparent;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 19px;
+}
+
+.alert-close:hover {
+    background: rgba(0,0,0,.05);
+}
+
+
+/* =========================================================
+   EDITOR
+========================================================= */
+
+.editor-layout {
+    display: grid;
+
+    grid-template-columns:
+        var(--sidebar)
+        minmax(0,1fr);
+
+    gap: 28px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.section-nav {
+    position: sticky;
+
+    top: 102px;
+
+    padding: 15px;
+
+    background:
+        rgba(255,255,255,.94);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-lg);
+
+    box-shadow: var(--shadow);
+
+    backdrop-filter: blur(14px);
+}
+
+.nav-label {
+    padding: 8px 11px 12px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+    letter-spacing: .09em;
+}
+
+.section-link {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    width: 100%;
+
+    margin: 2px 0;
+
+    padding: 11px;
+
+    border-radius: 10px;
+
+    color: #64748b;
+
+    font-size: 12px;
+    font-weight: 750;
+
+    transition: .18s ease;
+}
+
+.section-link:hover {
+    color: var(--dark);
+    background: #f8fafc;
+}
+
+.section-link.active {
+    color: var(--primary);
+    background: var(--primary-soft);
+}
+
+.section-link.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: -15px;
+
+    top: 9px;
+    bottom: 9px;
+
+    width: 3px;
+
+    border-radius: 4px;
+
+    background: var(--primary);
+}
+
+.nav-icon {
+    width: 31px;
+    height: 31px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    color: inherit;
+
+    background: #f1f5f9;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.section-link.active .nav-icon {
+    background: #dbeafe;
+}
+
+
+/* =========================================================
+   MOBILE NAV
+========================================================= */
+
+.mobile-section-nav {
+    display: none;
+
+    margin-bottom: 20px;
+
+    overflow-x: auto;
+
+    padding: 7px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 12px;
+
+    box-shadow: var(--shadow-sm);
+
+    scrollbar-width: none;
+}
+
+.mobile-section-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.mobile-section-nav a {
+    flex: 0 0 auto;
+
+    padding: 9px 12px;
+
+    border-radius: 8px;
+
+    color: var(--text-light);
+
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.mobile-section-nav a:hover {
+    color: var(--primary);
+    background: var(--primary-soft);
+}
+
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    overflow: hidden;
+
+    margin-bottom: 24px;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius-xl);
+
+    box-shadow: var(--shadow);
+
+    scroll-margin-top: 105px;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.card-header {
+    min-height: 82px;
+
+    padding: 17px 24px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    border-bottom: 1px solid #edf1f5;
+
+    background:
+        linear-gradient(
+            180deg,
+            #ffffff,
+            #fbfdff
+        );
+}
+
+.card-icon {
+    width: 44px;
+    height: 44px;
+
+    display: grid;
+    place-items: center;
+
+    flex-shrink: 0;
+
+    color: var(--primary);
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #eef2ff
+        );
+
+    border: 1px solid #dbeafe;
+
+    border-radius: 12px;
+
+    font-size: 16px;
+    font-weight: 900;
+}
+
+.card-title {
+    margin: 0;
+
+    color: var(--dark);
+
+    font-size: 16px;
+    font-weight: 900;
+
+    letter-spacing: -.2px;
+}
+
+.card-description {
+    margin-top: 3px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 28px;
+}
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
+
+.row {
+    display: grid;
+
+    grid-template-columns:
+        repeat(12,minmax(0,1fr));
+
+    gap: 24px;
+}
+
+.col-12 {
+    grid-column: span 12;
+}
+
+.col-6 {
+    grid-column: span 6;
+}
+
+.col-4 {
+    grid-column: span 4;
+}
+
+
+/* =========================================================
+   FORM
+========================================================= */
+
+.form-group {
+    min-width: 0;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    margin-bottom: 8px;
+
+    color: #334155;
+
+    font-size: 12px;
+    font-weight: 850;
+}
+
+.required {
+    color: var(--red);
+}
+
+.form-control,
+.form-select,
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="date"],
+input[type="datetime-local"],
+input[type="file"],
+select,
+textarea {
+    width: 100%;
+
+    min-height: 48px;
+
+    padding: 11px 13px;
+
+    color: #1e293b;
+
+    background: white;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-size: 13px;
+
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+}
+
+textarea,
+textarea.form-control {
+    min-height: 145px;
+
+    resize: vertical;
+
+    line-height: 1.6;
+}
+
+input[type="file"] {
+    padding: 8px;
+
+    background: #f8fafc;
+}
+
+input[type="file"]::file-selector-button {
+    margin-right: 10px;
+
+    padding: 7px 11px;
+
+    color: #334155;
+
+    background: white;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 7px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: #94a3b8;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+
+    box-shadow:
+        0 0 0 4px rgba(37,99,235,.09);
+
+    background: white;
+}
+
+.form-help {
+    display: block;
+
+    margin-top: 7px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+.errorlist {
+    margin: 7px 0 0;
+
+    padding-left: 18px;
+
+    color: var(--red);
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   PROFESSIONAL MEDIA SECTION
+========================================================= */
+
+.media-section {
+    grid-column: span 12;
+}
+
+.media-field {
+    position: relative;
+
+    min-height: 100%;
+
+    padding: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f8fafc
+        );
+
+    border: 1px solid #dbe3ec;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(15,23,42,.055);
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+}
+
+.media-field:hover {
+    transform: translateY(-2px);
+
+    border-color: #bfdbfe;
+
+    box-shadow:
+        0 15px 38px rgba(37,99,235,.10);
+}
+
+.media-field-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 17px;
+}
+
+.media-title-wrap {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+.media-icon {
+    width: 43px;
+    height: 43px;
+
+    display: grid;
+
+    place-items: center;
+
+    flex-shrink: 0;
+
+    color: var(--primary);
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #eef2ff
+        );
+
+    border: 1px solid #dbeafe;
+
+    border-radius: 12px;
+
+    font-size: 17px;
+
+    font-weight: 900;
+}
+
+.media-title {
+    margin: 0;
+
+    color: var(--dark);
+
+    font-size: 14px;
+
+    font-weight: 900;
+}
+
+.media-subtitle {
+    margin-top: 2px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+.media-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 9px;
+
+    color: #475569;
+
+    background: #f1f5f9;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+    letter-spacing: .05em;
+
+    white-space: nowrap;
+}
+
+.media-badge-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+}
+
+
+/* =========================================================
+   600 X 600 PREVIEW
+========================================================= */
+
+.media-preview-box {
+    position: relative;
+
+    width: 600px;
+    height: 600px;
+
+    max-width: 100%;
+
+    margin: 18px auto 0;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #e2e8f0,
+            #f8fafc
+        );
+
+    border: 1px solid #d7dee8;
+
+    border-radius: 16px;
+
+    box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.65),
+        0 12px 35px rgba(15,23,42,.09);
+
+    cursor: pointer;
+}
+
+.media-preview-box::after {
+    content: "VIEW MEDIA";
+
+    position: absolute;
+
+    left: 50%;
+    bottom: 18px;
+
+    transform: translateX(-50%);
+
+    padding: 8px 13px;
+
+    color: white;
+
+    background: rgba(15,23,42,.82);
+
+    border-radius: 999px;
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    letter-spacing: .08em;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition: .2s ease;
+}
+
+.media-preview-box:hover::after {
+    opacity: 1;
+}
+
+.media-preview-box:hover {
+    border-color: #93c5fd;
+
+    box-shadow:
+        0 18px 45px rgba(37,99,235,.14);
+}
+
+.preview-image,
+.preview-video {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    background:
+        #e2e8f0;
+}
+
+.preview-video {
+    object-fit: contain;
+
+    cursor: pointer;
+}
+
+.media-preview-empty {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 12px;
+
+    color: var(--muted);
+
+    background:
+        linear-gradient(
+            145deg,
+            #f8fafc,
+            #eef2f7
+        );
+}
+
+.media-preview-empty-icon {
+    width: 65px;
+    height: 65px;
+
+    display: grid;
+
+    place-items: center;
+
+    color: #64748b;
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 18px;
+
+    font-size: 25px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.media-preview-empty strong {
+    color: #475569;
+
+    font-size: 13px;
+}
+
+.media-preview-empty span {
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   CURRENT FILE
+========================================================= */
+
+.file-current {
+    margin-top: 14px;
+
+    padding: 12px 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    color: var(--text-light);
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+.file-current-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.file-current-icon {
+    width: 28px;
+    height: 28px;
+
+    display: grid;
+
+    place-items: center;
+
+    color: var(--primary);
+
+    background: var(--primary-soft);
+
+    border-radius: 7px;
+
+    font-size: 11px;
+}
+
+.file-current a {
+    color: var(--primary);
+
+    font-weight: 850;
+}
+
+.file-current a:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================================================
+   MEDIA ACTIONS
+========================================================= */
+
+.media-actions {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-top: 14px;
+}
+
+.media-open-btn {
+    min-height: 42px;
+
+    padding: 9px 15px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--primary),
+            var(--indigo)
+        );
+
+    border-radius: 9px;
+
+    box-shadow:
+        0 7px 18px rgba(37,99,235,.20);
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    font-weight: 850;
+
+    transition: .18s ease;
+}
+
+.media-open-btn:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 10px 24px rgba(37,99,235,.28);
+}
+
+.media-open-btn:active {
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   UPLOAD NOTE
+========================================================= */
+
+.media-upload-note {
+    margin-top: 13px;
+
+    padding: 10px 12px;
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 8px;
+
+    color: #64748b;
+
+    background: #f8fafc;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 9px;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+}
+
+.media-upload-note strong {
+    color: #475569;
+}
+
+
+/* =========================================================
+   MEDIA MODAL
+========================================================= */
+
+.media-modal {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 99999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(2,6,23,.88);
+
+    backdrop-filter: blur(8px);
+
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.media-modal.show {
+    display: flex;
+}
+
+.media-modal-content {
+    position: relative;
+
+    width: 600px;
+    height: 600px;
+
+    max-width: calc(100vw - 40px);
+    max-height: calc(100vh - 40px);
+
+    padding: 56px 16px 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f8fafc
+        );
+
+    border: 1px solid rgba(255,255,255,.75);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 35px 100px rgba(0,0,0,.40);
+}
+
+.media-modal-title {
+    position: absolute;
+
+    top: 18px;
+    left: 20px;
+
+    color: var(--dark);
+
+    font-size: 13px;
+
+    font-weight: 900;
+
+    letter-spacing: -.1px;
+}
+
+.media-modal-close {
+    position: absolute;
+
+    top: 12px;
+    right: 12px;
+
+    width: 40px;
+    height: 40px;
+
+    z-index: 10;
+
+    display: grid;
+
+    place-items: center;
+
+    color: #334155;
+
+    background: #f1f5f9;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 24px;
+
+    font-weight: 700;
+
+    line-height: 1;
+
+    transition: .18s ease;
+}
+
+.media-modal-close:hover {
+    color: white;
+
+    background: var(--red);
+
+    border-color: var(--red);
+
+    transform: scale(1.04);
+}
+
+.media-modal-image,
+.media-modal-video {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    max-width: 100%;
+    max-height: 100%;
+
+    object-fit: contain;
+
+    border-radius: 10px;
+
+    background: #e2e8f0;
+}
+
+.media-modal-video {
+    outline: none;
+}
+
+.media-modal-hint {
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 13px;
+
+    transform: translateX(-50%);
+
+    color: #94a3b8;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .04em;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   STATUS PANEL
+========================================================= */
+
+.status-panel {
+    padding: 22px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fafc,
+            #f1f5f9
+        );
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+}
+
+#id_status {
+    font-weight: 800;
+}
+
+.current-status {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-top: 9px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+.status-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    padding: 5px 10px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+.status-approved {
+    color: #166534;
+
+    background: #dcfce7;
+}
+
+.status-rejected {
+    color: #991b1b;
+
+    background: #fee2e2;
+}
+
+.status-pending {
+    color: #92400e;
+
+    background: #fef3c7;
+}
+
+
+/* =========================================================
+   CHECKBOX
+========================================================= */
+
+.checkbox-wrapper {
+    min-height: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 2px;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    width: 19px;
+    height: 19px;
+
+    min-height: auto;
+
+    margin: 0 10px 0 0;
+
+    accent-color: var(--primary);
+
+    cursor: pointer;
+}
+
+.checkbox-label {
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   READONLY
+========================================================= */
+
+.readonly-box {
+    min-height: 48px;
+
+    padding: 10px 13px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #475569;
+
+    background: #f1f5f9;
+
+    border: 1px solid #dbe2ea;
+
+    border-radius: 10px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+.readonly-box.empty {
+    color: var(--muted);
+
+    font-weight: 500;
+}
+
+.automatic-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    margin-left: auto;
+
+    padding: 4px 8px;
+
+    color: #64748b;
+
+    background: #e2e8f0;
+
+    border-radius: 6px;
+
+    font-size: 9px;
+
+    font-weight: 900;
+
+    text-transform: uppercase;
+
+    letter-spacing: .05em;
+}
+
+
+/* =========================================================
+   REJECTION
+========================================================= */
+
+.rejection-field {
+    display: none;
+
+    grid-column: span 12;
+
+    padding: 19px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff8f8,
+            #fef2f2
+        );
+
+    border: 1px solid var(--red-border);
+
+    border-radius: 13px;
+
+    animation: fadeIn .2s ease;
+}
+
+.rejection-field.show {
+    display: block;
+}
+
+.rejection-notice {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    margin-bottom: 14px;
+
+    color: #991b1b;
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+.rejection-notice-icon {
+    width: 27px;
+    height: 27px;
+
+    display: grid;
+
+    place-items: center;
+
+    flex-shrink: 0;
+
+    color: #991b1b;
+
+    background: #fee2e2;
+
+    border-radius: 8px;
+
+    font-weight: 900;
+}
+
+#id_rejected_reason {
+    border-color: #fca5a5;
+}
+
+#id_rejected_reason:focus {
+    border-color: var(--red);
+
+    box-shadow:
+        0 0 0 4px rgba(220,38,38,.09);
+}
+
+
+/* =========================================================
+   INFORMATION
+========================================================= */
+
+.approval-info,
+.rejection-info {
+    margin-top: 22px;
+
+    padding: 18px;
+
+    border-radius: 13px;
+}
+
+.approval-info {
+    color: #166534;
+
+    background: var(--green-soft);
+
+    border: 1px solid var(--green-border);
+}
+
+.rejection-info {
+    color: #991b1b;
+
+    background: var(--red-soft);
+
+    border: 1px solid var(--red-border);
+}
+
+.info-title {
+    margin-bottom: 10px;
+
+    font-size: 13px;
+
+    font-weight: 900;
+}
+
+.info-row {
+    margin-top: 6px;
+
+    font-size: 12px;
+}
+
+.info-label {
+    color: var(--text-light);
+}
+
+
+/* =========================================================
+   AUDIT
+========================================================= */
+
+#id_audit_log {
+    min-height: 220px;
+
+    padding: 16px;
+
+    color: #cbd5e1;
+
+    background: #0f172a;
+
+    border-color: #1e293b;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+    font-size: 11px;
+
+    line-height: 1.7;
+}
+
+#id_audit_log:focus {
+    color: #e2e8f0;
+
+    background: #020617;
+}
+
+
+/* =========================================================
+   ACTION BAR
+========================================================= */
+
+.sticky-actions {
+    position: sticky;
+
+    bottom: 18px;
+
+    z-index: 900;
+
+    margin-top: 26px;
+
+    padding: 14px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    background:
+        rgba(255,255,255,.95);
+
+    border: 1px solid var(--border);
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 18px 45px rgba(15,23,42,.14);
+
+    backdrop-filter: blur(18px);
+
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.action-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding-left: 8px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    font-weight: 750;
+}
+
+.action-dot {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: var(--green);
+
+    box-shadow:
+        0 0 0 4px rgba(22,163,74,.10);
+}
+
+.action-buttons {
+    display: flex;
+
+    gap: 9px;
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width:1200px) {
+
+    :root {
+        --sidebar: 235px;
+    }
+
+    .page-container,
+    .topbar-inner {
+        width: min(100% - 40px,1500px);
+    }
+
+    .editor-layout {
+        gap: 20px;
+    }
+
+    .media-preview-box {
+        width: 600px;
+        height: 600px;
+    }
+
+}
+
+
+@media (max-width:950px) {
+
+    .page-container {
+        width: calc(100% - 28px);
+    }
+
+    .topbar-inner {
+        width: calc(100% - 28px);
+    }
+
+    .editor-layout {
+        display: block;
+    }
+
+    .section-nav {
+        display: none;
+    }
+
+    .mobile-section-nav {
+        display: flex;
+    }
+
+    .page-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .header-meta {
+        width: 100%;
+    }
+
+    .col-4,
+    .col-6 {
+        grid-column: span 12;
+    }
+
+    .media-preview-box {
+        width: 600px;
+        height: 600px;
+
+        max-width: 100%;
+    }
+
+}
+
+
+@media (max-width:650px) {
+
+    .media-preview-box {
+        width: 100%;
+
+        height: min(600px,80vw);
+
+        min-height: 320px;
+    }
+
+    .media-modal {
+        padding: 10px;
+    }
+
+    .media-modal-content {
+        width: 600px;
+        height: 600px;
+
+        max-width: calc(100vw - 20px);
+        max-height: calc(100vh - 20px);
+
+        border-radius: 15px;
+    }
+
+}
+
+
+@media (max-width:600px) {
+
+    .topbar {
+        height: 64px;
+    }
+
+    .topbar-inner {
+        width: calc(100% - 18px);
+    }
+
+    .brand-logo {
+        width: 37px;
+        height: 37px;
+
+        border-radius: 10px;
+    }
+
+    .brand-subtitle {
+        display: none;
+    }
+
+    .brand-title {
+        font-size: 13px;
+    }
+
+    .topbar-right .btn {
+        min-height: 37px;
+
+        padding: 7px 10px;
+    }
+
+    .topbar-right .btn span {
+        display: none;
+    }
+
+    .page-container {
+        width: calc(100% - 16px);
+
+        padding-top: 20px;
+
+        padding-bottom: 90px;
+    }
+
+    .page-title {
+        font-size: 27px;
+    }
+
+    .page-subtitle {
+        font-size: 12px;
+    }
+
+    .advertisement-id {
+        display: inline-flex;
+
+        margin-top: 6px;
+
+        margin-left: 0;
+    }
+
+    .header-meta {
+        overflow-x: auto;
+    }
+
+    .card {
+        margin-bottom: 16px;
+
+        border-radius: 15px;
+    }
+
+    .card-header {
+        min-height: 67px;
+
+        padding: 13px 15px;
+    }
+
+    .card-body {
+        padding: 17px 15px;
+    }
+
+    .card-icon {
+        width: 37px;
+        height: 37px;
+    }
+
+    .card-title {
+        font-size: 14px;
+    }
+
+    .row {
+        gap: 17px;
+    }
+
+    .status-panel {
+        padding: 16px;
+    }
+
+    .sticky-actions {
+        bottom: 8px;
+
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .action-status {
+        justify-content: center;
+
+        padding: 0;
+    }
+
+    .action-buttons {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1.5fr;
+    }
+
+    .action-buttons .btn {
+        width: 100%;
+    }
+
+    .media-field {
+        padding: 15px;
+    }
+
+    .media-preview-box {
+        width: 100%;
+
+        height: min(600px, calc(100vw - 50px));
+
+        min-height: 300px;
+    }
+
+    .media-field-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .media-badge {
+        align-self: flex-start;
+    }
+
+    .readonly-box {
+        align-items: flex-start;
+    }
+
+    .automatic-badge {
+        flex-shrink: 0;
+    }
+
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print {
+
+    .topbar,
+    .section-nav,
+    .mobile-section-nav,
+    .sticky-actions,
+    .media-modal {
+        display: none !important;
+    }
+
+    body {
+        background: white;
+    }
+
+    .page-container {
+        width: 100%;
+
+        padding: 0;
+    }
+
+    .editor-layout {
+        display: block;
+    }
+
+    .card {
+        box-shadow: none;
+
+        break-inside: avoid;
+    }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion:reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+
+        animation-duration: .01ms !important;
+
+        transition-duration: .01ms !important;
+    }
+
+}
+
+</style>
+
+
+<!-- =========================================================
+     TOP BAR
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="topbar-inner">
+
+        <div class="brand-area">
+
+            <div class="brand-logo">
+                A
+            </div>
+
+            <div>
+
+                <div class="brand-title">
+                    Advertisement Manager
+                </div>
+
+                <div class="brand-subtitle">
+                    Professional Administration Panel
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="topbar-right">
+
+            <a
+                href="/advertisement_dashboard/"
+                class="btn btn-secondary"
+            >
+                ←
+                <span>Admin Dashboard</span>
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="page-container">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <div class="breadcrumb">
+
+                <a href="/admin/">
+                    Administration
+                </a>
+
+                <span class="breadcrumb-separator">
+                    /
+                </span>
+
+                <span>
+                    Advertisements
+                </span>
+
+                <span class="breadcrumb-separator">
+                    /
+                </span>
+
+                <span>
+                    Edit
+                </span>
+
+            </div>
+
+            <h1 class="page-title">
+                Edit Advertisement
+            </h1>
+
+            <div class="page-subtitle">
+
+                Manage advertisement content, campaign scheduling,
+                approval status, payments, renewals and performance.
+
+                <span class="advertisement-id">
+                    #{{ advertisement.pk }}
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="header-meta">
+
+            <div class="header-badge">
+
+                <span class="header-dot"></span>
+
+                Advertisement Editor
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MESSAGES -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div
+                class="
+                    alert
+                    {% if message.tags == 'success' %}
+                        alert-success
+                    {% elif message.tags == 'warning' %}
+                        alert-warning
+                    {% elif message.tags == 'error' %}
+                        alert-danger
+                    {% else %}
+                        alert-info
+                    {% endif %}
+                "
+            >
+
+                {{ message }}
+
+                <button
+                    type="button"
+                    class="alert-close"
+                    onclick="this.parentElement.remove()"
+                    aria-label="Close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- MOBILE NAV -->
+
+    <nav class="mobile-section-nav">
+
+        <a href="#details">Details</a>
+        <a href="#plan">Plan</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#status">Status</a>
+        <a href="#payment">Payment</a>
+        <a href="#renewal">Renewal</a>
+        <a href="#analytics">Analytics</a>
+        <a href="#audit">Audit</a>
+
+    </nav>
+
+
+    <!-- EDITOR -->
+
+    <div class="editor-layout">
+
+
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
+        <aside class="section-nav">
+
+            <div class="nav-label">
+                Advertisement Settings
+            </div>
+
+            <a
+                href="#details"
+                class="section-link active"
+            >
+                <span class="nav-icon">A</span>
+                Advertisement
+            </a>
+
+            <a
+                href="#plan"
+                class="section-link"
+            >
+                <span class="nav-icon">$</span>
+                Plan & Pricing
+            </a>
+
+            <a
+                href="#schedule"
+                class="section-link"
+            >
+                <span class="nav-icon">◷</span>
+                Schedule
+            </a>
+
+            <a
+                href="#status"
+                class="section-link"
+            >
+                <span class="nav-icon">✓</span>
+                Status & Approval
+            </a>
+
+            <a
+                href="#payment"
+                class="section-link"
+            >
+                <span class="nav-icon">₹</span>
+                Payment
+            </a>
+
+            <a
+                href="#renewal"
+                class="section-link"
+            >
+                <span class="nav-icon">↻</span>
+                Renewal
+            </a>
+
+            <a
+                href="#analytics"
+                class="section-link"
+            >
+                <span class="nav-icon">↗</span>
+                Analytics
+            </a>
+
+            <a
+                href="#audit"
+                class="section-link"
+            >
+                <span class="nav-icon">≡</span>
+                Audit Log
+            </a>
+
+        </aside>
+
+
+        <!-- =================================================
+             MAIN FORM
+        ================================================== -->
+
+        <section>
+
+            <form
+                method="POST"
+                enctype="multipart/form-data"
+                id="advertisementForm"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- =================================================
+                     ADVERTISEMENT DETAILS
+                ================================================= -->
+
+                <div class="card" id="details">
+
+                    <div class="card-header">
+
+                        <div class="card-icon">
+                            A
+                        </div>
+
+                        <div>
+
+                            <h2 class="card-title">
+                                Advertisement Details
+                            </h2>
+
+                            <div class="card-description">
+                                Basic information, description and advertisement media
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+
+                            <div class="form-group col-6">
+
+                                <label class="form-label">
+                                    Seller
+                                </label>
+
+                                {{ form.seller }}
+                                {{ form.seller.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-6">
+
+                                <label class="form-label">
+
+                                    Title
+
+                                    <span class="required">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                {{ form.title }}
+                                {{ form.title.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-12">
+
+                                <label class="form-label">
+                                    Description
+                                </label>
+
+                                {{ form.description }}
+                                {{ form.description.errors }}
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 PRODUCT IMAGE
+                            ================================================== -->
+
+                            <div class="form-group media-section">
+
+                                <div class="media-field">
+
+                                    <div class="media-field-header">
+
+                                        <div class="media-title-wrap">
+
+                                            <div class="media-icon">
+                                                🖼
+                                            </div>
+
+                                            <div>
+
+                                                <h3 class="media-title">
+                                                    Product Image
+                                                </h3>
+
+                                                <div class="media-subtitle">
+                                                    Product advertising image
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="media-badge">
+
+                                            <span class="media-badge-dot"></span>
+
+                                            IMAGE
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{ form.product_image }}
+                                    {{ form.product_image.errors }}
+
+
+                                    {% if advertisement.product_image %}
+
+                                        <div
+                                            class="media-preview-box media-image-trigger"
+                                            data-media-type="image"
+                                            data-media-url="{{ advertisement.product_image.url }}"
+                                            data-media-title="Product Image"
+                                            role="button"
+                                            tabindex="0"
+                                            aria-label="Open Product Image"
+                                        >
+
+                                            <img
+                                                src="{{ advertisement.product_image.url }}"
+                                                class="preview-image"
+                                                alt="Product Image"
+                                            >
+
+                                        </div>
+
+
+                                        <div class="file-current">
+
+                                            <div class="file-current-left">
+
+                                                <div class="file-current-icon">
+                                                    ✓
+                                                </div>
+
+                                                <span>
+                                                    Current product image
+                                                </span>
+
+                                            </div>
+
+                                            <a
+                                                href="{{ advertisement.product_image.url }}"
+                                                target="_blank"
+                                                rel="noopener"
+                                            >
+                                                Open Original →
+                                            </a>
+
+                                        </div>
+
+
+                                        <div class="media-actions">
+
+                                            <button
+                                                type="button"
+                                                class="media-open-btn media-trigger-btn"
+                                                data-media-type="image"
+                                                data-media-url="{{ advertisement.product_image.url }}"
+                                                data-media-title="Product Image"
+                                            >
+                                                View Image
+                                            </button>
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="media-preview-box">
+
+                                            <div class="media-preview-empty">
+
+                                                <div class="media-preview-empty-icon">
+                                                    🖼
+                                                </div>
+
+                                                <strong>
+                                                    No Product Image
+                                                </strong>
+
+                                                <span>
+                                                    Upload an image to preview it here
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <div class="media-upload-note">
+
+                                        <span>ⓘ</span>
+
+                                        <span>
+                                            Upload a new product image to replace the current image.
+                                            The preview is displayed in a professional
+                                            <strong>600 × 600</strong> viewing area.
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 ADVERTISEMENT VIDEO
+                            ================================================== -->
+
+                            <div class="form-group media-section">
+
+                                <div class="media-field">
+
+                                    <div class="media-field-header">
+
+                                        <div class="media-title-wrap">
+
+                                            <div class="media-icon">
+                                                ▶
+                                            </div>
+
+                                            <div>
+
+                                                <h3 class="media-title">
+                                                    Advertisement Video
+                                                </h3>
+
+                                                <div class="media-subtitle">
+                                                    Campaign promotional video
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="media-badge">
+
+                                            <span class="media-badge-dot"></span>
+
+                                            VIDEO
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{ form.video }}
+                                    {{ form.video.errors }}
+
+
+                                    {% if advertisement.video %}
+
+                                        <div
+                                            class="media-preview-box media-video-trigger"
+                                            data-media-type="video"
+                                            data-media-url="{{ advertisement.video.url }}"
+                                            data-media-title="Advertisement Video"
+                                            role="button"
+                                            tabindex="0"
+                                            aria-label="Open Advertisement Video"
+                                        >
+
+                                            <video
+                                                class="preview-video"
+                                                controls
+                                                playsinline
+                                                preload="metadata"
+                                            >
+
+                                                <source
+                                                    src="{{ advertisement.video.url }}"
+                                                    type="video/mp4"
+                                                >
+
+                                                Your browser does not support video playback.
+
+                                            </video>
+
+                                        </div>
+
+
+                                        <div class="file-current">
+
+                                            <div class="file-current-left">
+
+                                                <div class="file-current-icon">
+                                                    ▶
+                                                </div>
+
+                                                <span>
+                                                    Current advertisement video
+                                                </span>
+
+                                            </div>
+
+                                            <a
+                                                href="{{ advertisement.video.url }}"
+                                                target="_blank"
+                                                rel="noopener"
+                                            >
+                                                Open Original →
+                                            </a>
+
+                                        </div>
+
+
+                                        <div class="media-actions">
+
+                                            <button
+                                                type="button"
+                                                class="media-open-btn media-trigger-btn"
+                                                data-media-type="video"
+                                                data-media-url="{{ advertisement.video.url }}"
+                                                data-media-title="Advertisement Video"
+                                            >
+                                                View Video
+                                            </button>
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="media-preview-box">
+
+                                            <div class="media-preview-empty">
+
+                                                <div class="media-preview-empty-icon">
+                                                    ▶
+                                                </div>
+
+                                                <strong>
+                                                    No Advertisement Video
+                                                </strong>
+
+                                                <span>
+                                                    Upload a video to preview it here
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <div class="media-upload-note">
+
+                                        <span>ⓘ</span>
+
+                                        <span>
+                                            Upload an MP4 advertisement video.
+                                            The current media is shown in a
+                                            <strong>600 × 600</strong> professional preview area.
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- =================================================
+                                 THUMBNAIL
+                            ================================================== -->
+
+                            <div class="form-group media-section">
+
+                                <div class="media-field">
+
+                                    <div class="media-field-header">
+
+                                        <div class="media-title-wrap">
+
+                                            <div class="media-icon">
+                                                ▣
+                                            </div>
+
+                                            <div>
+
+                                                <h3 class="media-title">
+                                                    Thumbnail
+                                                </h3>
+
+                                                <div class="media-subtitle">
+                                                    Advertisement preview thumbnail
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        <div class="media-badge">
+
+                                            <span class="media-badge-dot"></span>
+
+                                            THUMBNAIL
+
+                                        </div>
+
+                                    </div>
+
+
+                                    {{ form.thumbnail }}
+                                    {{ form.thumbnail.errors }}
+
+
+                                    {% if advertisement.thumbnail %}
+
+                                        <div
+                                            class="media-preview-box media-image-trigger"
+                                            data-media-type="image"
+                                            data-media-url="{{ advertisement.thumbnail.url }}"
+                                            data-media-title="Advertisement Thumbnail"
+                                            role="button"
+                                            tabindex="0"
+                                            aria-label="Open Advertisement Thumbnail"
+                                        >
+
+                                            <img
+                                                src="{{ advertisement.thumbnail.url }}"
+                                                class="preview-image"
+                                                alt="Advertisement Thumbnail"
+                                            >
+
+                                        </div>
+
+
+                                        <div class="file-current">
+
+                                            <div class="file-current-left">
+
+                                                <div class="file-current-icon">
+                                                    ✓
+                                                </div>
+
+                                                <span>
+                                                    Current advertisement thumbnail
+                                                </span>
+
+                                            </div>
+
+                                            <a
+                                                href="{{ advertisement.thumbnail.url }}"
+                                                target="_blank"
+                                                rel="noopener"
+                                            >
+                                                Open Original →
+                                            </a>
+
+                                        </div>
+
+
+                                        <div class="media-actions">
+
+                                            <button
+                                                type="button"
+                                                class="media-open-btn media-trigger-btn"
+                                                data-media-type="image"
+                                                data-media-url="{{ advertisement.thumbnail.url }}"
+                                                data-media-title="Advertisement Thumbnail"
+                                            >
+                                                View Thumbnail
+                                            </button>
+
+                                        </div>
+
+                                    {% else %}
+
+                                        <div class="media-preview-box">
+
+                                            <div class="media-preview-empty">
+
+                                                <div class="media-preview-empty-icon">
+                                                    ▣
+                                                </div>
+
+                                                <strong>
+                                                    No Thumbnail
+                                                </strong>
+
+                                                <span>
+                                                    Upload a thumbnail to preview it here
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <div class="media-upload-note">
+
+                                        <span>ⓘ</span>
+
+                                        <span>
+                                            Upload a replacement thumbnail.
+                                            Preview area is designed for
+                                            <strong>600 × 600</strong> viewing.
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PLAN
+                ================================================== -->
+
+                <div class="card" id="plan">
+
+                    <div class="card-header">
+
+                        <div class="card-icon">
+                            $
+                        </div>
+
+                        <div>
+
+                            <h2 class="card-title">
+                                Advertisement Plan
+                            </h2>
+
+                            <div class="card-description">
+                                Configure plan, campaign duration and advertisement pricing
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Plan
+                                </label>
+
+                                {{ form.plan }}
+                                {{ form.plan.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Duration
+                                </label>
+
+                                {{ form.duration }}
+                                {{ form.duration.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Amount
+                                </label>
+
+                                {{ form.amount }}
+                                {{ form.amount.errors }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     SCHEDULE
+                ================================================== -->
+
+                <div class="card" id="schedule">
+
+                    <div class="card-header">
+
+                        <div class="card-icon">
+                            ◷
+                        </div>
+
+                        <div>
+
+                            <h2 class="card-title">
+                                Advertisement Schedule
+                            </h2>
+
+                            <div class="card-description">
+                                Configure campaign start and expiration dates
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="form-group col-6">
+
+                                <label class="form-label">
+                                    Start Date &amp; Time
+                                </label>
+
+                                {{ form.start_datetime }}
+                                {{ form.start_datetime.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-6">
+
+                                <label class="form-label">
+                                    End Date &amp; Time
+                                </label>
+
+                                {{ form.end_datetime }}
+                                {{ form.end_datetime.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-6">
+
+                                <label class="form-label">
+                                    Start Date
+                                </label>
+
+                                {{ form.start_date }}
+                                {{ form.start_date.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-6">
+
+                                <label class="form-label">
+                                    End Date
+                                </label>
+
+                                {{ form.end_date }}
+                                {{ form.end_date.errors }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     STATUS
+                ================================================== -->
+
+                <div class="card" id="status">
+
+                    <div class="card-header">
+
+                        <div class="card-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <h2 class="card-title">
+                                Status &amp; Approval
+                            </h2>
+
+                            <div class="card-description">
+                                Control publication, approval, rejection and featured visibility
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="status-panel">
+
+                            <div class="row">
+
+                                <div class="form-group col-6">
+
+                                    <label class="form-label">
+                                        Advertisement Status
+                                    </label>
+
+                                    {{ form.status }}
+                                    {{ form.status.errors }}
+
+                                    <div class="current-status">
+
+                                        <span>
+                                            Current status:
+                                        </span>
+
+                                        <strong>
+                                            {{ advertisement.get_status_display }}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="form-group col-6">
+
+                                    <label class="form-label">
+                                        Featured Advertisement
+                                    </label>
+
+                                    <div class="checkbox-wrapper">
+
+                                        {{ form.featured }}
+
+                                        <label class="checkbox-label">
+                                            Display this advertisement as featured
+                                        </label>
+
+                                    </div>
+
+                                    {{ form.featured.errors }}
+
+                                </div>
+
+
+                                <div class="form-group col-6">
+
+                                    <label class="form-label">
+                                        Approved By
+                                    </label>
+
+                                    {{ form.approved_by }}
+                                    {{ form.approved_by.errors }}
+
+                                    <span class="form-help">
+                                        Administrator responsible for approving this advertisement.
+                                    </span>
+
+                                </div>
+
+
+                                <div class="form-group col-6">
+
+                                    <label class="form-label">
+                                        Approved At
+                                    </label>
+
+                                    <div
+                                        class="
+                                            readonly-box
+                                            {% if not advertisement.approved_at %}
+                                                empty
+                                            {% endif %}
+                                        "
+                                    >
+
+                                        <span>
+
+                                            {% if advertisement.approved_at %}
+
+                                                {{ advertisement.approved_at|date:"d M Y, h:i A" }}
+
+                                            {% else %}
+
+                                                Approval date/time will be recorded automatically.
+
+                                            {% endif %}
+
+                                        </span>
+
+                                        <span class="automatic-badge">
+                                            Automatic
+                                        </span>
+
+                                    </div>
+
+                                    <span class="form-help">
+                                        This field is automatically managed by the system.
+                                    </span>
+
+                                </div>
+
+
+                                <div
+                                    class="rejection-field"
+                                    id="rejectionField"
+                                >
+
+                                    <div class="rejection-notice">
+
+                                        <span class="rejection-notice-icon">
+                                            !
+                                        </span>
+
+                                        <span>
+                                            This advertisement is being rejected.
+                                            A clear rejection reason is required before saving.
+                                        </span>
+
+                                    </div>
+
+                                    <label class="form-label">
+
+                                        Rejection Reason
+
+                                        <span class="required">
+                                            *
+                                        </span>
+
+                                    </label>
+
+                                    {{ form.rejected_reason }}
+                                    {{ form.rejected_reason.errors }}
+
+                                    <span class="form-help">
+                                        Required when the advertisement status is REJECTED.
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {% if advertisement.status == "APPROVED" %}
+
+                            <div class="approval-info">
+
+                                <div class="info-title">
+                                    ✓ Advertisement Approved
+                                </div>
+
+                                <div class="info-row">
+
+                                    <span class="info-label">
+                                        Approved By:
+                                    </span>
+
+                                    {% if advertisement.approved_by %}
+
+                                        <strong>
+                                            {{ advertisement.approved_by.username }}
+                                        </strong>
+
+                                    {% else %}
+
+                                        Not specified
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div class="info-row">
+
+                                    <span class="info-label">
+                                        Approved At:
+                                    </span>
+
+                                    {% if advertisement.approved_at %}
+
+                                        <strong>
+                                            {{ advertisement.approved_at|date:"d M Y, h:i A" }}
+                                        </strong>
+
+                                    {% else %}
+
+                                        Not available
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if advertisement.status == "REJECTED" %}
+
+                            <div class="rejection-info">
+
+                                <div class="info-title">
+                                    ✕ Advertisement Rejected
+                                </div>
+
+                                <div class="info-row">
+
+                                    <span class="info-label">
+                                        Rejection Reason:
+                                    </span>
+
+                                </div>
+
+                                <div class="info-row">
+
+                                    {{ advertisement.rejected_reason|default:"No reason provided." }}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PAYMENT
+                ================================================== -->
+
+                <div class="card" id="payment">
+
+                    <div class="card-header">
+
+                        <div class="card-icon">
+                            ₹
+                        </div>
+
+                        <div>
+
+                            <h2 class="card-title">
+                                Payment Information
+                            </h2>
+
+                            <div class="card-description">
+                                Manage payment method, transaction details and invoice
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Payment Method
+                                </label>
+
+                                {{ form.payment_method }}
+                                {{ form.payment_method.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Payment Status
+                                </label>
+
+                                {{ form.payment_status }}
+                                {{ form.payment_status.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Payment ID
+                                </label>
+
+                                {{ form.payment_id }}
+                                {{ form.payment_id.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-6">
+
+                                <label class="form-label">
+                                    Paid At
+                                </label>
+
+                                {{ form.paid_at }}
+                                {{ form.paid_at.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-6">
+
+                                <label class="form-label">
+                                    Invoice PDF
+                                </label>
+
+                                {{ form.invoice_pdf }}
+                                {{ form.invoice_pdf.errors }}
+
+                                {% if advertisement.invoice_pdf %}
+
+                                    <div class="file-current">
+
+                                        <div class="file-current-left">
+
+                                            <div class="file-current-icon">
+                                                PDF
+                                            </div>
+
+                                            <span>
+                                                Current invoice
+                                            </span>
+
+                                        </div>
+
+                                        <a
+                                            href="{{ advertisement.invoice_pdf.url }}"
+                                            target="_blank"
+                                            rel="noopener"
+                                        >
+                                            View Invoice →
+                                        </a>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     RENEWAL
+                ================================================== -->
+
+                <div class="card" id="renewal">
+
+                    <div class="card-header">
+
+                        <div class="card-icon">
+                            ↻
+                        </div>
+
+                        <div>
+
+                            <h2 class="card-title">
+                                Renewal Information
+                            </h2>
+
+                            <div class="card-description">
+                                Manage advertisement renewal and expiry information
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Renewal Status
+                                </label>
+
+                                <div class="checkbox-wrapper">
+
+                                    {{ form.is_renewed }}
+
+                                    <label class="checkbox-label">
+                                        Advertisement has been renewed
+                                    </label>
+
+                                </div>
+
+                                {{ form.is_renewed.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Renewal Date
+                                </label>
+
+                                {{ form.renewal_date }}
+                                {{ form.renewal_date.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Renewal Expiry
+                                </label>
+
+                                {{ form.renewal_expiry }}
+                                {{ form.renewal_expiry.errors }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     ANALYTICS
+                ================================================== -->
+
+                <div class="card" id="analytics">
+
+                    <div class="card-header">
+
+                        <div class="card-icon">
+                            ↗
+                        </div>
+
+                        <div>
+
+                            <h2 class="card-title">
+                                Advertisement Analytics
+                            </h2>
+
+                            <div class="card-description">
+                                Monitor advertisement views, clicks and click-through performance
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="row">
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Views
+                                </label>
+
+                                {{ form.views }}
+                                {{ form.views.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    Clicks
+                                </label>
+
+                                {{ form.clicks }}
+                                {{ form.clicks.errors }}
+
+                            </div>
+
+
+                            <div class="form-group col-4">
+
+                                <label class="form-label">
+                                    CTR
+                                </label>
+
+                                {{ form.ctr }}
+                                {{ form.ctr.errors }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     AUDIT
+                ================================================== -->
+
+                <div class="card" id="audit">
+
+                    <div class="card-header">
+
+                        <div class="card-icon">
+                            ≡
+                        </div>
+
+                        <div>
+
+                            <h2 class="card-title">
+                                Audit Log
+                            </h2>
+
+                            <div class="card-description">
+                                Administrative change history and system activity
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Audit Log JSON
+                            </label>
+
+                            {{ form.audit_log }}
+                            {{ form.audit_log.errors }}
+
+                            <span class="form-help">
+                                Administrator activity is automatically recorded here.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTION BAR
+                ================================================== -->
+
+                <div class="sticky-actions">
+
+                    <div class="action-status">
+
+                        <span class="action-dot"></span>
+
+                        <span id="formState">
+                            Ready to save
+                        </span>
+
+                    </div>
+
+
+                    <div class="action-buttons">
+
+                        <a
+                            href="/admin/"
+                            class="btn btn-secondary"
+                        >
+                            Cancel
+                        </a>
+
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary"
+                            id="saveButton"
+                        >
+
+                            <span id="saveButtonText">
+                                Save Advertisement
+                            </span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     MEDIA POPUP
+     ONLY CLOSE BUTTON CLOSES
+     OUTSIDE CLICK DOES NOT CLOSE
+     ESC DOES NOT CLOSE
+========================================================= -->
+
+<div
+    id="mediaModal"
+    class="media-modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mediaModalTitle"
+>
+
+    <div
+        class="media-modal-content"
+        id="mediaModalContent"
+    >
+
+        <div
+            class="media-modal-title"
+            id="mediaModalTitle"
+        >
+            Media Preview
+        </div>
+
+
+        <button
+            type="button"
+            class="media-modal-close"
+            id="mediaModalClose"
+            aria-label="Close media preview"
+        >
+            ×
+        </button>
+
+
+        <img
+            id="mediaModalImage"
+            class="media-modal-image"
+            src=""
+            alt="Media Preview"
+            style="display:none;"
+        >
+
+
+        <video
+            id="mediaModalVideo"
+            class="media-modal-video"
+            controls
+            playsinline
+            preload="metadata"
+            style="display:none;"
+        >
+            <source
+                id="mediaModalVideoSource"
+                src=""
+                type="video/mp4"
+            >
+
+            Your browser does not support video playback.
+
+        </video>
+
+
+        <div class="media-modal-hint">
+            Use the Close button to exit preview
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   MEDIA POPUP
+========================================================= */
+
+(function () {
+
+    const modal =
+        document.getElementById("mediaModal");
+
+    const modalContent =
+        document.getElementById("mediaModalContent");
+
+    const closeButton =
+        document.getElementById("mediaModalClose");
+
+    const image =
+        document.getElementById("mediaModalImage");
+
+    const video =
+        document.getElementById("mediaModalVideo");
+
+    const videoSource =
+        document.getElementById("mediaModalVideoSource");
+
+    const title =
+        document.getElementById("mediaModalTitle");
+
+
+    if (
+        !modal ||
+        !modalContent ||
+        !closeButton ||
+        !image ||
+        !video
+    ) {
+        return;
+    }
+
+
+    /* =====================================================
+       OPEN
+    ===================================================== */
+
+    function openMediaModal(
+        mediaType,
+        mediaUrl,
+        mediaTitle
+    ) {
+
+        if (!mediaUrl) {
+            return;
+        }
+
+
+        image.style.display = "none";
+
+        video.style.display = "none";
+
+        video.pause();
+
+        video.removeAttribute("src");
+
+        videoSource.removeAttribute("src");
+
+
+        title.textContent =
+            mediaTitle || "Media Preview";
+
+
+        if (mediaType === "video") {
+
+            videoSource.src = mediaUrl;
+
+            video.load();
+
+            video.style.display = "block";
+
+        } else {
+
+            image.src = mediaUrl;
+
+            image.style.display = "block";
+
+        }
+
+
+        modal.classList.add("show");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+        document.body.style.overflow = "hidden";
+
+    }
+
+
+    /* =====================================================
+       CLOSE
+       ONLY THIS FUNCTION CAN CLOSE MODAL
+    ===================================================== */
+
+    function closeMediaModal() {
+
+        video.pause();
+
+        video.removeAttribute("src");
+
+        videoSource.removeAttribute("src");
+
+        image.removeAttribute("src");
+
+        modal.classList.remove("show");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+        document.body.style.overflow = "";
+
+    }
+
+
+    /* =====================================================
+       BUTTON CLICK
+    ===================================================== */
+
+    document.querySelectorAll(
+        ".media-trigger-btn"
+    ).forEach(function (button) {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                openMediaModal(
+                    this.dataset.mediaType,
+                    this.dataset.mediaUrl,
+                    this.dataset.mediaTitle
+                );
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       IMAGE / VIDEO PREVIEW CLICK
+    ===================================================== */
+
+    document.querySelectorAll(
+        ".media-image-trigger, .media-video-trigger"
+    ).forEach(function (preview) {
+
+        preview.addEventListener(
+            "click",
+            function (event) {
+
+                /*
+                 If user clicks video controls,
+                 do not open popup.
+                */
+
+                if (
+                    event.target.tagName === "VIDEO" ||
+                    event.target.closest("video")
+                ) {
+
+                    const videoElement =
+                        event.target.closest("video");
+
+                    if (
+                        videoElement &&
+                        event.offsetY >
+                        videoElement.clientHeight - 55
+                    ) {
+                        return;
+                    }
+
+                }
+
+
+                openMediaModal(
+                    this.dataset.mediaType,
+                    this.dataset.mediaUrl,
+                    this.dataset.mediaTitle
+                );
+
+            }
+        );
+
+
+        preview.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+
+                    event.preventDefault();
+
+                    openMediaModal(
+                        this.dataset.mediaType,
+                        this.dataset.mediaUrl,
+                        this.dataset.mediaTitle
+                    );
+
+                }
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       CLOSE BUTTON ONLY
+    ===================================================== */
+
+    closeButton.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            closeMediaModal();
+
+        }
+    );
+
+
+    /* =====================================================
+       IMPORTANT:
+       OUTSIDE CLICK DOES NOT CLOSE
+    ===================================================== */
+
+    modal.addEventListener(
+        "click",
+        function (event) {
+
+            /*
+             Intentionally do nothing.
+
+             Clicking:
+             - dark background
+             - outside popup
+             - popup area
+
+             WILL NOT CLOSE.
+            */
+
+            event.stopPropagation();
+
+        }
+    );
+
+
+    /* =====================================================
+       IMPORTANT:
+       ESC DOES NOT CLOSE
+    ===================================================== */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                event.key === "Escape" &&
+                modal.classList.contains("show")
+            ) {
+
+                /*
+                 Intentionally do nothing.
+                 Only Close button closes popup.
+                */
+
+                event.preventDefault();
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       PREVENT POPUP CONTENT CLICK PROPAGATION
+    ===================================================== */
+
+    modalContent.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+        }
+    );
+
+})();
+
+
+/* =========================================================
+   NEW IMAGE UPLOAD PREVIEW
+========================================================= */
+
+function setupImageUploadPreview(
+    inputSelector,
+    titleText
+) {
+
+    const input =
+        document.querySelector(inputSelector);
+
+    if (!input) {
+        return;
+    }
+
+
+    input.addEventListener(
+        "change",
+        function () {
+
+            const file =
+                this.files &&
+                this.files[0];
+
+            if (!file) {
+                return;
+            }
+
+
+            if (
+                !file.type ||
+                !file.type.startsWith("image/")
+            ) {
+                return;
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function (event) {
+
+                    const mediaField =
+                        input.closest(".media-field");
+
+                    if (!mediaField) {
+                        return;
+                    }
+
+
+                    let preview =
+                        mediaField.querySelector(
+                            ".media-preview-box"
+                        );
+
+
+                    if (!preview) {
+
+                        preview =
+                            document.createElement("div");
+
+                        preview.className =
+                            "media-preview-box media-image-trigger";
+
+                        mediaField.appendChild(
+                            preview
+                        );
+
+                    }
+
+
+                    preview.dataset.mediaType =
+                        "image";
+
+                    preview.dataset.mediaUrl =
+                        event.target.result;
+
+                    preview.dataset.mediaTitle =
+                        titleText;
+
+
+                    preview.innerHTML = "";
+
+
+                    const img =
+                        document.createElement("img");
+
+                    img.className =
+                        "preview-image";
+
+                    img.src =
+                        event.target.result;
+
+                    img.alt =
+                        titleText;
+
+
+                    preview.appendChild(img);
+
+
+                    /*
+                     Rebind popup behavior
+                    */
+
+                    preview.addEventListener(
+                        "click",
+                        function () {
+
+                            const modal =
+                                document.getElementById(
+                                    "mediaModal"
+                                );
+
+                            const modalImage =
+                                document.getElementById(
+                                    "mediaModalImage"
+                                );
+
+                            const modalVideo =
+                                document.getElementById(
+                                    "mediaModalVideo"
+                                );
+
+                            const modalTitle =
+                                document.getElementById(
+                                    "mediaModalTitle"
+                                );
+
+                            modalVideo.pause();
+
+                            modalVideo.style.display =
+                                "none";
+
+                            modalImage.src =
+                                event.target.result;
+
+                            modalImage.style.display =
+                                "block";
+
+                            modalTitle.textContent =
+                                titleText;
+
+                            modal.classList.add(
+                                "show"
+                            );
+
+                            modal.setAttribute(
+                                "aria-hidden",
+                                "false"
+                            );
+
+                            document.body.style.overflow =
+                                "hidden";
+
+                        }
+                    );
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   NEW VIDEO UPLOAD PREVIEW
+========================================================= */
+
+function setupVideoUploadPreview(
+    inputSelector,
+    titleText
+) {
+
+    const input =
+        document.querySelector(inputSelector);
+
+    if (!input) {
+        return;
+    }
+
+
+    input.addEventListener(
+        "change",
+        function () {
+
+            const file =
+                this.files &&
+                this.files[0];
+
+            if (!file) {
+                return;
+            }
+
+
+            if (
+                !file.type ||
+                !file.type.startsWith("video/")
+            ) {
+                return;
+            }
+
+
+            const videoUrl =
+                URL.createObjectURL(file);
+
+
+            const mediaField =
+                input.closest(".media-field");
+
+            if (!mediaField) {
+                return;
+            }
+
+
+            let preview =
+                mediaField.querySelector(
+                    ".media-preview-box"
+                );
+
+
+            if (!preview) {
+
+                preview =
+                    document.createElement("div");
+
+                preview.className =
+                    "media-preview-box media-video-trigger";
+
+                mediaField.appendChild(
+                    preview
+                );
+
+            }
+
+
+            preview.dataset.mediaType =
+                "video";
+
+            preview.dataset.mediaUrl =
+                videoUrl;
+
+            preview.dataset.mediaTitle =
+                titleText;
+
+
+            preview.innerHTML = "";
+
+
+            const video =
+                document.createElement("video");
+
+            video.className =
+                "preview-video";
+
+            video.controls =
+                true;
+
+            video.playsInline =
+                true;
+
+            video.preload =
+                "metadata";
+
+            video.src =
+                videoUrl;
+
+
+            preview.appendChild(video);
+
+
+            /*
+             Popup for newly selected video
+            */
+
+            preview.addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        event.target.closest("video")
+                    ) {
+
+                        const videoElement =
+                            event.target.closest("video");
+
+                        /*
+                         Allow normal controls.
+                        Open popup only when the
+                         main preview area is clicked.
+                        */
+
+                        if (
+                            event.offsetY >
+                            videoElement.clientHeight - 60
+                        ) {
+                            return;
+                        }
+
+                    }
+
+
+                    const modal =
+                        document.getElementById(
+                            "mediaModal"
+                        );
+
+                    const modalImage =
+                        document.getElementById(
+                            "mediaModalImage"
+                        );
+
+                    const modalVideo =
+                        document.getElementById(
+                            "mediaModalVideo"
+                        );
+
+                    const modalSource =
+                        document.getElementById(
+                            "mediaModalVideoSource"
+                        );
+
+                    const modalTitle =
+                        document.getElementById(
+                            "mediaModalTitle"
+                        );
+
+
+                    modalImage.style.display =
+                        "none";
+
+                    modalImage.removeAttribute(
+                        "src"
+                    );
+
+
+                    modalVideo.style.display =
+                        "block";
+
+                    modalSource.src =
+                        videoUrl;
+
+                    modalVideo.load();
+
+
+                    modalTitle.textContent =
+                        titleText;
+
+
+                    modal.classList.add(
+                        "show"
+                    );
+
+                    modal.setAttribute(
+                        "aria-hidden",
+                        "false"
+                    );
+
+                    document.body.style.overflow =
+                        "hidden";
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   INITIALIZE UPLOAD PREVIEWS
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        setupImageUploadPreview(
+            "#id_product_image",
+            "Product Image"
+        );
+
+        setupImageUploadPreview(
+            "#id_thumbnail",
+            "Advertisement Thumbnail"
+        );
+
+        setupVideoUploadPreview(
+            "#id_video",
+            "Advertisement Video"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   REJECTION FIELD
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const statusField =
+            document.getElementById(
+                "id_status"
+            );
+
+        const rejectionField =
+            document.getElementById(
+                "rejectionField"
+            );
+
+        if (
+            !statusField ||
+            !rejectionField
+        ) {
+            return;
+        }
+
+
+        function updateRejectionField() {
+
+            const value =
+                String(
+                    statusField.value || ""
+                ).toUpperCase();
+
+
+            if (
+                value === "REJECTED"
+            ) {
+
+                rejectionField.classList.add(
+                    "show"
+                );
+
+            } else {
+
+                rejectionField.classList.remove(
+                    "show"
+                );
+
+            }
+
+        }
+
+
+        statusField.addEventListener(
+            "change",
+            updateRejectionField
+        );
+
+
+        updateRejectionField();
+
+    }
+);
+
+
+/* =========================================================
+   FORM SAVE STATE
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const form =
+            document.getElementById(
+                "advertisementForm"
+            );
+
+        const button =
+            document.getElementById(
+                "saveButton"
+            );
+
+        const buttonText =
+            document.getElementById(
+                "saveButtonText"
+            );
+
+        const formState =
+            document.getElementById(
+                "formState"
+            );
+
+
+        if (
+            !form ||
+            !button ||
+            !buttonText ||
+            !formState
+        ) {
+            return;
+        }
+
+
+        form.addEventListener(
+            "submit",
+            function () {
+
+                button.disabled =
+                    true;
+
+                buttonText.textContent =
+                    "Saving Advertisement...";
+
+                formState.textContent =
+                    "Saving changes...";
+
+            }
+        );
+
+    }
+);
+
+
+/* =========================================================
+   SIDEBAR ACTIVE SECTION
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const links =
+            document.querySelectorAll(
+                ".section-link"
+            );
+
+        const sections =
+            document.querySelectorAll(
+                ".card[id]"
+            );
+
+
+        if (
+            !links.length ||
+            !sections.length
+        ) {
+            return;
+        }
+
+
+        const observer =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(
+                        function (entry) {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                links.forEach(
+                                    function (link) {
+
+                                        link.classList.remove(
+                                            "active"
+                                        );
+
+                                        if (
+                                            link.getAttribute(
+                                                "href"
+                                            ) ===
+                                            "#" +
+                                            entry.target.id
+                                        ) {
+
+                                            link.classList.add(
+                                                "active"
+                                            );
+
+                                        }
+
+                                    }
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    rootMargin:
+                        "-120px 0px -65% 0px"
+                }
+            );
+
+
+        sections.forEach(
+            function (section) {
+
+                observer.observe(
+                    section
+                );
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+
+{% endblock %}

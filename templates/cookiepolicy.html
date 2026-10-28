@@ -1,0 +1,735 @@
+{% extends 'layouts/main.html' %} 
+{% block content %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Cookie Policy | YourStore</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #222;
+      line-height: 1.7;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 20px;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 18px;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: #60a5fa;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      text-align: center;
+      padding: 65px 20px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .hero p {
+      opacity: 0.9;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 35px;
+      margin-bottom: 25px;
+      border-radius: 14px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+    }
+
+    h2 {
+      color: #111827;
+      font-size: 25px;
+      margin-bottom: 15px;
+    }
+
+    h3 {
+      color: #374151;
+      font-size: 18px;
+      margin-top: 22px;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-bottom: 14px;
+    }
+
+    ul {
+      margin: 10px 0 18px 25px;
+    }
+
+    li {
+      margin-bottom: 7px;
+    }
+
+    .notice {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 16px;
+      margin: 20px 0;
+      border-radius: 5px;
+    }
+
+    .cookie-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      overflow: hidden;
+    }
+
+    .cookie-table th,
+    .cookie-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .cookie-table th {
+      background: #111827;
+      color: white;
+    }
+
+    .cookie-table tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    .contact {
+      background: #111827;
+      color: white;
+    }
+
+    .contact h2 {
+      color: white;
+    }
+
+    .contact a {
+      color: #60a5fa;
+    }
+
+    .updated {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    footer {
+      background: #0b1120;
+      color: #aaa;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    footer a {
+      color: #60a5fa;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    /* Cookie Banner */
+
+    .cookie-banner {
+      position: fixed;
+      left: 20px;
+      right: 20px;
+      bottom: 20px;
+      max-width: 1100px;
+      margin: auto;
+      background: white;
+      border-radius: 14px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      padding: 22px;
+      z-index: 9999;
+      display: none;
+    }
+
+    .cookie-banner h3 {
+      margin-top: 0;
+      color: #111827;
+    }
+
+    .cookie-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 15px;
+    }
+
+    .cookie-btn {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .accept {
+      background: #2563eb;
+      color: white;
+    }
+
+    .reject {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .settings {
+      background: white;
+      color: #2563eb;
+      border: 1px solid #2563eb;
+    }
+
+    .manage-cookies {
+      display: inline-block;
+      margin-top: 15px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 700px) {
+
+      .header-inner {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      nav a {
+        margin: 0 6px;
+      }
+
+      .hero h1 {
+        font-size: 30px;
+      }
+
+      .card {
+        padding: 22px;
+      }
+
+      .cookie-table {
+        font-size: 13px;
+      }
+
+      .cookie-table th,
+      .cookie-table td {
+        padding: 8px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+
+
+<section class="hero">
+
+  <h1>Cookie Policy</h1>
+
+  <p>
+    Learn how we use cookies and similar technologies on our website.
+  </p>
+
+</section>
+
+
+<main class="container">
+
+  <p class="updated">
+    Last Updated: September 4, 2026
+  </p>
+
+
+  <!-- INTRODUCTION -->
+
+  <section class="card">
+
+    <h2>1. What Are Cookies?</h2>
+
+    <p>
+      Cookies are small text files that are stored on your device when
+      you visit a website. They help websites remember information about
+      your visit and provide certain functionality.
+    </p>
+
+    <p>
+      We may also use similar technologies such as pixels, local storage
+      and other tracking technologies.
+    </p>
+
+  </section>
+
+
+  <!-- HOW WE USE -->
+
+  <section class="card">
+
+    <h2>2. How We Use Cookies</h2>
+
+    <p>
+      YourStore may use cookies for purposes including:
+    </p>
+
+    <ul>
+      <li>Keeping products in your shopping cart.</li>
+      <li>Keeping you signed in to your account.</li>
+      <li>Remembering website preferences.</li>
+      <li>Improving website performance.</li>
+      <li>Understanding how visitors use our website.</li>
+      <li>Detecting security problems and fraudulent activity.</li>
+      <li>Supporting relevant advertising where applicable.</li>
+    </ul>
+
+  </section>
+
+
+  <!-- COOKIE TYPES -->
+
+  <section class="card">
+
+    <h2>3. Types of Cookies We May Use</h2>
+
+    <table class="cookie-table">
+
+      <thead>
+        <tr>
+          <th>Cookie Type</th>
+          <th>Purpose</th>
+          <th>Typical Use</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr>
+          <td><strong>Essential</strong></td>
+
+          <td>
+            Required for core website functionality.
+          </td>
+
+          <td>
+            Shopping cart, login, security and checkout.
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong>Preferences</strong></td>
+
+          <td>
+            Remember choices made by visitors.
+          </td>
+
+          <td>
+            Language, region and website preferences.
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong>Analytics</strong></td>
+
+          <td>
+            Help us understand website traffic and usage.
+          </td>
+
+          <td>
+            Page visits, traffic sources and performance.
+          </td>
+        </tr>
+
+        <tr>
+          <td><strong>Marketing</strong></td>
+
+          <td>
+            May be used to provide or measure relevant advertising.
+          </td>
+
+          <td>
+            Advertising and campaign measurement.
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </section>
+
+
+  <!-- ESSENTIAL COOKIES -->
+
+  <section class="card">
+
+    <h2>4. Essential Cookies</h2>
+
+    <p>
+      Essential cookies may be necessary for the website to function
+      correctly. For example, they may help maintain your shopping cart,
+      process checkout or protect the website against security threats.
+    </p>
+
+    <p>
+      Depending on applicable law, these cookies may not require the same
+      type of consent as optional cookies.
+    </p>
+
+  </section>
+
+
+  <!-- ANALYTICS -->
+
+  <section class="card">
+
+    <h2>5. Analytics Cookies</h2>
+
+    <p>
+      Analytics technologies may help us understand how visitors interact
+      with our website.
+    </p>
+
+    <p>
+      This information may be used to improve website navigation,
+      performance and customer experience.
+    </p>
+
+  </section>
+
+
+  <!-- MARKETING -->
+
+  <section class="card">
+
+    <h2>6. Marketing Cookies</h2>
+
+    <p>
+      Where used and permitted by applicable law, marketing cookies may
+      help us or our advertising partners deliver, personalize or measure
+      advertisements.
+    </p>
+
+    <p>
+      Marketing cookies should only be activated in accordance with the
+      consent requirements applicable to your visitors.
+    </p>
+
+  </section>
+
+
+  <!-- THIRD PARTY -->
+
+  <section class="card">
+
+    <h2>7. Third-Party Cookies</h2>
+
+    <p>
+      Some services integrated into our website may place their own cookies.
+      These may include payment services, analytics providers, advertising
+      services, social-media features or other third-party technologies.
+    </p>
+
+    <p>
+      Third parties may process information according to their own privacy
+      policies.
+    </p>
+
+  </section>
+
+
+  <!-- CONTROL -->
+
+  <section class="card">
+
+    <h2>8. How You Can Control Cookies</h2>
+
+    <p>
+      You can control or delete cookies through your browser settings.
+      You can also use the cookie preferences provided on our website,
+      where available.
+    </p>
+
+    <p>
+      Disabling certain cookies may affect website functionality,
+      including shopping cart and checkout features.
+    </p>
+
+    <button
+      class="manage-cookies"
+      onclick="openCookieBanner()">
+      Manage Cookie Preferences
+    </button>
+
+  </section>
+
+
+  <!-- CONSENT -->
+
+  <section class="card">
+
+    <h2>9. Cookie Consent</h2>
+
+    <p>
+      Where applicable law requires consent for non-essential cookies,
+      we will request consent before activating those cookies.
+    </p>
+
+    <p>
+      You may withdraw or change your cookie choices where the applicable
+      cookie-consent mechanism provides that option.
+    </p>
+
+  </section>
+
+
+  <!-- PRIVACY -->
+
+  <section class="card">
+
+    <h2>10. Privacy Policy</h2>
+
+    <p>
+      Cookies may involve the processing of information that can be
+      associated with a visitor or device.
+    </p>
+
+    <p>
+      For more information about how we handle personal information,
+      please read our
+      <a href="privacy-policy.html">Privacy Policy</a>.
+    </p>
+
+  </section>
+
+
+  <!-- CHANGES -->
+
+  <section class="card">
+
+    <h2>11. Changes to This Cookie Policy</h2>
+
+    <p>
+      We may update this Cookie Policy from time to time to reflect
+      changes to our website, technologies, services or legal requirements.
+    </p>
+
+    <p>
+      Any updated version will be posted on this page with a revised
+      "Last Updated" date.
+    </p>
+
+  </section>
+
+
+  <!-- CONTACT -->
+
+  <section class="card contact">
+
+    <h2>12. Contact Us</h2>
+
+    <p>
+      If you have questions about this Cookie Policy, please contact us:
+    </p>
+
+    <p>
+      <strong>Business Name:</strong> YourStore<br>
+      <strong>Company/Owner:</strong> Your Company Name<br>
+      <strong>Email:</strong>
+      <a href="mailto:your@email.com">your@email.com</a><br>
+      <strong>Phone:</strong> +91 XXXXX XXXXX<br>
+      <strong>Address:</strong>
+      Your Business Address, Kerala, India
+    </p>
+
+  </section>
+
+</main>
+
+
+
+<!-- COOKIE CONSENT BANNER -->
+
+<div class="cookie-banner" id="cookieBanner">
+
+  <h3>🍪 We Use Cookies</h3>
+
+  <p>
+    We use cookies and similar technologies to operate our website,
+    remember your preferences and, where applicable, understand website
+    usage and provide relevant services.
+  </p>
+
+  <p>
+    You can accept all cookies, reject optional cookies, or manage your
+    preferences.
+  </p>
+
+  <div class="cookie-buttons">
+
+    <button
+      class="cookie-btn accept"
+      onclick="acceptCookies()">
+      Accept All
+    </button>
+
+    <button
+      class="cookie-btn reject"
+      onclick="rejectCookies()">
+      Reject Optional
+    </button>
+
+    <button
+      class="cookie-btn settings"
+      onclick="showCookieInfo()">
+      Cookie Settings
+    </button>
+
+  </div>
+
+</div>
+
+
+<script>
+
+  /*
+    SIMPLE COOKIE CONSENT DEMO
+
+    IMPORTANT:
+    This example stores the visitor's choice in localStorage.
+
+    Before production use, connect this consent system to the actual
+    analytics, advertising and other optional scripts used by your store.
+  */
+
+
+  function showCookieBanner() {
+    document.getElementById("cookieBanner").style.display = "block";
+  }
+
+
+  function hideCookieBanner() {
+    document.getElementById("cookieBanner").style.display = "none";
+  }
+
+
+  function acceptCookies() {
+
+    localStorage.setItem(
+      "cookieConsent",
+      "accepted"
+    );
+
+    hideCookieBanner();
+
+    /*
+      Load optional analytics/marketing scripts here
+      after valid consent, where required.
+    */
+
+    console.log("Optional cookies accepted.");
+  }
+
+
+  function rejectCookies() {
+
+    localStorage.setItem(
+      "cookieConsent",
+      "rejected"
+    );
+
+    hideCookieBanner();
+
+    /*
+      Do NOT load optional analytics or marketing scripts
+      when the visitor has rejected them.
+    */
+
+    console.log("Optional cookies rejected.");
+  }
+
+
+  function showCookieInfo() {
+
+    alert(
+      "Cookie Settings\\n\\n" +
+      "Essential cookies: Required for basic website functions.\\n\\n" +
+      "Preference cookies: Remember your choices.\\n\\n" +
+      "Analytics cookies: Help us understand website usage.\\n\\n" +
+      "Marketing cookies: May be used for advertising where applicable."
+    );
+  }
+
+
+  function openCookieBanner() {
+
+    document.getElementById("cookieBanner").style.display = "block";
+
+  }
+
+
+  /*
+    Show banner only if the visitor has not made a choice.
+  */
+
+  window.addEventListener("load", function() {
+
+    const consent =
+      localStorage.getItem("cookieConsent");
+
+    if (!consent) {
+      showCookieBanner();
+    }
+
+  });
+
+</script>
+
+</body>
+</html>
+{% endblock content %}

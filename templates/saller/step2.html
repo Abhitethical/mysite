@@ -1,0 +1,2754 @@
+{% extends "saller/base_steps.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Seller Verification System</title>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+<style>
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    background:#f4f7fb;
+    color:#1f2937;
+    max-width:900px;
+    margin:auto;
+    padding:30px 20px;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.verification-header{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.verification-header h2{
+    margin:0 0 8px;
+    font-size:28px;
+    font-weight:700;
+    color:#111827;
+}
+
+.verification-header p{
+    margin:0;
+    color:#6b7280;
+    font-size:14px;
+}
+
+/* =========================================================
+   BUSINESS TYPE
+========================================================= */
+
+.business-card{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:24px;
+    margin-bottom:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.04);
+}
+
+.business-header{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-bottom:15px;
+}
+
+.business-icon{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eff6ff;
+    color:#2563eb;
+    font-size:20px;
+}
+
+.business-title{
+    margin:0;
+    font-size:19px;
+    color:#111827;
+}
+
+.business-description{
+    font-size:12px;
+    color:#6b7280;
+    margin-top:3px;
+}
+
+.business-select{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    background:#fff;
+    font-size:14px;
+    color:#111827;
+    outline:none;
+    cursor:pointer;
+}
+
+.business-select:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+/* =========================================================
+   REQUIREMENT INFO
+========================================================= */
+
+.requirement-box{
+    display:none;
+    margin-top:15px;
+    padding:13px 15px;
+    border-radius:9px;
+    background:#eff6ff;
+    border:1px solid #bfdbfe;
+    color:#1e40af;
+    font-size:13px;
+    line-height:1.6;
+}
+
+.requirement-box.show{
+    display:block;
+}
+
+.requirement-box strong{
+    color:#1e3a8a;
+}
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-wrapper{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:18px 20px;
+    margin-bottom:25px;
+    box-shadow:0 4px 15px rgba(0,0,0,.04);
+}
+
+.progress-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+}
+
+.progress-title{
+    font-weight:600;
+    font-size:14px;
+}
+
+.progress-status{
+    font-size:13px;
+    color:#6b7280;
+}
+
+.progress-track{
+    height:8px;
+    background:#e5e7eb;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,#2563eb,#16a34a);
+    border-radius:20px;
+    transition:width .5s ease;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    padding:25px;
+    margin-bottom:20px;
+    border-radius:14px;
+    box-shadow:0 5px 20px rgba(0,0,0,.04);
+    transition:
+        border-color .3s ease,
+        box-shadow .3s ease,
+        opacity .3s ease;
+}
+
+.section:hover{
+    box-shadow:0 8px 25px rgba(0,0,0,.06);
+}
+
+.section.verified{
+    border-color:#86efac;
+    box-shadow:0 5px 20px rgba(22,163,74,.08);
+}
+
+/* =========================================================
+   HIDDEN SECTION
+========================================================= */
+
+.section.hidden-section{
+    display:none !important;
+}
+
+/* =========================================================
+   SECTION HEADER
+========================================================= */
+
+.section-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.section-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.icon{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eff6ff;
+    color:#2563eb;
+    font-size:20px;
+    font-weight:bold;
+}
+
+.section h3{
+    margin:0;
+    font-size:19px;
+    color:#111827;
+}
+
+.section-description{
+    font-size:12px;
+    color:#6b7280;
+    margin-top:3px;
+}
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status-badge{
+    display:none;
+    align-items:center;
+    gap:6px;
+    padding:7px 11px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:600;
+    white-space:nowrap;
+}
+
+.status-badge.verified{
+    display:flex;
+    background:#ecfdf5;
+    color:#15803d;
+    border:1px solid #bbf7d0;
+}
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.field-group{
+    margin-bottom:15px;
+}
+
+.field-label{
+    display:block;
+    font-size:13px;
+    font-weight:600;
+    margin-bottom:7px;
+    color:#374151;
+}
+
+.required-star{
+    color:#dc2626;
+}
+
+input{
+    width:100%;
+    padding:12px 14px;
+    margin:0;
+    border:1px solid #d1d5db;
+    border-radius:8px;
+    outline:none;
+    font-size:14px;
+    background:#fff;
+    transition:
+        border-color .2s,
+        box-shadow .2s,
+        background .2s;
+}
+
+input:focus{
+    border-color:#2563eb;
+    box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+
+input[type="file"]{
+    cursor:pointer;
+    padding:10px;
+}
+
+input[type="file"]::file-selector-button{
+    border:none;
+    background:#eff6ff;
+    color:#1d4ed8;
+    padding:8px 12px;
+    border-radius:6px;
+    margin-right:10px;
+    cursor:pointer;
+    font-weight:600;
+}
+
+/* =========================================================
+   LOCKED INPUT
+========================================================= */
+
+.locked input:not([type="file"]){
+    background:#f0fdf4;
+    border-color:#bbf7d0;
+    color:#166534;
+    cursor:not-allowed;
+}
+
+/*
+   File input stays enabled internally so Django receives
+   the uploaded document during POST.
+   The UI prevents changing it after verification.
+*/
+
+.locked .file-lock-wrapper{
+    pointer-events:none;
+    opacity:.65;
+}
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+button{
+    border:none;
+    cursor:pointer;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:600;
+    transition:
+        transform .15s ease,
+        opacity .2s,
+        box-shadow .2s;
+}
+
+.verify-btn{
+    width:100%;
+    padding:13px;
+    margin-top:5px;
+    background:#16a34a;
+    color:white;
+    box-shadow:0 4px 10px rgba(22,163,74,.18);
+}
+
+.verify-btn:hover{
+    background:#15803d;
+    transform:translateY(-1px);
+}
+
+.verify-btn:disabled{
+    cursor:not-allowed;
+    opacity:.65;
+    transform:none;
+    box-shadow:none;
+}
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+.result{
+    min-height:25px;
+    margin-top:13px;
+    font-size:13px;
+}
+
+.success{
+    color:#15803d;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.error{
+    color:#dc2626;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:7px;
+}
+
+.scanning{
+    color:#2563eb;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+/* =========================================================
+   LOADER
+========================================================= */
+
+.loader{
+    width:15px;
+    height:15px;
+    border:2px solid #dbeafe;
+    border-top-color:#2563eb;
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================================================
+   LOCKED STATE
+========================================================= */
+
+.locked{
+    position:relative;
+    border-color:#86efac !important;
+    background:#fbfffc;
+}
+
+.locked::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:14px;
+    background:rgba(240,253,244,.18);
+    pointer-events:none;
+}
+
+.lock-icon{
+    display:none;
+}
+
+.locked .lock-icon{
+    display:inline;
+}
+
+/* =========================================================
+   CONTINUE
+========================================================= */
+
+.continue-wrapper{
+    background:white;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:20px;
+    margin-top:25px;
+    box-shadow:0 5px 20px rgba(0,0,0,.04);
+}
+
+#continueBtn{
+    width:100%;
+    background:#2563eb;
+    color:white;
+    padding:15px;
+    display:none;
+    font-size:15px;
+    box-shadow:0 5px 15px rgba(37,99,235,.22);
+}
+
+#continueBtn:hover{
+    background:#1d4ed8;
+    transform:translateY(-1px);
+}
+
+.security-note{
+    text-align:center;
+    margin-top:12px;
+    color:#6b7280;
+    font-size:11px;
+}
+
+/* =========================================================
+   SECURITY NOTICE
+========================================================= */
+
+.real-verification-note{
+    margin-top:15px;
+    padding:13px 15px;
+    background:#fff7ed;
+    border:1px solid #fed7aa;
+    border-radius:9px;
+    color:#9a3412;
+    font-size:11px;
+    line-height:1.6;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:600px){
+
+    body{
+        padding:20px 12px;
+    }
+
+    .section{
+        padding:18px;
+    }
+
+    .business-card{
+        padding:18px;
+    }
+
+    .section-header{
+        align-items:flex-start;
+    }
+
+    .status-badge{
+        font-size:11px;
+    }
+
+    .verification-header h2{
+        font-size:23px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<div class="verification-header">
+
+    <h2>Seller Verification</h2>
+
+    <p>
+        Select your business type and complete the required identity verification.
+    </p>
+
+</div>
+
+
+<!-- =========================================================
+     BUSINESS TYPE
+========================================================= -->
+
+<div class="business-card">
+
+    <div class="business-header">
+
+        <div class="business-icon">
+            🏢
+        </div>
+
+        <div>
+
+            <h3 class="business-title">
+                Business Type
+            </h3>
+
+            <div class="business-description">
+                Select the legal structure of your seller business.
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <select
+        name="business_type"
+        id="businessType"
+        class="business-select"
+    >
+
+        <option value="">
+            -- Select Business Type --
+        </option>
+
+        <option value="individual">
+            Individual
+        </option>
+
+        <option value="proprietorship">
+            Proprietorship
+        </option>
+
+        <option value="partnership">
+            Partnership
+        </option>
+
+        <option value="llp">
+            LLP
+        </option>
+
+        <option value="private_limited">
+            Private Limited Company
+        </option>
+
+        <option value="opc">
+            One Person Company
+        </option>
+
+    </select>
+
+
+    <div
+        id="requirementBox"
+        class="requirement-box"
+    ></div>
+
+</div>
+
+
+<!-- =========================================================
+     PROGRESS
+========================================================= -->
+
+<div class="progress-wrapper">
+
+    <div class="progress-header">
+
+        <span class="progress-title">
+            Verification Progress
+        </span>
+
+        <span
+            class="progress-status"
+            id="progressStatus"
+        >
+            Select business type
+        </span>
+
+    </div>
+
+    <div class="progress-track">
+
+        <div
+            class="progress-bar"
+            id="progressBar"
+        ></div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     FORM
+========================================================= -->
+
+<form
+    method="POST"
+    enctype="multipart/form-data"
+    id="verificationForm"
+>
+
+{% csrf_token %}
+
+
+<!-- =========================================================
+     AADHAAR
+========================================================= -->
+
+<div
+    class="section"
+    id="aadhaarBox"
+>
+
+    <div class="section-header">
+
+        <div class="section-title">
+
+            <div class="icon">
+                🪪
+            </div>
+
+            <div>
+
+                <h3>
+                    Aadhaar Verification
+                    <span class="lock-icon">🔒</span>
+                </h3>
+
+                <div class="section-description">
+                    Required only for Individual business type.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="status-badge"
+            id="aadhaarStatus"
+        >
+            ✓ Verified & Locked
+        </div>
+
+    </div>
+
+
+    <div class="field-group">
+
+        <label
+            class="field-label"
+            for="aadhaar_name"
+        >
+            Name on Aadhaar
+            <span class="required-star">*</span>
+        </label>
+
+        <input
+            type="text"
+            name="aadhaar_name"
+            id="aadhaar_name"
+            placeholder="Enter name exactly as shown on Aadhaar"
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <div class="field-group">
+
+        <label
+            class="field-label"
+            for="aadhaar_number"
+        >
+            Aadhaar Number
+            <span class="required-star">*</span>
+        </label>
+
+        <input
+            type="text"
+            name="aadhar_number"
+            id="aadhaar_number"
+            placeholder="Enter 12-digit Aadhaar number"
+            maxlength="14"
+            inputmode="numeric"
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <div class="field-group">
+
+        <label
+            class="field-label"
+            for="aadhaar_file"
+        >
+            Aadhaar Document
+            <span class="required-star">*</span>
+        </label>
+
+        <div class="file-lock-wrapper">
+
+            <input
+                type="file"
+                name="aadhar_image"
+                id="aadhaar_file"
+                accept="image/*"
+            >
+
+        </div>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="verify-btn"
+        id="aadhaarVerifyBtn"
+        onclick="verifyAadhaar()"
+    >
+        Verify Aadhaar
+    </button>
+
+
+    <div
+        id="aadhaar_result"
+        class="result"
+    ></div>
+
+</div>
+
+
+<!-- =========================================================
+     PAN
+========================================================= -->
+
+<div
+    class="section"
+    id="panBox"
+>
+
+    <div class="section-header">
+
+        <div class="section-title">
+
+            <div class="icon">
+                📄
+            </div>
+
+            <div>
+
+                <h3>
+                    PAN Verification
+                    <span class="lock-icon">🔒</span>
+                </h3>
+
+                <div class="section-description">
+                    PAN verification is required for all business types.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="status-badge"
+            id="panStatus"
+        >
+            ✓ Verified & Locked
+        </div>
+
+    </div>
+
+
+    <div class="field-group">
+
+        <label
+            class="field-label"
+            for="pan_name"
+        >
+            Name on PAN
+            <span class="required-star">*</span>
+        </label>
+
+        <input
+            type="text"
+            name="pan_name"
+            id="pan_name"
+            placeholder="Enter name exactly as shown on PAN"
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <div class="field-group">
+
+        <label
+            class="field-label"
+            for="pan_number"
+        >
+            PAN Number
+            <span class="required-star">*</span>
+        </label>
+
+        <input
+            type="text"
+            name="pan_number"
+            id="pan_number"
+            placeholder="Enter 10-character PAN"
+            maxlength="10"
+            style="text-transform:uppercase;"
+            autocomplete="off"
+        >
+
+    </div>
+
+
+    <div class="field-group">
+
+        <label
+            class="field-label"
+            for="pan_file"
+        >
+            PAN Document
+            <span class="required-star">*</span>
+        </label>
+
+        <div class="file-lock-wrapper">
+
+            <input
+                type="file"
+                name="pan_image"
+                id="pan_file"
+                accept="image/*"
+            >
+
+        </div>
+
+    </div>
+
+
+    <button
+        type="button"
+        class="verify-btn"
+        id="panVerifyBtn"
+        onclick="verifyPAN()"
+    >
+        Verify PAN
+    </button>
+
+
+    <div
+        id="pan_result"
+        class="result"
+    ></div>
+
+</div>
+
+
+<!-- =========================================================
+     CONTINUE
+========================================================= -->
+
+<div class="continue-wrapper">
+
+    <button
+        type="submit"
+        id="continueBtn"
+    >
+        Continue to Next Step →
+    </button>
+
+    <div class="security-note">
+        🔒 Verification sections are locked after successful document matching.
+    </div>
+
+    <div class="real-verification-note">
+
+        <strong>Security Notice:</strong><br>
+
+        This browser verification uses OCR to compare the entered
+        information with the uploaded document.
+
+        It does <strong>not</strong> directly verify Aadhaar/PAN
+        against government databases.
+
+        For authoritative KYC verification, your Django backend
+        must use an authorized identity-verification provider/API.
+
+    </div>
+
+</div>
+
+
+</form>
+
+
+<script>
+
+/* =========================================================
+   SHOPKART - PROFESSIONAL SELLER VERIFICATION
+   ---------------------------------------------------------
+   BUSINESS RULES
+
+   Individual:
+       Aadhaar = REQUIRED
+       PAN     = REQUIRED
+
+   All other business types:
+       Aadhaar = HIDDEN
+       PAN     = REQUIRED
+
+   OCR:
+       Tesseract.js 5
+
+   IMPORTANT:
+       OCR/document matching is NOT government KYC.
+       Authoritative verification must be performed
+       server-side using an authorized verification service.
+========================================================= */
+
+
+/* =========================================================
+   BUSINESS TYPES
+========================================================= */
+
+const BUSINESS_TYPES = {
+
+    individual: {
+        name: "Individual",
+        aadhaar: true,
+        pan: true
+    },
+
+    proprietorship: {
+        name: "Proprietorship",
+        aadhaar: false,
+        pan: true
+    },
+
+    partnership: {
+        name: "Partnership",
+        aadhaar: false,
+        pan: true
+    },
+
+    llp: {
+        name: "LLP",
+        aadhaar: false,
+        pan: true
+    },
+
+    private_limited: {
+        name: "Private Limited Company",
+        aadhaar: false,
+        pan: true
+    },
+
+    opc: {
+        name: "One Person Company",
+        aadhaar: false,
+        pan: true
+    }
+
+};
+
+
+/* =========================================================
+   VERIFICATION STATE
+========================================================= */
+
+let aadhaarVerified = false;
+let panVerified = false;
+
+let aadhaarProcessing = false;
+let panProcessing = false;
+
+let currentBusinessType = "";
+
+
+/* =========================================================
+   ELEMENT HELPER
+========================================================= */
+
+function getElement(id) {
+
+    return document.getElementById(id);
+
+}
+
+
+/* =========================================================
+   NAME NORMALIZATION
+========================================================= */
+
+function normalizeName(value) {
+
+    return String(value || "")
+        .toUpperCase()
+        .replace(/[.,/\\\-_:;|]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+
+}
+
+
+/* =========================================================
+   NUMBER NORMALIZATION
+========================================================= */
+
+function normalizeAadhaar(value) {
+
+    return String(value || "")
+        .replace(/\D/g, "")
+        .substring(0, 12);
+
+}
+
+
+function normalizePAN(value) {
+
+    return String(value || "")
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, "")
+        .substring(0, 10);
+
+}
+
+
+/* =========================================================
+   NAME TOKENS
+========================================================= */
+
+function nameTokens(name) {
+
+    return normalizeName(name)
+        .split(" ")
+        .filter(Boolean);
+
+}
+
+
+/* =========================================================
+   OCR NAME MATCHING
+   ---------------------------------------------------------
+   Handles common OCR formatting differences such as:
+
+   ABHI T
+   ABHIT
+   ABHI   T
+   ABHI-T
+
+   The comparison still requires the important name tokens
+   to occur in the OCR text.
+========================================================= */
+
+function nameMatches(scannedText, enteredName) {
+
+    const text = normalizeName(scannedText);
+    const name = normalizeName(enteredName);
+
+    if (!text || !name) {
+        return false;
+    }
+
+
+    /* Exact full-name match */
+
+    if (text.includes(name)) {
+        return true;
+    }
+
+
+    /* Remove spaces */
+
+    const compactText = text.replace(/\s/g, "");
+    const compactName = name.replace(/\s/g, "");
+
+    if (compactText.includes(compactName)) {
+        return true;
+    }
+
+
+    /* Token matching */
+
+    const tokens = nameTokens(name);
+
+    if (!tokens.length) {
+        return false;
+    }
+
+
+    let matched = 0;
+
+    tokens.forEach(function(token) {
+
+        if (token.length < 2) {
+            return;
+        }
+
+        if (text.includes(token)) {
+            matched++;
+        }
+
+    });
+
+
+    /*
+       For a multi-word name require every meaningful
+       token to be present.
+
+       Example:
+
+       ABHI T
+
+       OCR:
+       ABHI T
+
+       => PASS
+    */
+
+    return matched === tokens.length;
+
+}
+
+
+/* =========================================================
+   INPUT AUTO UPPERCASE
+========================================================= */
+
+function enableUppercaseInput(id) {
+
+    const element = getElement(id);
+
+    if (!element) {
+        return;
+    }
+
+
+    element.addEventListener("input", function() {
+
+        const start = this.selectionStart;
+
+        this.value = this.value
+            .toUpperCase()
+            .replace(/\s+/g, " ");
+
+
+        try {
+
+            this.setSelectionRange(start, start);
+
+        } catch (e) {}
+
+    });
+
+}
+
+
+enableUppercaseInput("aadhaar_name");
+enableUppercaseInput("pan_name");
+enableUppercaseInput("pan_number");
+
+
+/* =========================================================
+   AADHAAR INPUT FORMAT
+========================================================= */
+
+getElement("aadhaar_number")
+    .addEventListener(
+        "input",
+        function() {
+
+            if (aadhaarVerified) {
+                return;
+            }
+
+
+            let value = this.value
+                .replace(/\D/g, "")
+                .substring(0, 12);
+
+
+            const groups = value.match(/.{1,4}/g);
+
+
+            this.value = groups
+                ? groups.join(" ")
+                : "";
+
+        }
+    );
+
+
+/* =========================================================
+   PAN INPUT FORMAT
+========================================================= */
+
+getElement("pan_number")
+    .addEventListener(
+        "input",
+        function() {
+
+            if (panVerified) {
+                return;
+            }
+
+
+            this.value = normalizePAN(this.value);
+
+        }
+    );
+
+
+/* =========================================================
+   BUSINESS TYPE CHANGE
+========================================================= */
+
+getElement("businessType")
+    .addEventListener(
+        "change",
+        function() {
+
+            currentBusinessType = this.value;
+
+            resetVerificationState();
+
+            applyBusinessType();
+
+        }
+    );
+
+
+/* =========================================================
+   APPLY BUSINESS TYPE
+========================================================= */
+
+function applyBusinessType() {
+
+    const aadhaarBox =
+        getElement("aadhaarBox");
+
+    const panBox =
+        getElement("panBox");
+
+    const requirementBox =
+        getElement("requirementBox");
+
+
+    aadhaarBox.classList.add(
+        "hidden-section"
+    );
+
+    panBox.classList.add(
+        "hidden-section"
+    );
+
+
+    requirementBox.classList.remove(
+        "show"
+    );
+
+    requirementBox.innerHTML = "";
+
+
+    if (!currentBusinessType) {
+
+        getElement("progressBar")
+            .style.width = "0%";
+
+        getElement("progressStatus")
+            .innerText =
+            "Select business type";
+
+        getElement("continueBtn")
+            .style.display = "none";
+
+        return;
+
+    }
+
+
+    const config =
+        BUSINESS_TYPES[currentBusinessType];
+
+
+    if (!config) {
+        return;
+    }
+
+
+    /* =====================================================
+       INDIVIDUAL
+       Aadhaar + PAN
+    ===================================================== */
+
+    if (config.aadhaar) {
+
+        aadhaarBox.classList.remove(
+            "hidden-section"
+        );
+
+    }
+
+
+    /* =====================================================
+       ALL BUSINESS TYPES
+       PAN REQUIRED
+    ===================================================== */
+
+    if (config.pan) {
+
+        panBox.classList.remove(
+            "hidden-section"
+        );
+
+    }
+
+
+    let message = "";
+
+
+    if (currentBusinessType === "individual") {
+
+        message =
+            "<strong>Individual</strong><br>" +
+            "Aadhaar and PAN verification are both required.";
+
+    } else {
+
+        message =
+            "<strong>" +
+            config.name +
+            "</strong><br>" +
+            "Aadhaar is not required on this step. PAN verification is required.";
+
+    }
+
+
+    requirementBox.innerHTML = message;
+
+    requirementBox.classList.add("show");
+
+
+    updateStatus();
+
+}
+
+
+/* =========================================================
+   RESET STATE
+========================================================= */
+
+function resetVerificationState() {
+
+    aadhaarVerified = false;
+    panVerified = false;
+
+    aadhaarProcessing = false;
+    panProcessing = false;
+
+
+    /* =====================================================
+       AADHAAR
+    ===================================================== */
+
+    const aadhaarBox =
+        getElement("aadhaarBox");
+
+
+    aadhaarBox.classList.remove(
+        "verified",
+        "locked"
+    );
+
+
+    getElement("aadhaarStatus")
+        .classList.remove("verified");
+
+
+    getElement("aadhaar_result")
+        .innerHTML = "";
+
+
+    const aadhaarInputs =
+        aadhaarBox.querySelectorAll(
+            "input"
+        );
+
+
+    aadhaarInputs.forEach(
+        function(input) {
+
+            input.disabled = false;
+            input.readOnly = false;
+
+        }
+    );
+
+
+    const aadhaarButton =
+        getElement("aadhaarVerifyBtn");
+
+
+    aadhaarButton.disabled = false;
+
+    aadhaarButton.innerHTML =
+        "Verify Aadhaar";
+
+
+    const aadhaarWrapper =
+        aadhaarBox.querySelector(
+            ".file-lock-wrapper"
+        );
+
+
+    if (aadhaarWrapper) {
+
+        aadhaarWrapper.style.pointerEvents =
+            "auto";
+
+    }
+
+
+    /* =====================================================
+       PAN
+    ===================================================== */
+
+    const panBox =
+        getElement("panBox");
+
+
+    panBox.classList.remove(
+        "verified",
+        "locked"
+    );
+
+
+    getElement("panStatus")
+        .classList.remove("verified");
+
+
+    getElement("pan_result")
+        .innerHTML = "";
+
+
+    const panInputs =
+        panBox.querySelectorAll(
+            "input"
+        );
+
+
+    panInputs.forEach(
+        function(input) {
+
+            input.disabled = false;
+            input.readOnly = false;
+
+        }
+    );
+
+
+    const panButton =
+        getElement("panVerifyBtn");
+
+
+    panButton.disabled = false;
+
+    panButton.innerHTML =
+        "Verify PAN";
+
+
+    const panWrapper =
+        panBox.querySelector(
+            ".file-lock-wrapper"
+        );
+
+
+    if (panWrapper) {
+
+        panWrapper.style.pointerEvents =
+            "auto";
+
+    }
+
+
+    updateStatus();
+
+}
+
+
+/* =========================================================
+   OCR DOCUMENT READER
+========================================================= */
+
+async function readText(file) {
+
+    if (!file) {
+
+        throw new Error(
+            "Please upload the document."
+        );
+
+    }
+
+
+    if (!file.type.startsWith("image/")) {
+
+        throw new Error(
+            "Only image documents are supported."
+        );
+
+    }
+
+
+    /*
+       Basic client-side size protection.
+    */
+
+    if (file.size > 10 * 1024 * 1024) {
+
+        throw new Error(
+            "Document image must be smaller than 10 MB."
+        );
+
+    }
+
+
+    const result =
+        await Tesseract.recognize(
+            file,
+            "eng",
+            {
+
+                logger: function(info) {
+
+                    if (
+                        info.status ===
+                        "recognizing text"
+                    ) {
+
+                        const progress =
+                            Math.round(
+                                info.progress * 100
+                            );
+
+
+                        const scanning =
+                            document.querySelector(
+                                ".scanning"
+                            );
+
+
+                        if (scanning) {
+
+                            scanning.innerHTML =
+                                "<span class='loader'></span>" +
+                                " Scanning document " +
+                                progress +
+                                "%...";
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+
+    /*
+       Never log OCR document text.
+       Aadhaar/PAN are sensitive identifiers.
+    */
+
+    return String(
+        result.data.text || ""
+    )
+        .toUpperCase()
+        .replace(/\s+/g, " ")
+        .trim();
+
+}
+
+
+/* =========================================================
+   EXTRACT ALL POSSIBLE AADHAAR NUMBERS
+========================================================= */
+
+function getAllAadhaarNumbers(text) {
+
+    const results = [];
+
+    const cleanText =
+        String(text || "")
+            .replace(/[^0-9\s]/g, " ");
+
+
+    const matches =
+        cleanText.match(
+            /\d{4}\s?\d{4}\s?\d{4}/g
+        );
+
+
+    if (!matches) {
+        return results;
+    }
+
+
+    matches.forEach(function(value) {
+
+        const number =
+            value.replace(/\D/g, "");
+
+
+        if (
+            number.length === 12 &&
+            !results.includes(number)
+        ) {
+
+            results.push(number);
+
+        }
+
+    });
+
+
+    return results;
+
+}
+
+
+/* =========================================================
+   AADHAAR NUMBER EXTRACTION
+========================================================= */
+
+function getAadhaar(text) {
+
+    const numbers =
+        getAllAadhaarNumbers(text);
+
+
+    return numbers.length
+        ? numbers[0]
+        : "";
+
+}
+
+
+/* =========================================================
+   AADHAAR NUMBER VALIDATION
+   ---------------------------------------------------------
+   Verifies the 12-digit structure.
+
+   NOTE:
+   This does NOT prove the number belongs to a person.
+========================================================= */
+
+function validAadhaar(number) {
+
+    return /^\d{12}$/.test(number);
+
+}
+
+
+/* =========================================================
+   PAN EXTRACTION
+========================================================= */
+
+function getAllPANs(text) {
+
+    const results = [];
+
+
+    const normalized =
+        String(text || "")
+            .toUpperCase()
+            .replace(/\s+/g, " ");
+
+
+    const matches =
+        normalized.match(
+            /\b[A-Z]{5}[0-9]{4}[A-Z]\b/g
+        );
+
+
+    if (!matches) {
+        return results;
+    }
+
+
+    matches.forEach(function(value) {
+
+        const pan =
+            value.replace(
+                /[^A-Z0-9]/g,
+                ""
+            );
+
+
+        if (
+            pan.length === 10 &&
+            !results.includes(pan)
+        ) {
+
+            results.push(pan);
+
+        }
+
+    });
+
+
+    return results;
+
+}
+
+
+/* =========================================================
+   PAN VALIDATION
+========================================================= */
+
+function validPAN(number) {
+
+    return /^[A-Z]{5}[0-9]{4}[A-Z]$/
+        .test(number);
+
+}
+
+
+/* =========================================================
+   RESULT UI
+========================================================= */
+
+function showSuccess(
+    resultId,
+    message
+) {
+
+    getElement(resultId).innerHTML =
+        "<div class='success'>" +
+        "✓ " +
+        message +
+        "</div>";
+
+}
+
+
+function showError(
+    resultId,
+    message
+) {
+
+    getElement(resultId).innerHTML =
+        "<div class='error'>" +
+        "✗ " +
+        message +
+        "</div>";
+
+}
+
+
+function showScanning(resultId) {
+
+    getElement(resultId).innerHTML =
+        "<div class='scanning'>" +
+        "<span class='loader'></span>" +
+        " Securely scanning document..." +
+        "</div>";
+
+}
+
+
+/* =========================================================
+   LOCK SECTION
+========================================================= */
+
+function lockSection(sectionId) {
+
+    const section =
+        getElement(sectionId);
+
+
+    section.classList.add(
+        "locked"
+    );
+
+
+    /*
+       Do NOT disable text fields.
+
+       readonly fields are submitted by Django.
+
+       Disabled fields are NOT submitted.
+    */
+
+    const textInputs =
+        section.querySelectorAll(
+            'input:not([type="file"])'
+        );
+
+
+    textInputs.forEach(
+        function(input) {
+
+            input.readOnly = true;
+
+            input.setAttribute(
+                "data-verified",
+                "true"
+            );
+
+        }
+    );
+
+
+    /*
+       Prevent changing the document after
+       successful verification.
+    */
+
+    const fileWrapper =
+        section.querySelector(
+            ".file-lock-wrapper"
+        );
+
+
+    if (fileWrapper) {
+
+        fileWrapper.style.pointerEvents =
+            "none";
+
+        fileWrapper.style.opacity =
+            ".65";
+
+    }
+
+
+    const button =
+        section.querySelector(
+            ".verify-btn"
+        );
+
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.innerHTML =
+            "✓ Verified & Locked";
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE PROGRESS
+========================================================= */
+
+function updateStatus() {
+
+    if (!currentBusinessType) {
+
+        getElement("progressBar")
+            .style.width = "0%";
+
+        getElement("progressStatus")
+            .innerText =
+            "Select business type";
+
+        getElement("continueBtn")
+            .style.display =
+            "none";
+
+        return;
+
+    }
+
+
+    const config =
+        BUSINESS_TYPES[
+            currentBusinessType
+        ];
+
+
+    if (!config) {
+        return;
+    }
+
+
+    const requiredCount =
+        (config.aadhaar ? 1 : 0) +
+        (config.pan ? 1 : 0);
+
+
+    const completed =
+        (config.aadhaar &&
+         aadhaarVerified ? 1 : 0) +
+
+        (config.pan &&
+         panVerified ? 1 : 0);
+
+
+    const percentage =
+        requiredCount
+            ? (completed / requiredCount) * 100
+            : 0;
+
+
+    getElement("progressBar")
+        .style.width =
+        percentage + "%";
+
+
+    getElement("progressStatus")
+        .innerText =
+        completed +
+        " of " +
+        requiredCount +
+        " completed";
+
+
+    const continueBtn =
+        getElement("continueBtn");
+
+
+    if (
+        completed === requiredCount &&
+        requiredCount > 0
+    ) {
+
+        continueBtn.style.display =
+            "block";
+
+    } else {
+
+        continueBtn.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   AADHAAR VERIFICATION
+========================================================= */
+
+async function verifyAadhaar() {
+
+    /*
+       Aadhaar is required ONLY for Individual.
+    */
+
+    if (
+        currentBusinessType !==
+        "individual"
+    ) {
+
+        return;
+
+    }
+
+
+    if (aadhaarVerified) {
+        return;
+    }
+
+
+    if (aadhaarProcessing) {
+        return;
+    }
+
+
+    const name =
+        normalizeName(
+            getElement(
+                "aadhaar_name"
+            ).value
+        );
+
+
+    const enteredNumber =
+        normalizeAadhaar(
+            getElement(
+                "aadhaar_number"
+            ).value
+        );
+
+
+    const file =
+        getElement(
+            "aadhaar_file"
+        ).files[0];
+
+
+    /* =====================================================
+       VALIDATION
+    ===================================================== */
+
+    if (!name) {
+
+        showError(
+            "aadhaar_result",
+            "Please enter the full name exactly as shown on Aadhaar."
+        );
+
+        return;
+
+    }
+
+
+    if (!validAadhaar(enteredNumber)) {
+
+        showError(
+            "aadhaar_result",
+            "Please enter a valid 12-digit Aadhaar number."
+        );
+
+        return;
+
+    }
+
+
+    if (!file) {
+
+        showError(
+            "aadhaar_result",
+            "Please upload the Aadhaar image."
+        );
+
+        return;
+
+    }
+
+
+    aadhaarProcessing = true;
+
+
+    const button =
+        getElement(
+            "aadhaarVerifyBtn"
+        );
+
+
+    button.disabled = true;
+
+    button.innerHTML =
+        "Scanning Aadhaar...";
+
+
+    showScanning(
+        "aadhaar_result"
+    );
+
+
+    try {
+
+        const text =
+            await readText(file);
+
+
+        /*
+           Extract EVERY Aadhaar number found
+           by OCR instead of blindly accepting
+           the first number.
+        */
+
+        const detectedNumbers =
+            getAllAadhaarNumbers(text);
+
+
+        /*
+           Exact number comparison.
+
+           Example:
+
+           User entered:
+           812963698112
+
+           Document contains:
+           812963698111
+
+           => FAIL
+
+           Document contains:
+           812963698112
+
+           => PASS
+        */
+
+        if (!detectedNumbers.length) {
+
+            throw new Error(
+                "No valid 12-digit Aadhaar number was detected in the uploaded image."
+            );
+
+        }
+
+
+        const numberMatched =
+            detectedNumbers.includes(
+                enteredNumber
+            );
+
+
+        if (!numberMatched) {
+
+            throw new Error(
+                "Aadhaar number does not match the uploaded document."
+            );
+
+        }
+
+
+        /*
+           Name comparison.
+
+           Example:
+
+           Entered:
+           ABHI T
+
+           OCR:
+           ABHI T
+
+           => PASS
+
+           Entered:
+           ABHI T
+
+           OCR:
+           SOME OTHER NAME
+
+           => FAIL
+        */
+
+        const nameMatched =
+            nameMatches(
+                text,
+                name
+            );
+
+
+        if (!nameMatched) {
+
+            throw new Error(
+                "Aadhaar full name could not be matched with the uploaded document."
+            );
+
+        }
+
+
+        /*
+           SUCCESS
+        */
+
+        aadhaarVerified = true;
+
+
+        const box =
+            getElement(
+                "aadhaarBox"
+            );
+
+
+        box.classList.add(
+            "verified"
+        );
+
+
+        getElement(
+            "aadhaarStatus"
+        ).classList.add(
+            "verified"
+        );
+
+
+        showSuccess(
+            "aadhaar_result",
+            "Aadhaar number and full name matched successfully. Verification section locked."
+        );
+
+
+        lockSection(
+            "aadhaarBox"
+        );
+
+
+        updateStatus();
+
+    }
+
+    catch (error) {
+
+        aadhaarVerified = false;
+
+
+        showError(
+            "aadhaar_result",
+            error.message ||
+            "Aadhaar document verification failed."
+        );
+
+
+        button.disabled = false;
+
+        button.innerHTML =
+            "Verify Aadhaar";
+
+    }
+
+    finally {
+
+        aadhaarProcessing = false;
+
+    }
+
+}
+
+
+/* =========================================================
+   PAN VERIFICATION
+========================================================= */
+
+async function verifyPAN() {
+
+    /*
+       PAN is required for ALL business types.
+    */
+
+    if (!currentBusinessType) {
+
+        showError(
+            "pan_result",
+            "Please select your business type first."
+        );
+
+        return;
+
+    }
+
+
+    if (panVerified) {
+        return;
+    }
+
+
+    if (panProcessing) {
+        return;
+    }
+
+
+    const name =
+        normalizeName(
+            getElement(
+                "pan_name"
+            ).value
+        );
+
+
+    const enteredPAN =
+        normalizePAN(
+            getElement(
+                "pan_number"
+            ).value
+        );
+
+
+    const file =
+        getElement(
+            "pan_file"
+        ).files[0];
+
+
+    /* =====================================================
+       VALIDATION
+    ===================================================== */
+
+    if (!name) {
+
+        showError(
+            "pan_result",
+            "Please enter the full name exactly as shown on PAN."
+        );
+
+        return;
+
+    }
+
+
+    if (!validPAN(enteredPAN)) {
+
+        showError(
+            "pan_result",
+            "Please enter a valid 10-character PAN."
+        );
+
+        return;
+
+    }
+
+
+    if (!file) {
+
+        showError(
+            "pan_result",
+            "Please upload the PAN image."
+        );
+
+        return;
+
+    }
+
+
+    panProcessing = true;
+
+
+    const button =
+        getElement(
+            "panVerifyBtn"
+        );
+
+
+    button.disabled = true;
+
+    button.innerHTML =
+        "Scanning PAN...";
+
+
+    showScanning(
+        "pan_result"
+    );
+
+
+    try {
+
+        const text =
+            await readText(file);
+
+
+        const detectedPANs =
+            getAllPANs(text);
+
+
+        if (!detectedPANs.length) {
+
+            throw new Error(
+                "No valid PAN number was detected in the uploaded image."
+            );
+
+        }
+
+
+        /*
+           EXACT PAN MATCH
+        */
+
+        const panMatched =
+            detectedPANs.includes(
+                enteredPAN
+            );
+
+
+        if (!panMatched) {
+
+            throw new Error(
+                "PAN number does not match the uploaded document."
+            );
+
+        }
+
+
+        /*
+           FULL NAME MATCH
+        */
+
+        const nameMatched =
+            nameMatches(
+                text,
+                name
+            );
+
+
+        if (!nameMatched) {
+
+            throw new Error(
+                "PAN full name could not be matched with the uploaded document."
+            );
+
+        }
+
+
+        /*
+           SUCCESS
+        */
+
+        panVerified = true;
+
+
+        const box =
+            getElement(
+                "panBox"
+            );
+
+
+        box.classList.add(
+            "verified"
+        );
+
+
+        getElement(
+            "panStatus"
+        ).classList.add(
+            "verified"
+        );
+
+
+        showSuccess(
+            "pan_result",
+            "PAN number and full name matched successfully. Verification section locked."
+        );
+
+
+        lockSection(
+            "panBox"
+        );
+
+
+        updateStatus();
+
+    }
+
+    catch (error) {
+
+        panVerified = false;
+
+
+        showError(
+            "pan_result",
+            error.message ||
+            "PAN document verification failed."
+        );
+
+
+        button.disabled = false;
+
+        button.innerHTML =
+            "Verify PAN";
+
+    }
+
+    finally {
+
+        panProcessing = false;
+
+    }
+
+}
+
+
+/* =========================================================
+   FORM SUBMISSION SECURITY
+========================================================= */
+
+getElement(
+    "verificationForm"
+).addEventListener(
+    "submit",
+    function(event) {
+
+        const businessType =
+            getElement(
+                "businessType"
+            ).value;
+
+
+        /*
+           BUSINESS TYPE
+        */
+
+        if (!businessType) {
+
+            event.preventDefault();
+
+            alert(
+                "Please select your business type."
+            );
+
+            return;
+
+        }
+
+
+        const config =
+            BUSINESS_TYPES[
+                businessType
+            ];
+
+
+        if (!config) {
+
+            event.preventDefault();
+
+            alert(
+                "Invalid business type."
+            );
+
+            return;
+
+        }
+
+
+        /*
+           INDIVIDUAL
+           Aadhaar REQUIRED
+        */
+
+        if (
+            config.aadhaar &&
+            !aadhaarVerified
+        ) {
+
+            event.preventDefault();
+
+            alert(
+                "Please complete Aadhaar verification before continuing."
+            );
+
+            return;
+
+        }
+
+
+        /*
+           ALL BUSINESS TYPES
+           PAN REQUIRED
+        */
+
+        if (
+            config.pan &&
+            !panVerified
+        ) {
+
+            event.preventDefault();
+
+            alert(
+                "Please complete PAN verification before continuing."
+            );
+
+            return;
+
+        }
+
+
+        /*
+           IMPORTANT:
+
+           Do NOT add another hidden input
+           named business_type here.
+
+           The select itself already submits:
+
+           business_type=<selected value>
+        */
+
+    }
+);
+
+
+/* =========================================================
+   INITIAL STATE
+========================================================= */
+
+applyBusinessType();
+
+updateStatus();
+
+
+</script>
+
+
+<script>
+
+(function () {
+
+    /*
+     * Replace the current history state.
+     */
+    history.replaceState(
+        null,
+        "",
+        window.location.href
+    );
+
+
+    /*
+     * Add a controlled history entry.
+     */
+    history.pushState(
+        null,
+        "",
+        window.location.href
+    );
+
+
+    /*
+     * Detect browser Back button.
+     */
+    window.addEventListener(
+        "popstate",
+        function () {
+
+            /*
+             * Prevent normal navigation backward.
+             */
+            history.pushState(
+                null,
+                "",
+                window.location.href
+            );
+
+
+            /*
+             * Reload the page.
+             *
+             * Because Django uses:
+             * seller_step2_completed
+             *
+             * the server will redirect to Step 3.
+             */
+            window.location.reload();
+
+        }
+    );
+
+})();
+
+</script>
+
+</body>
+
+</html>
+
+{% endblock %}

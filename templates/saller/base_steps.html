@@ -1,0 +1,97 @@
+
+
+{% extends "base.html" %}
+
+{% block content %}
+
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Seller Verification</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{ background:#f5f6f9; }
+
+.steps-bar{
+    display:flex;
+    justify-content:space-between;
+    margin:20px 0;
+    font-weight:bold;
+}
+
+.step-box{
+    flex:1;
+    text-align:center;
+    position:relative;
+}
+
+.step-box span{
+    width:32px;
+    height:32px;
+    display:inline-block;
+    border-radius:50%;
+    background:#ccc;
+    color:#fff;
+    line-height:32px;
+}
+
+.step-box.active span{ background:#0d6efd; }
+.step-box.done span{ background:green; }
+
+.step-box::after{
+    content:"";
+    position:absolute;
+    top:16px;
+    left:50%;
+    width:100%;
+    height:3px;
+    background:#ccc;
+    z-index:-1;
+}
+
+.step-box.done::after{ background:green; }
+.step-box:last-child::after{ display:none; }
+
+.card-box{
+    background:#fff;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 0 15px rgba(0,0,0,0.1);
+}
+</style>
+</head>
+
+<body class="container">
+
+<h3 class="text-center mt-3">Seller Verification System</h3>
+
+<!-- TOP STEP BAR -->
+<div class="steps-bar">
+    <div class="step-box {% if step >= 1 %}active{% endif %} {% if step > 1 %}done{% endif %}">
+        <span>1</span><div>Details</div>
+    </div>
+
+    <div class="step-box {% if step >= 2 %}active{% endif %} {% if step > 2 %}done{% endif %}">
+        <span>2</span><div>Docs</div>
+    </div>
+
+    <div class="step-box {% if step >= 3 %}active{% endif %} {% if step > 3 %}done{% endif %}">
+        <span>3</span><div>Location</div>
+    </div>
+
+    <div class="step-box {% if step >= 4 %}active{% endif %}">
+        <span>4</span><div>Done</div>
+    </div>
+</div>
+
+<div class="card-box">
+</div>
+
+</body>
+</html>
+{% endblock %}

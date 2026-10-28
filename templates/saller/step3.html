@@ -1,0 +1,537 @@
+{% extends "saller/base_steps.html" %}
+{% block content %}
+
+<div class="container-box text-center">
+
+    <h2>Seller Face Verification</h2>
+
+    <form id="verifyForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <button type="button" id="startBtn" class="btn btn-primary">
+            Start Verification
+        </button>
+
+        <br><br>
+
+        <div id="cameraSection">
+            <video id="video" autoplay muted playsinline></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+        </div>
+
+        <div id="status">Waiting...</div>
+
+        <!-- Face image -->
+        <input type="file"
+               name="liveface_scan"
+               id="imageData"
+               hidden>
+
+        <!--
+            LOCATION DATA
+            Hidden from frontend UI,
+            but still submitted to Django backend.
+        -->
+        <input type="hidden" name="latitude" id="latInput">
+        <input type="hidden" name="longitude" id="lngInput">
+        <input type="hidden" name="live_location" id="locationInput">
+
+        <!--
+            REMOVED:
+            Latitude display
+            Longitude display
+            Address display
+        -->
+
+        <button type="submit"
+                id="continueBtn"
+                class="btn btn-success w-100 mt-3"
+                disabled>
+            Continue
+        </button>
+
+    </form>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-detection"></script>
+
+<script>
+
+let detector;
+let stream;
+let faceVerified = false;
+let locationVerified = false;
+
+
+/* =========================================================
+   LOAD FACE DETECTOR
+========================================================= */
+
+async function loadModel() {
+
+    try {
+
+        detector = await faceDetection.createDetector(
+            faceDetection.SupportedModels.MediaPipeFaceDetector,
+            {
+                runtime: "tfjs"
+            }
+        );
+
+        console.log("Face detector loaded");
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("status").innerText =
+            "Face verification system failed ❌";
+    }
+}
+
+loadModel();
+
+
+/* =========================================================
+   START VERIFICATION
+========================================================= */
+
+document.getElementById("startBtn").addEventListener(
+    "click",
+    startVerification
+);
+
+
+async function startVerification() {
+
+    try {
+
+        document.getElementById("status").innerText =
+            "Opening Camera...";
+
+        if (!detector) {
+
+            document.getElementById("status").innerText =
+                "Loading face verification system...";
+
+            return;
+        }
+
+
+        /* CAMERA */
+
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: true
+        });
+
+        const video = document.getElementById("video");
+
+        video.srcObject = stream;
+
+        await video.play();
+
+
+        document.getElementById("status").innerText =
+            "Looking for face...";
+
+
+        /*
+            Wait a few seconds so camera can stabilize.
+        */
+
+        setTimeout(scanFace, 3000);
+
+
+        /*
+            Get location separately.
+        */
+
+        getLocation();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("status").innerText =
+            "Camera permission required ❌";
+    }
+}
+
+
+/* =========================================================
+   FACE SCAN
+========================================================= */
+
+async function scanFace() {
+
+    try {
+
+        const video = document.getElementById("video");
+
+        const faces = await detector.estimateFaces(video);
+
+
+        /*
+            Exactly one face required.
+        */
+
+        if (faces.length !== 1) {
+
+            document.getElementById("status").innerText =
+                "FAILED ❌ Show exactly one face";
+
+            stopCamera();
+
+            return;
+        }
+
+
+        capturePhoto();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById("status").innerText =
+            "Face scanning failed ❌";
+
+        stopCamera();
+    }
+}
+
+
+/* =========================================================
+   CAPTURE FACE PHOTO
+========================================================= */
+
+function capturePhoto() {
+
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+
+    const ctx = canvas.getContext("2d");
+
+    ctx.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    canvas.toBlob(function(blob) {
+
+        if (!blob) {
+
+            document.getElementById("status").innerText =
+                "Unable to capture image ❌";
+
+            return;
+        }
+
+
+        const file = new File(
+            [blob],
+            "face.png",
+            {
+                type: "image/png"
+            }
+        );
+
+
+        const dataTransfer = new DataTransfer();
+
+        dataTransfer.items.add(file);
+
+
+        const input =
+            document.getElementById("imageData");
+
+        input.files = dataTransfer.files;
+
+
+        faceVerified = true;
+
+
+        document.getElementById("status").innerText =
+            "Face Verified ✔";
+
+
+        stopCamera();
+
+
+        document.getElementById(
+            "cameraSection"
+        ).style.display = "none";
+
+
+        checkVerification();
+
+
+    }, "image/png");
+}
+
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
+function stopCamera() {
+
+    if (stream) {
+
+        stream.getTracks().forEach(
+            track => track.stop()
+        );
+
+        stream = null;
+    }
+}
+
+
+/* =========================================================
+   GET LOCATION
+========================================================= */
+
+function getLocation() {
+
+    if (!navigator.geolocation) {
+
+        document.getElementById("status").innerText =
+            "Location is not supported by this browser ❌";
+
+        return;
+    }
+
+
+    navigator.geolocation.getCurrentPosition(
+
+        async function(position) {
+
+            const lat =
+                position.coords.latitude;
+
+            const lng =
+                position.coords.longitude;
+
+
+            /*
+                IMPORTANT:
+                These values are NOT displayed
+                anywhere on the frontend.
+            */
+
+            document.getElementById(
+                "latInput"
+            ).value = lat;
+
+
+            document.getElementById(
+                "lngInput"
+            ).value = lng;
+
+
+            /* =============================================
+               REVERSE GEOCODING
+            ============================================= */
+
+            try {
+
+                const url =
+                    "https://nominatim.openstreetmap.org/reverse" +
+                    "?format=json" +
+                    "&lat=" + encodeURIComponent(lat) +
+                    "&lon=" + encodeURIComponent(lng);
+
+
+                const response = await fetch(url);
+
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Location lookup failed"
+                    );
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                const address =
+                    data.display_name || "";
+
+
+                /*
+                    Address is stored only in
+                    the hidden input.
+                */
+
+                document.getElementById(
+                    "locationInput"
+                ).value = address;
+
+
+                locationVerified = true;
+
+
+                checkVerification();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                /*
+                    Coordinates are still available
+                    even if reverse geocoding fails.
+                */
+
+                document.getElementById(
+                    "locationInput"
+                ).value =
+                    "Address Not Found";
+
+
+                locationVerified = true;
+
+
+                checkVerification();
+            }
+
+        },
+
+
+        function(error) {
+
+            console.error(error);
+
+
+            document.getElementById("status").innerText =
+                "Location Permission Required ❌";
+
+
+            locationVerified = false;
+
+
+            checkVerification();
+        },
+
+        {
+            enableHighAccuracy: true,
+            timeout: 15000,
+            maximumAge: 0
+        }
+    );
+}
+
+
+/* =========================================================
+   FINAL VERIFICATION CHECK
+========================================================= */
+
+function checkVerification() {
+
+    const continueBtn =
+        document.getElementById("continueBtn");
+
+
+    if (
+        faceVerified &&
+        locationVerified
+    ) {
+
+        continueBtn.disabled = false;
+
+        document.getElementById("status").innerText =
+            "Face & Location Verified ✔";
+
+    } else {
+
+        continueBtn.disabled = true;
+    }
+}
+
+
+/* =========================================================
+   EXTRA SAFETY - STOP CAMERA WHEN LEAVING PAGE
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    function() {
+        stopCamera();
+    }
+);
+
+</script>
+
+<script>
+
+(function () {
+
+    /*
+     * Replace current browser history entry.
+     */
+    history.replaceState(
+        null,
+        "",
+        window.location.href
+    );
+
+
+    /*
+     * Add controlled history state.
+     */
+    history.pushState(
+        null,
+        "",
+        window.location.href
+    );
+
+
+    /*
+     * Detect browser Back button.
+     */
+    window.addEventListener(
+        "popstate",
+        function () {
+
+            /*
+             * Keep the current page in browser history.
+             */
+            history.pushState(
+                null,
+                "",
+                window.location.href
+            );
+
+
+            /*
+             * Ask Django again.
+             *
+             * Since seller_step3_completed=True,
+             * Django redirects to registration_complete.
+             */
+            window.location.reload();
+
+        }
+    );
+
+})();
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,3412 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Edit Seller · {{ seller.company_name|default:"Seller Profile" }}
+    </title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-soft: #eff6ff;
+
+            --success: #16a34a;
+            --success-soft: #f0fdf4;
+
+            --warning: #d97706;
+            --warning-soft: #fffbeb;
+
+            --danger: #dc2626;
+            --danger-soft: #fef2f2;
+
+            --dark: #0f172a;
+            --text: #334155;
+            --muted: #64748b;
+
+            --border: #e2e8f0;
+            --border-light: #eef2f7;
+
+            --bg: #f5f7fb;
+            --white: #ffffff;
+
+            --radius: 16px;
+
+            --shadow-sm:
+                0 2px 8px rgba(15, 23, 42, .04);
+
+            --shadow:
+                0 8px 30px rgba(15, 23, 42, .06);
+
+            --shadow-lg:
+                0 15px 45px rgba(15, 23, 42, .10);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(37, 99, 235, .05),
+                    transparent 30%
+                ),
+                var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        .top-nav {
+            height: 70px;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1050;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 32px;
+
+            background: rgba(255,255,255,.92);
+
+            backdrop-filter: blur(18px);
+
+            border-bottom:
+                1px solid rgba(226,232,240,.9);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+
+            font-size: 17px;
+            font-weight: 800;
+
+            color: var(--dark);
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #4f46e5
+                );
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+
+            gap: 10px;
+        }
+
+        .top-status {
+            display: inline-flex;
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 8px 13px;
+
+            border-radius: 999px;
+
+            background: var(--success-soft);
+
+            color: var(--success);
+
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: currentColor;
+        }
+
+        .page-container {
+            max-width: 1480px;
+
+            margin: 0 auto;
+
+            padding:
+                25px 28px
+                130px;
+        }
+
+        .breadcrumb-wrap {
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb {
+            margin: 0;
+            font-size: 12px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .seller-hero {
+            position: relative;
+
+            overflow: hidden;
+
+            padding: 28px;
+
+            margin-bottom: 22px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffffff,
+                    #f8fbff
+                );
+
+            border:
+                1px solid var(--border);
+
+            box-shadow: var(--shadow);
+        }
+
+        .hero-content {
+            display: flex;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 25px;
+        }
+
+        .seller-profile {
+            display: flex;
+            align-items: center;
+
+            gap: 20px;
+        }
+
+        .profile-wrapper {
+            position: relative;
+        }
+
+        .profile-img {
+            width: 100px;
+            height: 100px;
+
+            object-fit: cover;
+
+            border-radius: 50%;
+
+            border: 5px solid white;
+
+            background: #f1f5f9;
+
+            box-shadow:
+                0 10px 30px rgba(15,23,42,.15);
+        }
+
+        .online-indicator {
+            position: absolute;
+
+            right: 5px;
+            bottom: 8px;
+
+            width: 19px;
+            height: 19px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+
+            border: 4px solid white;
+        }
+
+        .seller-heading h1 {
+            margin: 0 0 7px;
+
+            color: var(--dark);
+
+            font-size: 26px;
+            font-weight: 800;
+        }
+
+        .seller-subtitle {
+            color: var(--muted);
+
+            font-size: 13px;
+
+            margin-bottom: 12px;
+        }
+
+        .seller-meta {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+        }
+
+        .meta-chip {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding: 6px 9px;
+
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 8px;
+
+            color: #475569;
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .main-grid {
+            display: grid;
+
+            grid-template-columns:
+                minmax(0,1fr)
+                330px;
+
+            gap: 22px;
+
+            align-items: start;
+        }
+
+        .section-card,
+        .side-card {
+            background: white;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-card {
+            padding: 25px;
+
+            margin-bottom: 20px;
+        }
+
+        .side-card {
+            padding: 20px;
+
+            margin-bottom: 18px;
+        }
+
+        .section-header {
+            display: flex;
+
+            align-items: flex-start;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding-bottom: 18px;
+
+            margin-bottom: 22px;
+
+            border-bottom:
+                1px solid var(--border-light);
+        }
+
+        .section-title-wrap {
+            display: flex;
+
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            color: var(--primary);
+
+            background:
+                var(--primary-soft);
+        }
+
+        .section-title {
+            margin: 0;
+
+            color: var(--dark);
+
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        .section-description {
+            margin-top: 4px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .form-label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #475569;
+
+            font-size: 11px;
+
+            font-weight: 750;
+
+            text-transform: uppercase;
+
+            letter-spacing: .35px;
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 45px;
+
+            padding:
+                10px 13px;
+
+            border:
+                1px solid #dbe2ea;
+
+            border-radius: 9px;
+
+            color: #1e293b;
+
+            background: #fff;
+
+            font-size: 13px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(37,99,235,.09);
+        }
+
+        textarea.form-control {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .readonly-field {
+            background: #f8fafc !important;
+            color: #64748b !important;
+        }
+
+        .documents-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,minmax(0,1fr));
+
+            gap: 13px;
+        }
+
+        .legal-document {
+            padding: 15px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 12px;
+
+            background: white;
+        }
+
+        .file-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 12px;
+
+            border-radius: 10px;
+
+            color: #dc2626;
+
+            background: #fef2f2;
+
+            font-size: 20px;
+        }
+
+        .legal-document h6 {
+            color: var(--dark);
+
+            font-size: 12px;
+
+            font-weight: 750;
+        }
+
+        .document-preview {
+            overflow: hidden;
+
+            width: 100%;
+            height: 175px;
+
+            margin-bottom: 12px;
+
+            border-radius: 10px;
+
+            border:
+                1px solid var(--border);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eef2ff
+                );
+        }
+
+        .document-preview img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+
+            cursor: pointer;
+        }
+
+        .verification-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4,minmax(0,1fr));
+
+            gap: 10px;
+        }
+
+        .verify-item {
+            padding: 15px;
+
+            border:
+                1px solid var(--border);
+
+            border-radius: 12px;
+
+            background: white;
+        }
+
+        .verify-label {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: var(--dark);
+
+            font-size: 12px;
+
+            font-weight: 750;
+        }
+
+        .verify-label input {
+            width: 17px;
+            height: 17px;
+
+            accent-color: var(--primary);
+        }
+
+        .verify-item small {
+            display: block;
+
+            margin-top: 8px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+        }
+
+        .badge-soft-success,
+        .badge-soft-warning,
+        .badge-soft-danger {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            padding: 6px 9px;
+
+            border-radius: 999px;
+
+            font-size: 10px;
+
+            font-weight: 750;
+        }
+
+        .badge-soft-success {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .badge-soft-warning {
+            color: #b45309;
+            background: #fef3c7;
+        }
+
+        .badge-soft-danger {
+            color: #b91c1c;
+            background: #fee2e2;
+        }
+
+        .summary-row {
+            display: flex;
+
+            align-items: flex-start;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            padding: 11px 0;
+
+            border-bottom:
+                1px solid #f1f5f9;
+        }
+
+        .summary-label {
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .summary-value {
+            color: var(--dark);
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            text-align: right;
+        }
+
+        .side-title {
+            margin-bottom: 16px;
+
+            color: var(--dark);
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+        .action-bar {
+            position: fixed;
+
+            left: 0;
+            right: 0;
+            bottom: 0;
+
+            z-index: 1040;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 13px 30px;
+
+            background:
+                rgba(255,255,255,.94);
+
+            backdrop-filter: blur(18px);
+
+            border-top:
+                1px solid var(--border);
+
+            box-shadow:
+                0 -8px 30px
+                rgba(15,23,42,.06);
+        }
+
+        .action-buttons {
+            display: flex;
+
+            gap: 9px;
+        }
+
+        .save-info {
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .save-indicator {
+            display: inline-block;
+
+            width: 8px;
+            height: 8px;
+
+            margin-right: 7px;
+
+            border-radius: 50%;
+
+            background: #94a3b8;
+        }
+
+        .save-indicator.unsaved {
+            background: #f59e0b;
+        }
+
+        #accountBlockBox {
+            display: none;
+        }
+
+        .block-warning {
+            padding: 10px 12px;
+
+            margin-bottom: 12px;
+
+            border-radius: 9px;
+
+            color: #991b1b;
+
+            background: #fef2f2;
+
+            border: 1px solid #fecaca;
+
+            font-size: 11px;
+        }
+
+        @media(max-width:1150px) {
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .documents-grid {
+                grid-template-columns:
+                    repeat(2,minmax(0,1fr));
+            }
+
+        }
+
+        @media(max-width:800px) {
+
+            .hero-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .verification-grid {
+                grid-template-columns:
+                    repeat(2,minmax(0,1fr));
+            }
+
+            .action-bar {
+                padding: 11px 15px;
+            }
+
+        }
+
+        @media(max-width:560px) {
+
+            .seller-profile {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .documents-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .verification-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .action-buttons .btn {
+                flex: 1;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<header class="top-nav">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            <i class="bi bi-shop"></i>
+        </div>
+
+        <span>Seller Management</span>
+
+    </div>
+
+    <div class="top-right">
+
+        <span class="top-status">
+
+            <span class="status-dot"></span>
+
+            {{ seller.get_status_display }}
+
+        </span>
+
+        <a
+            href="javascript:history.back()"
+            class="btn btn-light border"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back
+        </a>
+
+    </div>
+
+</header>
+
+
+<main class="page-container">
+
+    <div class="breadcrumb-wrap">
+
+        <nav aria-label="breadcrumb">
+
+            <ol class="breadcrumb">
+
+                <li class="breadcrumb-item">
+                    <a href="#">Sellers</a>
+                </li>
+
+                <li class="breadcrumb-item">
+                    Seller Profile
+                </li>
+
+                <li class="breadcrumb-item active">
+                    Edit
+                </li>
+
+            </ol>
+
+        </nav>
+
+    </div>
+
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+        id="sellerForm"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- HERO -->
+
+        <section class="seller-hero">
+
+            <div class="hero-content">
+
+                <div class="seller-profile">
+
+                    <div class="profile-wrapper">
+
+                        {% if seller.profile_photo %}
+
+                            <img
+                                id="profilePreview"
+                                src="{{ seller.profile_photo.url }}"
+                                class="profile-img"
+                                alt="Seller Profile"
+                            >
+
+                        {% else %}
+
+                            <img
+                                id="profilePreview"
+                                src="/static/images/default-user.png"
+                                class="profile-img"
+                                alt="Seller Profile"
+                            >
+
+                        {% endif %}
+
+                        <span class="online-indicator"></span>
+
+                    </div>
+
+
+                    <div class="seller-heading">
+
+                        <h1>
+                            {{ seller.company_name|default:"Seller Profile" }}
+                        </h1>
+
+                        <div class="seller-subtitle">
+                            Seller account management and verification
+                        </div>
+
+                        <div class="seller-meta">
+
+                            <span class="meta-chip">
+                                <i class="bi bi-person"></i>
+                                {{ seller.user.username }}
+                            </span>
+
+                            <span class="meta-chip">
+                                <i class="bi bi-hash"></i>
+                                #{{ seller.id }}
+                            </span>
+
+                            <span class="meta-chip">
+                                <i class="bi bi-envelope"></i>
+                                {{ seller.email|default:seller.user.email }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <label
+                        class="btn btn-outline-primary mb-0"
+                        for="profilePhotoInput"
+                    >
+                        <i class="bi bi-camera"></i>
+                        Change Photo
+                    </label>
+
+                    <input
+                        type="file"
+                        name="profile_photo"
+                        id="profilePhotoInput"
+                        accept="image/*"
+                        hidden
+                    >
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <div class="main-grid">
+
+
+            <!-- LEFT -->
+
+            <div>
+
+
+                <!-- PERSONAL -->
+
+                <section class="section-card">
+
+                    <div class="section-header">
+
+                        <div class="section-title-wrap">
+
+                            <div class="section-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="section-title">
+                                    Personal Information
+                                </h2>
+
+                                <div class="section-description">
+                                    Basic account and contact information
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Username
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control readonly-field"
+                                value="{{ seller.user.username }}"
+                                readonly
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Email Address
+                            </label>
+
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                value="{{ seller.email|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Mobile Number
+                            </label>
+
+                            <input
+                                type="text"
+                                name="mobile_number"
+                                class="form-control"
+                                value="{{ seller.mobile_number|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Gender
+                            </label>
+
+                            <select
+                                name="gender"
+                                class="form-select"
+                            >
+
+                                <option value="">
+                                    Select Gender
+                                </option>
+
+                                <option
+                                    value="Male"
+                                    {% if seller.gender == "Male" %}selected{% endif %}
+                                >
+                                    Male
+                                </option>
+
+                                <option
+                                    value="Female"
+                                    {% if seller.gender == "Female" %}selected{% endif %}
+                                >
+                                    Female
+                                </option>
+
+                                <option
+                                    value="Other"
+                                    {% if seller.gender == "Other" %}selected{% endif %}
+                                >
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Date of Birth
+                            </label>
+
+                            <input
+                                type="date"
+                                name="date_of_birth"
+                                class="form-control"
+                                value="{{ seller.date_of_birth|date:'Y-m-d' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Wedding Anniversary
+                            </label>
+
+                            <input
+                                type="date"
+                                name="wedding_anniversary"
+                                class="form-control"
+                                value="{{ seller.wedding_anniversary|date:'Y-m-d' }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- BUSINESS -->
+
+                <section class="section-card">
+
+                    <div class="section-header">
+
+                        <div class="section-title-wrap">
+
+                            <div class="section-icon">
+                                <i class="bi bi-building"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="section-title">
+                                    Business Information
+                                </h2>
+
+                                <div class="section-description">
+                                    Registered company and business information
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Business Type
+                            </label>
+
+                            <select
+                                name="business_type"
+                                class="form-select"
+                            >
+
+                                {% for key, value in business_types %}
+
+                                    <option
+                                        value="{{ key }}"
+                                        {% if seller.business_type == key %}selected{% endif %}
+                                    >
+                                        {{ value }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Company Name
+                            </label>
+
+                            <input
+                                type="text"
+                                name="company_name"
+                                class="form-control"
+                                value="{{ seller.company_name|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                GST Number
+                            </label>
+
+                            <input
+                                type="text"
+                                name="gstinnamber"
+                                class="form-control"
+                                value="{{ seller.gstinnamber|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Tax Classification
+                            </label>
+
+                            <input
+                                type="text"
+                                name="tax_classification"
+                                class="form-control"
+                                value="{{ seller.tax_classification|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Country
+                            </label>
+
+                            <input
+                                type="text"
+                                name="country"
+                                class="form-control"
+                                value="{{ seller.country|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                State
+                            </label>
+
+                            <input
+                                type="text"
+                                name="state"
+                                class="form-control"
+                                value="{{ seller.state|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                City
+                            </label>
+
+                            <input
+                                type="text"
+                                name="city"
+                                class="form-control"
+                                value="{{ seller.city|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Pincode
+                            </label>
+
+                            <input
+                                type="text"
+                                name="pincode"
+                                class="form-control"
+                                value="{{ seller.pincode|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <label class="form-label">
+                                Registered Address
+                            </label>
+
+                            <textarea
+                                name="address"
+                                class="form-control"
+                            >{{ seller.address|default:'' }}</textarea>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- KYC -->
+
+                <section class="section-card">
+
+                    <div class="section-header">
+
+                        <div class="section-title-wrap">
+
+                            <div class="section-icon">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="section-title">
+                                    KYC Verification
+                                </h2>
+
+                                <div class="section-description">
+                                    Identity and regulatory documents
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Aadhar Document
+                            </label>
+
+                            {% if seller.aadhar_image %}
+
+                                <div class="document-preview">
+
+                                    <img
+                                        src="{{ seller.aadhar_image.url }}"
+                                        alt="Aadhar"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#imageModal"
+                                        data-img="{{ seller.aadhar_image.url }}"
+                                    >
+
+                                </div>
+
+                                <a
+                                    href="{{ seller.aadhar_image.url }}"
+                                    target="_blank"
+                                    class="btn btn-primary btn-sm mb-2"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                    View
+                                </a>
+
+                                <a
+                                    href="{{ seller.aadhar_image.url }}"
+                                    download
+                                    class="btn btn-success btn-sm mb-2"
+                                >
+                                    <i class="bi bi-download"></i>
+                                    Download
+                                </a>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="aadhar_image"
+                                class="form-control"
+                                accept="image/*,.pdf"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                PAN Document
+                            </label>
+
+                            {% if seller.pan_image %}
+
+                                <div class="document-preview">
+
+                                    <img
+                                        src="{{ seller.pan_image.url }}"
+                                        alt="PAN"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#imageModal"
+                                        data-img="{{ seller.pan_image.url }}"
+                                    >
+
+                                </div>
+
+                                <a
+                                    href="{{ seller.pan_image.url }}"
+                                    target="_blank"
+                                    class="btn btn-primary btn-sm mb-2"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                    View
+                                </a>
+
+                                <a
+                                    href="{{ seller.pan_image.url }}"
+                                    download
+                                    class="btn btn-success btn-sm mb-2"
+                                >
+                                    <i class="bi bi-download"></i>
+                                    Download
+                                </a>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="pan_image"
+                                class="form-control"
+                                accept="image/*,.pdf"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Aadhar Number
+                            </label>
+
+                            <input
+                                type="text"
+                                name="aadhar_number"
+                                class="form-control"
+                                value="{{ seller.aadhar_number|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                PAN Number
+                            </label>
+
+                            <input
+                                type="text"
+                                name="pan_number"
+                                class="form-control"
+                                value="{{ seller.pan_number|default:'' }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Partner KYC Document
+                            </label>
+
+                            {% if seller.partner_kyc_document %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.partner_kyc_document.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.partner_kyc_document.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        <i class="bi bi-download"></i>
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="partner_kyc_document"
+                                class="form-control"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Director KYC Document
+                            </label>
+
+                            {% if seller.director_kyc_document %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.director_kyc_document.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.director_kyc_document.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        <i class="bi bi-download"></i>
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="director_kyc_document"
+                                class="form-control"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- LEGAL DOCUMENTS -->
+
+                <section class="section-card">
+
+                    <div class="section-header">
+
+                        <div class="section-title-wrap">
+
+                            <div class="section-icon">
+                                <i class="bi bi-folder2-open"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="section-title">
+                                    Legal Documents
+                                </h2>
+
+                                <div class="section-description">
+                                    View, download and replace seller documents
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="documents-grid">
+
+                        {% with documents="" %}
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>Registered Office Proof</h6>
+
+                            {% if seller.registered_office_proof %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.registered_office_proof.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.registered_office_proof.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="registered_office_proof"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>GST Certificate</h6>
+
+                            {% if seller.gst_certificate %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.gst_certificate.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.gst_certificate.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="gst_certificate"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>Incorporation Certificate</h6>
+
+                            {% if seller.incorporation_certificate %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.incorporation_certificate.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.incorporation_certificate.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="incorporation_certificate"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>Partnership Deed</h6>
+
+                            {% if seller.partnership_deed %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.partnership_deed.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.partnership_deed.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="partnership_deed"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>LLP Agreement</h6>
+
+                            {% if seller.llp_agreement %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.llp_agreement.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.llp_agreement.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="llp_agreement"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>MOA Document</h6>
+
+                            {% if seller.moa_document %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.moa_document.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.moa_document.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="moa_document"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>AOA Document</h6>
+
+                            {% if seller.aoa_document %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.aoa_document.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.aoa_document.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="aoa_document"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>Udyam Registration</h6>
+
+                            {% if seller.udyam_registration %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.udyam_registration.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.udyam_registration.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="udyam_registration"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>Shop Establishment License</h6>
+
+                            {% if seller.shop_establishment_license %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.shop_establishment_license.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.shop_establishment_license.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="shop_establishment_license"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>Trademark Certificate</h6>
+
+                            {% if seller.trademark_certificate %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.trademark_certificate.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.trademark_certificate.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="trademark_certificate"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>Brand Authorization Letter</h6>
+
+                            {% if seller.brand_authorization_letter %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.brand_authorization_letter.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.brand_authorization_letter.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="brand_authorization_letter"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+
+                        <div class="legal-document">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark"></i>
+                            </div>
+
+                            <h6>Business License</h6>
+
+                            {% if seller.business_license %}
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.business_license.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.business_license.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="business_license"
+                                class="form-control form-control-sm"
+                            >
+
+                        </div>
+
+                        {% endwith %}
+
+                    </div>
+
+                </section>
+
+
+                <!-- AGREEMENTS -->
+
+                <section class="section-card">
+
+                    <div class="section-header">
+
+                        <div class="section-title-wrap">
+
+                            <div class="section-icon">
+                                <i class="bi bi-patch-check"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="section-title">
+                                    Agreements & Verification
+                                </h2>
+
+                                <div class="section-description">
+                                    Manage seller agreements and verification
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="verification-grid">
+
+                        <div class="verify-item">
+
+                            <label class="verify-label">
+
+                                <input
+                                    type="checkbox"
+                                    name="terms_accepted"
+                                    {% if seller.terms_accepted %}checked{% endif %}
+                                >
+
+                                Terms Accepted
+
+                            </label>
+
+                            <small>
+                                Seller accepted platform terms.
+                            </small>
+
+                        </div>
+
+
+                        <div class="verify-item">
+
+                            <label class="verify-label">
+
+                                <input
+                                    type="checkbox"
+                                    name="privacy_policy_accepted"
+                                    {% if seller.privacy_policy_accepted %}checked{% endif %}
+                                >
+
+                                Privacy Accepted
+
+                            </label>
+
+                            <small>
+                                Privacy policy accepted.
+                            </small>
+
+                        </div>
+
+
+                        <div class="verify-item">
+
+                            <label class="verify-label">
+
+                                <input
+                                    type="checkbox"
+                                    name="return_policy_accepted"
+                                    {% if seller.return_policy_accepted %}checked{% endif %}
+                                >
+
+                                Return Policy
+
+                            </label>
+
+                            <small>
+                                Return policy accepted.
+                            </small>
+
+                        </div>
+
+
+                        <div class="verify-item">
+
+                            <label class="verify-label">
+
+                                <input
+                                    type="checkbox"
+                                    name="commission_agreement_accepted"
+                                    {% if seller.commission_agreement_accepted %}checked{% endif %}
+                                >
+
+                                Commission Agreement
+
+                            </label>
+
+                            <small>
+                                Commission agreement accepted.
+                            </small>
+
+                        </div>
+
+
+                        <div class="verify-item">
+
+                            <label class="verify-label">
+
+                                <input
+                                    type="checkbox"
+                                    name="mobile_verified"
+                                    {% if seller.mobile_verified %}checked{% endif %}
+                                >
+
+                                Mobile Verified
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="verify-item">
+
+                            <label class="verify-label">
+
+                                <input
+                                    type="checkbox"
+                                    name="email_verified"
+                                    {% if seller.email_verified %}checked{% endif %}
+                                >
+
+                                Email Verified
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="verify-item">
+
+                            <label class="verify-label">
+
+                                <input
+                                    type="checkbox"
+                                    name="bank_verified"
+                                    {% if seller.bank_verified %}checked{% endif %}
+                                >
+
+                                Bank Verified
+
+                            </label>
+
+                        </div>
+
+
+                        <div class="verify-item">
+
+                            <label class="verify-label">
+
+                                <input
+                                    type="checkbox"
+                                    name="gst_verified"
+                                    {% if seller.gst_verified %}checked{% endif %}
+                                >
+
+                                GST Verified
+
+                            </label>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- LOCATION -->
+
+                <section class="section-card">
+
+                    <div class="section-header">
+
+                        <div class="section-title-wrap">
+
+                            <div class="section-icon">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="section-title">
+                                    Live Face & Location
+                                </h2>
+
+                                <div class="section-description">
+                                    Seller verification location and live face scan
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-5">
+
+                            <label class="form-label">
+                                Live Face Scan
+                            </label>
+
+                            {% if seller.liveface_scan %}
+
+                                <div class="document-preview">
+
+                                    <img
+                                        src="{{ seller.liveface_scan.url }}"
+                                        alt="Live Face Scan"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#imageModal"
+                                        data-img="{{ seller.liveface_scan.url }}"
+                                    >
+
+                                </div>
+
+                                <div class="mb-2">
+
+                                    <a
+                                        href="{{ seller.liveface_scan.url }}"
+                                        target="_blank"
+                                        class="btn btn-primary btn-sm"
+                                    >
+                                        View
+                                    </a>
+
+                                    <a
+                                        href="{{ seller.liveface_scan.url }}"
+                                        download
+                                        class="btn btn-success btn-sm"
+                                    >
+                                        Download
+                                    </a>
+
+                                </div>
+
+                            {% endif %}
+
+                            <input
+                                type="file"
+                                name="liveface_scan"
+                                class="form-control"
+                                accept="image/*"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-7">
+
+                            <label class="form-label">
+                                Latitude
+                            </label>
+
+                            <input
+                                type="number"
+                                step="0.0000001"
+                                name="latitude"
+                                class="form-control mb-3"
+                                value="{{ seller.latitude|default:'' }}"
+                            >
+
+
+                            <label class="form-label">
+                                Longitude
+                            </label>
+
+                            <input
+                                type="number"
+                                step="0.0000001"
+                                name="longitude"
+                                class="form-control mb-3"
+                                value="{{ seller.longitude|default:'' }}"
+                            >
+
+
+                            <label class="form-label">
+                                Live Location
+                            </label>
+
+                            <input
+                                type="text"
+                                name="live_location"
+                                class="form-control"
+                                value="{{ seller.live_location|default:'' }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- SECURITY -->
+
+                <section class="section-card">
+
+                    <div class="section-header">
+
+                        <div class="section-title-wrap">
+
+                            <div class="section-icon">
+                                <i class="bi bi-lock"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="section-title">
+                                    Security & Account Access
+                                </h2>
+
+                                <div class="section-description">
+                                    Manage login attempts and account lock
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Login Attempts
+                            </label>
+
+                            <input
+                                type="number"
+                                min="0"
+                                name="login_attempts"
+                                class="form-control"
+                                value="{{ seller.login_attempts|default:0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Account Lock
+                            </label>
+
+                            <select
+                                name="is_locked"
+                                id="isLockedSelect"
+                                class="form-select"
+                            >
+
+                                <option
+                                    value="False"
+                                    {% if not seller.is_locked %}selected{% endif %}
+                                >
+                                    Unlocked
+                                </option>
+
+                                <option
+                                    value="True"
+                                    {% if seller.is_locked %}selected{% endif %}
+                                >
+                                    Locked
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- ACCOUNT BLOCK REASON -->
+
+                        <div
+                            class="col-12"
+                            id="accountBlockBox"
+                        >
+
+                            <div class="block-warning">
+
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+
+                                The seller account is being blocked.
+                                A reason is required and will be sent to the seller by email.
+
+                            </div>
+
+                            <label class="form-label">
+                                Account Block Reason
+                            </label>
+
+                            <textarea
+                                name="account_block_reason"
+                                id="accountBlockReason"
+                                class="form-control"
+                                placeholder="Enter the reason for blocking this seller account..."
+                            >{{ seller.account_block_reason|default:'' }}</textarea>
+
+                            <small class="text-danger">
+                                Required when the account is locked.
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- RIGHT SIDEBAR -->
+
+            <aside>
+
+
+                <!-- ACCOUNT STATUS -->
+
+                <div class="side-card">
+
+                    <div class="side-title">
+                        Account Status
+                    </div>
+
+
+                    <label class="form-label">
+                        Seller Status
+                    </label>
+
+                    <select
+                        name="status"
+                        id="statusSelect"
+                        class="form-select mb-3"
+                    >
+
+                        {% for key, value in status_choices %}
+
+                            <option
+                                value="{{ key }}"
+                                {% if seller.status == key %}selected{% endif %}
+                            >
+                                {{ value }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+
+                    <div id="rejectionBox">
+
+                        <label class="form-label">
+                            Rejection Reason
+                        </label>
+
+                        <textarea
+                            name="rejection_reason"
+                            id="rejectionReason"
+                            class="form-control"
+                            placeholder="Enter reason if seller is rejected..."
+                        >{{ seller.rejection_reason|default:'' }}</textarea>
+
+                        <small class="text-danger">
+                            Required when status is Rejected.
+                        </small>
+
+                    </div>
+
+
+                    <hr>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Seller ID
+                        </span>
+
+                        <span class="summary-value">
+                            #{{ seller.id }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Current Status
+                        </span>
+
+                        <span class="summary-value">
+                            {{ seller.get_status_display }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Account
+                        </span>
+
+                        <span class="summary-value">
+
+                            {% if seller.is_locked %}
+
+                                <span class="badge-soft-danger">
+                                    <i class="bi bi-lock-fill"></i>
+                                    Locked
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge-soft-success">
+                                    <i class="bi bi-unlock-fill"></i>
+                                    Unlocked
+                                </span>
+
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    {% if seller.is_locked and seller.account_block_reason %}
+
+                        <div class="mt-3">
+
+                            <div class="form-label">
+                                Block Reason
+                            </div>
+
+                            <div class="block-warning">
+                                {{ seller.account_block_reason }}
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- VERIFICATION -->
+
+                <div class="side-card">
+
+                    <div class="side-title">
+                        Verification Status
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Mobile
+                        </span>
+
+                        <span class="summary-value">
+
+                            {% if seller.mobile_verified %}
+                                <span class="badge-soft-success">
+                                    Verified
+                                </span>
+                            {% else %}
+                                <span class="badge-soft-warning">
+                                    Pending
+                                </span>
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Email
+                        </span>
+
+                        <span class="summary-value">
+
+                            {% if seller.email_verified %}
+                                <span class="badge-soft-success">
+                                    Verified
+                                </span>
+                            {% else %}
+                                <span class="badge-soft-warning">
+                                    Pending
+                                </span>
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Bank
+                        </span>
+
+                        <span class="summary-value">
+
+                            {% if seller.bank_verified %}
+                                <span class="badge-soft-success">
+                                    Verified
+                                </span>
+                            {% else %}
+                                <span class="badge-soft-warning">
+                                    Pending
+                                </span>
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            GST
+                        </span>
+
+                        <span class="summary-value">
+
+                            {% if seller.gst_verified %}
+                                <span class="badge-soft-success">
+                                    Verified
+                                </span>
+                            {% else %}
+                                <span class="badge-soft-warning">
+                                    Pending
+                                </span>
+                            {% endif %}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SELLER INFORMATION -->
+
+                <div class="side-card">
+
+                    <div class="side-title">
+                        Seller Information
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Business
+                        </span>
+
+                        <span class="summary-value">
+                            {{ seller.get_business_type_display }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Country
+                        </span>
+
+                        <span class="summary-value">
+                            {{ seller.country|default:"-" }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            State
+                        </span>
+
+                        <span class="summary-value">
+                            {{ seller.state|default:"-" }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            City
+                        </span>
+
+                        <span class="summary-value">
+                            {{ seller.city|default:"-" }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="summary-row">
+
+                        <span class="summary-label">
+                            Pincode
+                        </span>
+
+                        <span class="summary-value">
+                            {{ seller.pincode|default:"-" }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </aside>
+
+        </div>
+
+    </form>
+
+</main>
+
+
+<!-- SAVE BAR -->
+
+<div class="action-bar">
+
+    <div class="save-info">
+
+        <span
+            class="save-indicator"
+            id="saveIndicator"
+        ></span>
+
+        <span id="saveStatusText">
+            No unsaved changes
+        </span>
+
+    </div>
+
+
+    <div class="action-buttons">
+
+        <button
+            type="button"
+            class="btn btn-light border"
+            onclick="handleCancel()"
+        >
+            <i class="bi bi-x-lg"></i>
+            Cancel
+        </button>
+
+
+        <button
+            type="submit"
+            form="sellerForm"
+            id="saveButton"
+            class="btn btn-primary"
+        >
+            <i class="bi bi-check-lg"></i>
+
+            <span id="saveButtonText">
+                Update Seller
+            </span>
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- IMAGE MODAL -->
+
+<div
+    class="modal fade"
+    id="imageModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Document Preview
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body text-center">
+
+                <img
+                    id="modalImage"
+                    src=""
+                    class="img-fluid"
+                    style="max-height:75vh;"
+                    alt="Document Preview"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<script>
+
+    /* =========================================================
+       PROFILE PREVIEW
+    ========================================================= */
+
+    const profileInput =
+        document.getElementById("profilePhotoInput");
+
+    const profilePreview =
+        document.getElementById("profilePreview");
+
+
+    if (profileInput) {
+
+        profileInput.addEventListener(
+            "change",
+            function () {
+
+                const file = this.files[0];
+
+                if (!file) {
+                    return;
+                }
+
+                if (!file.type.startsWith("image/")) {
+
+                    alert("Please select a valid image.");
+
+                    this.value = "";
+
+                    return;
+                }
+
+                const reader = new FileReader();
+
+                reader.onload = function (event) {
+
+                    profilePreview.src =
+                        event.target.result;
+
+                };
+
+                reader.readAsDataURL(file);
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       IMAGE MODAL
+    ========================================================= */
+
+    const imageModal =
+        document.getElementById("imageModal");
+
+
+    if (imageModal) {
+
+        imageModal.addEventListener(
+            "show.bs.modal",
+            function (event) {
+
+                const trigger =
+                    event.relatedTarget;
+
+                if (!trigger) {
+                    return;
+                }
+
+                const imageUrl =
+                    trigger.getAttribute("data-img");
+
+                document.getElementById(
+                    "modalImage"
+                ).src = imageUrl || "";
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       STATUS / REJECTION REASON
+    ========================================================= */
+
+    const statusSelect =
+        document.getElementById("statusSelect");
+
+    const rejectionBox =
+        document.getElementById("rejectionBox");
+
+    const rejectionReason =
+        document.getElementById("rejectionReason");
+
+
+    function updateRejectionBox() {
+
+        if (!statusSelect) {
+            return;
+        }
+
+        if (statusSelect.value === "rejected") {
+
+            rejectionBox.style.display = "block";
+
+            rejectionReason.required = true;
+
+        } else {
+
+            rejectionBox.style.display = "none";
+
+            rejectionReason.required = false;
+
+        }
+
+    }
+
+
+    if (statusSelect) {
+
+        statusSelect.addEventListener(
+            "change",
+            updateRejectionBox
+        );
+
+        updateRejectionBox();
+
+    }
+
+
+    /* =========================================================
+       ACCOUNT LOCK / BLOCK REASON
+    ========================================================= */
+
+    const isLockedSelect =
+        document.getElementById("isLockedSelect");
+
+    const accountBlockBox =
+        document.getElementById("accountBlockBox");
+
+    const accountBlockReason =
+        document.getElementById("accountBlockReason");
+
+
+    function updateAccountBlockBox() {
+
+        if (!isLockedSelect) {
+            return;
+        }
+
+        if (isLockedSelect.value === "True") {
+
+            accountBlockBox.style.display = "block";
+
+            accountBlockReason.required = true;
+
+        } else {
+
+            accountBlockBox.style.display = "none";
+
+            accountBlockReason.required = false;
+
+        }
+
+    }
+
+
+    if (isLockedSelect) {
+
+        isLockedSelect.addEventListener(
+            "change",
+            updateAccountBlockBox
+        );
+
+        updateAccountBlockBox();
+
+    }
+
+
+    /* =========================================================
+       DIRTY STATE
+    ========================================================= */
+
+    const sellerForm =
+        document.getElementById("sellerForm");
+
+    const saveIndicator =
+        document.getElementById("saveIndicator");
+
+    const saveStatusText =
+        document.getElementById("saveStatusText");
+
+    let originalFormData = null;
+
+
+    if (sellerForm) {
+
+        originalFormData =
+            new FormData(sellerForm);
+
+        sellerForm.addEventListener(
+            "input",
+            checkDirtyState
+        );
+
+        sellerForm.addEventListener(
+            "change",
+            checkDirtyState
+        );
+
+    }
+
+
+    function checkDirtyState() {
+
+        const current =
+            new FormData(sellerForm);
+
+        let changed = false;
+
+
+        for (
+            const [key, value]
+            of current.entries()
+        ) {
+
+            const original =
+                originalFormData.get(key);
+
+
+            if (value instanceof File) {
+
+                if (
+                    value.name !==
+                    (
+                        original instanceof File
+                        ? original.name
+                        : ""
+                    )
+                ) {
+
+                    changed = true;
+
+                    break;
+
+                }
+
+            } else {
+
+                if (value !== original) {
+
+                    changed = true;
+
+                    break;
+
+                }
+
+            }
+
+        }
+
+
+        if (changed) {
+
+            saveIndicator.classList.add(
+                "unsaved"
+            );
+
+            saveStatusText.textContent =
+                "You have unsaved changes";
+
+        } else {
+
+            saveIndicator.classList.remove(
+                "unsaved"
+            );
+
+            saveStatusText.textContent =
+                "No unsaved changes";
+
+        }
+
+    }
+
+
+    /* =========================================================
+       SUBMIT
+       IMPORTANT: event parameter added
+    ========================================================= */
+
+    if (sellerForm) {
+
+        sellerForm.addEventListener(
+            "submit",
+            function (event) {
+
+                if (
+                    statusSelect &&
+                    statusSelect.value === "rejected" &&
+                    !rejectionReason.value.trim()
+                ) {
+
+                    alert(
+                        "Please enter a rejection reason."
+                    );
+
+                    rejectionReason.focus();
+
+                    event.preventDefault();
+
+                    return;
+
+                }
+
+
+                if (
+                    isLockedSelect &&
+                    isLockedSelect.value === "True" &&
+                    !accountBlockReason.value.trim()
+                ) {
+
+                    alert(
+                        "Please enter an account block reason."
+                    );
+
+                    accountBlockReason.focus();
+
+                    event.preventDefault();
+
+                    return;
+
+                }
+
+
+                const saveButton =
+                    document.getElementById("saveButton");
+
+
+                if (saveButton) {
+
+                    saveButton.disabled = true;
+
+                    saveButton.innerHTML = `
+                        <span
+                            class="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true">
+                        </span>
+                        Saving...
+                    `;
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       CANCEL
+    ========================================================= */
+
+    function handleCancel() {
+
+        if (
+            saveIndicator.classList.contains(
+                "unsaved"
+            )
+        ) {
+
+            const confirmed =
+                confirm(
+                    "You have unsaved changes. Are you sure you want to leave?"
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+        }
+
+        history.back();
+
+    }
+
+
+    /* =========================================================
+       BEFORE UNLOAD
+    ========================================================= */
+
+    window.addEventListener(
+        "beforeunload",
+        function (event) {
+
+            if (
+                saveIndicator.classList.contains(
+                    "unsaved"
+                )
+            ) {
+
+                event.preventDefault();
+
+                event.returnValue = "";
+
+            }
+
+        }
+    );
+
+</script>
+
+
+</body>
+
+</html>
+
+{% endblock %}

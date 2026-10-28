@@ -1,0 +1,1176 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111827">
+<title>Seller Dashboard | MyShop</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+<style>
+:root {
+    --primary:#6366f1;
+    --primary-dark:#4f46e5;
+    --purple:#8b5cf6;
+    --success:#10b981;
+    --danger:#ef4444;
+    --warning:#f59e0b;
+    --ink:#111827;
+    --muted:#64748b;
+    --bg:#f5f7fc;
+    --card:#fff;
+    --line:#e8edf5;
+    --sidebar:264px;
+    --radius:18px;
+    --shadow:0 8px 30px rgba(15,23,42,.045);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:Inter,system-ui,sans-serif;font-size:13px;
+    overflow-x:hidden
+}
+a{text-decoration:none}
+button,input,select{font:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{
+    outline:3px solid #a5b4fc;outline-offset:3px
+}
+button:disabled{opacity:.55;cursor:not-allowed}
+.dashboard{min-height:100vh}
+.sidebar{
+    width:var(--sidebar);position:fixed;inset:0 auto 0 0;
+    z-index:1050;display:flex;flex-direction:column;
+    padding:22px 15px 15px;color:#fff;
+    background:radial-gradient(ellipse at top left,#312e8155,transparent 45%),
+    linear-gradient(180deg,#111827,#0b1220);
+    transition:transform .28s ease
+}
+.brand{
+    display:flex;align-items:center;gap:12px;
+    padding:3px 11px 22px;border-bottom:1px solid #ffffff12
+}
+.brand-logo{
+    display:grid;place-items:center;width:44px;height:44px;
+    flex-shrink:0;border-radius:14px;
+    background:linear-gradient(135deg,#818cf8,#7c3aed);
+    font-size:22px;box-shadow:0 8px 25px #6366f144
+}
+.brand-name{font-size:19px;font-weight:800;letter-spacing:-.6px}
+.brand-sub{font-size:10px;color:#9ca3af;margin-top:3px}
+.menu-area{overflow-y:auto;flex:1;padding:9px 0}
+.menu-area::-webkit-scrollbar{width:4px}
+.menu-area::-webkit-scrollbar-thumb{background:#374151;border-radius:10px}
+.menu-title{
+    padding:18px 12px 7px;color:#7f8ba1;
+    font-size:9px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase
+}
+.nav-link-custom{
+    display:flex;align-items:center;gap:12px;
+    padding:11px 12px;margin:3px 0;border-radius:11px;
+    color:#c4ccda;font-size:12px;font-weight:600;
+    transition:background .2s,color .2s,transform .2s
+}
+.nav-link-custom i{font-size:17px;width:21px;text-align:center}
+.nav-link-custom:hover{background:#ffffff0d;color:#fff;transform:translateX(2px)}
+.nav-link-custom.active{
+    color:white;background:linear-gradient(110deg,#6366f1,#7c3aed);
+    box-shadow:0 8px 22px #6366f12c
+}
+.nav-count{
+    margin-left:auto;padding:3px 7px;min-width:22px;text-align:center;
+    border-radius:20px;background:#ef4444;color:white;font-size:10px;font-weight:800
+}
+.sidebar-footer{padding-top:14px;border-top:1px solid #ffffff12}
+.sidebar-user{display:flex;align-items:center;gap:10px;padding:10px 5px 13px}
+.sidebar-avatar{
+    width:38px;height:38px;border-radius:12px;object-fit:cover;
+    background:#e0e7ff;border:1px solid #ffffff25
+}
+.sidebar-user-name{font-size:11px;font-weight:700;color:white;max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sidebar-user-role{font-size:10px;color:#9ca3af;margin-top:3px}
+.logout{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px;border:1px solid #ef444444;border-radius:11px;
+    background:#ef444415;color:#fecaca;font-weight:700;font-size:12px;
+    transition:.2s
+}
+.logout:hover{background:#ef4444;color:white}
+.main{margin-left:var(--sidebar);min-height:100vh;padding:25px 30px 12px;transition:.25s}
+.topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:18px;margin-bottom:24px;min-height:52px
+}
+.top-left{display:flex;align-items:center;gap:13px;min-width:0}
+.page-title{font-size:25px;font-weight:800;letter-spacing:-1px;margin:0}
+.page-subtitle{color:var(--muted);font-size:11px;margin:6px 0 0}
+.top-right{display:flex;align-items:center;gap:10px}
+.clock{
+    display:flex;align-items:center;gap:8px;padding:10px 12px;
+    border:1px solid var(--line);background:white;border-radius:12px;
+    font-size:11px;font-weight:700;color:#475569;white-space:nowrap
+}
+.clock i{color:var(--primary)}
+.icon-btn{
+    width:41px;height:41px;position:relative;display:grid;place-items:center;
+    border:1px solid var(--line);border-radius:12px;background:white;
+    color:#475569;font-size:17px;transition:.2s
+}
+.icon-btn:hover{background:#eef2ff;color:var(--primary);border-color:#c7d2fe}
+.notification-dot{
+    position:absolute;right:8px;top:8px;width:8px;height:8px;
+    border-radius:50%;background:#ef4444;border:2px solid white
+}
+.mobile-btn{display:none}
+.search-wrap{position:relative}
+.search-wrap>i{position:absolute;left:12px;top:12px;color:#94a3b8}
+.top-search{
+    width:210px;height:41px;padding:0 12px 0 35px;
+    border:1px solid var(--line);border-radius:12px;background:white;
+    outline:none;font-size:11px;transition:.2s
+}
+.top-search:focus{border-color:#a5b4fc;box-shadow:0 0 0 3px #6366f115}
+.card-premium{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--radius);box-shadow:var(--shadow)
+}
+.profile-card{position:relative;overflow:hidden;margin-bottom:25px}
+.profile-cover{
+    height:96px;
+    background:linear-gradient(110deg,#3730a3,#6366f1 48%,#a78bfa);
+    position:relative;overflow:hidden
+}
+.profile-cover:before,.profile-cover:after{
+    content:"";position:absolute;border:1px solid #ffffff20;border-radius:50%
+}
+.profile-cover:before{width:260px;height:260px;right:7%;top:-180px}
+.profile-cover:after{width:190px;height:190px;right:18%;top:-120px}
+.cover-label{
+    position:absolute;right:20px;top:17px;color:#ffffffc9;
+    font-size:10px;font-weight:600;letter-spacing:.4px
+}
+.profile-content{
+    display:flex;align-items:center;gap:17px;padding:0 24px 22px;
+    margin-top:-36px;position:relative
+}
+.profile-photo-wrap{position:relative;flex-shrink:0}
+.profile-photo{
+    width:82px;height:82px;object-fit:cover;border-radius:23px;
+    background:#e0e7ff;border:4px solid white;box-shadow:0 5px 18px #0f172a16
+}
+.online{
+    position:absolute;width:14px;height:14px;right:2px;bottom:3px;
+    background:#22c55e;border:3px solid white;border-radius:50%
+}
+.profile-details{padding-top:38px;min-width:0}
+.profile-details h3{font-size:19px;font-weight:800;letter-spacing:-.5px;margin:0 0 5px}
+.profile-company{color:var(--muted);font-size:11px;margin-bottom:12px}
+.profile-meta{display:flex;flex-wrap:wrap;gap:7px}
+.pill{
+    display:inline-flex;align-items:center;gap:6px;padding:6px 9px;
+    border-radius:9px;background:#f1f5f9;color:#475569;
+    font-size:10px;font-weight:700
+}
+.pill.success{background:#dcfce7;color:#15803d}
+.pill.purple{background:#eef2ff;color:#4f46e5}
+.profile-action{margin-left:auto;align-self:flex-end}
+.btn-primary-custom{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:10px 14px;border:0;border-radius:11px;
+    background:linear-gradient(110deg,var(--primary),var(--purple));
+    color:white;font-size:11px;font-weight:700;
+    box-shadow:0 5px 15px #6366f125;transition:.2s
+}
+.btn-primary-custom:hover{color:white;transform:translateY(-1px);box-shadow:0 8px 20px #6366f140}
+.section-head{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;margin-bottom:14px
+}
+.section-title{font-size:15px;font-weight:800;letter-spacing:-.3px;margin:0}
+.section-caption{font-size:10px;color:#94a3b8;margin-top:4px}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px}
+.kpi{
+    position:relative;overflow:hidden;padding:19px;border-radius:17px;
+    border:1px solid var(--line);background:white;box-shadow:var(--shadow);
+    transition:transform .25s,box-shadow .25s
+}
+.kpi:hover{transform:translateY(-4px);box-shadow:0 15px 35px #0f172a0d}
+.kpi:after{
+    content:"";position:absolute;right:-32px;bottom:-48px;
+    width:105px;height:105px;border-radius:50%;background:var(--tint)
+}
+.kpi-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.kpi-icon{width:43px;height:43px;display:grid;place-items:center;border-radius:13px;font-size:19px;background:var(--tint);color:var(--tone)}
+.kpi-label{margin-top:18px;font-size:11px;color:var(--muted);font-weight:600}
+.kpi-value{font-size:25px;font-weight:800;letter-spacing:-1px;margin-top:5px;overflow-wrap:anywhere}
+.kpi-note{display:flex;align-items:center;gap:5px;margin-top:8px;font-size:10px;color:#64748b}
+.kpi-note i{color:var(--tone)}
+.kpi-mini{font-size:9px;font-weight:800;background:var(--tint);color:var(--tone);padding:5px 7px;border-radius:7px;white-space:nowrap}
+.analytics-grid{display:grid;grid-template-columns:minmax(0,1.85fr) minmax(250px,1fr);gap:16px;margin-top:20px}
+.panel{padding:20px;min-width:0}
+.panel-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}
+.panel-heading h3{font-size:14px;font-weight:800;margin:0}
+.panel-heading p{font-size:10px;color:#94a3b8;margin:5px 0 0}
+.chart-select{
+    border:1px solid var(--line);border-radius:9px;background:white;
+    padding:8px 10px;color:#475569;font-size:10px;font-weight:600;max-width:140px
+}
+.chart-container{height:255px;position:relative}
+.chart-foot{
+    display:flex;gap:20px;flex-wrap:wrap;border-top:1px solid #f1f5f9;
+    padding-top:13px;margin-top:13px;color:#64748b;font-size:10px
+}
+.chart-legend{display:flex;align-items:center;gap:7px}
+.legend-dot{width:8px;height:8px;border-radius:3px;background:var(--primary)}
+.summary-list{display:grid;gap:11px}
+.summary-item{
+    display:flex;align-items:center;gap:12px;padding:12px;
+    background:#f8fafc;border:1px solid #f1f5f9;border-radius:13px
+}
+.summary-icon{width:39px;height:39px;display:grid;place-items:center;flex-shrink:0;background:white;border:1px solid var(--line);border-radius:11px;font-size:17px;color:var(--primary)}
+.summary-copy{flex:1;min-width:0}
+.summary-copy small{display:block;color:#94a3b8;font-size:10px;margin-bottom:5px}
+.summary-copy strong{font-size:14px;font-weight:800;overflow-wrap:anywhere}
+.summary-end{font-size:10px;color:#94a3b8}
+.summary-note{font-size:10px;color:#64748b;line-height:1.7;margin-top:15px;padding:12px;background:#f8fafc;border-radius:10px}
+.orders-panel{margin-top:22px;padding:20px}
+.orders-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+.orders-title-wrap{display:flex;align-items:center;gap:11px}
+.orders-title-icon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;background:#eef2ff;color:var(--primary);font-size:18px}
+.orders-title-wrap h3{font-size:14px;font-weight:800;margin:0}
+.orders-title-wrap p{font-size:10px;color:#94a3b8;margin:5px 0 0}
+.order-tools{display:flex;gap:8px;align-items:center}
+.filter-select,.order-search{
+    height:37px;border:1px solid var(--line);border-radius:10px;
+    padding:0 10px;background:white;font-size:10px;color:#475569;min-width:0
+}
+.order-search{width:170px}
+.orders-list{display:grid;gap:11px}
+.order-card{
+    border:1px solid #edf0f5;border-radius:14px;background:#fcfdff;
+    padding:15px;transition:border-color .2s,box-shadow .2s
+}
+.order-card:hover{border-color:#c7d2fe;box-shadow:0 7px 20px #0f172a08}
+.order-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:13px}
+.customer{display:flex;align-items:center;gap:10px;min-width:0}
+.customer-photo{
+    width:42px;height:42px;object-fit:cover;border-radius:13px;
+    background:#e0e7ff;flex-shrink:0
+}
+.customer-name{font-size:11px;font-weight:800;margin:0 0 4px}
+.order-id{font-size:10px;color:#94a3b8}
+.new-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:20px;background:#dcfce7;color:#15803d;font-size:9px;font-weight:800;white-space:nowrap}
+.new-light{width:6px;height:6px;background:#22c55e;border-radius:50%}
+.order-fields{
+    display:grid;grid-template-columns:1.5fr .65fr .9fr .9fr 1fr;
+    gap:13px;padding-top:12px;border-top:1px solid #edf0f5
+}
+.field-label{font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.4px}
+.field-value{font-size:11px;font-weight:700;color:#334155;margin-top:6px;overflow-wrap:anywhere}
+.status{
+    display:inline-flex;align-items:center;gap:5px;padding:5px 8px;
+    border-radius:8px;font-size:9px;font-weight:800
+}
+.status:before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor}
+.status-pending{background:#fef3c7;color:#b45309}
+.status-delivered{background:#dcfce7;color:#15803d}
+.status-cancelled{background:#fee2e2;color:#b91c1c}
+.status-default{background:#e0e7ff;color:#4338ca}
+.empty-state{text-align:center;padding:43px 15px;color:#94a3b8}
+.empty-state i{font-size:38px;display:block;margin-bottom:12px;color:#cbd5e1}
+.empty-state strong{display:block;color:#475569;font-size:12px;margin-bottom:6px}
+.empty-state p{font-size:11px;margin:0}
+.pagination{gap:4px;margin-bottom:0}
+.pagination .page-link{
+    display:grid;place-items:center;min-width:31px;height:32px;
+    border:1px solid var(--line)!important;border-radius:8px!important;
+    background:white;color:#64748b;font-size:10px
+}
+.pagination .page-link:hover{background:#eef2ff;color:var(--primary)}
+.pagination .active .page-link{background:var(--primary);color:white;border-color:var(--primary)!important}
+.pagination .page-link:disabled{opacity:.5}
+.footer{padding:23px 0 8px;text-align:center;color:#94a3b8;font-size:10px}
+.overlay{
+    display:none;position:fixed;inset:0;background:#0f172a80;
+    z-index:1040;backdrop-filter:blur(2px)
+}
+.overlay.show{display:block}
+.drawer{
+    position:fixed;top:0;right:0;bottom:0;width:min(390px,100%);
+    background:white;z-index:1100;box-shadow:-10px 0 40px #0f172a18;
+    transform:translateX(105%);transition:transform .28s ease;
+    display:flex;flex-direction:column
+}
+.drawer.open{transform:translateX(0)}
+.drawer-head{display:flex;justify-content:space-between;align-items:center;padding:21px;border-bottom:1px solid var(--line)}
+.drawer-head h3{font-size:16px;font-weight:800;margin:0}
+.drawer-body{padding:20px;overflow:auto}
+.notification-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid #f1f5f9}
+.notification-icon{width:39px;height:39px;display:grid;place-items:center;border-radius:12px;background:#eef2ff;color:var(--primary);font-size:17px;flex-shrink:0}
+.notification-item strong{font-size:11px}
+.notification-item p{font-size:10px;color:#64748b;line-height:1.7;margin:5px 0 0}
+.toast-stack{position:fixed;right:20px;bottom:20px;z-index:1200;display:grid;gap:10px;pointer-events:none}
+.app-toast{
+    display:flex;align-items:center;gap:10px;background:#111827;color:white;
+    border-radius:12px;padding:13px 16px;box-shadow:0 10px 35px #0f172a2b;
+    font-size:11px;max-width:min(370px,calc(100vw - 35px));
+    animation:toastIn .25s ease
+}
+.app-toast i{font-size:17px;color:#86efac}
+@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.loading-cover{opacity:.55;pointer-events:none}
+@media(max-width:1200px){
+    :root{--sidebar:245px}
+    .main{padding:22px}
+    .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .analytics-grid{grid-template-columns:minmax(0,1.4fr) minmax(240px,1fr)}
+    .top-search{width:165px}
+}
+@media(max-width:1000px){
+    .sidebar{transform:translateX(-105%)}
+    .sidebar.show{transform:translateX(0)}
+    .main{margin-left:0;padding:20px}
+    .mobile-btn{display:grid}
+    .analytics-grid{grid-template-columns:1fr}
+    .summary-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .summary-note{margin-top:12px}
+}
+@media(max-width:700px){
+    .main{padding:15px}
+    .topbar{align-items:flex-start;margin-bottom:20px}
+    .page-title{font-size:20px;letter-spacing:-.7px}
+    .page-subtitle{display:none}
+    .top-right{gap:7px}
+    .clock,.top-search{display:none}
+    .profile-cover{height:75px}
+    .profile-content{padding:0 15px 17px;gap:12px;align-items:flex-start;margin-top:-30px}
+    .profile-photo{width:67px;height:67px;border-radius:18px}
+    .profile-details{padding-top:33px}
+    .profile-details h3{font-size:15px}
+    .profile-company{font-size:10px;margin-bottom:9px}
+    .profile-meta{gap:5px}
+    .pill{font-size:9px;padding:5px 7px}
+    .profile-action{display:none}
+    .kpi{padding:15px}
+    .kpi-value{font-size:22px}
+    .panel,.orders-panel{padding:15px}
+    .chart-container{height:225px}
+    .orders-heading{align-items:flex-start;flex-direction:column}
+    .order-tools{width:100%}
+    .order-search{flex:1;width:100%}
+    .filter-select{max-width:125px}
+    .order-fields{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+    .order-fields .field:first-child{grid-column:1/-1}
+    .summary-list{grid-template-columns:1fr}
+}
+@media(max-width:390px){
+    .kpi-grid{gap:9px}
+    .kpi{padding:12px}
+    .kpi-icon{width:36px;height:36px;font-size:16px}
+    .kpi-value{font-size:19px}
+    .kpi-mini{font-size:8px;padding:4px}
+    .profile-meta .pill{max-width:100%}
+    .orders-title-wrap h3{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){
+    *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+
+<body>
+<div class="dashboard">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar" aria-label="Seller navigation">
+    <a href="{% url 'seller_dashboard' %}" class="brand">
+        <div class="brand-logo"><i class="bi bi-shop"></i></div>
+        <div>
+            <div class="brand-name">MyShop</div>
+            <div class="brand-sub">SELLER CONTROL CENTER</div>
+        </div>
+    </a>
+
+    <nav class="menu-area">
+        <div class="menu-title">Workspace</div>
+        <a href="{% url 'seller_dashboard' %}" class="nav-link-custom active">
+            <i class="bi bi-grid-1x2-fill"></i> Dashboard
+        </a>
+        <a href="{% url 'saller_product_list' %}" class="nav-link-custom">
+            <i class="bi bi-box-seam"></i> Products
+        </a>
+        <a href="{% url 'saller_advertisements' %}" class="nav-link-custom">
+            <i class="bi bi-megaphone"></i> Advertisements
+        </a>
+
+        <div class="menu-title">Orders & Fulfilment</div>
+        <a href="{% url 'saller_customer_orders' %}" class="nav-link-custom">
+            <i class="bi bi-cart3"></i> Customer Orders
+        </a>
+        <a href="{% url 'seller_neworders' %}" class="nav-link-custom">
+            <i class="bi bi-bag-plus"></i> New Orders
+        </a>
+        <a href="{% url 'seller_order_status' %}" class="nav-link-custom">
+            <i class="bi bi-card-checklist"></i> Order Status
+        </a>
+
+        <div class="menu-title">Business Intelligence</div>
+        <a href="{% url 'saller_sales_report' %}" class="nav-link-custom">
+            <i class="bi bi-graph-up-arrow"></i> Sales Report
+        </a>
+        <a href="{% url 'seller_top_selling_products' %}" class="nav-link-custom">
+            <i class="bi bi-fire"></i> Top Selling Products
+        </a>
+        <a href="{% url 'saller_low_stock' %}" class="nav-link-custom">
+            <i class="bi bi-exclamation-triangle"></i> Low Stock
+        </a>
+
+        <div class="menu-title">Customer Support</div>
+        <a href="{% url 'seller_return_list' %}" class="nav-link-custom">
+            <i class="bi bi-arrow-return-left"></i> Returns
+            {% if pending_returns_count > 0 %}
+            <span class="nav-count">{{ pending_returns_count }}</span>
+            {% endif %}
+        </a>
+        <a href="{% url 'seller_ticket_dashboard' %}" class="nav-link-custom">
+            <i class="bi bi-ticket-perforated"></i> Create Ticket
+        </a>
+        <a href="{% url 'ticket_search' %}" class="nav-link-custom">
+            <i class="bi bi-search"></i> Ticket Search
+        </a>
+
+        <div class="menu-title">Account Settings</div>
+        <a href="{% url 'seller_bank_form' %}" class="nav-link-custom">
+            <i class="bi bi-bank"></i> Bank Details
+        </a>
+        <a href="{% url 'seller_profile' %}" class="nav-link-custom">
+            <i class="bi bi-person-circle"></i> My Profile
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            {% if seller.profile_photo %}
+            <img src="{{ seller.profile_photo.url }}" class="sidebar-avatar" alt="Seller profile">
+            {% else %}
+            <div class="sidebar-avatar d-grid place-items-center" style="display:grid;place-items:center;color:#4f46e5">
+                <i class="bi bi-person-fill fs-5"></i>
+            </div>
+            {% endif %}
+            <div class="overflow-hidden">
+                <div class="sidebar-user-name">{{ seller.user.get_full_name|default:seller.user.username }}</div>
+                <div class="sidebar-user-role">Seller Account</div>
+            </div>
+        </div>
+        <a href="{% url 'seller_logout' %}" class="logout">
+            <i class="bi bi-box-arrow-right"></i> Sign Out
+        </a>
+    </div>
+</aside>
+
+<div class="overlay" id="sidebarOverlay"></div>
+
+<!-- MAIN -->
+<main class="main">
+
+    <header class="topbar">
+        <div class="top-left">
+            <button type="button" class="icon-btn mobile-btn" id="mobileMenuBtn"
+                    aria-label="Open navigation" aria-expanded="false">
+                <i class="bi bi-list"></i>
+            </button>
+            <div>
+                <h1 class="page-title">Dashboard Overview</h1>
+                <p class="page-subtitle">Monitor your store, sales and customer activity.</p>
+            </div>
+        </div>
+
+        <div class="top-right">
+            <div class="search-wrap">
+                <i class="bi bi-search"></i>
+                <input type="search" id="globalSearch" class="top-search"
+                       placeholder="Search recent orders..." aria-label="Search recent orders">
+            </div>
+            <div class="clock"><i class="bi bi-clock-history"></i><span id="datetime">Loading time...</span></div>
+            <button type="button" class="icon-btn" id="notificationBtn"
+                    aria-label="Open dashboard information" aria-controls="notificationDrawer">
+                <i class="bi bi-bell"></i>
+                <span class="notification-dot"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- PROFILE -->
+    <section class="card-premium profile-card">
+        <div class="profile-cover">
+            <span class="cover-label"><i class="bi bi-shield-check"></i> SELLER WORKSPACE</span>
+        </div>
+        <div class="profile-content">
+            <div class="profile-photo-wrap">
+                {% if seller.profile_photo %}
+                <img src="{{ seller.profile_photo.url }}" class="profile-photo" alt="Seller profile photo">
+                {% else %}
+                <div class="profile-photo d-grid place-items-center"
+                     style="display:grid;place-items:center;color:#6366f1;font-size:28px">
+                    <i class="bi bi-person-fill"></i>
+                </div>
+                {% endif %}
+                <span class="online" title="Dashboard active"></span>
+            </div>
+
+            <div class="profile-details">
+                <h3>{{ seller.user.get_full_name|default:seller.user.username }}</h3>
+                <div class="profile-company">
+                    <i class="bi bi-building me-1"></i>
+                    {{ seller.company_name|default:"Your business" }}
+                </div>
+                <div class="profile-meta">
+                    <span class="pill purple">
+                        <i class="bi bi-briefcase"></i>
+                        {{ seller.get_business_type_display|default:"Seller" }}
+                    </span>
+                    <span class="pill success">
+                        <i class="bi bi-patch-check-fill"></i>
+                        {{ seller.status|default:"Active" }}
+                    </span>
+                    <span class="pill">
+                        <i class="bi bi-clock"></i>
+                        Login: {{ last_login|date:"d M Y, h:i A"|default:"Not available" }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="profile-action">
+                <a href="{% url 'seller_profile' %}" class="btn-primary-custom">
+                    <i class="bi bi-pencil-square"></i> Edit Profile
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- BUSINESS OVERVIEW -->
+    <div class="section-head">
+        <div>
+            <h2 class="section-title">Business Overview</h2>
+            <div class="section-caption">Your store at a glance</div>
+        </div>
+        <span class="pill"><i class="bi bi-arrow-repeat"></i> Live page data</span>
+    </div>
+
+    <section class="kpi-grid" aria-label="Business metrics">
+        <article class="kpi" style="--tone:#4f46e5;--tint:#eef2ff">
+            <div class="kpi-top">
+                <div class="kpi-icon"><i class="bi bi-currency-rupee"></i></div>
+                <span class="kpi-mini">REVENUE</span>
+            </div>
+            <div class="kpi-label">Total Revenue</div>
+            <div class="kpi-value">₹{{ total_revenue|default:0|floatformat:2 }}</div>
+            <div class="kpi-note"><i class="bi bi-wallet2"></i> Based on your dashboard data</div>
+        </article>
+
+        <article class="kpi" style="--tone:#059669;--tint:#d1fae5">
+            <div class="kpi-top">
+                <div class="kpi-icon"><i class="bi bi-cart-check"></i></div>
+                <span class="kpi-mini">ORDERS</span>
+            </div>
+            <div class="kpi-label">Total Orders</div>
+            <div class="kpi-value">{{ total_orders|default:0 }}</div>
+            <div class="kpi-note"><i class="bi bi-receipt"></i> Orders in your report</div>
+        </article>
+
+        <article class="kpi" style="--tone:#d97706;--tint:#fef3c7">
+            <div class="kpi-top">
+                <div class="kpi-icon"><i class="bi bi-box-seam"></i></div>
+                <span class="kpi-mini">INVENTORY</span>
+            </div>
+            <div class="kpi-label">Total Products</div>
+            <div class="kpi-value">{{ total_products|default:0 }}</div>
+            <div class="kpi-note"><i class="bi bi-boxes"></i> Products in your store</div>
+        </article>
+
+        <article class="kpi" style="--tone:#dc2626;--tint:#fee2e2">
+            <div class="kpi-top">
+                <div class="kpi-icon"><i class="bi bi-people"></i></div>
+                <span class="kpi-mini">CUSTOMERS</span>
+            </div>
+            <div class="kpi-label">Total Customers</div>
+            <div class="kpi-value">{{ total_customers|default:0 }}</div>
+            <div class="kpi-note"><i class="bi bi-person-check"></i> Customer metric from your view</div>
+        </article>
+    </section>
+
+    <!-- ANALYTICS -->
+    <section class="analytics-grid">
+        <article class="card-premium panel">
+            <div class="panel-heading">
+                <div>
+                    <h3>Sales Analytics</h3>
+                    <p>Illustrative chart until real monthly data is connected</p>
+                </div>
+                <select class="chart-select" id="chartPeriod" aria-label="Chart display period">
+                    <option value="year">Full year</option>
+                    <option value="half">Last 6 months</option>
+                    <option value="quarter">Last 3 months</option>
+                </select>
+            </div>
+            <div class="chart-container">
+                <canvas id="salesChart" role="img" aria-label="Illustrative monthly sales chart"></canvas>
+            </div>
+            <div class="chart-foot">
+                <span class="chart-legend"><span class="legend-dot"></span> Illustrative sales values</span>
+                <span><i class="bi bi-info-circle me-1"></i>Not database revenue</span>
+            </div>
+        </article>
+
+        <article class="card-premium panel">
+            <div class="panel-heading">
+                <div>
+                    <h3>Store Summary</h3>
+                    <p>Your current business metrics</p>
+                </div>
+                <i class="bi bi-three-dots" style="font-size:19px;color:#94a3b8"></i>
+            </div>
+            <div class="summary-list">
+                <div class="summary-item">
+                    <div class="summary-icon"><i class="bi bi-box-seam"></i></div>
+                    <div class="summary-copy">
+                        <small>Products Listed</small>
+                        <strong>{{ total_products|default:0 }}</strong>
+                    </div>
+                    <span class="summary-end"><i class="bi bi-box-arrow-up-right"></i></span>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon"><i class="bi bi-bag-check"></i></div>
+                    <div class="summary-copy">
+                        <small>Total Orders</small>
+                        <strong>{{ total_orders|default:0 }}</strong>
+                    </div>
+                    <span class="summary-end"><i class="bi bi-box-arrow-up-right"></i></span>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon"><i class="bi bi-people"></i></div>
+                    <div class="summary-copy">
+                        <small>Total Customers</small>
+                        <strong>{{ total_customers|default:0 }}</strong>
+                    </div>
+                    <span class="summary-end"><i class="bi bi-box-arrow-up-right"></i></span>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-icon"><i class="bi bi-cash-stack"></i></div>
+                    <div class="summary-copy">
+                        <small>Total Revenue</small>
+                        <strong>₹{{ total_revenue|default:0|floatformat:2 }}</strong>
+                    </div>
+                    <span class="summary-end"><i class="bi bi-currency-rupee"></i></span>
+                </div>
+            </div>
+            <div class="summary-note">
+                <i class="bi bi-lightbulb me-1"></i>
+                Use Sales Report for detailed financial analysis. Make sure revenue is calculated from the appropriate order statuses in your Django view.
+            </div>
+        </article>
+    </section>
+
+    <!-- RECENT ORDERS -->
+    <section class="card-premium orders-panel" id="orders-data">
+        <div class="orders-heading">
+            <div class="orders-title-wrap">
+                <div class="orders-title-icon"><i class="bi bi-receipt-cutoff"></i></div>
+                <div>
+                    <h3>Recent Orders</h3>
+                    <p>Review recent customer purchases and their status</p>
+                </div>
+            </div>
+            <div class="order-tools">
+                <input type="search" id="orderSearch" class="order-search"
+                       placeholder="Search orders..." aria-label="Search orders">
+                <select id="statusFilter" class="filter-select" aria-label="Filter orders by status">
+                    <option value="">All statuses</option>
+                    <option value="pending">Pending</option>
+                    <option value="delivered">Delivered</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
+                <a href="{% url 'saller_customer_orders' %}" class="btn-primary-custom">
+                    View All <i class="bi bi-arrow-up-right"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="orders-list" id="ordersList">
+            {% for order in recent_orders %}
+            <article class="order-card"
+                     data-status="{{ order.status|default:'unknown'|lower }}"
+                     data-search="{{ order.id }} {{ order.user.username }} {{ order.user.get_full_name }} {{ order.product.name }} {{ order.status }}">
+                <div class="order-top">
+                    <div class="customer">
+                        {% if order.user.customerregistration.profile_image %}
+                        <img src="{{ order.user.customerregistration.profile_image.url }}"
+                             class="customer-photo" alt="Customer profile">
+                        {% else %}
+                        <div class="customer-photo d-grid place-items-center"
+                             style="display:grid;place-items:center;color:#6366f1;font-size:19px">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        {% endif %}
+                        <div class="overflow-hidden">
+                            <p class="customer-name text-truncate">
+                                {{ order.user.get_full_name|default:order.user.username }}
+                            </p>
+                            <div class="order-id">Order #{{ order.id }}</div>
+                        </div>
+                    </div>
+                    {% if order.is_new %}
+                    <span class="new-badge"><span class="new-light"></span> NEW ORDER</span>
+                    {% endif %}
+                </div>
+
+                <div class="order-fields">
+                    <div class="field">
+                        <div class="field-label">Product</div>
+                        <div class="field-value">{{ order.product.name }}</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Quantity</div>
+                        <div class="field-value">{{ order.quantity }}</div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Amount</div>
+                        <div class="field-value">
+                            ₹{{ order.total_amount|default_if_none:0|floatformat:2 }}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Status</div>
+                        <div class="field-value">
+                            {% if order.status|lower == 'pending' %}
+                            <span class="status status-pending">Pending</span>
+                            {% elif order.status|lower == 'delivered' %}
+                            <span class="status status-delivered">Delivered</span>
+                            {% elif order.status|lower == 'cancelled' %}
+                            <span class="status status-cancelled">Cancelled</span>
+                            {% else %}
+                            <span class="status status-default">{{ order.status|default:"Unknown" }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="field-label">Order Date</div>
+                        <div class="field-value">
+                            {{ order.created_at|date:"d M Y, H:i"|default:"—" }}
+                        </div>
+                    </div>
+                </div>
+            </article>
+            {% empty %}
+            <div class="empty-state">
+                <i class="bi bi-bag-x"></i>
+                <strong>No recent orders found</strong>
+                <p>New customer orders will appear here when available.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div id="noFilteredOrders" class="empty-state d-none">
+            <i class="bi bi-search"></i>
+            <strong>No matching orders</strong>
+            <p>Try another search term or status filter.</p>
+        </div>
+
+        {% if recent_orders.paginator.num_pages > 1 %}
+        <nav class="mt-4" aria-label="Recent orders pagination">
+            <ul class="pagination justify-content-center">
+                {% if recent_orders.has_previous %}
+                <li class="page-item">
+                    <button type="button" class="page-link ajax-page"
+                            data-page="{{ recent_orders.previous_page_number }}">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                </li>
+                {% endif %}
+
+                {% for num in recent_orders.paginator.page_range %}
+                <li class="page-item {% if recent_orders.number == num %}active{% endif %}">
+                    <button type="button" class="page-link ajax-page" data-page="{{ num }}"
+                            {% if recent_orders.number == num %}aria-current="page"{% endif %}>
+                        {{ num }}
+                    </button>
+                </li>
+                {% endfor %}
+
+                {% if recent_orders.has_next %}
+                <li class="page-item">
+                    <button type="button" class="page-link ajax-page"
+                            data-page="{{ recent_orders.next_page_number }}">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    </section>
+
+    <footer class="footer">
+        © {% now "Y" %} MyShop Seller Portal · Built for your business
+    </footer>
+</main>
+</div>
+
+<!-- INFORMATION DRAWER -->
+<aside class="drawer" id="notificationDrawer" aria-label="Dashboard information"
+       aria-hidden="true">
+    <div class="drawer-head">
+        <div>
+            <h3>Dashboard Center</h3>
+            <div class="section-caption">Shortcuts and useful information</div>
+        </div>
+        <button type="button" class="icon-btn" id="closeDrawer" aria-label="Close drawer">
+            <i class="bi bi-x-lg"></i>
+        </button>
+    </div>
+    <div class="drawer-body">
+        <div class="notification-item">
+            <div class="notification-icon"><i class="bi bi-graph-up-arrow"></i></div>
+            <div>
+                <strong>Sales performance</strong>
+                <p>Review the Sales Report for your recorded sales, date ranges and revenue totals.</p>
+                <a href="{% url 'saller_sales_report' %}" class="btn-primary-custom mt-2">
+                    Open Sales Report <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="notification-item">
+            <div class="notification-icon" style="background:#fef3c7;color:#b45309">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <div>
+                <strong>Inventory management</strong>
+                <p>Check your product inventory and review low-stock products before replenishment.</p>
+                <a href="{% url 'saller_low_stock' %}" class="btn-primary-custom mt-2">
+                    Check Stock <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="notification-item">
+            <div class="notification-icon" style="background:#dcfce7;color:#15803d">
+                <i class="bi bi-arrow-return-left"></i>
+            </div>
+            <div>
+                <strong>Customer returns</strong>
+                <p>
+                    {% if pending_returns_count %}
+                    You have {{ pending_returns_count }} pending return{{ pending_returns_count|pluralize }} to review.
+                    {% else %}
+                    Your pending returns count is currently zero.
+                    {% endif %}
+                </p>
+                <a href="{% url 'seller_return_list' %}" class="btn-primary-custom mt-2">
+                    Manage Returns <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+        <div class="notification-item">
+            <div class="notification-icon" style="background:#f3e8ff;color:#7e22ce">
+                <i class="bi bi-person-gear"></i>
+            </div>
+            <div>
+                <strong>Keep your profile updated</strong>
+                <p>Check your business profile and bank details to keep your seller information current.</p>
+                <a href="{% url 'seller_profile' %}" class="btn-primary-custom mt-2">
+                    Open Profile <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</aside>
+<div class="overlay" id="drawerOverlay"></div>
+<div class="toast-stack" id="toastStack" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+(function () {
+    "use strict";
+
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+    // MOBILE SIDEBAR
+    const sidebar = $("#sidebar");
+    const sidebarOverlay = $("#sidebarOverlay");
+    const mobileMenuBtn = $("#mobileMenuBtn");
+
+    function closeSidebar() {
+        sidebar?.classList.remove("show");
+        sidebarOverlay?.classList.remove("show");
+        mobileMenuBtn?.setAttribute("aria-expanded", "false");
+    }
+
+    mobileMenuBtn?.addEventListener("click", () => {
+        const isOpen = sidebar.classList.toggle("show");
+        sidebarOverlay?.classList.toggle("show", isOpen);
+        mobileMenuBtn.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    sidebarOverlay?.addEventListener("click", closeSidebar);
+
+    // ACTIVE NAVIGATION: derive the active item from the current URL.
+    const currentPath = window.location.pathname.replace(/\/+$/, "") || "/";
+    $$(".nav-link-custom").forEach(link => {
+        const linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/+$/, "") || "/";
+        const isDashboard = linkPath === currentPath;
+        if (isDashboard) {
+            $$(".nav-link-custom").forEach(item => item.classList.remove("active"));
+            link.classList.add("active");
+        }
+    });
+
+    // REAL-TIME LOCAL CLOCK
+    const clock = $("#datetime");
+
+    function updateClock() {
+        if (!clock) return;
+        const now = new Date();
+        clock.textContent = now.toLocaleDateString("en-IN", {
+            day: "2-digit", month: "short", year: "numeric"
+        }) + " · " + now.toLocaleTimeString("en-IN", {
+            hour: "2-digit", minute: "2-digit", second: "2-digit",
+            hour12: true
+        });
+    }
+
+    updateClock();
+    window.setInterval(updateClock, 1000);
+
+    // DRAWER
+    const drawer = $("#notificationDrawer");
+    const drawerOverlay = $("#drawerOverlay");
+
+    function openDrawer() {
+        drawer?.classList.add("open");
+        drawerOverlay?.classList.add("show");
+        drawer?.setAttribute("aria-hidden", "false");
+        $("#closeDrawer")?.focus();
+    }
+
+    function closeDrawer() {
+        drawer?.classList.remove("open");
+        drawerOverlay?.classList.remove("show");
+        drawer?.setAttribute("aria-hidden", "true");
+        $("#notificationBtn")?.focus();
+    }
+
+    $("#notificationBtn")?.addEventListener("click", openDrawer);
+    $("#closeDrawer")?.addEventListener("click", closeDrawer);
+    drawerOverlay?.addEventListener("click", closeDrawer);
+
+    document.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+            closeDrawer();
+            closeSidebar();
+        }
+    });
+
+    // TOAST FEEDBACK
+    function toast(message, icon = "bi-check-circle-fill") {
+        const stack = $("#toastStack");
+        if (!stack) return;
+        const element = document.createElement("div");
+        element.className = "app-toast";
+        const symbol = document.createElement("i");
+        symbol.className = "bi " + icon;
+        const text = document.createElement("span");
+        text.textContent = message;
+        element.append(symbol, text);
+        stack.appendChild(element);
+        window.setTimeout(() => element.remove(), 3200);
+    }
+
+    // ORDER SEARCH + STATUS FILTER
+    const orderSearch = $("#orderSearch");
+    const globalSearch = $("#globalSearch");
+    const statusFilter = $("#statusFilter");
+    const ordersList = $("#ordersList");
+    const noFilteredOrders = $("#noFilteredOrders");
+
+    function filterOrders() {
+        if (!ordersList) return;
+        const query = (orderSearch?.value || globalSearch?.value || "").trim().toLowerCase();
+        const status = (statusFilter?.value || "").toLowerCase();
+        let visible = 0;
+
+        $$(".order-card", ordersList).forEach(card => {
+            const searchText = (card.dataset.search || card.textContent).toLowerCase();
+            const orderStatus = (card.dataset.status || "").toLowerCase();
+            const matchesQuery = !query || searchText.includes(query);
+            const matchesStatus = !status || orderStatus.includes(status);
+            const matches = matchesQuery && matchesStatus;
+            card.classList.toggle("d-none", !matches);
+            if (matches) visible++;
+        });
+
+        noFilteredOrders?.classList.toggle("d-none", visible !== 0);
+    }
+
+    orderSearch?.addEventListener("input", () => {
+        if (globalSearch) globalSearch.value = orderSearch.value;
+        filterOrders();
+    });
+
+    globalSearch?.addEventListener("input", () => {
+        if (orderSearch) orderSearch.value = globalSearch.value;
+        filterOrders();
+        $("#orders-data")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    statusFilter?.addEventListener("change", filterOrders);
+
+    // SALES CHART
+    // These are illustrative values, NOT actual Django sales.
+    // Replace them with monthly totals supplied by your Django view.
+    const chartCanvas = $("#salesChart");
+    let salesChart = null;
+
+    const demoLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const demoValues = [12000, 18000, 15000, 23000, 21000, 28000,
+                        32000, 29000, 35000, 38000, 42000, 48000];
+
+    function getChartRange(period) {
+        const now = new Date();
+        const end = now.getMonth();
+        const start = period === "quarter" ? Math.max(0, end - 2)
+                    : period === "half" ? Math.max(0, end - 5) : 0;
+        const labels = demoLabels.slice(start, end + 1);
+        const values = demoValues.slice(start, end + 1);
+        return { labels, values };
+    }
+
+    function renderChart(period = "year") {
+        if (!chartCanvas || typeof Chart === "undefined") return;
+        const ctx = chartCanvas.getContext("2d");
+        const range = getChartRange(period);
+        const gradient = ctx.createLinearGradient(0, 0, 0, 260);
+        gradient.addColorStop(0, "rgba(99,102,241,.24)");
+        gradient.addColorStop(1, "rgba(99,102,241,0)");
+
+        if (salesChart) salesChart.destroy();
+
+        salesChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: range.labels.length ? range.labels : demoLabels,
+                datasets: [{
+                    label: "Illustrative sales",
+                    data: range.values.length ? range.values : demoValues,
+                    borderColor: "#6366f1",
+                    backgroundColor: gradient,
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: .38,
+                    pointRadius: 3,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: "#6366f1",
+                    pointBorderColor: "#fff",
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: "index" },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: "#111827",
+                        padding: 12,
+                        displayColors: false,
+                        callbacks: {
+                            label: context => "₹" +
+                                Number(context.parsed.y).toLocaleString("en-IN")
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        border: { display: false },
+                        grid: { color: "#f1f5f9" },
+                        ticks: {
+                            color: "#94a3b8",
+                            font: { size: 10 },
+                            callback: value => "₹" + (value / 1000) + "k"
+                        }
+                    },
+                    x: {
+                        border: { display: false },
+                        grid: { display: false },
+                        ticks: { color: "#94a3b8", font: { size: 10 } }
+                    }
+                }
+            }
+        });
+    }
+
+    renderChart("year");
+    $("#chartPeriod")?.addEventListener("change", event => {
+        renderChart(event.target.value);
+    });
+
+    // AJAX PAGINATION
+    // Expects the same dashboard HTML to be returned for ?page=N.
+    // Django's existing pagination view must remain responsible for the page query.
+    document.addEventListener("click", async event => {
+        const button = event.target.closest(".ajax-page");
+        if (!button) return;
+
+        const page = button.dataset.page;
+        if (!page || !/^\d+$/.test(page)) return;
+
+        const container = $("#orders-data");
+        if (!container) return;
+
+        container.classList.add("loading-cover");
+        $$(".ajax-page", container).forEach(item => item.disabled = true);
+
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.set("page", page);
+
+            const response = await fetch(url.toString(), {
+                headers: { "X-Requested-With": "XMLHttpRequest" },
+                credentials: "same-origin"
+            });
+
+            if (!response.ok) throw new Error("Unable to load this page.");
+
+            const html = await response.text();
+            const parsed = new DOMParser().parseFromString(html, "text/html");
+            const newContainer = parsed.querySelector("#orders-data");
+
+            if (!newContainer) throw new Error("Orders section was not found.");
+
+            container.innerHTML = newContainer.innerHTML;
+            window.history.pushState({ page }, "", url);
+            filterOrders();
+            container.scrollIntoView({ behavior: "smooth", block: "start" });
+        } catch (error) {
+            console.error("Pagination error:", error);
+            toast("Could not load orders. Please try again.", "bi-exclamation-circle-fill");
+        } finally {
+            container.classList.remove("loading-cover");
+            $$(".ajax-page", container).forEach(item => item.disabled = false);
+        }
+    });
+
+    // Browser history support for AJAX page navigation.
+    window.addEventListener("popstate", () => window.location.reload());
+
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

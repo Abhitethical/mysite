@@ -1,0 +1,442 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .status-wrapper {
+        min-height: 80vh;
+        background: #f5f7fb;
+        padding: 50px 0;
+    }
+
+    .status-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        background: #ffffff;
+    }
+
+    .status-header {
+        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        color: white;
+        padding: 30px;
+    }
+
+    .status-header h2 {
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .status-header p {
+        opacity: 0.85;
+        margin-bottom: 0;
+    }
+
+    .advertisement-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .section-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #6b7280;
+        margin-bottom: 15px;
+    }
+
+    .status-box {
+        border: 1px solid #e5e7eb;
+        border-radius: 15px;
+        padding: 22px;
+        height: 100%;
+        transition: all 0.2s ease;
+        background: #fff;
+    }
+
+    .status-box:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .status-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+
+    .icon-success {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .icon-warning {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .icon-danger {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .status-label {
+        color: #6b7280;
+        font-size: 0.9rem;
+        margin-bottom: 6px;
+    }
+
+    .status-value {
+        font-size: 1.15rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .success-text {
+        color: #16a34a;
+    }
+
+    .warning-text {
+        color: #d97706;
+    }
+
+    .danger-text {
+        color: #dc2626;
+    }
+
+    .pending-text {
+        color: #92400e;
+    }
+
+    .rejected-reason {
+        margin-top: 18px;
+        background: #fff7f7;
+        border-left: 4px solid #dc2626;
+        border-radius: 8px;
+        padding: 15px;
+        color: #7f1d1d;
+    }
+
+    .progress-container {
+        margin-top: 30px;
+    }
+
+    .progress {
+        height: 9px;
+        border-radius: 20px;
+        background: #e5e7eb;
+    }
+
+    .progress-bar {
+        border-radius: 20px;
+        background: linear-gradient(90deg, #4f46e5, #7c3aed);
+    }
+
+    .info-footer {
+        margin-top: 25px;
+        padding: 18px;
+        border-radius: 12px;
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 768px) {
+        .status-wrapper {
+            padding: 25px 10px;
+        }
+
+        .status-header {
+            padding: 25px 20px;
+        }
+    }
+</style>
+
+<div class="status-wrapper">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-lg-9 col-xl-8">
+
+                <div class="status-card">
+
+                    <!-- Header -->
+                    <div class="status-header">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <div>
+                                <i class="bi bi-megaphone-fill fs-1"></i>
+                            </div>
+
+                            <div>
+                                <h2>Advertisement Status</h2>
+                                <p>Track your advertisement payment and approval status</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Content -->
+                    <div class="p-4 p-md-5">
+
+                        <!-- Advertisement -->
+                        <div class="mb-4">
+
+                            <div class="section-title">
+                                Advertisement
+                            </div>
+
+                            <div class="advertisement-title">
+                                <i class="bi bi-file-earmark-text me-2 text-primary"></i>
+
+                                {{ advertisement.title }}
+
+                            </div>
+
+                        </div>
+
+
+                        <hr class="mb-4">
+
+
+                        <!-- Status Cards -->
+                        <div class="row g-4">
+
+                            <!-- Payment Status -->
+                            <div class="col-md-6">
+
+                                <div class="status-box">
+
+                                    {% if advertisement.payment_status == "PAID" %}
+
+                                        <div class="status-icon icon-success">
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        </div>
+
+                                        <div class="status-label">
+                                            Payment Status
+                                        </div>
+
+                                        <p class="status-value success-text">
+                                            Payment Completed
+                                        </p>
+
+                                        <span class="badge bg-success-subtle text-success mt-2">
+                                            PAID
+                                        </span>
+
+                                    {% else %}
+
+                                        <div class="status-icon icon-warning">
+                                            <i class="bi bi-clock-fill"></i>
+                                        </div>
+
+                                        <div class="status-label">
+                                            Payment Status
+                                        </div>
+
+                                        <p class="status-value warning-text">
+                                            Pending Payment
+                                        </p>
+
+                                        <span class="badge bg-warning-subtle text-warning mt-2">
+                                            PAYMENT PENDING
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Approval Status -->
+                            <div class="col-md-6">
+
+                                <div class="status-box">
+
+                                    {% if advertisement.status == "WAITING_APPROVAL" %}
+
+                                        <div class="status-icon icon-warning">
+                                            <i class="bi bi-hourglass-split"></i>
+                                        </div>
+
+                                        <div class="status-label">
+                                            Approval Status
+                                        </div>
+
+                                        <p class="status-value warning-text">
+                                            Waiting for Approval
+                                        </p>
+
+                                        <span class="badge bg-warning-subtle text-warning mt-2">
+                                            UNDER REVIEW
+                                        </span>
+
+
+                                    {% elif advertisement.status == "APPROVED" %}
+
+                                        <div class="status-icon icon-success">
+                                            <i class="bi bi-patch-check-fill"></i>
+                                        </div>
+
+                                        <div class="status-label">
+                                            Approval Status
+                                        </div>
+
+                                        <p class="status-value success-text">
+                                            Advertisement Approved
+                                        </p>
+
+                                        <span class="badge bg-success-subtle text-success mt-2">
+                                            APPROVED
+                                        </span>
+
+
+                                    {% elif advertisement.status == "REJECTED" %}
+
+                                        <div class="status-icon icon-danger">
+                                            <i class="bi bi-x-circle-fill"></i>
+                                        </div>
+
+                                        <div class="status-label">
+                                            Approval Status
+                                        </div>
+
+                                        <p class="status-value danger-text">
+                                            Advertisement Rejected
+                                        </p>
+
+                                        <span class="badge bg-danger-subtle text-danger mt-2">
+                                            REJECTED
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Progress -->
+                        <div class="progress-container">
+
+                            <div class="d-flex justify-content-between mb-2">
+
+                                <span class="fw-semibold">
+                                    Advertisement Progress
+                                </span>
+
+                                {% if advertisement.status == "APPROVED" %}
+
+                                    <span class="text-success fw-semibold">
+                                        100%
+                                    </span>
+
+                                {% elif advertisement.status == "WAITING_APPROVAL" %}
+
+                                    <span class="text-warning fw-semibold">
+                                        75%
+                                    </span>
+
+                                {% elif advertisement.status == "REJECTED" %}
+
+                                    <span class="text-danger fw-semibold">
+                                        Rejected
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        In Progress
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="progress">
+
+                                {% if advertisement.status == "APPROVED" %}
+
+                                    <div class="progress-bar" style="width: 100%;"></div>
+
+                                {% elif advertisement.status == "WAITING_APPROVAL" %}
+
+                                    <div class="progress-bar" style="width: 75%;"></div>
+
+                                {% elif advertisement.status == "REJECTED" %}
+
+                                    <div class="progress-bar bg-danger" style="width: 100%;"></div>
+
+                                {% else %}
+
+                                    <div class="progress-bar" style="width: 40%;"></div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Rejection Reason -->
+                        {% if advertisement.status == "REJECTED" %}
+
+                            <div class="rejected-reason">
+
+                                <div class="fw-bold mb-1">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    Rejection Reason
+                                </div>
+
+                                <div>
+                                    {{ advertisement.rejected_reason }}
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- Footer Information -->
+                        <div class="info-footer">
+
+                            <i class="bi bi-info-circle me-2"></i>
+
+                            Your advertisement status is updated by the administration.
+                            Please check this page again if your advertisement is still under review.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

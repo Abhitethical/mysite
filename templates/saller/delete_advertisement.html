@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    body {
+        background: #f4f7fb;
+        font-family: "Inter", "Segoe UI", sans-serif;
+    }
+
+    .delete-page {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 15px;
+    }
+
+    .delete-card {
+        width: 100%;
+        max-width: 520px;
+        background: #ffffff;
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 15px 45px rgba(0, 0, 0, 0.10);
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .delete-header {
+        background: linear-gradient(135deg, #dc3545, #b02a37);
+        color: white;
+        text-align: center;
+        padding: 35px 25px 30px;
+    }
+
+    .warning-icon {
+        width: 75px;
+        height: 75px;
+        margin: 0 auto 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        font-size: 36px;
+    }
+
+    .delete-header h2 {
+        margin: 0;
+        font-size: 27px;
+        font-weight: 700;
+    }
+
+    .delete-body {
+        padding: 35px;
+        text-align: center;
+    }
+
+    .delete-message {
+        color: #6c757d;
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 10px;
+    }
+
+    .advertisement-name {
+        display: inline-block;
+        max-width: 100%;
+        padding: 10px 18px;
+        margin: 8px 0 25px;
+        background: #fff5f5;
+        color: #b02a37;
+        border: 1px solid #f5c2c7;
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 17px;
+        word-break: break-word;
+    }
+
+    .warning-text {
+        font-size: 13px;
+        color: #999;
+        margin-bottom: 28px;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .action-buttons .btn {
+        min-width: 140px;
+        padding: 12px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.25s ease;
+    }
+
+    .btn-delete {
+        background: linear-gradient(135deg, #dc3545, #bb2d3b);
+        border: none;
+        color: white;
+        box-shadow: 0 5px 15px rgba(220, 53, 69, 0.25);
+    }
+
+    .btn-delete:hover {
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(220, 53, 69, 0.35);
+    }
+
+    .btn-cancel {
+        background: #f1f3f5;
+        border: 1px solid #dee2e6;
+        color: #495057;
+    }
+
+    .btn-cancel:hover {
+        background: #e9ecef;
+        color: #212529;
+        transform: translateY(-2px);
+    }
+
+    .security-note {
+        border-top: 1px solid #eee;
+        margin-top: 30px;
+        padding-top: 18px;
+        color: #adb5bd;
+        font-size: 12px;
+    }
+
+    .security-note i {
+        color: #198754;
+        margin-right: 5px;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 576px) {
+        .delete-card {
+            border-radius: 16px;
+        }
+
+        .delete-body {
+            padding: 28px 20px;
+        }
+
+        .delete-header {
+            padding: 30px 20px 25px;
+        }
+
+        .delete-header h2 {
+            font-size: 23px;
+        }
+
+        .action-buttons {
+            flex-direction: column-reverse;
+        }
+
+        .action-buttons .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="delete-page">
+
+    <div class="delete-card">
+
+        <!-- Header -->
+        <div class="delete-header">
+
+            <div class="warning-icon">
+                <i class="bi bi-trash3"></i>
+            </div>
+
+            <h2>Delete Advertisement</h2>
+
+        </div>
+
+
+        <!-- Body -->
+        <div class="delete-body">
+
+            <p class="delete-message">
+                Are you sure you want to permanently delete this advertisement?
+            </p>
+
+            <div class="advertisement-name">
+                <i class="bi bi-megaphone me-2"></i>
+                {{ advertisement.title }}
+            </div>
+
+            <p class="warning-text">
+                <i class="bi bi-exclamation-triangle me-1"></i>
+                This action cannot be undone.
+            </p>
+
+
+            <!-- Actions -->
+            <form method="post">
+
+                {% csrf_token %}
+
+                <div class="action-buttons">
+
+                    <a href="{% url 'advertisement_detail' advertisement.id %}"
+                       class="btn btn-cancel">
+
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Cancel
+
+                    </a>
+
+
+                    <button type="submit"
+                            class="btn btn-delete">
+
+                        <i class="bi bi-trash3 me-2"></i>
+                        Delete Advertisement
+
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <!-- Security Note -->
+            <div class="security-note">
+
+                <i class="bi bi-shield-check"></i>
+
+                Your request is securely protected with CSRF verification.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<title>ShopKart Invoice - INV-{{ order.id }}</title>
+
+<style>
+
+    @page {
+        size: A4;
+        margin: 22px 25px 25px 25px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background: #ffffff;
+        color: #172033;
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 10px;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .invoice {
+        width: 100%;
+    }
+
+
+    /* =========================================
+       TOP ACCENT
+    ========================================= */
+
+    .accent {
+        height: 5px;
+        background: #2563eb;
+        margin-bottom: 18px;
+    }
+
+
+    /* =========================================
+       HEADER
+    ========================================= */
+
+    .header {
+        width: 100%;
+        margin-bottom: 18px;
+    }
+
+    .brand {
+        font-size: 27px;
+        font-weight: bold;
+        color: #2563eb;
+        letter-spacing: 0.3px;
+    }
+
+    .brand-dark {
+        color: #111827;
+    }
+
+    .tagline {
+        margin-top: 3px;
+        color: #64748b;
+        font-size: 9px;
+        letter-spacing: 0.7px;
+    }
+
+    .company-info {
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 9px;
+        line-height: 14px;
+    }
+
+    .invoice-word {
+        text-align: right;
+        font-size: 29px;
+        font-weight: bold;
+        color: #0f172a;
+        letter-spacing: 1px;
+    }
+
+    .invoice-meta {
+        text-align: right;
+        margin-top: 5px;
+        color: #64748b;
+        font-size: 9px;
+        line-height: 15px;
+    }
+
+    .invoice-meta strong {
+        color: #111827;
+    }
+
+
+    /* =========================================
+       STATUS
+    ========================================= */
+
+    .status-pill {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 5px 13px;
+
+        background: #ecfdf5;
+        border: 1px solid #bbf7d0;
+
+        color: #15803d;
+
+        font-size: 8px;
+        font-weight: bold;
+
+        text-transform: uppercase;
+    }
+
+
+    /* =========================================
+       INFORMATION CARDS
+    ========================================= */
+
+    .info-area {
+        width: 100%;
+        margin-top: 5px;
+        margin-bottom: 20px;
+    }
+
+    .info-card {
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        padding: 12px;
+        vertical-align: top;
+    }
+
+    .info-gap {
+        width: 15px;
+    }
+
+    .info-title {
+        color: #2563eb;
+        font-size: 8px;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        padding-bottom: 6px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 8px;
+    }
+
+    .customer-name {
+        font-size: 13px;
+        font-weight: bold;
+        color: #111827;
+        margin-bottom: 5px;
+    }
+
+    .info-text {
+        color: #64748b;
+        font-size: 9px;
+        line-height: 15px;
+    }
+
+    .info-text strong {
+        color: #334155;
+    }
+
+
+    /* =========================================
+       PRODUCT SECTION TITLE
+    ========================================= */
+
+    .section-title {
+        margin-bottom: 8px;
+        color: #0f172a;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .section-subtitle {
+        color: #94a3b8;
+        font-size: 8px;
+        margin-top: 2px;
+    }
+
+
+    /* =========================================
+       PRODUCT TABLE
+    ========================================= */
+
+    .products {
+        width: 100%;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 18px;
+    }
+
+    .products th {
+        background: #0f172a;
+        color: #ffffff;
+
+        padding: 10px 8px;
+
+        font-size: 8px;
+        font-weight: bold;
+
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .products td {
+        padding: 11px 8px;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: middle;
+    }
+
+    .products tr:last-child td {
+        border-bottom: none;
+    }
+
+    .product-name {
+        color: #111827;
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    .product-meta {
+        color: #94a3b8;
+        font-size: 8px;
+        margin-top: 3px;
+    }
+
+    .qty {
+        text-align: center;
+        color: #334155;
+        font-weight: bold;
+    }
+
+    .price {
+        text-align: right;
+        color: #334155;
+    }
+
+    .amount {
+        text-align: right;
+        color: #111827;
+        font-weight: bold;
+    }
+
+
+    /* =========================================
+       SUMMARY
+    ========================================= */
+
+    .summary-area {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .summary-left {
+        width: 55%;
+        vertical-align: top;
+    }
+
+    .summary-right {
+        width: 45%;
+        vertical-align: top;
+    }
+
+    .coupon {
+        border: 1px dashed #93c5fd;
+        background: #eff6ff;
+        padding: 10px;
+        width: 85%;
+    }
+
+    .coupon-title {
+        color: #64748b;
+        font-size: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+    }
+
+    .coupon-code {
+        color: #1d4ed8;
+        font-size: 12px;
+        font-weight: bold;
+        margin-top: 4px;
+    }
+
+    .summary {
+        width: 100%;
+    }
+
+    .summary td {
+        padding: 5px 7px;
+        font-size: 9px;
+    }
+
+    .summary-label {
+        color: #64748b;
+        text-align: left;
+    }
+
+    .summary-value {
+        color: #334155;
+        text-align: right;
+    }
+
+    .discount {
+        color: #16a34a;
+    }
+
+    .grand-total td {
+        border-top: 2px solid #2563eb;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    .grand-total .summary-label {
+        color: #111827;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .grand-total .summary-value {
+        color: #2563eb;
+        font-size: 17px;
+        font-weight: bold;
+    }
+
+
+    /* =========================================
+       PAYMENT CARD
+    ========================================= */
+
+    .payment-card {
+        margin-top: 18px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        padding: 12px;
+    }
+
+    .payment-title {
+        color: #0f172a;
+        font-size: 9px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        margin-bottom: 6px;
+    }
+
+    .payment-text {
+        color: #64748b;
+        font-size: 9px;
+        line-height: 15px;
+    }
+
+    .paid {
+        color: #16a34a;
+        font-weight: bold;
+    }
+
+
+    /* =========================================
+       DELIVERY STATUS
+    ========================================= */
+
+    .timeline {
+        margin-top: 18px;
+        border: 1px solid #e2e8f0;
+        padding: 12px;
+    }
+
+    .timeline-title {
+        font-size: 9px;
+        font-weight: bold;
+        color: #0f172a;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+    }
+
+    .timeline-step {
+        text-align: center;
+        vertical-align: top;
+    }
+
+    .circle {
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+
+        background: #2563eb;
+        color: #ffffff;
+
+        border-radius: 50%;
+
+        margin: auto;
+
+        font-size: 8px;
+        font-weight: bold;
+    }
+
+    .timeline-label {
+        margin-top: 5px;
+        color: #64748b;
+        font-size: 7px;
+    }
+
+    .timeline-line {
+        border-top: 1px solid #bfdbfe;
+        margin-top: 10px;
+    }
+
+
+    /* =========================================
+       SIGNATURE / SEAL
+    ========================================= */
+
+    .signature-section {
+        width: 100%;
+        margin-top: 28px;
+    }
+
+    .signature-left {
+        width: 60%;
+        vertical-align: bottom;
+    }
+
+    .seal-right {
+        width: 40%;
+        text-align: center;
+        vertical-align: bottom;
+    }
+
+    .signature-label {
+        color: #64748b;
+        font-size: 8px;
+    }
+
+    .signature-text {
+        color: #334155;
+        font-size: 18px;
+        font-style: italic;
+        margin-top: 16px;
+        margin-bottom: 4px;
+    }
+
+    .signature-line {
+        width: 180px;
+        border-top: 1px solid #334155;
+        padding-top: 5px;
+    }
+
+    .authorized {
+        color: #111827;
+        font-size: 8px;
+        font-weight: bold;
+    }
+
+
+    /* =========================================
+       OFFICIAL SEAL
+    ========================================= */
+
+    .seal {
+        width: 78px;
+        height: 78px;
+
+        border: 3px solid #2563eb;
+        border-radius: 50%;
+
+        margin: auto;
+
+        text-align: center;
+    }
+
+    .seal-inner {
+        width: 62px;
+        height: 62px;
+
+        margin: 5px auto;
+
+        border: 1px solid #2563eb;
+        border-radius: 50%;
+
+        padding-top: 10px;
+    }
+
+    .seal-company {
+        color: #2563eb;
+        font-size: 7px;
+        font-weight: bold;
+    }
+
+    .seal-main {
+        color: #1d4ed8;
+        font-size: 10px;
+        font-weight: bold;
+        margin-top: 5px;
+    }
+
+    .seal-check {
+        color: #16a34a;
+        font-size: 11px;
+        font-weight: bold;
+        margin-top: 3px;
+    }
+
+
+    /* =========================================
+       NOTES
+    ========================================= */
+
+    .notes {
+        margin-top: 22px;
+        border-top: 1px solid #e2e8f0;
+        padding-top: 10px;
+
+        color: #64748b;
+        font-size: 8px;
+        line-height: 14px;
+    }
+
+    .notes-title {
+        color: #334155;
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+
+    .footer {
+        margin-top: 18px;
+        padding-top: 10px;
+
+        border-top: 3px solid #0f172a;
+
+        text-align: center;
+    }
+
+    .footer-title {
+        color: #111827;
+        font-size: 11px;
+        font-weight: bold;
+    }
+
+    .footer-text {
+        color: #94a3b8;
+        font-size: 7px;
+        line-height: 12px;
+        margin-top: 4px;
+    }
+
+    .footer-id {
+        color: #cbd5e1;
+        font-size: 7px;
+        margin-top: 4px;
+    }
+
+</style>
+```
+
+</head>
+
+<body>
+
+<div class="invoice">
+
+```
+<!-- =========================================
+     TOP ACCENT
+========================================== -->
+
+<div class="accent"></div>
+
+
+<!-- =========================================
+     HEADER
+========================================== -->
+
+<table class="header">
+
+    <tr>
+
+        <td width="60%" valign="top">
+
+            <div class="brand">
+                Shop<span class="brand-dark">Kart</span>
+            </div>
+
+            <div class="tagline">
+                PREMIUM ONLINE SHOPPING
+            </div>
+
+            <div class="company-info">
+
+                Your Business Address<br>
+
+                Kerala, India - 000000<br>
+
+                Phone: +91 XXXXXXXXXX<br>
+
+                Email: support@shopkart.com
+
+            </div>
+
+        </td>
+
+
+        <td width="40%" valign="top">
+
+            <div class="invoice-word">
+                INVOICE
+            </div>
+
+            <div class="invoice-meta">
+
+                Invoice No:
+                <strong>INV-{{ order.id }}</strong>
+
+                <br>
+
+                Order No:
+                <strong>#{{ order.id }}</strong>
+
+                <br>
+
+                Date:
+                <strong>
+                    {{ order.ordered_date|date:"d M Y" }}
+                </strong>
+
+            </div>
+
+            <div style="text-align:right;">
+
+                <span class="status-pill">
+
+                    {{ order.get_status_display }}
+
+                </span>
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+
+
+<!-- =========================================
+     BILL TO / ORDER INFORMATION
+========================================== -->
+
+<table class="info-area">
+
+    <tr>
+
+        <td class="info-card" width="49%">
+
+            <div class="info-title">
+                Customer Information
+            </div>
+
+            <div class="customer-name">
+
+                {{ order.name|default:"Customer" }}
+
+            </div>
+
+            <div class="info-text">
+
+                {% if order.address %}
+                    {{ order.address }}<br>
+                {% endif %}
+
+                {% if order.city %}
+                    {{ order.city }},
+                {% endif %}
+
+                {% if order.state %}
+                    {{ order.state }}
+                {% endif %}
+
+                {% if order.postal_code %}
+                    - {{ order.postal_code }}
+                {% endif %}
+
+                <br>
+
+                {% if order.phone %}
+                    <strong>Phone:</strong>
+                    {{ order.phone }}
+                {% endif %}
+
+            </div>
+
+        </td>
+
+
+        <td class="info-gap">
+            &nbsp;
+        </td>
+
+
+        <td class="info-card" width="49%">
+
+            <div class="info-title">
+                Order Information
+            </div>
+
+            <div class="info-text">
+
+                <strong>Order ID:</strong>
+                #{{ order.id }}
+
+                <br>
+
+                <strong>Order Date:</strong>
+                {{ order.ordered_date|date:"d M Y, h:i A" }}
+
+                <br>
+
+                <strong>Status:</strong>
+                {{ order.get_status_display }}
+
+                <br>
+
+                {% if order.vendor %}
+
+                    <strong>Seller:</strong>
+                    {{ order.vendor }}
+
+                {% endif %}
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+
+
+<!-- =========================================
+     PRODUCT TITLE
+========================================== -->
+
+<div class="section-title">
+
+    Order Items
+
+    <div class="section-subtitle">
+        Product details and pricing
+    </div>
+
+</div>
+
+
+
+<!-- =========================================
+     PRODUCT TABLE
+========================================== -->
+
+<table class="products">
+
+    <thead>
+
+        <tr>
+
+            <th width="46%" style="text-align:left;">
+                Product
+            </th>
+
+            <th width="12%" style="text-align:center;">
+                Qty
+            </th>
+
+            <th width="20%" style="text-align:right;">
+                Unit Price
+            </th>
+
+            <th width="22%" style="text-align:right;">
+                Amount
+            </th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody>
+
+        <tr>
+
+            <td>
+
+                <div class="product-name">
+
+                    {{ order.product_name|default:"Product" }}
+
+                </div>
+
+                {% if order.vendor %}
+
+                    <div class="product-meta">
+
+                        Sold by:
+                        {{ order.vendor }}
+
+                    </div>
+
+                {% endif %}
+
+            </td>
+
+
+            <td class="qty">
+
+                {{ quantity }}
+
+            </td>
+
+
+            <td class="price">
+
+                ₹{{ unit_price|floatformat:2 }}
+
+            </td>
+
+
+            <td class="amount">
+
+                ₹{{ subtotal|floatformat:2 }}
+
+            </td>
+
+        </tr>
+
+    </tbody>
+
+</table>
+
+
+
+<!-- =========================================
+     SUMMARY
+========================================== -->
+
+<table class="summary-area">
+
+    <tr>
+
+        <td class="summary-left">
+
+            {% if order.coupon_code %}
+
+                <div class="coupon">
+
+                    <div class="coupon-title">
+                        Coupon Applied
+                    </div>
+
+                    <div class="coupon-code">
+                        {{ order.coupon_code }}
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+            <div class="info-text"
+                 style="margin-top:10px;">
+
+                <strong>Items:</strong>
+                {{ quantity }}
+
+                <br>
+
+                <strong>Seller:</strong>
+                {{ order.vendor|default:"N/A" }}
+
+            </div>
+
+        </td>
+
+
+        <td class="summary-right">
+
+            <table class="summary">
+
+                <tr>
+
+                    <td class="summary-label">
+                        Subtotal
+                    </td>
+
+                    <td class="summary-value">
+
+                        ₹{{ subtotal|floatformat:2 }}
+
+                    </td>
+
+                </tr>
+
+
+                {% if discount > 0 %}
+
+                <tr>
+
+                    <td class="summary-label">
+                        Discount
+                    </td>
+
+                    <td class="summary-value discount">
+
+                        - ₹{{ discount|floatformat:2 }}
+
+                    </td>
+
+                </tr>
+
+                {% endif %}
+
+
+                <tr>
+
+                    <td class="summary-label">
+                        Shipping
+                    </td>
+
+                    <td class="summary-value">
+                        ₹0.00
+                    </td>
+
+                </tr>
+
+
+                <tr class="grand-total">
+
+                    <td class="summary-label">
+                        GRAND TOTAL
+                    </td>
+
+                    <td class="summary-value">
+
+                        ₹{{ invoice_total|floatformat:2 }}
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </td>
+
+    </tr>
+
+</table>
+
+
+
+<!-- =========================================
+     PAYMENT INFORMATION
+========================================== -->
+
+<div class="payment-card">
+
+    <div class="payment-title">
+        Payment Information
+    </div>
+
+    <div class="payment-text">
+
+        Payment Status:
+        <span class="paid">
+            PAID / {{ order.get_status_display|upper }}
+        </span>
+
+        <br>
+
+        Your payment and order information have been
+        securely recorded in the ShopKart system.
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================
+     ORDER PROGRESS
+========================================== -->
+
+<div class="timeline">
+
+    <div class="timeline-title">
+        Order Progress
+    </div>
+
+    <table>
+
+        <tr>
+
+            <td width="20%" class="timeline-step">
+
+                <div class="circle">1</div>
+
+                <div class="timeline-label">
+                    ORDERED
+                </div>
+
+            </td>
+
+            <td width="20%">
+                <div class="timeline-line"></div>
+            </td>
+
+            <td width="20%" class="timeline-step">
+
+                <div class="circle">2</div>
+
+                <div class="timeline-label">
+                    PROCESSING
+                </div>
+
+            </td>
+
+            <td width="20%">
+                <div class="timeline-line"></div>
+            </td>
+
+            <td width="20%" class="timeline-step">
+
+                <div class="circle">3</div>
+
+                <div class="timeline-label">
+                    {{ order.get_status_display|upper }}
+                </div>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+</div>
+
+
+
+<!-- =========================================
+     SIGNATURE + SEAL
+========================================== -->
+
+<table class="signature-section">
+
+    <tr>
+
+        <td class="signature-left">
+
+            <div class="signature-label">
+                Authorized Signature
+            </div>
+
+            <div class="signature-text">
+                Authorized
+            </div>
+
+            <div class="signature-line">
+
+                <div class="authorized">
+                    For ShopKart
+                </div>
+
+                <div class="signature-label">
+                    Authorized Signatory
+                </div>
+
+            </div>
+
+        </td>
+
+
+        <td class="seal-right">
+
+            <div class="seal">
+
+                <div class="seal-inner">
+
+                    <div class="seal-company">
+                        SHOPKART
+                    </div>
+
+                    <div class="seal-main">
+                        VERIFIED
+                    </div>
+
+                    <div class="seal-check">
+                        ✓
+                    </div>
+
+                    <div class="seal-company">
+                        OFFICIAL
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="signature-label"
+                 style="margin-top:5px;">
+
+                Company Seal
+
+            </div>
+
+        </td>
+
+    </tr>
+
+</table>
+
+
+
+<!-- =========================================
+     NOTES
+========================================== -->
+
+<div class="notes">
+
+    <div class="notes-title">
+        Invoice Notes
+    </div>
+
+    This invoice is generated electronically from the
+    ShopKart order system.
+
+    <br>
+
+    Product, seller, quantity and pricing information are
+    based on the order record.
+
+    <br>
+
+    Please keep this invoice for your purchase records.
+
+</div>
+
+
+
+<!-- =========================================
+     FOOTER
+========================================== -->
+
+<div class="footer">
+
+    <div class="footer-title">
+        Thank You For Shopping With ShopKart!
+    </div>
+
+    <div class="footer-text">
+
+        This is a computer-generated invoice and does not
+        require a physical signature.
+
+        <br>
+
+        For support, please contact:
+        support@shopkart.com
+
+    </div>
+
+    <div class="footer-id">
+
+        Invoice INV-{{ order.id }}
+        &nbsp; • &nbsp;
+        Order #{{ order.id }}
+        &nbsp; • &nbsp;
+        {% now "Y" %}
+
+    </div>
+
+</div>
+```
+
+</div>
+
+</body>
+</html>

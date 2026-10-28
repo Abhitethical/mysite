@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+
+
+<h2>
+Renew Advertisement
+</h2>
+
+
+<h3>
+{{ad.title}}
+</h3>
+
+
+
+<form method="POST">
+
+{% csrf_token %}
+
+
+<select name="plan">
+
+
+<option value="BASIC">
+Basic - ₹500
+</option>
+
+
+<option value="STANDARD">
+Standard - ₹1250
+</option>
+
+
+<option value="PREMIUM">
+Premium - ₹2500
+</option>
+
+
+<option value="GOLD">
+Gold - ₹4500
+</option>
+
+
+<option value="PLATINUM">
+Platinum - ₹8000
+</option>
+
+
+</select>
+
+
+
+<button type="submit">
+
+Renew
+
+</button>
+
+
+</form>
+
+
+</body>
+
+</html>
+
+{% endblock %}

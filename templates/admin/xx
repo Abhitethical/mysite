@@ -1,0 +1,234 @@
+saller order update html page
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Order Control</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h4 class="mb-0">Customer Orders (Admin)</h4>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Image</th>
+                            <th>User</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Update</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+
+                            <td>
+                                <img src="{{ order.product.product_image.url }}"
+                                     class="img-thumbnail"
+                                     width="60">
+                            </td>
+
+                            <td>
+                                <a href="{% url 'customer_address' order.user.id %}"
+                                   class="text-decoration-none">
+                                    {{ order.user.username }}
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href="{% url 'product_detailz' order.product.id %}"
+                                   class="text-decoration-none">
+                                    {{ order.product.name }}
+                                </a>
+                            </td>
+
+                            <td>{{ order.quantity }}</td>
+
+                            <td>
+                                <span class="badge 
+                                    {% if order.status == 'pending' %}bg-secondary
+                                    {% elif order.status == 'processing' %}bg-info
+                                    {% elif order.status == 'shipped' %}bg-primary
+                                    {% elif order.status == 'delivered' %}bg-success
+                                    {% elif order.status == 'completed' %}bg-dark
+                                    {% elif order.status == 'cancelled' %}bg-danger
+                                    {% endif %}">
+                                    {{ order.status|title }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <form method="POST"
+                                      action="{% url 'seller_update_order_status' order.id %}"
+                                      class="d-flex gap-2 justify-content-center">
+                                    {% csrf_token %}
+
+                                    <select name="status"
+                                            class="form-select form-select-sm w-auto"
+                                            {% if order.status == "cancelled" %}disabled{% endif %}>
+                                        <option value="pending" {% if order.status == "pending" %}selected{% endif %}>Pending</option>
+                                        <option value="processing" {% if order.status == "processing" %}selected{% endif %}>Processing</option>
+                                        <option value="shipped" {% if order.status == "shipped" %}selected{% endif %}>Shipped</option>
+                                        <option value="delivered" {% if order.status == "delivered" %}selected{% endif %}>Delivered</option>
+                                        <option value="completed" {% if order.status == "completed" %}selected{% endif %}>Completed</option>
+                                        <option value="cancelled" {% if order.status == "cancelled" %}selected{% endif %}>Cancelled</option>
+                                    </select>
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-success"
+                                            {% if order.status == "cancelled" %}disabled{% endif %}>
+                                        Update
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-muted">
+                                No orders found
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+admin order updtae html product_image
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Order Control</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container-fluid mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <h4 class="mb-0">Customer Orders (Admin)</h4>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Image</th>
+                            <th>User</th>
+                            <th>Product</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
+                            <th>Update</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+
+                            <td>
+                                <img src="{{ order.product.product_image.url }}"
+                                     class="img-thumbnail"
+                                     width="60">
+                            </td>
+
+                            <td>
+                                <a href="{% url 'customer_address' order.user.id %}"
+                                   class="text-decoration-none">
+                                    {{ order.user.username }}
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href="{% url 'product_detailz' order.product.id %}"
+                                   class="text-decoration-none">
+                                    {{ order.product.name }}
+                                </a>
+                            </td>
+
+                            <td>{{ order.quantity }}</td>
+
+                            <td>
+                                <span class="badge 
+                                    {% if order.status == 'pending' %}bg-secondary
+                                    {% elif order.status == 'processing' %}bg-info
+                                    {% elif order.status == 'shipped' %}bg-primary
+                                    {% elif order.status == 'delivered' %}bg-success
+                                    {% elif order.status == 'completed' %}bg-dark
+                                    {% elif order.status == 'cancelled' %}bg-danger
+                                    {% endif %}">
+                                    {{ order.status|title }}
+                                </span>
+                            </td>
+
+                            <td>
+                                <form method="POST"
+                                      action="{% url 'seller_update_order_status' order.id %}"
+                                      class="d-flex gap-2 justify-content-center">
+                                    {% csrf_token %}
+
+                                    <select name="status"
+                                            class="form-select form-select-sm w-auto"
+                                            {% if order.status == "cancelled" %}disabled{% endif %}>
+                                        <option value="pending" {% if order.status == "pending" %}selected{% endif %}>Pending</option>
+                                        <option value="processing" {% if order.status == "processing" %}selected{% endif %}>Processing</option>
+                                        <option value="shipped" {% if order.status == "shipped" %}selected{% endif %}>Shipped</option>
+                                        <option value="delivered" {% if order.status == "delivered" %}selected{% endif %}>Delivered</option>
+                                        <option value="completed" {% if order.status == "completed" %}selected{% endif %}>Completed</option>
+                                        <option value="cancelled" {% if order.status == "cancelled" %}selected{% endif %}>Cancelled</option>
+                                    </select>
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-success"
+                                            {% if order.status == "cancelled" %}disabled{% endif %}>
+                                        Update
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-muted">
+                                No orders found
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+

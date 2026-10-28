@@ -1,0 +1,645 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ticket Details | Support Center</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --dark: #111827;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --background: #f5f7fb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                         "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, 0.08), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.08), transparent 30%),
+                var(--background);
+            color: #1f2937;
+        }
+
+        /* Navbar */
+        .topbar {
+            background: rgba(17, 24, 39, 0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #6366f1, #4f46e5);
+            margin-right: 10px;
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Main */
+        .page-wrapper {
+            max-width: 1050px;
+            margin: 0 auto;
+            padding: 55px 20px 70px;
+        }
+
+        .breadcrumb-custom {
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 20px;
+        }
+
+        .breadcrumb-custom i {
+            margin: 0 7px;
+            font-size: 12px;
+        }
+
+        /* Main Card */
+        .ticket-card {
+            border: 1px solid rgba(229, 231, 235, 0.9);
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow:
+                0 20px 60px rgba(15, 23, 42, 0.08),
+                0 4px 15px rgba(15, 23, 42, 0.03);
+            overflow: hidden;
+        }
+
+        /* Header */
+        .ticket-header {
+            position: relative;
+            padding: 30px 35px;
+            color: white;
+            background:
+                linear-gradient(135deg, #111827 0%, #1f2937 50%, #312e81 100%);
+        }
+
+        .ticket-header::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            right: -60px;
+            top: -80px;
+            background: rgba(99, 102, 241, 0.18);
+            border-radius: 50%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.65);
+            font-size: 14px;
+            margin-top: 6px;
+        }
+
+        .ticket-number-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 13px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 13px;
+            margin-top: 16px;
+        }
+
+        /* Body */
+        .ticket-body {
+            padding: 35px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .info-item {
+            padding: 20px;
+            border: 1px solid var(--border);
+            background: #fafafa;
+            border-radius: 16px;
+            transition: all 0.25s ease;
+        }
+
+        .info-item:hover {
+            transform: translateY(-2px);
+            background: #fff;
+            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.06);
+        }
+
+        .info-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 9px;
+        }
+
+        .info-label i {
+            color: var(--primary);
+            font-size: 15px;
+        }
+
+        .info-value {
+            color: #111827;
+            font-size: 16px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        /* Status */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 7px 13px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .status-badge::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .status-active {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .status-cancelled {
+            color: #b91c1c;
+            background: #fee2e2;
+        }
+
+        /* Cancellation Alert */
+        .cancelled-box {
+            margin-top: 25px;
+            padding: 22px;
+            border-radius: 17px;
+            border: 1px solid #fecaca;
+            background: linear-gradient(135deg, #fff7f7, #fef2f2);
+        }
+
+        .cancelled-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #991b1b;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .cancelled-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 9px;
+            font-size: 14px;
+        }
+
+        .cancelled-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .cancelled-label {
+            color: #7f1d1d;
+            font-weight: 700;
+        }
+
+        .cancelled-value {
+            color: #450a0a;
+        }
+
+        /* Divider */
+        .section-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 32px 0;
+        }
+
+        /* Actions */
+        .action-section {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 22px;
+            border-radius: 18px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .action-title {
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 4px;
+        }
+
+        .action-description {
+            color: var(--muted);
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .btn-cancel {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 8px 20px rgba(220, 38, 38, 0.2);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+        }
+
+        .btn-cancel:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(220, 38, 38, 0.28);
+        }
+
+        .locked-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .locked-icon {
+            width: 43px;
+            height: 43px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            color: #6b7280;
+            background: #e5e7eb;
+            font-size: 18px;
+        }
+
+        .locked-title {
+            color: #374151;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .locked-text {
+            color: #dc2626;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        /* Footer */
+        .page-footer {
+            text-align: center;
+            color: #9ca3af;
+            font-size: 13px;
+            margin-top: 25px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-wrapper {
+                padding: 30px 14px 50px;
+            }
+
+            .ticket-header,
+            .ticket-body {
+                padding: 25px 20px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-section {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .btn-cancel {
+                width: 100%;
+            }
+
+            .header-title {
+                font-size: 21px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .ticket-card {
+                border-radius: 18px;
+            }
+
+            .info-item {
+                padding: 16px;
+            }
+
+            .ticket-number-badge {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="topbar">
+    <div class="container py-3">
+        <a href="#" class="brand">
+            <span class="brand-icon">
+                <i class="bi bi-ticket-perforated-fill"></i>
+            </span>
+            Support Center
+        </a>
+    </div>
+</nav>
+
+
+<!-- ================= MAIN ================= -->
+<main class="page-wrapper">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb-custom">
+        <i class="bi bi-house-door"></i>
+        Support Center
+        <i class="bi bi-chevron-right"></i>
+        Ticket Details
+    </div>
+
+
+    <!-- Ticket Card -->
+    <div class="ticket-card">
+
+        <!-- Header -->
+        <div class="ticket-header">
+            <div class="header-content">
+
+                <h1 class="header-title">
+                    <i class="bi bi-ticket-detailed me-2"></i>
+                    Ticket Details
+                </h1>
+
+                <div class="header-subtitle">
+                    View information and manage your support request
+                </div>
+
+                <div class="ticket-number-badge">
+                    <i class="bi bi-hash"></i>
+                    {{ ticket.ticket_number }}
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Body -->
+        <div class="ticket-body">
+
+            <!-- Ticket Information -->
+            <div class="info-grid">
+
+                <!-- Ticket Number -->
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi bi-hash"></i>
+                        Ticket Number
+                    </div>
+
+                    <div class="info-value">
+                        {{ ticket.ticket_number }}
+                    </div>
+                </div>
+
+
+                <!-- Title -->
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi bi-card-heading"></i>
+                        Title
+                    </div>
+
+                    <div class="info-value">
+                        {{ ticket.title }}
+                    </div>
+                </div>
+
+
+                <!-- Status -->
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi bi-activity"></i>
+                        Status
+                    </div>
+
+                    <div class="info-value">
+
+                        {% if ticket.status == "CANCELLED" %}
+
+                            <span class="status-badge status-cancelled">
+                                Cancelled
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge status-active">
+                                {{ ticket.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+
+                <!-- Created -->
+                <div class="info-item">
+                    <div class="info-label">
+                        <i class="bi bi-calendar3"></i>
+                        Created
+                    </div>
+
+                    <div class="info-value">
+                        {{ ticket.created_at|date:"d M Y, h:i A" }}
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- ================= CANCELLATION DETAILS ================= -->
+
+            {% if ticket.status == "CANCELLED" %}
+
+                <div class="cancelled-box">
+
+                    <div class="cancelled-title">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        Ticket Cancelled
+                    </div>
+
+                    <div class="cancelled-row">
+                        <span class="cancelled-label">
+                            Cancelled At:
+                        </span>
+
+                        <span class="cancelled-value">
+                            {{ ticket.cancelled_at|date:"d M Y, h:i A" }}
+                        </span>
+                    </div>
+
+                    <div class="cancelled-row">
+                        <span class="cancelled-label">
+                            Reason:
+                        </span>
+
+                        <span class="cancelled-value">
+                            {{ ticket.cancel_reason }}
+                        </span>
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- Divider -->
+            <div class="section-divider"></div>
+
+
+            <!-- ================= ACTION SECTION ================= -->
+
+            <div class="action-section">
+
+                {% if can_cancel %}
+
+                    <div>
+                        <div class="action-title">
+                            <i class="bi bi-shield-exclamation me-1 text-danger"></i>
+                            Ticket Actions
+                        </div>
+
+                        <p class="action-description">
+                            You can cancel this ticket while the cancellation
+                            window is still available.
+                        </p>
+                    </div>
+
+                    <a
+                        href="{% url 'ticket_cancel' ticket.ticket_number %}"
+                        class="btn btn-cancel"
+                    >
+                        <i class="bi bi-x-circle me-2"></i>
+                        Cancel Ticket
+                    </a>
+
+                {% else %}
+
+                    <div class="locked-box">
+
+                        <div class="locked-icon">
+                            <i class="bi bi-lock-fill"></i>
+                        </div>
+
+                        <div>
+                            <div class="locked-title">
+                                Cancellation Locked
+                            </div>
+
+                            <p class="locked-text">
+                                <i class="bi bi-clock me-1"></i>
+                                Cancel option expired (24 hours limit)
+                            </p>
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <div class="page-footer">
+        <i class="bi bi-shield-check me-1"></i>
+        Your ticket information is securely managed by the Support Center.
+    </div>
+
+</main>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
+
+
+
+{% endblock %}

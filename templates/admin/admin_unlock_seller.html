@@ -1,0 +1,1837 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="robots"
+    content="noindex, nofollow, noarchive"
+>
+
+<meta
+    name="autocomplete"
+    content="off"
+>
+
+<title>Admin | Seller Account Security</title>
+
+
+<style>
+
+    /* =========================================================
+       ROOT
+    ========================================================= */
+
+    :root {
+
+        --primary: #4f46e5;
+        --primary-light: #6366f1;
+        --primary-dark: #3730a3;
+
+        --success: #059669;
+        --success-bg: #ecfdf5;
+        --success-border: #a7f3d0;
+
+        --warning: #d97706;
+        --warning-bg: #fffbeb;
+        --warning-border: #fde68a;
+
+        --danger: #dc2626;
+        --danger-bg: #fef2f2;
+        --danger-border: #fecaca;
+
+        --text: #111827;
+        --text-secondary: #475569;
+        --muted: #64748b;
+
+        --border: #e2e8f0;
+
+        --background: #f1f5f9;
+
+        --white: #ffffff;
+
+        --radius-lg: 24px;
+        --radius-md: 14px;
+        --radius-sm: 10px;
+
+        --shadow-card:
+            0 30px 70px rgba(15, 23, 42, .10),
+            0 10px 25px rgba(15, 23, 42, .05);
+
+        --transition:
+            all .22s cubic-bezier(.4, 0, .2, 1);
+    }
+
+
+    /* =========================================================
+       GLOBAL
+    ========================================================= */
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+
+    body {
+
+        min-height: 100vh;
+
+        font-family:
+            Inter,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            Helvetica,
+            Arial,
+            sans-serif;
+
+        color: var(--text);
+
+        background:
+
+            radial-gradient(
+                circle at 0% 0%,
+                rgba(79, 70, 229, .12),
+                transparent 30%
+            ),
+
+            radial-gradient(
+                circle at 100% 100%,
+                rgba(16, 185, 129, .10),
+                transparent 30%
+            ),
+
+            linear-gradient(
+                135deg,
+                #f8fafc,
+                #eef2ff
+            );
+
+        padding: 35px 20px 60px;
+    }
+
+
+    /* =========================================================
+       PAGE
+    ========================================================= */
+
+    .unlock-page {
+
+        width: 100%;
+
+        max-width: 720px;
+
+        margin: 0 auto;
+    }
+
+
+    /* =========================================================
+       MAIN CARD
+    ========================================================= */
+
+    .unlock-card {
+
+        position: relative;
+
+        overflow: hidden;
+
+        background:
+            rgba(255, 255, 255, .94);
+
+        border:
+            1px solid rgba(255, 255, 255, .85);
+
+        border-radius: var(--radius-lg);
+
+        box-shadow: var(--shadow-card);
+
+        backdrop-filter: blur(18px);
+
+        -webkit-backdrop-filter: blur(18px);
+
+        animation:
+            cardEnter .45s ease-out;
+    }
+
+
+    @keyframes cardEnter {
+
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    /* =========================================================
+       TOP ACCENT
+    ========================================================= */
+
+    .top-accent {
+
+        height: 5px;
+
+        width: 100%;
+
+        background:
+
+            linear-gradient(
+                90deg,
+                #4338ca,
+                #6366f1,
+                #8b5cf6,
+                #10b981
+            );
+    }
+
+
+    /* =========================================================
+       HEADER
+    ========================================================= */
+
+    .unlock-header {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 18px;
+
+        padding: 34px 38px 28px;
+
+        border-bottom:
+            1px solid #eef2f7;
+    }
+
+
+    .header-icon {
+
+        position: relative;
+
+        width: 62px;
+
+        height: 62px;
+
+        min-width: 62px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 18px;
+
+        color: white;
+
+        background:
+
+            linear-gradient(
+                135deg,
+                var(--primary),
+                #7c3aed
+            );
+
+        box-shadow:
+
+            0 14px 28px
+            rgba(79, 70, 229, .25);
+    }
+
+
+    .header-icon::after {
+
+        content: "";
+
+        position: absolute;
+
+        width: 9px;
+
+        height: 9px;
+
+        right: 3px;
+
+        top: 3px;
+
+        border-radius: 50%;
+
+        background: #22c55e;
+
+        border: 2px solid white;
+
+        box-shadow:
+            0 0 0 3px rgba(34,197,94,.12);
+    }
+
+
+    .header-icon svg {
+
+        width: 30px;
+
+        height: 30px;
+    }
+
+
+    .header-content {
+
+        min-width: 0;
+    }
+
+
+    .eyebrow {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        margin-bottom: 5px;
+
+        color: var(--primary);
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        letter-spacing: 1.2px;
+
+        text-transform: uppercase;
+    }
+
+
+    .eyebrow-dot {
+
+        width: 6px;
+
+        height: 6px;
+
+        border-radius: 50%;
+
+        background: var(--success);
+    }
+
+
+    .header-content h1 {
+
+        margin: 0 0 5px;
+
+        font-size: 25px;
+
+        line-height: 1.2;
+
+        font-weight: 800;
+
+        letter-spacing: -.6px;
+
+        color: #0f172a;
+    }
+
+
+    .header-content p {
+
+        color: var(--muted);
+
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+
+    /* =========================================================
+       BODY
+    ========================================================= */
+
+    .unlock-body {
+
+        padding: 30px 38px 34px;
+    }
+
+
+    /* =========================================================
+       SECURITY NOTICE
+    ========================================================= */
+
+    .security-notice {
+
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 13px;
+
+        padding: 15px 16px;
+
+        margin-bottom: 25px;
+
+        border-radius: 14px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eef2ff,
+                #f5f3ff
+            );
+
+        border:
+            1px solid #e0e7ff;
+    }
+
+
+    .notice-icon {
+
+        width: 34px;
+
+        height: 34px;
+
+        min-width: 34px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 10px;
+
+        color: var(--primary);
+
+        background: #ffffff;
+
+        box-shadow:
+            0 3px 10px rgba(79,70,229,.08);
+    }
+
+
+    .notice-icon svg {
+
+        width: 18px;
+
+        height: 18px;
+    }
+
+
+    .notice-text strong {
+
+        display: block;
+
+        margin-bottom: 3px;
+
+        color: #312e81;
+
+        font-size: 13px;
+
+        font-weight: 750;
+    }
+
+
+    .notice-text span {
+
+        color: #6366f1;
+
+        font-size: 12px;
+
+        line-height: 1.5;
+    }
+
+
+    /* =========================================================
+       DJANGO MESSAGES
+    ========================================================= */
+
+    .message {
+
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 12px;
+
+        padding: 15px 16px;
+
+        margin-bottom: 22px;
+
+        border-radius: 14px;
+
+        border: 1px solid;
+
+        animation:
+            messageEnter .3s ease-out;
+    }
+
+
+    @keyframes messageEnter {
+
+        from {
+            opacity: 0;
+            transform: translateY(-5px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+
+    .message-icon {
+
+        width: 25px;
+
+        height: 25px;
+
+        min-width: 25px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 50%;
+
+        color: white;
+
+        font-size: 12px;
+
+        font-weight: 900;
+    }
+
+
+    .message-content {
+
+        flex: 1;
+
+        min-width: 0;
+    }
+
+
+    .message-title {
+
+        display: block;
+
+        margin-bottom: 2px;
+
+        font-size: 12px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .4px;
+    }
+
+
+    .message-text {
+
+        font-size: 13px;
+
+        line-height: 1.5;
+    }
+
+
+    /* SUCCESS */
+
+    .message.success {
+
+        background: var(--success-bg);
+
+        border-color: var(--success-border);
+
+        color: #065f46;
+    }
+
+
+    .message.success .message-icon {
+
+        background: var(--success);
+    }
+
+
+    /* WARNING */
+
+    .message.warning {
+
+        background: var(--warning-bg);
+
+        border-color: var(--warning-border);
+
+        color: #92400e;
+    }
+
+
+    .message.warning .message-icon {
+
+        background: var(--warning);
+    }
+
+
+    /* ERROR */
+
+    .message.error {
+
+        background: var(--danger-bg);
+
+        border-color: var(--danger-border);
+
+        color: #991b1b;
+    }
+
+
+    .message.error .message-icon {
+
+        background: var(--danger);
+    }
+
+
+    /* =========================================================
+       FORM SECTION
+    ========================================================= */
+
+    .form-section {
+
+        padding: 23px;
+
+        border:
+
+            1px solid #e8edf4;
+
+        border-radius: 17px;
+
+        background:
+
+            linear-gradient(
+                180deg,
+                #ffffff,
+                #fbfdff
+            );
+    }
+
+
+    .section-title {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 9px;
+
+        margin-bottom: 19px;
+
+        color: #1e293b;
+
+        font-size: 13px;
+
+        font-weight: 800;
+
+        letter-spacing: .2px;
+    }
+
+
+    .section-title-icon {
+
+        width: 27px;
+
+        height: 27px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        border-radius: 8px;
+
+        color: var(--primary);
+
+        background: #eef2ff;
+    }
+
+
+    .section-title-icon svg {
+
+        width: 15px;
+
+        height: 15px;
+    }
+
+
+    /* =========================================================
+       LABEL
+    ========================================================= */
+
+    .field-label {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        margin-bottom: 9px;
+    }
+
+
+    .field-label label {
+
+        margin: 0;
+
+        color: #334155;
+
+        font-size: 13px;
+
+        font-weight: 750;
+    }
+
+
+    .required {
+
+        color: var(--danger);
+
+        font-size: 12px;
+    }
+
+
+    /* =========================================================
+       INPUT
+    ========================================================= */
+
+    .input-wrapper {
+
+        position: relative;
+    }
+
+
+    .input-icon {
+
+        position: absolute;
+
+        left: 15px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        width: 20px;
+
+        height: 20px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        color: #94a3b8;
+
+        pointer-events: none;
+
+        z-index: 2;
+    }
+
+
+    .input-icon svg {
+
+        width: 19px;
+
+        height: 19px;
+    }
+
+
+    #seller_input {
+
+        width: 100%;
+
+        height: 54px;
+
+        padding:
+            0 48px 0 47px;
+
+        border:
+
+            1px solid #dbe2ea;
+
+        border-radius: 12px;
+
+        outline: none;
+
+        background: #ffffff;
+
+        color: #0f172a;
+
+        font-size: 14px;
+
+        font-weight: 500;
+
+        transition: var(--transition);
+
+        box-shadow:
+            0 2px 5px rgba(15,23,42,.025);
+    }
+
+
+    #seller_input::placeholder {
+
+        color: #a1a1aa;
+
+        font-weight: 400;
+    }
+
+
+    #seller_input:hover {
+
+        border-color: #c7d2fe;
+    }
+
+
+    #seller_input:focus {
+
+        border-color: var(--primary);
+
+        box-shadow:
+
+            0 0 0 4px
+            rgba(99,102,241,.09),
+
+            0 7px 18px
+            rgba(15,23,42,.045);
+    }
+
+
+    #seller_input.input-error {
+
+        border-color: var(--danger);
+
+        box-shadow:
+            0 0 0 4px rgba(220,38,38,.07);
+    }
+
+
+    /* =========================================================
+       INPUT TYPE BADGE
+    ========================================================= */
+
+    .input-type {
+
+        position: absolute;
+
+        right: 13px;
+
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        display: none;
+
+        align-items: center;
+
+        gap: 5px;
+
+        padding: 5px 8px;
+
+        border-radius: 7px;
+
+        color: #64748b;
+
+        background: #f8fafc;
+
+        border: 1px solid #e2e8f0;
+
+        font-size: 10px;
+
+        font-weight: 750;
+
+        text-transform: uppercase;
+
+        letter-spacing: .3px;
+
+        pointer-events: none;
+    }
+
+
+    .input-type.visible {
+
+        display: flex;
+    }
+
+
+    /* =========================================================
+       HINT
+    ========================================================= */
+
+    .field-hint {
+
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 7px;
+
+        margin-top: 9px;
+
+        color: #64748b;
+
+        font-size: 11px;
+
+        line-height: 1.5;
+    }
+
+
+    .field-hint svg {
+
+        width: 14px;
+
+        height: 14px;
+
+        min-width: 14px;
+
+        margin-top: 1px;
+
+        color: #94a3b8;
+    }
+
+
+    /* =========================================================
+       SUBMIT BUTTON
+    ========================================================= */
+
+    .submit-button {
+
+        position: relative;
+
+        width: 100%;
+
+        height: 54px;
+
+        margin-top: 18px;
+
+        border: none;
+
+        border-radius: 12px;
+
+        cursor: pointer;
+
+        overflow: hidden;
+
+        color: white;
+
+        background:
+
+            linear-gradient(
+                135deg,
+                var(--primary),
+                var(--primary-dark)
+            );
+
+        font-size: 14px;
+
+        font-weight: 800;
+
+        letter-spacing: .1px;
+
+        box-shadow:
+
+            0 12px 24px
+            rgba(79,70,229,.20);
+
+        transition: var(--transition);
+    }
+
+
+    .submit-button::before {
+
+        content: "";
+
+        position: absolute;
+
+        inset: 0;
+
+        background:
+
+            linear-gradient(
+                120deg,
+                transparent 30%,
+                rgba(255,255,255,.15),
+                transparent 70%
+            );
+
+        transform: translateX(-100%);
+
+        transition:
+            transform .6s ease;
+    }
+
+
+    .submit-button:hover::before {
+
+        transform: translateX(100%);
+    }
+
+
+    .submit-button:hover {
+
+        transform: translateY(-2px);
+
+        box-shadow:
+
+            0 16px 30px
+            rgba(79,70,229,.27);
+    }
+
+
+    .submit-button:active {
+
+        transform: translateY(0);
+    }
+
+
+    .button-content {
+
+        position: relative;
+
+        z-index: 2;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 9px;
+    }
+
+
+    .button-content svg {
+
+        width: 18px;
+
+        height: 18px;
+    }
+
+
+    .loading-spinner {
+
+        width: 17px;
+
+        height: 17px;
+
+        border:
+
+            2px solid rgba(255,255,255,.35);
+
+        border-top-color: white;
+
+        border-radius: 50%;
+
+        animation:
+            spin .7s linear infinite;
+
+        display: none;
+    }
+
+
+    @keyframes spin {
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+
+    .submit-button.loading .loading-spinner {
+
+        display: block;
+    }
+
+
+    .submit-button.loading .button-icon,
+
+    .submit-button.loading .button-text {
+
+        display: none;
+    }
+
+
+    /* =========================================================
+       SECURITY FOOTER
+    ========================================================= */
+
+    .security-footer {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+
+        margin-top: 25px;
+
+        padding-top: 20px;
+
+        border-top:
+            1px solid #edf1f5;
+
+        color: #64748b;
+
+        font-size: 11px;
+    }
+
+
+    .security-footer svg {
+
+        width: 15px;
+
+        height: 15px;
+
+        color: var(--success);
+    }
+
+
+    .security-footer strong {
+
+        color: #475569;
+
+        font-weight: 700;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+
+    @media (max-width: 700px) {
+
+        body {
+
+            padding:
+                20px 12px 40px;
+        }
+
+
+        .unlock-header {
+
+            padding:
+                27px 23px 23px;
+
+            gap: 14px;
+        }
+
+
+        .unlock-body {
+
+            padding:
+                23px 18px 28px;
+        }
+
+
+        .header-icon {
+
+            width: 52px;
+
+            height: 52px;
+
+            min-width: 52px;
+
+            border-radius: 15px;
+        }
+
+
+        .header-icon svg {
+
+            width: 25px;
+
+            height: 25px;
+        }
+
+
+        .header-content h1 {
+
+            font-size: 21px;
+        }
+
+
+        .header-content p {
+
+            font-size: 12px;
+        }
+
+
+        .form-section {
+
+            padding: 18px;
+        }
+    }
+
+
+    @media (max-width: 450px) {
+
+        .unlock-header {
+
+            align-items: flex-start;
+        }
+
+
+        .header-icon {
+
+            margin-top: 2px;
+        }
+
+
+        .eyebrow {
+
+            font-size: 9px;
+
+            letter-spacing: .8px;
+        }
+
+
+        .header-content h1 {
+
+            font-size: 19px;
+        }
+
+
+        .input-type {
+
+            display: none !important;
+        }
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="unlock-page">
+
+<div class="unlock-card">
+
+
+    <!-- =====================================================
+         TOP ACCENT
+    ====================================================== -->
+
+    <div class="top-accent"></div>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="unlock-header">
+
+        <div class="header-icon">
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+
+                <path
+                    d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                />
+
+                <rect
+                    x="8"
+                    y="10"
+                    width="8"
+                    height="6"
+                    rx="1.2"
+                />
+
+                <path
+                    d="M10 10V8.5a2 2 0 0 1 4 0V10"
+                />
+
+                <circle
+                    cx="12"
+                    cy="13"
+                    r=".7"
+                    fill="currentColor"
+                    stroke="none"
+                />
+
+            </svg>
+
+        </div>
+
+
+        <div class="header-content">
+
+            <div class="eyebrow">
+
+                <span class="eyebrow-dot"></span>
+
+                Administrator Security
+
+            </div>
+
+
+            <h1>
+                Unlock Seller Account
+            </h1>
+
+
+            <p>
+                Securely manage seller account lock status
+                and restore account access.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         BODY
+    ====================================================== -->
+
+    <div class="unlock-body">
+
+
+        <!-- =================================================
+             SECURITY NOTICE
+        ================================================== -->
+
+        <div class="security-notice">
+
+            <div class="notice-icon">
+
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+
+                    <path
+                        d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                    />
+
+                    <path
+                        d="M9 12l2 2 4-4"
+                    />
+
+                </svg>
+
+            </div>
+
+
+            <div class="notice-text">
+
+                <strong>
+                    Authorized administrator action
+                </strong>
+
+                <span>
+                    Enter a valid seller identifier.
+                    Locked seller accounts can be restored
+                    securely from this panel.
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             DJANGO MESSAGES
+        ================================================== -->
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div
+                    class="message {{ message.tags }}"
+                    role="alert"
+                >
+
+                    <span class="message-icon">
+
+                        {% if message.tags == "success" %}
+                            ✓
+
+                        {% elif message.tags == "warning" %}
+                            !
+
+                        {% else %}
+                            ×
+
+                        {% endif %}
+
+                    </span>
+
+
+                    <div class="message-content">
+
+                        {% if message.tags == "success" %}
+
+                            <span class="message-title">
+                                Account Updated
+                            </span>
+
+                        {% elif message.tags == "warning" %}
+
+                            <span class="message-title">
+                                Account Status
+                            </span>
+
+                        {% else %}
+
+                            <span class="message-title">
+                                Request Not Completed
+                            </span>
+
+                        {% endif %}
+
+
+                        <span class="message-text">
+                            {{ message }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        <!-- =================================================
+             FORM
+        ================================================== -->
+
+        <div class="form-section">
+
+
+            <div class="section-title">
+
+                <span class="section-title-icon">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+
+                        <path
+                            d="M20 21a8 8 0 0 0-16 0"
+                        />
+
+                        <circle
+                            cx="12"
+                            cy="7"
+                            r="4"
+                        />
+
+                    </svg>
+
+                </span>
+
+                Seller Account Identification
+
+            </div>
+
+
+            <form
+                method="POST"
+                id="unlockForm"
+                autocomplete="off"
+                novalidate
+            >
+
+                {% csrf_token %}
+
+
+                <div class="field-label">
+
+                    <label for="seller_input">
+
+                        Seller ID, Username or Email
+
+                    </label>
+
+
+                    <span class="required">
+                        Required
+                    </span>
+
+                </div>
+
+
+                <div class="input-wrapper">
+
+
+                    <span class="input-icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        >
+
+                            <path
+                                d="M20 21a8 8 0 0 0-16 0"
+                            />
+
+                            <circle
+                                cx="12"
+                                cy="7"
+                                r="4"
+                            />
+
+                        </svg>
+
+                    </span>
+
+
+                    <input
+                        type="text"
+                        name="seller_input"
+                        id="seller_input"
+                        placeholder="Enter Seller ID, username or email"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        spellcheck="false"
+                        inputmode="text"
+                        required
+                    >
+
+
+                    <span
+                        class="input-type"
+                        id="inputType"
+                    ></span>
+
+                </div>
+
+
+                <div class="field-hint">
+
+                    <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
+
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                        />
+
+                        <path
+                            d="M12 16v-4"
+                        />
+
+                        <path
+                            d="M12 8h.01"
+                        />
+
+                    </svg>
+
+                    <span>
+                        You can enter the numeric Seller ID,
+                        username, or registered email address.
+                    </span>
+
+                </div>
+
+
+                <!-- =========================================
+                     SUBMIT
+                ========================================== -->
+
+                <button
+                    type="submit"
+                    class="submit-button"
+                    id="unlockButton"
+                >
+
+                    <span class="button-content">
+
+                        <span class="button-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+
+                                <rect
+                                    x="3"
+                                    y="11"
+                                    width="18"
+                                    height="10"
+                                    rx="2"
+                                />
+
+                                <path
+                                    d="M7 11V7a5 5 0 0 1 10 0v4"
+                                />
+
+                                <path
+                                    d="M12 15v3"
+                                />
+
+                            </svg>
+
+                        </span>
+
+
+                        <span class="button-text">
+                            Verify & Unlock Account
+                        </span>
+
+
+                        <span
+                            class="loading-spinner"
+                        ></span>
+
+                    </span>
+
+                </button>
+
+
+            </form>
+
+        </div>
+
+
+        <!-- =================================================
+             SECURITY FOOTER
+        ================================================== -->
+
+        <div class="security-footer">
+
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+
+                <path
+                    d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
+                />
+
+                <path
+                    d="M9 12l2 2 4-4"
+                />
+
+            </svg>
+
+
+            <span>
+                Protected administrative action
+            </span>
+
+
+            <strong>
+                •
+            </strong>
+
+
+            <span>
+                Authorized personnel only
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+</div>
+
+<script>
+
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
+
+    const sellerInput =
+        document.getElementById("seller_input");
+
+    const inputType =
+        document.getElementById("inputType");
+
+    const unlockForm =
+        document.getElementById("unlockForm");
+
+    const unlockButton =
+        document.getElementById("unlockButton");
+
+
+    /* =========================================================
+       IDENTIFIER DETECTION
+    ========================================================= */
+
+    sellerInput.addEventListener("input", function () {
+
+        const value =
+            this.value.trim();
+
+
+        inputType.classList.remove("visible");
+
+
+        if (!value) {
+            return;
+        }
+
+
+        /* Numeric Seller ID */
+
+        if (/^\d+$/.test(value)) {
+
+            inputType.textContent =
+                "SELLER ID";
+
+            inputType.classList.add("visible");
+
+            return;
+        }
+
+
+        /* Email */
+
+        if (
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+        ) {
+
+            inputType.textContent =
+                "EMAIL";
+
+            inputType.classList.add("visible");
+
+            return;
+        }
+
+
+        /* Username */
+
+        inputType.textContent =
+            "USERNAME";
+
+        inputType.classList.add("visible");
+
+    });
+
+
+    /* =========================================================
+       FORM VALIDATION + LOADING STATE
+    ========================================================= */
+
+    unlockForm.addEventListener("submit", function (event) {
+
+        const value =
+            sellerInput.value.trim();
+
+
+        if (!value) {
+
+            event.preventDefault();
+
+            sellerInput.classList.add(
+                "input-error"
+            );
+
+            sellerInput.focus();
+
+            return;
+        }
+
+
+        sellerInput.classList.remove(
+            "input-error"
+        );
+
+
+        /*
+         * Prevent accidental double submission.
+         */
+
+        unlockButton.classList.add(
+            "loading"
+        );
+
+        unlockButton.disabled = true;
+
+    });
+
+
+    /* =========================================================
+       REMOVE ERROR WHILE TYPING
+    ========================================================= */
+
+    sellerInput.addEventListener("input", function () {
+
+        if (this.value.trim()) {
+
+            this.classList.remove(
+                "input-error"
+            );
+        }
+
+    });
+
+</script>
+
+</body>
+
+</html>
+
+{% endblock %}

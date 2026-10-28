@@ -1,0 +1,49 @@
+{% extends "adminbase.html" %}
+
+
+{% block content %}
+
+
+<div class="container mt-5">
+
+
+<h2>
+Reject Advertisement
+</h2>
+
+
+
+<form method="POST">
+
+
+{% csrf_token %}
+
+
+
+<textarea
+name="reason"
+class="form-control"
+placeholder="Enter rejection reason"
+required>
+
+</textarea>
+
+
+
+
+<button class="btn btn-danger mt-3">
+
+Reject Advertisement
+
+</button>
+
+
+
+</form>
+
+
+
+</div>
+
+
+{% endblock %}

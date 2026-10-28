@@ -1,0 +1,831 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+
+    .renew-page {
+        background: linear-gradient(135deg, #f5f7fb 0%, #eef2f7 100%);
+        min-height: 100vh;
+    }
+
+    .renew-card {
+        border: 0;
+        border-radius: 24px;
+        overflow: hidden;
+        background: #ffffff;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.10);
+    }
+
+    .renew-header {
+        background: linear-gradient(135deg, #0d6efd, #084298);
+        padding: 32px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .renew-header::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        right: -70px;
+        top: -90px;
+    }
+
+    .renew-header h2 {
+        position: relative;
+        z-index: 2;
+        font-weight: 700;
+    }
+
+    .renew-header p {
+        position: relative;
+        z-index: 2;
+    }
+
+    .ad-box {
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 20px;
+        background: #f8fafc;
+    }
+
+    .ad-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: #e7f0ff;
+        color: #0d6efd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+    }
+
+    .section-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: #212529;
+    }
+
+    .plan-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .plan-option {
+        position: relative;
+    }
+
+    .plan-option input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .plan-label {
+        display: block;
+        cursor: pointer;
+        border: 2px solid #e5e7eb;
+        border-radius: 18px;
+        padding: 20px;
+        background: #ffffff;
+        transition: all 0.25s ease;
+        height: 100%;
+    }
+
+    .plan-label:hover {
+        border-color: #86b7fe;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(13, 110, 253, 0.10);
+    }
+
+    .plan-option input:checked + .plan-label {
+        border-color: #0d6efd;
+        background: #f0f6ff;
+        box-shadow: 0 10px 30px rgba(13, 110, 253, 0.14);
+    }
+
+    .plan-radio {
+        width: 22px;
+        height: 22px;
+        border: 2px solid #adb5bd;
+        border-radius: 50%;
+        float: right;
+        position: relative;
+    }
+
+    .plan-option input:checked + .plan-label .plan-radio {
+        border-color: #0d6efd;
+    }
+
+    .plan-option input:checked + .plan-label .plan-radio::after {
+        content: "";
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #0d6efd;
+        top: 4px;
+        left: 4px;
+    }
+
+    .plan-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #212529;
+    }
+
+    .plan-duration {
+        color: #6c757d;
+        font-size: 14px;
+        margin-top: 4px;
+    }
+
+    .plan-price {
+        color: #0d6efd;
+        font-size: 23px;
+        font-weight: 800;
+        margin-top: 12px;
+    }
+
+    .popular-badge {
+        position: absolute;
+        top: -10px;
+        left: 18px;
+        background: linear-gradient(135deg, #ffc107, #ff9800);
+        color: #212529;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .3px;
+    }
+
+    .benefits-box {
+        background: #f8fafc;
+        border-radius: 18px;
+        padding: 22px;
+        border: 1px solid #edf0f3;
+    }
+
+    .benefit-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+        color: #495057;
+    }
+
+    .benefit-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .benefit-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #d1e7dd;
+        color: #198754;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 10px;
+        font-size: 13px;
+    }
+
+    .summary-box {
+        background: linear-gradient(135deg, #f8faff, #eef5ff);
+        border: 1px solid #dbe8ff;
+        border-radius: 18px;
+        padding: 22px;
+    }
+
+    .summary-price {
+        font-size: 30px;
+        font-weight: 800;
+        color: #0d6efd;
+    }
+
+    .security-box {
+        background: #ecfdf3;
+        border: 1px solid #b7ebca;
+        border-radius: 14px;
+        padding: 16px;
+        color: #146c43;
+    }
+
+    .payment-btn {
+        border: 0;
+        border-radius: 12px;
+        font-weight: 700;
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #0d6efd, #084298);
+        box-shadow: 0 8px 20px rgba(13, 110, 253, .22);
+        transition: .2s;
+    }
+
+    .payment-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(13, 110, 253, .30);
+    }
+
+    @media (max-width: 767px) {
+
+        .plan-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .renew-header {
+            padding: 25px;
+        }
+
+        .card-body {
+            padding: 24px !important;
+        }
+
+        .action-buttons {
+            flex-direction: column-reverse;
+        }
+
+        .action-buttons .btn {
+            width: 100%;
+        }
+    }
+
+</style>
+
+
+<div class="renew-page py-5">
+
+    <div class="container">
+
+        <div class="row justify-content-center">
+
+            <div class="col-xl-9 col-lg-10">
+
+                <div class="renew-card">
+
+                    <!-- ================= HEADER ================= -->
+
+                    <div class="renew-header">
+
+                        <div class="d-flex align-items-center">
+
+                            <div class="me-3 fs-2">
+                                <i class="fas fa-sync-alt"></i>
+                            </div>
+
+                            <div>
+
+                                <h2 class="mb-1">
+                                    Renew Advertisement
+                                </h2>
+
+                                <p class="mb-0 opacity-75">
+                                    Choose a plan and continue your advertisement
+                                    without interruption.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ================= BODY ================= -->
+
+                    <div class="card-body p-5">
+
+                        <form method="POST">
+
+                            {% csrf_token %}
+
+
+                            <!-- Advertisement -->
+
+                            <div class="ad-box mb-4">
+
+                                <div class="d-flex align-items-center">
+
+                                    <div class="ad-icon me-3">
+                                        <i class="fas fa-bullhorn"></i>
+                                    </div>
+
+                                    <div>
+
+                                        <small class="text-muted">
+                                            Advertisement
+                                        </small>
+
+                                        <h5 class="fw-bold mb-0">
+                                            {{ advertisement.title }}
+                                        </h5>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Plan Heading -->
+
+                            <div class="mb-3">
+
+                                <div class="section-title">
+                                    <i class="fas fa-crown text-warning me-2"></i>
+                                    Select Your Subscription
+                                </div>
+
+                                <small class="text-muted">
+                                    Choose the plan that best matches your advertising needs.
+                                </small>
+
+                            </div>
+
+
+                            <!-- ================= PLANS ================= -->
+
+                            <div class="plan-grid mb-4">
+
+
+                                <!-- BASIC -->
+
+                                <div class="plan-option">
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        value="BASIC"
+                                        id="basic"
+                                        data-name="Basic Plan"
+                                        data-duration="1 Day"
+                                        data-price="500"
+                                        required>
+
+                                    <label for="basic" class="plan-label">
+
+                                        <span class="plan-radio"></span>
+
+                                        <div class="plan-name">
+                                            Basic Plan
+                                        </div>
+
+                                        <div class="plan-duration">
+                                            <i class="far fa-clock me-1"></i>
+                                            1 Day
+                                        </div>
+
+                                        <div class="plan-price">
+                                            ₹500
+                                        </div>
+
+                                    </label>
+
+                                </div>
+
+
+                                <!-- STANDARD -->
+
+                                <div class="plan-option">
+
+                                    <span class="popular-badge">
+                                        MOST POPULAR
+                                    </span>
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        value="STANDARD"
+                                        id="standard"
+                                        data-name="Standard Plan"
+                                        data-duration="3 Days"
+                                        data-price="1250">
+
+                                    <label for="standard" class="plan-label">
+
+                                        <span class="plan-radio"></span>
+
+                                        <div class="plan-name">
+                                            Standard Plan
+                                        </div>
+
+                                        <div class="plan-duration">
+                                            <i class="far fa-clock me-1"></i>
+                                            3 Days
+                                        </div>
+
+                                        <div class="plan-price">
+                                            ₹1,250
+                                        </div>
+
+                                    </label>
+
+                                </div>
+
+
+                                <!-- PREMIUM -->
+
+                                <div class="plan-option">
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        value="PREMIUM"
+                                        id="premium"
+                                        data-name="Premium Plan"
+                                        data-duration="7 Days"
+                                        data-price="2500">
+
+                                    <label for="premium" class="plan-label">
+
+                                        <span class="plan-radio"></span>
+
+                                        <div class="plan-name">
+                                            Premium Plan
+                                        </div>
+
+                                        <div class="plan-duration">
+                                            <i class="far fa-clock me-1"></i>
+                                            7 Days
+                                        </div>
+
+                                        <div class="plan-price">
+                                            ₹2,500
+                                        </div>
+
+                                    </label>
+
+                                </div>
+
+
+                                <!-- GOLD -->
+
+                                <div class="plan-option">
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        value="GOLD"
+                                        id="gold"
+                                        data-name="Gold Plan"
+                                        data-duration="15 Days"
+                                        data-price="4500">
+
+                                    <label for="gold" class="plan-label">
+
+                                        <span class="plan-radio"></span>
+
+                                        <div class="plan-name">
+                                            Gold Plan
+                                        </div>
+
+                                        <div class="plan-duration">
+                                            <i class="far fa-clock me-1"></i>
+                                            15 Days
+                                        </div>
+
+                                        <div class="plan-price">
+                                            ₹4,500
+                                        </div>
+
+                                    </label>
+
+                                </div>
+
+
+                                <!-- PLATINUM -->
+
+                                <div class="plan-option">
+
+                                    <input
+                                        type="radio"
+                                        name="plan"
+                                        value="PLATINUM"
+                                        id="platinum"
+                                        data-name="Platinum Plan"
+                                        data-duration="30 Days"
+                                        data-price="8000">
+
+                                    <label for="platinum" class="plan-label">
+
+                                        <span class="plan-radio"></span>
+
+                                        <div class="plan-name">
+                                            Platinum Plan
+                                        </div>
+
+                                        <div class="plan-duration">
+                                            <i class="far fa-clock me-1"></i>
+                                            30 Days
+                                        </div>
+
+                                        <div class="plan-price">
+                                            ₹8,000
+                                        </div>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ================= SUMMARY ================= -->
+
+                            <div class="summary-box mb-4">
+
+                                <div class="row align-items-center">
+
+                                    <div class="col-md-8">
+
+                                        <small class="text-muted">
+                                            SELECTED PLAN
+                                        </small>
+
+                                        <h5
+                                            id="selectedPlan"
+                                            class="fw-bold mb-1">
+
+                                            No plan selected
+
+                                        </h5>
+
+                                        <div
+                                            id="selectedDuration"
+                                            class="text-muted">
+
+                                            Choose a subscription plan above
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+                                        <small class="text-muted d-block">
+                                            TOTAL AMOUNT
+                                        </small>
+
+                                        <span
+                                            id="selectedPrice"
+                                            class="summary-price">
+
+                                            ₹0
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ================= BENEFITS ================= -->
+
+                            <div class="benefits-box mb-4">
+
+                                <h5 class="fw-bold mb-3">
+
+                                    <i class="fas fa-star text-warning me-2"></i>
+
+                                    Included With Your Plan
+
+                                </h5>
+
+
+                                <div class="benefit-item">
+
+                                    <span class="benefit-icon">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+
+                                    Higher advertisement visibility
+
+                                </div>
+
+
+                                <div class="benefit-item">
+
+                                    <span class="benefit-icon">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+
+                                    Priority listing in search results
+
+                                </div>
+
+
+                                <div class="benefit-item">
+
+                                    <span class="benefit-icon">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+
+                                    Increased customer engagement
+
+                                </div>
+
+
+                                <div class="benefit-item">
+
+                                    <span class="benefit-icon">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+
+                                    Secure online payment
+
+                                </div>
+
+
+                                <div class="benefit-item">
+
+                                    <span class="benefit-icon">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+
+                                    Instant activation after successful payment
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ================= SECURITY ================= -->
+
+                            <div class="security-box mb-4">
+
+                                <div class="d-flex align-items-center">
+
+                                    <i class="fas fa-shield-alt fs-4 me-3"></i>
+
+                                    <div>
+
+                                        <strong>
+                                            Secure Payment
+                                        </strong>
+
+                                        <div class="small">
+                                            Your payment information is protected
+                                            using secure encrypted processing.
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ================= BUTTONS ================= -->
+
+                            <div
+                                class="action-buttons d-flex justify-content-between align-items-center gap-3">
+
+                                <a
+                                    href="javascript:history.back()"
+                                    class="btn btn-outline-secondary btn-lg px-4">
+
+                                    <i class="fas fa-arrow-left me-2"></i>
+
+                                    Back
+
+                                </a>
+
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-primary btn-lg payment-btn">
+
+                                    <i class="fas fa-lock me-2"></i>
+
+                                    Proceed to Secure Payment
+
+                                    <i class="fas fa-arrow-right ms-2"></i>
+
+                                </button>
+
+                            </div>
+
+                        </form>
+
+                    </div>
+
+
+                    <!-- ================= FOOTER ================= -->
+
+                    <div class="card-footer bg-white border-top text-center py-4">
+
+                        <div class="d-flex justify-content-center
+                                    align-items-center flex-wrap gap-3">
+
+                            <span class="text-muted small">
+
+                                <i class="fas fa-lock text-success me-1"></i>
+
+                                SSL Secured
+
+                            </span>
+
+                            <span class="text-muted small">
+                                •
+                            </span>
+
+                            <span class="text-muted small">
+
+                                <i class="fas fa-shield-alt text-success me-1"></i>
+
+                                Secure Payment
+
+                            </span>
+
+                            <span class="text-muted small">
+                                •
+                            </span>
+
+                            <span class="text-muted small">
+
+                                <i class="fas fa-check-circle text-success me-1"></i>
+
+                                Trusted Service
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const plans = document.querySelectorAll(
+        'input[name="plan"]'
+    );
+
+    const selectedPlan =
+        document.getElementById("selectedPlan");
+
+    const selectedDuration =
+        document.getElementById("selectedDuration");
+
+    const selectedPrice =
+        document.getElementById("selectedPrice");
+
+
+    plans.forEach(function (plan) {
+
+        plan.addEventListener("change", function () {
+
+            const name =
+                this.dataset.name;
+
+            const duration =
+                this.dataset.duration;
+
+            const price =
+                Number(this.dataset.price);
+
+
+            selectedPlan.textContent =
+                name;
+
+            selectedDuration.innerHTML =
+                '<i class="far fa-clock me-1"></i> ' +
+                duration;
+
+            selectedPrice.textContent =
+                "₹" + price.toLocaleString("en-IN");
+
+        });
+
+    });
+
+});
+
+</script>
+
+{% endblock %}
+

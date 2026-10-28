@@ -1,0 +1,676 @@
+
+{% extends 'layouts/main.html' %}
+
+
+
+{% block content %}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Help Center - ShopEase</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f7f8fa;
+      color: #222;
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Header */
+    .header {
+      background: #111827;
+      color: white;
+      padding: 18px 6%;
+    }
+
+    .navbar {
+      max-width: 1200px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      color: #ddd;
+      font-size: 14px;
+    }
+
+    .nav-links a:hover {
+      color: white;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      color: white;
+      text-align: center;
+      padding: 70px 20px;
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      color: #e5e7eb;
+      margin-bottom: 30px;
+    }
+
+    .search-box {
+      max-width: 700px;
+      margin: auto;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 18px 55px 18px 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      font-size: 22px;
+      color: #555;
+    }
+
+    /* Main */
+    .container {
+      max-width: 1200px;
+      margin: 50px auto;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    .section-title p {
+      color: #6b7280;
+    }
+
+    /* Categories */
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .category {
+      background: white;
+      padding: 28px;
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .category:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    .category-icon {
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .category h3 {
+      margin-bottom: 8px;
+    }
+
+    .category p {
+      color: #6b7280;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+
+    .category a {
+      color: #2563eb;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    /* FAQ */
+    .faq-section {
+      margin-top: 70px;
+    }
+
+    .faq {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      width: 100%;
+      background: white;
+      border: none;
+      padding: 20px;
+      text-align: left;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-question:hover {
+      background: #f9fafb;
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 0 20px 20px;
+      color: #6b7280;
+    }
+
+    .faq.active .faq-answer {
+      display: block;
+    }
+
+    .faq.active .arrow {
+      transform: rotate(180deg);
+    }
+
+    .arrow {
+      transition: 0.2s;
+    }
+
+    /* Help Articles */
+    .articles {
+      margin-top: 70px;
+    }
+
+    .article-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .article {
+      background: white;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+    }
+
+    .article h3 {
+      margin-bottom: 6px;
+    }
+
+    .article p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    .article a {
+      display: inline-block;
+      color: #2563eb;
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    /* Contact */
+    .contact {
+      margin-top: 70px;
+      background: #111827;
+      color: white;
+      border-radius: 15px;
+      padding: 45px 30px;
+      text-align: center;
+    }
+
+    .contact h2 {
+      margin-bottom: 10px;
+    }
+
+    .contact p {
+      color: #d1d5db;
+      margin-bottom: 25px;
+    }
+
+    .contact-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 12px 22px;
+      border-radius: 7px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-light {
+      background: white;
+      color: #111827;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 60px;
+      background: #0b1120;
+      color: #9ca3af;
+      padding: 40px 20px;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+    }
+
+    footer h3 {
+      color: white;
+      margin-bottom: 12px;
+    }
+
+    footer a {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    footer a:hover {
+      color: white;
+    }
+
+    .copyright {
+      max-width: 1200px;
+      margin: 30px auto 0;
+      padding-top: 20px;
+      border-top: 1px solid #1f2937;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    /* Responsive */
+    @media (max-width: 800px) {
+      .categories {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .article-list {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero h1 {
+        font-size: 32px;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .categories {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <!-- Hero / Search -->
+  <section class="hero">
+    <h1>How can we help?</h1>
+    <p>Find answers, guides and solutions for your ShopEase account and orders.</p>
+
+    <div class="search-box">
+      <input
+        type="text"
+        id="searchInput"
+        placeholder="Search for help articles..."
+        onkeyup="searchArticles()"
+      >
+      <span class="search-icon">🔍</span>
+    </div>
+  </section>
+
+
+  <main class="container">
+
+    <!-- Categories -->
+    <section>
+      <div class="section-title">
+        <h2>Browse Help Topics</h2>
+        <p>Choose a category to find the information you need.</p>
+      </div>
+
+      <div class="categories">
+
+        <div class="category">
+          <div class="category-icon">📦</div>
+          <h3>Orders</h3>
+          <p>Track, modify or cancel your orders.</p>
+          <a href="#">View Order Help →</a>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">🚚</div>
+          <h3>Shipping & Delivery</h3>
+          <p>Learn about delivery times, tracking and shipping fees.</p>
+          <a href="#">Shipping Help →</a>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">↩️</div>
+          <h3>Returns & Refunds</h3>
+          <p>Learn how to return products and receive refunds.</p>
+          <a href="#">Returns Help →</a>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">💳</div>
+          <h3>Payments</h3>
+          <p>Get help with payments, cards, invoices and refunds.</p>
+          <a href="#">Payment Help →</a>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">👤</div>
+          <h3>Account</h3>
+          <p>Manage your profile, password and account settings.</p>
+          <a href="#">Account Help →</a>
+        </div>
+
+        <div class="category">
+          <div class="category-icon">🔒</div>
+          <h3>Security & Privacy</h3>
+          <p>Learn how we protect your account and personal information.</p>
+          <a href="#">Security Help →</a>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- FAQ -->
+    <section class="faq-section">
+
+      <div class="section-title">
+        <h2>Frequently Asked Questions</h2>
+        <p>Quick answers to common questions.</p>
+      </div>
+
+      <div class="faq">
+        <button class="faq-question">
+          How can I track my order?
+          <span class="arrow">▼</span>
+        </button>
+
+        <div class="faq-answer">
+          You can track your order by opening the Orders section in your
+          account and selecting the order you want to track. Your tracking
+          number and latest delivery status will be displayed there.
+        </div>
+      </div>
+
+
+      <div class="faq">
+        <button class="faq-question">
+          How do I cancel an order?
+          <span class="arrow">▼</span>
+        </button>
+
+        <div class="faq-answer">
+          Open your Orders page, select the order and choose "Cancel Order".
+          Cancellation may not be available after the order has already been
+          shipped.
+        </div>
+      </div>
+
+
+      <div class="faq">
+        <button class="faq-question">
+          How do I return a product?
+          <span class="arrow">▼</span>
+        </button>
+
+        <div class="faq-answer">
+          Go to your Orders page, select the product and choose "Return
+          Product". Follow the instructions to select a return reason and
+          arrange the return.
+        </div>
+      </div>
+
+
+      <div class="faq">
+        <button class="faq-question">
+          When will I receive my refund?
+          <span class="arrow">▼</span>
+        </button>
+
+        <div class="faq-answer">
+          Refund processing times depend on the payment method and your bank.
+          Once the refund is approved, you will receive a confirmation email.
+        </div>
+      </div>
+
+
+      <div class="faq">
+        <button class="faq-question">
+          What payment methods do you accept?
+          <span class="arrow">▼</span>
+        </button>
+
+        <div class="faq-answer">
+          We support major credit and debit cards, online payment methods,
+          and other payment options available at checkout.
+        </div>
+      </div>
+
+
+      <div class="faq">
+        <button class="faq-question">
+          I forgot my password. What should I do?
+          <span class="arrow">▼</span>
+        </button>
+
+        <div class="faq-answer">
+          Click "Forgot Password" on the login page and follow the instructions
+          to reset your password.
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- Help Articles -->
+    <section class="articles">
+
+      <div class="section-title">
+        <h2>Popular Help Articles</h2>
+        <p>Useful guides for managing your shopping experience.</p>
+      </div>
+
+      <div class="article-list">
+
+        <div class="article">
+          <h3>How to place an order</h3>
+          <p>Learn how to search for products, add them to your cart and complete checkout.</p>
+          <a href="#">Read article →</a>
+        </div>
+
+        <div class="article">
+          <h3>Understanding order status</h3>
+          <p>Learn what processing, shipped, delivered and cancelled statuses mean.</p>
+          <a href="#">Read article →</a>
+        </div>
+
+        <div class="article">
+          <h3>Change your delivery address</h3>
+          <p>Learn when and how you can update your delivery address.</p>
+          <a href="#">Read article →</a>
+        </div>
+
+        <div class="article">
+          <h3>Return policy</h3>
+          <p>Find information about eligible products, return windows and refund processing.</p>
+          <a href="#">Read article →</a>
+        </div>
+
+        <div class="article">
+          <h3>Payment troubleshooting</h3>
+          <p>What to do when your card or online payment fails at checkout.</p>
+          <a href="#">Read article →</a>
+        </div>
+
+        <div class="article">
+          <h3>Protecting your account</h3>
+          <p>Learn how to keep your password and account information secure.</p>
+          <a href="#">Read article →</a>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- Contact Support -->
+    <section class="contact">
+
+      <h2>Still need help?</h2>
+
+      <p>
+        Our support team is ready to help you with your order or account.
+      </p>
+
+      <div class="contact-buttons">
+        <a href="mailto:support@example.com" class="btn btn-primary">
+          Contact Support
+        </a>
+
+        <a href="#" class="btn btn-light">
+          💬 Live Chat
+        </a>
+      </div>
+
+    </section>
+
+  </main>
+
+
+
+  <script>
+
+    // FAQ accordion
+    const faqQuestions = document.querySelectorAll(".faq-question");
+
+    faqQuestions.forEach(question => {
+      question.addEventListener("click", () => {
+
+        const faq = question.parentElement;
+
+        faq.classList.toggle("active");
+
+      });
+    });
+
+
+    // Search articles
+    function searchArticles() {
+
+      const input = document
+        .getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+      const items = document.querySelectorAll(
+        ".category, .article, .faq"
+      );
+
+      items.forEach(item => {
+
+        const text = item.innerText.toLowerCase();
+
+        if (text.includes(input)) {
+          item.style.display = "";
+        } else {
+          item.style.display = "none";
+        }
+
+      });
+    }
+
+  </script>
+
+</body>
+</html>
+
+
+
+{% endblock content %}
+
+
+
+
+
+
+
+

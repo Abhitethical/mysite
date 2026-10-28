@@ -1,0 +1,2528 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="robots"
+    content="noindex,nofollow,noarchive"
+>
+
+<title>Update Seller Status | Admin Panel</title>
+
+<!-- Bootstrap -->
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+>
+
+<!-- Bootstrap Icons -->
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+>
+
+<!-- Inter -->
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+
+<style>
+
+    :root {
+
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --primary-soft: #eff6ff;
+
+        --dark: #0f172a;
+        --dark-2: #1e293b;
+
+        --text: #172033;
+        --text-soft: #475569;
+        --muted: #64748b;
+
+        --border: #e2e8f0;
+        --border-soft: #eef2f7;
+
+        --bg: #f4f7fb;
+        --white: #ffffff;
+
+        --green: #16a34a;
+        --green-soft: #ecfdf3;
+
+        --orange: #d97706;
+        --orange-soft: #fff7ed;
+
+        --red: #dc2626;
+        --red-soft: #fef2f2;
+
+        --gray-soft: #f1f5f9;
+
+    }
+
+
+    * {
+        box-sizing: border-box;
+    }
+
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+
+    body {
+
+        margin: 0;
+
+        min-height: 100vh;
+
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(37, 99, 235, .06),
+                transparent 32%
+            ),
+            radial-gradient(
+                circle at bottom right,
+                rgba(99, 102, 241, .05),
+                transparent 30%
+            ),
+            var(--bg);
+
+        color: var(--text);
+
+        font-family:
+            Inter,
+            "Segoe UI",
+            Arial,
+            sans-serif;
+
+    }
+
+
+    /* =====================================================
+       PAGE
+    ===================================================== */
+
+    .status-page {
+
+        min-height: 100vh;
+
+        padding:
+            34px
+            20px
+            50px;
+
+    }
+
+
+    .status-container {
+
+        max-width: 1050px;
+
+        margin: 0 auto;
+
+    }
+
+
+    /* =====================================================
+       BREADCRUMB
+    ===================================================== */
+
+    .breadcrumb-bar {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-bottom: 15px;
+
+    }
+
+
+    .breadcrumb {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        margin: 0;
+
+        color: #94a3b8;
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+    }
+
+
+    .breadcrumb a {
+
+        color: #64748b;
+
+        text-decoration: none;
+
+        transition: .18s ease;
+
+    }
+
+
+    .breadcrumb a:hover {
+
+        color: var(--primary);
+
+    }
+
+
+    .breadcrumb-separator {
+
+        color: #cbd5e1;
+
+    }
+
+
+    .admin-security {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        padding: 7px 10px;
+
+        border-radius: 50px;
+
+        background: #ecfdf3;
+
+        border: 1px solid #bbf7d0;
+
+        color: #15803d;
+
+        font-size: 9px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .35px;
+
+    }
+
+
+    .security-dot {
+
+        width: 6px;
+        height: 6px;
+
+        border-radius: 50%;
+
+        background: #22c55e;
+
+        box-shadow:
+            0 0 0 3px rgba(34,197,94,.10);
+
+    }
+
+
+    /* =====================================================
+       MAIN CARD
+    ===================================================== */
+
+    .admin-card {
+
+        background: var(--white);
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 22px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 24px 65px rgba(15,23,42,.09);
+
+    }
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
+
+    .card-header-custom {
+
+        position: relative;
+
+        overflow: hidden;
+
+        padding: 30px 32px;
+
+        color: #fff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #0f172a 0%,
+                #172554 48%,
+                #2563eb 100%
+            );
+
+    }
+
+
+    .card-header-custom::before {
+
+        content: "";
+
+        position: absolute;
+
+        width: 280px;
+        height: 280px;
+
+        border-radius: 50%;
+
+        right: -130px;
+        top: -160px;
+
+        background:
+            rgba(255,255,255,.07);
+
+    }
+
+
+    .card-header-custom::after {
+
+        content: "";
+
+        position: absolute;
+
+        width: 170px;
+        height: 170px;
+
+        border-radius: 50%;
+
+        left: 46%;
+        bottom: -135px;
+
+        background:
+            rgba(255,255,255,.04);
+
+    }
+
+
+    .header-content {
+
+        position: relative;
+
+        z-index: 2;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 20px;
+
+    }
+
+
+    .header-left {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 16px;
+
+    }
+
+
+    .header-icon {
+
+        width: 56px;
+        height: 56px;
+
+        flex-shrink: 0;
+
+        border-radius: 16px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        background:
+            rgba(255,255,255,.12);
+
+        border:
+            1px solid rgba(255,255,255,.17);
+
+        box-shadow:
+            0 10px 25px rgba(0,0,0,.15);
+
+        font-size: 23px;
+
+    }
+
+
+    .header-title {
+
+        margin: 0;
+
+        font-size: 24px;
+
+        font-weight: 800;
+
+        letter-spacing: -.5px;
+
+    }
+
+
+    .header-subtitle {
+
+        margin: 5px 0 0;
+
+        color:
+            rgba(255,255,255,.68);
+
+        font-size: 11px;
+
+    }
+
+
+    .header-status {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        padding: 8px 11px;
+
+        border-radius: 50px;
+
+        background:
+            rgba(255,255,255,.09);
+
+        border:
+            1px solid rgba(255,255,255,.13);
+
+        color: #dbeafe;
+
+        font-size: 9px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        white-space: nowrap;
+
+    }
+
+
+    /* =====================================================
+       BODY
+    ===================================================== */
+
+    .card-body-custom {
+
+        padding: 28px 32px 30px;
+
+    }
+
+
+    /* =====================================================
+       SELLER PROFILE
+    ===================================================== */
+
+    .seller-profile-card {
+
+        position: relative;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 20px;
+
+        padding: 20px;
+
+        margin-bottom: 25px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 16px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #f8fafc,
+                #ffffff
+            );
+
+    }
+
+
+    .seller-profile-card::before {
+
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        top: 15px;
+        bottom: 15px;
+
+        width: 3px;
+
+        border-radius: 5px;
+
+        background:
+            linear-gradient(
+                #2563eb,
+                #6366f1
+            );
+
+    }
+
+
+    .seller-profile {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 14px;
+
+        min-width: 0;
+
+    }
+
+
+    .seller-avatar {
+
+        width: 56px;
+        height: 56px;
+
+        flex-shrink: 0;
+
+        border-radius: 15px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        color: #fff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #6366f1
+            );
+
+        font-size: 19px;
+
+        font-weight: 800;
+
+        box-shadow:
+            0 9px 22px rgba(37,99,235,.18);
+
+    }
+
+
+    .seller-name {
+
+        margin: 0;
+
+        color: var(--dark);
+
+        font-size: 16px;
+
+        font-weight: 800;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+
+        white-space: nowrap;
+
+    }
+
+
+    .seller-label {
+
+        margin: 4px 0 0;
+
+        color: #94a3b8;
+
+        font-size: 10px;
+
+    }
+
+
+    .seller-id {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 4px;
+
+        margin-top: 7px;
+
+        color: #64748b;
+
+        font-size: 9px;
+
+        font-weight: 700;
+
+    }
+
+
+    /* =====================================================
+       CURRENT STATUS
+    ===================================================== */
+
+    .current-status {
+
+        text-align: right;
+
+        flex-shrink: 0;
+
+    }
+
+
+    .status-label {
+
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        text-transform: uppercase;
+
+        letter-spacing: .65px;
+
+        font-weight: 800;
+
+    }
+
+
+    .status-badge {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        padding: 8px 12px;
+
+        border-radius: 50px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        border: 1px solid transparent;
+
+    }
+
+
+    .status-dot {
+
+        width: 7px;
+        height: 7px;
+
+        border-radius: 50%;
+
+    }
+
+
+    .status-approved {
+
+        color: #15803d;
+
+        background: var(--green-soft);
+
+        border-color: #bbf7d0;
+
+    }
+
+
+    .status-approved .status-dot {
+
+        background: var(--green);
+
+        box-shadow:
+            0 0 0 3px rgba(22,163,74,.10);
+
+    }
+
+
+    .status-pending {
+
+        color: #b45309;
+
+        background: var(--orange-soft);
+
+        border-color: #fed7aa;
+
+    }
+
+
+    .status-pending .status-dot {
+
+        background: #f59e0b;
+
+    }
+
+
+    .status-rejected {
+
+        color: #b91c1c;
+
+        background: var(--red-soft);
+
+        border-color: #fecaca;
+
+    }
+
+
+    .status-rejected .status-dot {
+
+        background: var(--red);
+
+    }
+
+
+    .status-blocked {
+
+        color: #475569;
+
+        background: var(--gray-soft);
+
+        border-color: #cbd5e1;
+
+    }
+
+
+    .status-blocked .status-dot {
+
+        background: #64748b;
+
+    }
+
+
+    /* =====================================================
+       INFORMATION STRIP
+    ===================================================== */
+
+    .info-strip {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0,1fr));
+
+        gap: 10px;
+
+        margin-bottom: 25px;
+
+    }
+
+
+    .info-item {
+
+        padding: 12px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 11px;
+
+        background: #fcfdff;
+
+    }
+
+
+    .info-item-label {
+
+        display: block;
+
+        color: #94a3b8;
+
+        font-size: 8px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .5px;
+
+        margin-bottom: 5px;
+
+    }
+
+
+    .info-item-value {
+
+        color: #334155;
+
+        font-size: 11px;
+
+        font-weight: 700;
+
+    }
+
+
+    /* =====================================================
+       SECTION TITLE
+    ===================================================== */
+
+    .section-heading {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        margin-bottom: 15px;
+
+    }
+
+
+    .section-heading-icon {
+
+        width: 35px;
+        height: 35px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 9px;
+
+        background: var(--primary-soft);
+
+        color: var(--primary);
+
+        font-size: 14px;
+
+    }
+
+
+    .section-heading h2 {
+
+        margin: 0;
+
+        color: var(--dark);
+
+        font-size: 14px;
+
+        font-weight: 800;
+
+    }
+
+
+    .section-heading p {
+
+        margin: 2px 0 0;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+    }
+
+
+    /* =====================================================
+       FORM
+    ===================================================== */
+
+    .form-panel {
+
+        padding: 19px;
+
+        border:
+            1px solid var(--border);
+
+        border-radius: 14px;
+
+        background: #fff;
+
+    }
+
+
+    .form-label {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        color: #334155;
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        margin-bottom: 8px;
+
+    }
+
+
+    .required-star {
+
+        color: var(--red);
+
+    }
+
+
+    .form-select {
+
+        min-height: 50px;
+
+        border:
+            1px solid #dbe2ea;
+
+        border-radius: 10px;
+
+        padding:
+            0 14px;
+
+        color: #334155;
+
+        background-color: #fff;
+
+        font-size: 12px;
+
+        font-weight: 600;
+
+        outline: none;
+
+        transition:
+            border-color .2s ease,
+            box-shadow .2s ease;
+
+    }
+
+
+    .form-select:hover {
+
+        border-color: #cbd5e1;
+
+    }
+
+
+    .form-select:focus {
+
+        border-color: var(--primary);
+
+        box-shadow:
+            0 0 0 4px rgba(37,99,235,.09);
+
+    }
+
+
+    .form-help {
+
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 6px;
+
+        margin-top: 8px;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+        line-height: 1.5;
+
+    }
+
+
+    /* =====================================================
+       LIVE PREVIEW
+    ===================================================== */
+
+    .preview-panel {
+
+        margin-top: 14px;
+
+        padding: 14px;
+
+        border-radius: 11px;
+
+        background: #f8fafc;
+
+        border:
+            1px solid var(--border);
+
+    }
+
+
+    .preview-header {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 10px;
+
+        margin-bottom: 9px;
+
+    }
+
+
+    .preview-label {
+
+        color: #64748b;
+
+        font-size: 9px;
+
+        font-weight: 800;
+
+        text-transform: uppercase;
+
+        letter-spacing: .5px;
+
+    }
+
+
+    .preview-note {
+
+        color: #94a3b8;
+
+        font-size: 8px;
+
+    }
+
+
+    .preview-status {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        padding: 8px 11px;
+
+        border-radius: 50px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+    }
+
+
+    /* =====================================================
+       WARNING
+    ===================================================== */
+
+    .warning-box {
+
+        display: flex;
+
+        align-items: flex-start;
+
+        gap: 11px;
+
+        margin-top: 18px;
+
+        padding: 13px 14px;
+
+        border:
+            1px solid #fde68a;
+
+        border-radius: 11px;
+
+        background:
+            #fffbeb;
+
+        color: #92400e;
+
+        font-size: 9px;
+
+        line-height: 1.55;
+
+    }
+
+
+    .warning-icon {
+
+        width: 28px;
+        height: 28px;
+
+        flex-shrink: 0;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 8px;
+
+        background: #fef3c7;
+
+        color: #d97706;
+
+        font-size: 13px;
+
+    }
+
+
+    .warning-title {
+
+        display: block;
+
+        margin-bottom: 2px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+    }
+
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .action-area {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        gap: 15px;
+
+        margin-top: 25px;
+
+        padding-top: 22px;
+
+        border-top:
+            1px solid var(--border);
+
+    }
+
+
+    .action-security {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 7px;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+    }
+
+
+    .action-buttons {
+
+        display: flex;
+
+        gap: 9px;
+
+    }
+
+
+    .btn-custom {
+
+        min-height: 43px;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 7px;
+
+        padding: 0 17px;
+
+        border-radius: 10px;
+
+        font-size: 11px;
+
+        font-weight: 800;
+
+        text-decoration: none;
+
+        border: 0;
+
+        transition:
+            transform .18s ease,
+            background .18s ease,
+            box-shadow .18s ease;
+
+    }
+
+
+    .btn-back {
+
+        color: #475569;
+
+        background: #f8fafc;
+
+        border:
+            1px solid var(--border);
+
+    }
+
+
+    .btn-back:hover {
+
+        color: #1e293b;
+
+        background: #f1f5f9;
+
+        transform: translateY(-1px);
+
+    }
+
+
+    .btn-update {
+
+        color: #fff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+        box-shadow:
+            0 7px 18px rgba(37,99,235,.20);
+
+    }
+
+
+    .btn-update:hover {
+
+        color: #fff;
+
+        transform: translateY(-1px);
+
+        box-shadow:
+            0 10px 23px rgba(37,99,235,.27);
+
+    }
+
+
+    .btn-update:disabled {
+
+        opacity: .65;
+
+        cursor: not-allowed;
+
+        transform: none;
+
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
+
+    .footer-text {
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 7px;
+
+        margin-top: 15px;
+
+        color: #94a3b8;
+
+        font-size: 9px;
+
+    }
+
+
+    /* =====================================================
+       CUSTOM CONFIRM MODAL
+    ===================================================== */
+
+    .confirm-modal .modal-content {
+
+        border: 0;
+
+        border-radius: 18px;
+
+        overflow: hidden;
+
+        box-shadow:
+            0 30px 90px rgba(15,23,42,.25);
+
+    }
+
+
+    .confirm-icon {
+
+        width: 58px;
+        height: 58px;
+
+        margin: 0 auto 15px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 16px;
+
+        background: #eff6ff;
+
+        color: #2563eb;
+
+        font-size: 23px;
+
+    }
+
+
+    .confirm-title {
+
+        color: #0f172a;
+
+        font-size: 17px;
+
+        font-weight: 800;
+
+        margin-bottom: 7px;
+
+    }
+
+
+    .confirm-text {
+
+        color: #64748b;
+
+        font-size: 11px;
+
+        line-height: 1.6;
+
+        margin: 0 auto;
+
+        max-width: 390px;
+
+    }
+
+
+    .confirm-new-status {
+
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 6px;
+
+        margin-top: 14px;
+
+        padding: 8px 12px;
+
+        border-radius: 50px;
+
+        background: #f8fafc;
+
+        border:
+            1px solid var(--border);
+
+        color: #334155;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+    }
+
+
+    .confirm-actions {
+
+        display: flex;
+
+        justify-content: center;
+
+        gap: 9px;
+
+        padding: 16px 20px 20px;
+
+    }
+
+
+    .confirm-btn {
+
+        min-height: 40px;
+
+        padding: 0 16px;
+
+        border-radius: 9px;
+
+        font-size: 10px;
+
+        font-weight: 800;
+
+        border: 0;
+
+    }
+
+
+    .confirm-cancel {
+
+        background: #f1f5f9;
+
+        color: #475569;
+
+    }
+
+
+    .confirm-cancel:hover {
+
+        background: #e2e8f0;
+
+    }
+
+
+    .confirm-submit {
+
+        color: #fff;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #4f46e5
+            );
+
+    }
+
+
+    /* =====================================================
+       LOADING
+    ===================================================== */
+
+    .loading-spinner {
+
+        width: 14px;
+        height: 14px;
+
+        border:
+            2px solid rgba(255,255,255,.35);
+
+        border-top-color: #fff;
+
+        border-radius: 50%;
+
+        animation:
+            spin .7s linear infinite;
+
+    }
+
+
+    @keyframes spin {
+
+        to {
+            transform: rotate(360deg);
+        }
+
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 768px) {
+
+        .status-page {
+
+            padding:
+                18px
+                12px
+                35px;
+
+        }
+
+
+        .breadcrumb-bar {
+
+            align-items: flex-start;
+
+            flex-direction: column;
+
+        }
+
+
+        .header-content {
+
+            align-items: flex-start;
+
+            flex-direction: column;
+
+        }
+
+
+        .header-status {
+
+            align-self: flex-start;
+
+        }
+
+
+        .card-header-custom {
+
+            padding: 23px;
+
+        }
+
+
+        .card-body-custom {
+
+            padding: 22px;
+
+        }
+
+
+        .seller-profile-card {
+
+            align-items: flex-start;
+
+            flex-direction: column;
+
+        }
+
+
+        .current-status {
+
+            text-align: left;
+
+        }
+
+
+        .info-strip {
+
+            grid-template-columns:
+                1fr;
+
+        }
+
+
+        .action-area {
+
+            align-items: stretch;
+
+            flex-direction: column;
+
+        }
+
+
+        .action-buttons {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1.4fr;
+
+        }
+
+
+        .btn-custom {
+
+            width: 100%;
+
+        }
+
+    }
+
+
+    @media (max-width: 480px) {
+
+        .header-title {
+
+            font-size: 20px;
+
+        }
+
+
+        .header-subtitle {
+
+            font-size: 10px;
+
+        }
+
+
+        .seller-avatar {
+
+            width: 50px;
+            height: 50px;
+
+        }
+
+
+        .action-buttons {
+
+            grid-template-columns:
+                1fr;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       PRINT
+    ===================================================== */
+
+    @media print {
+
+        body {
+            background: #fff;
+        }
+
+        .status-page {
+            padding: 0;
+        }
+
+        .admin-security,
+        .header-status,
+        .action-area,
+        .footer-text {
+            display: none !important;
+        }
+
+        .admin-card {
+            box-shadow: none;
+            border: 1px solid #ddd;
+        }
+
+    }
+
+</style>
+</head>
+
+<body>
+
+<div class="status-page">
+<div class="status-container">
+
+
+    <!-- =================================================
+         BREADCRUMB
+    ================================================== -->
+
+    <div class="breadcrumb-bar">
+
+        <div class="breadcrumb">
+
+            <a
+                href="{% url 'admin_contoll_seller_details' %}"
+            >
+                <i class="bi bi-people me-1"></i>
+                Sellers
+            </a>
+
+            <span class="breadcrumb-separator">
+                /
+            </span>
+
+            <span>
+                Update Status
+            </span>
+
+        </div>
+
+
+        <div class="admin-security">
+
+            <span class="security-dot"></span>
+
+            <i class="bi bi-shield-lock"></i>
+
+            Admin Control
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         MAIN CARD
+    ================================================== -->
+
+    <div class="admin-card">
+
+
+        <!-- HEADER -->
+
+        <div class="card-header-custom">
+
+            <div class="header-content">
+
+
+                <div class="header-left">
+
+                    <div class="header-icon">
+
+                        <i class="bi bi-person-gear"></i>
+
+                    </div>
+
+
+                    <div>
+
+                        <h1 class="header-title">
+                            Update Seller Status
+                        </h1>
+
+                        <p class="header-subtitle">
+                            Manage seller account access,
+                            verification and marketplace availability.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="header-status">
+
+                    <i class="bi bi-shield-check"></i>
+
+                    Protected Action
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <!-- BODY -->
+
+        <div class="card-body-custom">
+
+
+            <!-- =================================================
+                 SELLER PROFILE
+            ================================================== -->
+
+            <div class="seller-profile-card">
+
+
+                <div class="seller-profile">
+
+
+                    <div class="seller-avatar">
+
+                        {{ seller.user.username|first|upper }}
+
+                    </div>
+
+
+                    <div>
+
+                        <h2 class="seller-name">
+
+                            {{ seller.user.username }}
+
+                        </h2>
+
+
+                        <p class="seller-label">
+
+                            <i class="bi bi-person-badge me-1"></i>
+
+                            Registered Seller Account
+
+                        </p>
+
+
+                        <div class="seller-id">
+
+                            <i class="bi bi-fingerprint"></i>
+
+                            Seller ID: {{ seller.id }}
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- CURRENT STATUS -->
+
+                <div class="current-status">
+
+
+                    <span class="status-label">
+                        Current Status
+                    </span>
+
+
+                    <span
+                        id="currentStatusBadge"
+                        class="status-badge"
+                        data-status="{{ seller.status|default:'unknown'|lower }}"
+                    >
+
+                        <span class="status-dot"></span>
+
+                        <span id="currentStatusText">
+                            {{ seller.status|default:"Unknown"|capfirst }}
+                        </span>
+
+                    </span>
+
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 ACCOUNT SUMMARY
+            ================================================== -->
+
+            <div class="info-strip">
+
+
+                <div class="info-item">
+
+                    <span class="info-item-label">
+                        Account
+                    </span>
+
+                    <span class="info-item-value">
+
+                        <i class="bi bi-person-check me-1 text-success"></i>
+
+                        Active Profile
+
+                    </span>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <span class="info-item-label">
+                        Control Level
+                    </span>
+
+                    <span class="info-item-value">
+
+                        <i class="bi bi-shield-check me-1 text-primary"></i>
+
+                        Administrator
+
+                    </span>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <span class="info-item-label">
+                        Action
+                    </span>
+
+                    <span class="info-item-value">
+
+                        <i class="bi bi-arrow-repeat me-1 text-warning"></i>
+
+                        Status Change
+
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 SECTION
+            ================================================== -->
+
+            <div class="section-heading">
+
+                <div class="section-heading-icon">
+
+                    <i class="bi bi-sliders"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Account Status
+                    </h2>
+
+                    <p>
+                        Select the new status for this seller account.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORM PANEL
+            ================================================== -->
+
+            <div class="form-panel">
+
+
+                <form
+                    method="POST"
+                    id="statusForm"
+                    novalidate
+                >
+
+                    {% csrf_token %}
+
+
+                    <label
+                        for="status"
+                        class="form-label"
+                    >
+
+                        <i class="bi bi-list-check text-primary"></i>
+
+                        Select New Status
+
+                        <span class="required-star">
+                            *
+                        </span>
+
+                    </label>
+
+
+                    <select
+                        name="status"
+                        id="status"
+                        class="form-select"
+                        required
+                    >
+
+                        {% for key, value in seller.STATUS_CHOICES %}
+
+                            <option
+                                value="{{ key }}"
+                                {% if key == seller.status %}selected{% endif %}
+                            >
+
+                                {{ value }}
+
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+
+                    <div class="form-help">
+
+                        <i class="bi bi-info-circle"></i>
+
+                        <span>
+                            Select the account state that should be
+                            applied after administrator confirmation.
+                        </span>
+
+                    </div>
+
+
+                    <!-- LIVE PREVIEW -->
+
+                    <div class="preview-panel">
+
+
+                        <div class="preview-header">
+
+                            <span class="preview-label">
+
+                                Live Status Preview
+
+                            </span>
+
+
+                            <span class="preview-note">
+
+                                Updates automatically
+
+                            </span>
+
+                        </div>
+
+
+                        <span
+                            id="previewStatus"
+                            class="preview-status"
+                        >
+
+                            <span
+                                class="status-dot"
+                                id="previewDot"
+                            ></span>
+
+                            <span id="previewText">
+                                {{ seller.status|default:"Unknown"|capfirst }}
+                            </span>
+
+                        </span>
+
+
+                    </div>
+
+
+                    <!-- WARNING -->
+
+                    <div class="warning-box">
+
+
+                        <div class="warning-icon">
+
+                            <i class="bi bi-exclamation-triangle"></i>
+
+                        </div>
+
+
+                        <div>
+
+                            <span class="warning-title">
+
+                                Review before applying
+
+                            </span>
+
+                            Changing a seller's status may affect
+                            their access to marketplace features,
+                            seller operations and account permissions.
+
+                            Please verify the selected status before
+                            confirming the change.
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- ACTIONS -->
+
+                    <div class="action-area">
+
+
+                        <div class="action-security">
+
+                            <i class="bi bi-lock-fill"></i>
+
+                            Protected administrator operation
+
+                        </div>
+
+
+                        <div class="action-buttons">
+
+
+                            <a
+                                href="{% url 'admin_contoll_seller_details' %}"
+                                class="btn-custom btn-back"
+                            >
+
+                                <i class="bi bi-arrow-left"></i>
+
+                                Back to Sellers
+
+                            </a>
+
+
+                            <button
+                                type="button"
+                                class="btn-custom btn-update"
+                                id="updateButton"
+                            >
+
+                                <i class="bi bi-check2-circle"></i>
+
+                                Update Status
+
+                            </button>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                </form>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer-text">
+
+        <i class="bi bi-shield-check"></i>
+
+        Seller Management
+
+        <span>•</span>
+
+        Admin Control Panel
+
+        <span>•</span>
+
+        Protected Operation
+
+    </div>
+
+
+</div>
+
+</div>
+
+<!-- =========================================================
+     CUSTOM CONFIRMATION MODAL
+========================================================= -->
+
+<div
+    class="modal fade confirm-modal"
+    id="confirmStatusModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+<div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content">
+
+
+        <div class="modal-body text-center p-4">
+
+
+            <div class="confirm-icon">
+
+                <i class="bi bi-shield-exclamation"></i>
+
+            </div>
+
+
+            <div class="confirm-title">
+
+                Confirm Status Change
+
+            </div>
+
+
+            <p class="confirm-text">
+
+                You are about to change the status of
+
+                <strong>
+                    {{ seller.user.username }}
+                </strong>.
+
+                This may affect the seller's account access
+                and marketplace activity.
+
+            </p>
+
+
+            <div class="confirm-new-status">
+
+                <i class="bi bi-arrow-right"></i>
+
+                New Status:
+
+                <strong id="confirmStatusText">
+                    —
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="confirm-actions">
+
+
+            <button
+                type="button"
+                class="confirm-btn confirm-cancel"
+                data-bs-dismiss="modal"
+            >
+
+                Cancel
+
+            </button>
+
+
+            <button
+                type="button"
+                class="confirm-btn confirm-submit"
+                id="confirmSubmitButton"
+            >
+
+                <i class="bi bi-check2-circle me-1"></i>
+
+                Confirm Update
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- Bootstrap -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+></script>
+
+<script>
+
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
+
+    const form =
+        document.getElementById("statusForm");
+
+    const statusSelect =
+        document.getElementById("status");
+
+    const updateButton =
+        document.getElementById("updateButton");
+
+    const confirmButton =
+        document.getElementById("confirmSubmitButton");
+
+    const currentStatusBadge =
+        document.getElementById("currentStatusBadge");
+
+    const currentStatusText =
+        document.getElementById("currentStatusText");
+
+    const previewStatus =
+        document.getElementById("previewStatus");
+
+    const previewDot =
+        document.getElementById("previewDot");
+
+    const previewText =
+        document.getElementById("previewText");
+
+    const confirmStatusText =
+        document.getElementById("confirmStatusText");
+
+
+    /* =========================================================
+       STATUS HELPERS
+    ========================================================= */
+
+    function normalizeStatus(value) {
+
+        return String(value || "")
+            .toLowerCase()
+            .trim();
+
+    }
+
+
+    function formatStatus(value) {
+
+        return String(value || "Unknown")
+            .replace(/[_-]+/g, " ")
+            .replace(/\b\w/g, function(letter) {
+                return letter.toUpperCase();
+            });
+
+    }
+
+
+    function getStatusClass(status) {
+
+        status = normalizeStatus(status);
+
+
+        if (
+            status === "approved"
+            || status === "active"
+            || status === "verified"
+            || status === "completed"
+        ) {
+
+            return "status-approved";
+
+        }
+
+
+        if (
+            status === "pending"
+            || status === "processing"
+            || status === "waiting"
+        ) {
+
+            return "status-pending";
+
+        }
+
+
+        if (
+            status === "rejected"
+            || status === "failed"
+            || status === "suspended"
+        ) {
+
+            return "status-rejected";
+
+        }
+
+
+        return "status-blocked";
+
+    }
+
+
+    /* =========================================================
+       UPDATE PREVIEW
+    ========================================================= */
+
+    function updatePreview() {
+
+        const selectedValue =
+            statusSelect.value;
+
+
+        const selectedOption =
+            statusSelect.options[
+                statusSelect.selectedIndex
+            ];
+
+
+        const selectedText =
+            selectedOption
+                ? selectedOption.text.trim()
+                : formatStatus(selectedValue);
+
+
+        const statusClass =
+            getStatusClass(selectedValue);
+
+
+        previewStatus.className =
+            "preview-status " + statusClass;
+
+
+        previewText.textContent =
+            selectedText;
+
+
+        confirmStatusText.textContent =
+            selectedText;
+
+    }
+
+
+    /* =========================================================
+       CURRENT STATUS COLOR
+    ========================================================= */
+
+    function styleCurrentStatus() {
+
+        const current =
+            currentStatusBadge.dataset.status
+            || "unknown";
+
+
+        const statusClass =
+            getStatusClass(current);
+
+
+        currentStatusBadge.classList.add(
+            statusClass
+        );
+
+    }
+
+
+    /* =========================================================
+       STATUS CHANGE
+    ========================================================= */
+
+    statusSelect.addEventListener(
+        "change",
+        updatePreview
+    );
+
+
+    /* =========================================================
+       OPEN CONFIRMATION
+    ========================================================= */
+
+    updateButton.addEventListener(
+        "click",
+        function() {
+
+            if (!statusSelect.value) {
+
+                statusSelect.focus();
+
+                return;
+
+            }
+
+
+            updatePreview();
+
+
+            const modal =
+                bootstrap.Modal.getOrCreateInstance(
+                    document.getElementById(
+                        "confirmStatusModal"
+                    )
+                );
+
+
+            modal.show();
+
+        }
+    );
+
+
+    /* =========================================================
+       CONFIRM UPDATE
+    ========================================================= */
+
+    confirmButton.addEventListener(
+        "click",
+        function() {
+
+            confirmButton.disabled = true;
+
+
+            confirmButton.innerHTML =
+                '<span class="loading-spinner"></span>' +
+                ' Updating...';
+
+
+            updateButton.disabled = true;
+
+
+            /*
+             * Submit the original POST form.
+             * Django CSRF token remains inside the form.
+             */
+
+            form.submit();
+
+        }
+    );
+
+
+    /* =========================================================
+       INITIAL STATE
+    ========================================================= */
+
+    styleCurrentStatus();
+
+    updatePreview();
+
+
+    /* =========================================================
+       PREVENT DOUBLE SUBMISSION
+    ========================================================= */
+
+    form.addEventListener(
+        "submit",
+        function() {
+
+            updateButton.disabled = true;
+
+        }
+    );
+
+
+</script>
+
+</body>
+</html>
+
+{% endblock %}

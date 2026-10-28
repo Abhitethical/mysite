@@ -1,0 +1,3495 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow, noarchive">
+    <meta name="autocomplete" content="off">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>Seller Registration | Secure Seller Onboarding</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #64748b;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #f59e0b;
+            --light-bg: #f1f5f9;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --muted: #64748b;
+            --radius: 14px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(37, 99, 235, 0.08),
+                    transparent 30%
+                ),
+                linear-gradient(135deg, #f8fafc, #eef2ff);
+            color: var(--text);
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+            min-height: 100vh;
+        }
+
+        /* ==============================
+           MAIN WRAPPER
+        ============================== */
+
+        .page-wrapper {
+            width: 100%;
+            padding: 40px 15px 70px;
+        }
+
+        .register-container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .register-card {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            border-radius: 22px;
+            box-shadow:
+                0 20px 60px rgba(15, 23, 42, 0.10),
+                0 2px 10px rgba(15, 23, 42, 0.04);
+            overflow: hidden;
+        }
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        .registration-header {
+            background:
+                linear-gradient(
+                    135deg,
+                    #1d4ed8 0%,
+                    #2563eb 45%,
+                    #3b82f6 100%
+                );
+            color: #fff;
+            padding: 38px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .registration-header::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 50%;
+            right: -100px;
+            top: -150px;
+        }
+
+        .registration-header::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 50%;
+            left: -80px;
+            bottom: -120px;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-icon {
+            width: 58px;
+            height: 58px;
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 27px;
+            margin-bottom: 18px;
+        }
+
+        .registration-header h1 {
+            font-size: 30px;
+            font-weight: 750;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .registration-header p {
+            margin: 0;
+            opacity: 0.88;
+            font-size: 15px;
+        }
+
+        /* ==============================
+           PROGRESS
+        ============================== */
+
+        .progress-wrapper {
+            padding: 24px 40px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .progress-line {
+            height: 7px;
+            background: #e2e8f0;
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        .progress-bar-custom {
+            height: 100%;
+            width: 20%;
+            background: linear-gradient(
+                90deg,
+                #2563eb,
+                #60a5fa
+            );
+            border-radius: 50px;
+            transition: width 0.35s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 9px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* ==============================
+           FORM CONTENT
+        ============================== */
+
+        .form-content {
+            padding: 35px 40px 40px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            margin-bottom: 22px;
+            padding-bottom: 13px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section-number {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 11px;
+            background: #eff6ff;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .section-heading h3 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .section-heading p {
+            margin: 3px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* ==============================
+           FORM CONTROLS
+        ============================== */
+
+        .form-label {
+            font-weight: 600;
+            font-size: 13px;
+            color: #334155;
+            margin-bottom: 7px;
+        }
+
+        .required {
+            color: var(--danger);
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 48px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 11px 13px;
+            font-size: 14px;
+            color: #0f172a;
+            background-color: #fff;
+            transition: all 0.2s ease;
+        }
+
+        textarea.form-control {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-text {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        .input-group-text {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: #64748b;
+        }
+
+        /* ==============================
+           PROFILE UPLOAD
+        ============================== */
+
+        .profile-upload {
+            border: 2px dashed #cbd5e1;
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 22px;
+            transition: all 0.2s ease;
+        }
+
+        .profile-upload:hover {
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .profile-preview-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-preview {
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 15px rgba(15,23,42,0.12);
+            background: #e2e8f0;
+            display: none;
+        }
+
+        .upload-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            background: #dbeafe;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* ==============================
+           DOCUMENT BOX
+        ============================== */
+
+        .document-box {
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .document-box-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 17px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .document-box-title i {
+            color: var(--primary);
+        }
+
+        .hidden-section {
+            display: none;
+        }
+
+        /* ==============================
+           AGREEMENTS
+        ============================== */
+
+        .agreement-container {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+        }
+
+        .agreement-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .agreement-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .agreement-item:hover {
+            border-color: #bfdbfe;
+            background: #f8fbff;
+        }
+
+        .agreement-item input {
+            width: 19px;
+            height: 19px;
+            margin-top: 2px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .agreement-label {
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        .agreement-label span {
+            display: block;
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        /* ==============================
+           PASSWORD
+        ============================== */
+
+        .password-strength {
+            height: 5px;
+            border-radius: 50px;
+            background: #e2e8f0;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            transition: all 0.3s ease;
+        }
+
+        .password-info {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 6px;
+        }
+
+        /* ==============================
+           BUTTON
+        ============================== */
+
+        .submit-area {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-register {
+            width: 100%;
+            min-height: 54px;
+            border: none;
+            border-radius: 12px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #1d4ed8
+                );
+            color: #fff;
+            font-size: 16px;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(37,99,235,0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 25px rgba(37,99,235,0.30);
+            background:
+                linear-gradient(
+                    135deg,
+                    #1d4ed8,
+                    #1e40af
+                );
+        }
+
+        .btn-register:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .security-note {
+            text-align: center;
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 13px;
+        }
+
+        /* ==============================
+           MODAL
+        ============================== */
+
+        .modal-content {
+            border: none;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 70px rgba(15,23,42,0.25);
+        }
+
+        .modal-header {
+            background: #f8fafc;
+            border-bottom: 1px solid var(--border);
+            padding: 18px 22px;
+        }
+
+        .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .agreement-reader {
+            height: 330px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 14px;
+            line-height: 1.75;
+            color: #475569;
+        }
+
+        .agreement-reader::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .agreement-reader::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        .scroll-notice {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1d4ed8;
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--border);
+            padding: 15px 22px;
+        }
+
+        /* ==============================
+           ALERT
+        ============================== */
+
+        .alert-container {
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            border: none;
+            border-radius: 11px;
+            font-size: 14px;
+        }
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 768px) {
+
+            .page-wrapper {
+                padding: 15px 10px 40px;
+            }
+
+            .registration-header {
+                padding: 28px 22px;
+            }
+
+            .registration-header h1 {
+                font-size: 24px;
+            }
+
+            .progress-wrapper,
+            .form-content {
+                padding-left: 22px;
+                padding-right: 22px;
+            }
+
+            .profile-preview-wrapper {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .section {
+                margin-bottom: 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .registration-header {
+                padding: 24px 18px;
+            }
+
+            .progress-wrapper,
+            .form-content {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .section-heading h3 {
+                font-size: 16px;
+            }
+
+            .section-heading p {
+                font-size: 12px;
+            }
+
+            .document-box {
+                padding: 16px;
+            }
+
+            .agreement-container {
+                padding: 12px;
+            }
+        }
+
+        /* ==============================
+           INVALID INPUT
+        ============================== */
+
+        .was-validated .form-control:invalid,
+        .was-validated .form-select:invalid {
+            border-color: var(--danger);
+        }
+
+        .was-validated .form-control:valid,
+        .was-validated .form-select:valid {
+            border-color: #86efac;
+        }
+
+        /* =========================================================
+           ADVANCED PROFESSIONAL / SECURITY UI
+        ========================================================= */
+
+        .register-card {
+            position: relative;
+            isolation: isolate;
+        }
+
+        .register-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            border-radius: 22px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
+            z-index: 3;
+        }
+
+        .registration-header {
+            min-height: 210px;
+            display: flex;
+            align-items: center;
+        }
+
+        .registration-header h1 {
+            text-shadow: 0 2px 12px rgba(15,23,42,.15);
+        }
+
+        .header-content::after {
+            content: "SECURE SELLER ONBOARDING";
+            display: inline-flex;
+            align-items: center;
+            margin-top: 17px;
+            padding: 6px 11px;
+            border: 1px solid rgba(255,255,255,.25);
+            border-radius: 999px;
+            background: rgba(255,255,255,.10);
+            color: rgba(255,255,255,.92);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+        }
+
+        .progress-line {
+            box-shadow: inset 0 1px 2px rgba(15,23,42,.08);
+        }
+
+        .progress-bar-custom {
+            box-shadow: 0 0 14px rgba(37,99,235,.28);
+        }
+
+        .section-heading {
+            background: linear-gradient(90deg, rgba(239,246,255,.7), transparent);
+            border-radius: 12px;
+            padding: 10px 12px 12px;
+        }
+
+        .section-number {
+            box-shadow: 0 5px 14px rgba(37,99,235,.12);
+        }
+
+        .form-control,
+        .form-select {
+            box-shadow: 0 1px 2px rgba(15,23,42,.025);
+        }
+
+        .form-control:hover,
+        .form-select:hover {
+            border-color: #94a3b8;
+        }
+
+        .input-group:focus-within .input-group-text {
+            color: var(--primary);
+            border-color: var(--primary);
+            background: #eff6ff;
+        }
+
+        .security-panel {
+            position: relative;
+            padding: 22px;
+            border: 1px solid #bfdbfe;
+            border-radius: 16px;
+            background: linear-gradient(145deg, rgba(239,246,255,.92), rgba(248,250,252,.98));
+            box-shadow: 0 12px 30px rgba(37,99,235,.07), inset 0 1px 0 rgba(255,255,255,.9);
+            overflow: hidden;
+        }
+
+        .security-panel::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            right: -85px;
+            bottom: -95px;
+            border-radius: 50%;
+            background: rgba(37,99,235,.06);
+            pointer-events: none;
+        }
+
+        .security-panel-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(147,197,253,.55);
+        }
+
+        .security-panel-icon {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 18px;
+            box-shadow: 0 6px 15px rgba(37,99,235,.10);
+        }
+
+        .security-panel-header h4 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .security-panel-header p {
+            margin: 3px 0 0;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .security-badge {
+            margin-left: auto;
+            white-space: nowrap;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: #ecfdf5;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .security-help {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: flex-start;
+            padding: 10px 12px;
+            margin-top: 3px;
+            border-radius: 10px;
+            background: rgba(255,255,255,.72);
+            border: 1px solid rgba(191,219,254,.8);
+            color: #475569;
+            font-size: 11px;
+            line-height: 1.55;
+        }
+
+        .btn-register {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-register::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -80%;
+            width: 55%;
+            height: 100%;
+            background: linear-gradient(100deg, transparent, rgba(255,255,255,.22), transparent);
+            transform: skewX(-20deg);
+            transition: left .55s ease;
+        }
+
+        .btn-register:hover::before {
+            left: 135%;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        textarea:-webkit-autofill,
+        textarea:-webkit-autofill:hover,
+        textarea:-webkit-autofill:focus,
+        select:-webkit-autofill {
+            -webkit-text-fill-color: #0f172a;
+            -webkit-box-shadow: 0 0 0 1000px #ffffff inset;
+            transition: background-color 9999s ease-out 0s;
+        }
+
+        @media (max-width: 768px) {
+            .security-panel {
+                padding: 17px;
+            }
+
+            .security-panel-header {
+                align-items: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .security-badge {
+                margin-left: 54px;
+                margin-top: -5px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .security-badge {
+                margin-left: 47px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <div class="register-container">
+
+        <div class="register-card">
+
+            <!-- ==========================================
+                 HEADER
+            =========================================== -->
+
+            <div class="registration-header">
+
+                <div class="header-content">
+
+                    <div class="header-icon">
+                        <i class="bi bi-shop"></i>
+                    </div>
+
+                    <h1>Seller Registration</h1>
+
+                    <p>
+                        Create your professional seller account and start
+                        growing your business with our marketplace.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================================
+                 PROGRESS
+            =========================================== -->
+
+            <div class="progress-wrapper">
+
+                <div class="progress-line">
+                    <div
+                        class="progress-bar-custom"
+                        id="progressBar"
+                    ></div>
+                </div>
+
+                <div class="progress-text">
+
+                    <span id="progressText">
+                        Step 1 of 5
+                    </span>
+
+                    <span>
+                        Complete all required information
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==========================================
+                 FORM
+            =========================================== -->
+
+            <div class="form-content">
+
+                {% if error %}
+                    <div class="alert-container">
+                        <div class="alert alert-danger">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            {{ error }}
+                        </div>
+                    </div>
+                {% endif %}
+
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                    id="sellerForm"
+                    autocomplete="off"
+                    data-lpignore="true"
+                    data-1p-ignore="true"
+                    data-bwignore="true"
+                    novalidate
+                >
+
+                    {% csrf_token %}
+
+
+                    <!-- ======================================
+                         SECTION 1
+                    ======================================= -->
+
+                    <div
+                        class="section"
+                        data-step="1"
+                    >
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                1
+                            </div>
+
+                            <div>
+                                <h3>Business Information</h3>
+                                <p>
+                                    Select your business structure
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-md-7 mb-3">
+
+                                <label
+                                    for="business_type"
+                                    class="form-label"
+                                >
+                                    Business Type
+                                    <span class="required">*</span>
+                                </label>
+
+                                <select
+                                    name="business_type"
+                                    id="business_type"
+                                    class="form-select"
+                                    required
+                                
+                                        autocomplete="off"
+                                    >
+
+                                    <option value="">
+                                        Select Business Type
+                                    </option>
+
+                                    <option value="individual">
+                                        Individual
+                                    </option>
+
+                                    <option value="proprietorship">
+                                        Proprietorship
+                                    </option>
+
+                                    <option value="partnership">
+                                        Partnership
+                                    </option>
+
+                                    <option value="llp">
+                                        LLP
+                                    </option>
+
+                                    <option value="private_limited">
+                                        Private Limited Company
+                                    </option>
+
+                                    <option value="opc">
+                                        One Person Company
+                                    </option>
+
+                                </select>
+
+                                <div class="form-text">
+                                    Select the legal structure under which
+                                    you will operate your seller account.
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ======================================
+                         SECTION 2
+                    ======================================= -->
+
+                    <div
+                        class="section"
+                        data-step="2"
+                    >
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                2
+                            </div>
+
+                            <div>
+                                <h3>Account Information</h3>
+                                <p>
+                                    Create your seller login credentials
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <!-- Profile Upload -->
+
+                        <div class="profile-upload mb-4">
+
+                            <div class="profile-preview-wrapper">
+
+                                <img
+                                    src=""
+                                    id="profilePreview"
+                                    class="profile-preview"
+                                    alt="Profile Preview"
+                                >
+
+                                <div
+                                    class="upload-icon"
+                                    id="uploadIcon"
+                                >
+                                    <i class="bi bi-person-bounding-box"></i>
+                                </div>
+
+                                <div class="flex-grow-1">
+
+                                    <label
+                                        for="profile_photo"
+                                        class="form-label"
+                                    >
+                                        Profile Photo
+                                        <span class="required">*</span>
+                                    </label>
+
+                                    <input
+                                        type="file"
+                                        name="profile_photo"
+                                        id="profile_photo"
+                                        class="form-control"
+                                        accept="image/jpeg,image/png,image/webp"
+                                        required
+                                    
+                                        autocomplete="off"
+                                    >
+
+                                    <div class="form-text">
+                                        JPG, PNG or WEBP. Maximum recommended
+                                        size: 2MB.
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="username"
+                                    class="form-label"
+                                >
+                                    Username
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        id="username"
+                                        class="form-control uppercase-input"
+                                        placeholder="SELLERNAME"
+                                        required
+                                        minlength="4"
+                                        maxlength="50"
+                                    
+                                        autocomplete="off"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="email"
+                                    class="form-label"
+                                >
+                                    Email Address
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="bi bi-envelope"></i>
+                                    </span>
+
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="email"
+                                        class="form-control"
+                                        placeholder="seller@example.com"
+                                        required
+                                    
+                                        autocomplete="off"
+                                    >
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="password"
+                                    class="form-label"
+                                >
+                                    Password
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="input-group">
+
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        id="password"
+                                        class="form-control"
+                                        placeholder="Create a strong password"
+                                        required
+                                        minlength="8"
+                                    
+                                        autocomplete="off"
+                                    >
+
+                                    <button
+                                        type="button"
+                                        class="btn btn-outline-secondary"
+                                        id="togglePassword"
+                                    >
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
+                                </div>
+
+                                <div class="password-strength">
+                                    <div
+                                        class="password-strength-bar"
+                                        id="passwordStrength"
+                                    ></div>
+                                </div>
+
+                                <div
+                                    class="password-info"
+                                    id="passwordText"
+                                >
+                                    Minimum 8 characters recommended.
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="company_name"
+                                    class="form-label"
+                                >
+                                    Company / Business Name
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="bi bi-building"></i>
+                                    </span>
+
+                                    <input
+                                        type="text"
+                                        name="company_name"
+                                        id="company_name"
+                                        class="form-control uppercase-input"
+                                        placeholder="YOUR BUSINESS NAME"
+                                        required
+                                    
+                                        autocomplete="off"
+                                    >
+
+                                </div>
+
+
+
+
+                                
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- ======================================
+                         SECURITY & RECOVERY INFORMATION
+                    ======================================= -->
+
+                    <div class="security-panel mb-4">
+
+                        <div class="security-panel-header">
+                            <div class="security-panel-icon">
+                                <i class="bi bi-shield-lock-fill"></i>
+                            </div>
+                            <div>
+                                <h4>Security & Recovery Information</h4>
+                                <p>These details can be used to verify account ownership.</p>
+                            </div>
+                            <span class="security-badge">
+                                <i class="bi bi-lock-fill me-1"></i> Protected
+                            </span>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                <label for="gender" class="form-label">
+                                    Gender <span class="required">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-gender-ambiguous"></i>
+                                    </span>
+                                    <select name="gender" id="gender"
+                                            class="form-select"
+                                            autocomplete="off" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="wedding_anniversary" class="form-label">
+                                    Wedding Anniversary <span class="required">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar-heart"></i>
+                                    </span>
+                                    <input type="date" name="wedding_anniversary"
+                                           id="wedding_anniversary"
+                                           class="form-control"
+                                           autocomplete="off" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="date_of_birth" class="form-label">
+                                    Date of Birth <span class="required">*</span>
+                                </label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="bi bi-calendar3"></i>
+                                    </span>
+                                    <input type="date" name="date_of_birth"
+                                           id="date_of_birth"
+                                           class="form-control"
+                                           autocomplete="off" required>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="security-help">
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Keep these values accurate and consistent because they may be used during seller account verification.
+                        </div>
+
+                    </div>
+
+
+                    <!-- ======================================
+                         SECTION 3
+                    ======================================= -->
+
+                    <div
+                        class="section"
+                        data-step="3"
+                    >
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                3
+                            </div>
+
+                            <div>
+                                <h3>Contact Information</h3>
+                                <p>
+                                    Provide your business contact details
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="mobile"
+                                    class="form-label"
+                                >
+                                    Mobile Number
+                                    <span class="required">*</span>
+                                </label>
+
+                                <div class="input-group">
+
+                                    <span class="input-group-text">
+                                        <i class="bi bi-phone"></i>
+                                    </span>
+
+                                    <input
+                                        type="tel"
+                                        name="mobile"
+                                        id="mobile"
+                                        class="form-control"
+                                        placeholder="9876543210"
+                                        required
+                                        pattern="[0-9]{10}"
+                                        maxlength="10"
+                                    
+                                        autocomplete="off"
+                                    >
+
+                                </div>
+
+                                <div class="form-text">
+                                    Enter a valid 10-digit mobile number.
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-6 mb-3">
+
+                                <label
+                                    for="country"
+                                    class="form-label"
+                                >
+                                    Country
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="country"
+                                    id="country"
+                                    value="India"
+                                    class="form-control"
+                                    required
+                                
+                                        autocomplete="off"
+                                    >
+
+                            </div>
+
+
+                            <div class="col-12 mb-3">
+
+                                <label
+                                    for="address"
+                                    class="form-label"
+                                >
+                                    Complete Address
+                                    <span class="required">*</span>
+                                </label>
+
+                                <textarea
+                                    name="address"
+                                    id="address"
+                                    class="form-control"
+                                    rows="3"
+                                    placeholder="Enter your complete business address"
+                                    required
+                                
+                                        autocomplete="off"
+                                    ></textarea>
+
+                            </div>
+
+
+                            <div class="col-md-4 mb-3">
+
+                                <label
+                                    for="state"
+                                    class="form-label"
+                                >
+                                    State
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="state"
+                                    id="state"
+                                    class="form-control"
+                                    placeholder="Kerala"
+                                    required
+                                
+                                        autocomplete="off"
+                                    >
+
+                            </div>
+
+
+                            <div class="col-md-4 mb-3">
+
+                                <label
+                                    for="city"
+                                    class="form-label"
+                                >
+                                    City
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="city"
+                                    id="city"
+                                    class="form-control"
+                                    placeholder="Thiruvananthapuram"
+                                    required
+                                
+                                        autocomplete="off"
+                                    >
+
+                            </div>
+
+
+                            <div class="col-md-4 mb-3">
+
+                                <label
+                                    for="pincode"
+                                    class="form-label"
+                                >
+                                    Pincode
+                                    <span class="required">*</span>
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="pincode"
+                                    id="pincode"
+                                    class="form-control"
+                                    placeholder="695001"
+                                    required
+                                    pattern="[0-9]{6}"
+                                    maxlength="6"
+                                
+                                        autocomplete="off"
+                                    >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                      <!-- ======================================
+                         SECTION 4
+                    ======================================= -->
+
+                    <div
+                        class="section"
+                        data-step="4"
+                    >
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                4
+                            </div>
+
+                            <div>
+                                <h3>Business Documents</h3>
+                                <p>
+                                    Upload documents based on your business type
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <!-- COMMON DOCUMENTS -->
+
+                        <div
+                            id="business_docs"
+                            class="hidden-section"
+                        >
+
+                            <div class="document-box">
+
+                                <div class="document-box-title">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    General Business Documents
+                                </div>
+
+
+                                <div class="row">
+
+                                    <!-- GST NUMBER -->
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <label
+                                            for="gst_number"
+                                            class="form-label"
+                                        >
+                                            GST Number
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="gst_number"
+                                            id="gst_number"
+                                            class="form-control uppercase-input"
+                                            placeholder="22AAAAA0000A1Z5"
+                                            maxlength="15"
+                                        
+                                        autocomplete="off"
+                                    >
+
+                                    </div>
+
+
+                                    <!-- GST CERTIFICATE -->
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <label
+                                            for="gst_certificate"
+                                            class="form-label"
+                                        >
+                                            GST Certificate
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            name="gst_certificate"
+                                            id="gst_certificate"
+                                            class="form-control"
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                        
+                                        autocomplete="off"
+                                    >
+
+                                        <div class="form-text">
+                                            PDF, JPG or PNG.
+                                        </div>
+
+                                    </div>
+
+
+                                    <!-- LICENSE NUMBER -->
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <label
+                                            for="business_license_number"
+                                            class="form-label"
+                                        >
+                                            Business License Number
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="business_license_number"
+                                            id="business_license_number"
+                                            class="form-control"
+                                            placeholder="License number"
+                                        
+                                        autocomplete="off"
+                                    >
+
+                                    </div>
+
+
+                                    <!-- LICENSE DOCUMENT -->
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <label
+                                            for="business_license_document"
+                                            class="form-label"
+                                        >
+                                            Business License
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            name="business_license_document"
+                                            id="business_license_document"
+                                            class="form-control"
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                        
+                                        autocomplete="off"
+                                    >
+
+                                        <div class="form-text">
+                                            PDF, JPG or PNG.
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- LLP DOCUMENTS -->
+
+                        <div
+                            id="llp_docs"
+                            class="hidden-section"
+                        >
+
+                            <div class="document-box">
+
+                                <div class="document-box-title">
+                                    <i class="bi bi-file-earmark-ruled"></i>
+                                    LLP Documents
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <label
+                                            for="llp_number"
+                                            class="form-label"
+                                        >
+                                            LLP Number
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="llp_number"
+                                            id="llp_number"
+                                            class="form-control"
+                                            placeholder="Enter LLP number"
+                                        
+                                        autocomplete="off"
+                                    >
+
+                                    </div>
+
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <label
+                                            for="llp_agreement"
+                                            class="form-label"
+                                        >
+                                            LLP Agreement
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            name="llp_agreement"
+                                            id="llp_agreement"
+                                            class="form-control"
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                        
+                                        autocomplete="off"
+                                    >
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- COMPANY DOCUMENTS -->
+
+                        <div
+                            id="company_docs"
+                            class="hidden-section"
+                        >
+
+                            <div class="document-box">
+
+                                <div class="document-box-title">
+                                    <i class="bi bi-building-check"></i>
+                                    Company Documents
+                                </div>
+
+                                <div class="row">
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <label
+                                            for="moa_document"
+                                            class="form-label"
+                                        >
+                                            MOA Document
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            name="moa_document"
+                                            id="moa_document"
+                                            class="form-control"
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                        
+                                        autocomplete="off"
+                                    >
+
+                                    </div>
+
+
+                                    <div class="col-md-6 mb-3">
+
+                                        <label
+                                            for="aoa_document"
+                                            class="form-label"
+                                        >
+                                            AOA Document
+                                        </label>
+
+                                        <input
+                                            type="file"
+                                            name="aoa_document"
+                                            id="aoa_document"
+                                            class="form-control"
+                                            accept=".pdf,.jpg,.jpeg,.png"
+                                        
+                                        autocomplete="off"
+                                    >
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            id="individual_notice"
+                            class="alert alert-info d-none"
+                        >
+                            <i class="bi bi-info-circle-fill me-2"></i>
+                            Individual sellers do not need to upload
+                            business registration documents at this stage.
+                        </div>
+
+                    </div>
+
+
+                    <!-- ======================================
+                         SECTION 5
+                    ======================================= -->
+
+                    <div
+                        class="section"
+                        data-step="5"
+                    >
+
+                        <div class="section-heading">
+
+                            <div class="section-number">
+                                5
+                            </div>
+
+                            <div>
+                                <h3>Agreements & Confirmation</h3>
+                                <p>
+                                    Review and accept all required agreements
+                                </p>
+                            </div>
+
+                        </div>
+
+
+                        <div class="agreement-container">
+
+                            <!-- TERMS -->
+
+                            <div class="agreement-item">
+
+                                <input
+                                    type="checkbox"
+                                    name="terms_accepted"
+                                    id="termsCheck"
+                                    value="1"
+                                
+                                        autocomplete="off"
+                                    >
+
+                                <label
+                                    for="termsCheck"
+                                    class="agreement-label"
+                                >
+                                    Terms & Conditions
+
+                                    <span>
+                                        Review the platform terms and conditions.
+                                    </span>
+                                </label>
+
+                            </div>
+
+
+                            <!-- PRIVACY -->
+
+                            <div class="agreement-item">
+
+                                <input
+                                    type="checkbox"
+                                    name="privacy_policy_accepted"
+                                    id="policyCheck"
+                                    value="1"
+                                
+                                        autocomplete="off"
+                                    >
+
+                                <label
+                                    for="policyCheck"
+                                    class="agreement-label"
+                                >
+                                    Privacy Policy
+
+                                    <span>
+                                        Review how your personal information is handled.
+                                    </span>
+                                </label>
+
+                            </div>
+
+
+                            <!-- RETURN -->
+
+                            <div class="agreement-item">
+
+                                <input
+                                    type="checkbox"
+                                    name="return_policy_accepted"
+                                    id="returnCheck"
+                                    value="1"
+                                
+                                        autocomplete="off"
+                                    >
+
+                                <label
+                                    for="returnCheck"
+                                    class="agreement-label"
+                                >
+                                    Return Policy
+
+                                    <span>
+                                        Review the marketplace return requirements.
+                                    </span>
+                                </label>
+
+                            </div>
+
+
+                            <!-- SELLER -->
+
+                            <div class="agreement-item">
+
+                                <input
+                                    type="checkbox"
+                                    name="commission_agreement_accepted"
+                                    id="sellerCheck"
+                                    value="1"
+                                
+                                        autocomplete="off"
+                                    >
+
+                                <label
+                                    for="sellerCheck"
+                                    class="agreement-label"
+                                >
+                                    Seller Agreement
+
+                                    <span>
+                                        Review seller responsibilities and obligations.
+                                    </span>
+                                </label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ======================================
+                         SUBMIT
+                    ======================================= -->
+
+                    <div class="submit-area">
+
+                        <button
+                            type="submit"
+                            class="btn-register"
+                            id="registerButton"
+                        >
+                            <i class="bi bi-person-plus-fill me-2"></i>
+                            Register Seller
+                        </button>
+
+                        <div class="security-note">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Your information is securely submitted to the platform.
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ======================================================
+     GENERAL AGREEMENT MODAL
+======================================================= -->
+
+<div
+    class="modal fade"
+    id="agreementModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title"
+                    id="modalTitle"
+                >
+                    Agreement
+                </h5>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div class="scroll-notice">
+
+                    <i class="bi bi-info-circle me-1"></i>
+
+                    Please read the complete agreement. The
+                    <strong>I Agree</strong> button becomes available
+                    after you reach the bottom.
+
+                </div>
+
+
+                <div
+                    id="agreementText"
+                    class="agreement-reader"
+                ></div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    id="cancelAgreement"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="button"
+                    id="agreeBtn"
+                    class="btn btn-success"
+                    disabled
+                >
+                    <i class="bi bi-check-circle me-1"></i>
+                    I Agree
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ======================================================
+     SELLER AGREEMENT MODAL
+======================================================= -->
+
+<div
+    class="modal fade"
+    id="sellerModal"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    <i class="bi bi-shop me-2 text-primary"></i>
+                    Seller Agreement
+                </h5>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div class="agreement-reader">
+
+                    <h6 class="fw-bold mb-3">
+                        Seller Responsibilities & Disclaimer
+                    </h6>
+
+                    <p>
+                        This Seller Agreement sets forth the terms and
+                        conditions under which sellers may register, list,
+                        and sell products on our eCommerce platform.
+                    </p>
+
+                    <p>
+                        By registering as a seller, you agree to comply
+                        with all applicable laws, regulations, marketplace
+                        policies, and applicable product requirements.
+                    </p>
+
+                    <p>
+                        You confirm that all information provided during
+                        registration is accurate, complete, and up to date.
+                        Sellers are solely responsible for the quality,
+                        authenticity, legality, and safety of the products
+                        they list.
+                    </p>
+
+                    <p>
+                        Misleading, counterfeit, prohibited, unsafe, or
+                        unlawful products are strictly forbidden.
+                    </p>
+
+                    <p>
+                        Sellers must ensure timely order fulfillment,
+                        appropriate packaging, accurate descriptions,
+                        correct pricing, and updated stock availability.
+                    </p>
+
+                    <p>
+                        Payments will be processed according to the
+                        applicable commission structure and payout schedule,
+                        after deduction of applicable fees, taxes, refunds,
+                        penalties, or other charges.
+                    </p>
+
+                    <p>
+                        The platform reserves the right to review, suspend,
+                        restrict, or terminate seller accounts where policy
+                        violations, fraudulent activity, suspicious behavior,
+                        or legal concerns are identified.
+                    </p>
+
+                    <p>
+                        Sellers are responsible for resolving product-related
+                        obligations and complying with applicable consumer
+                        protection, taxation, intellectual property, and
+                        business laws.
+                    </p>
+
+                    <p>
+                        Sellers must not manipulate reviews, conduct
+                        fraudulent transactions, abuse promotional systems,
+                        or otherwise misuse the marketplace.
+                    </p>
+
+                    <p>
+                        The platform may modify the Seller Agreement and
+                        marketplace policies from time to time. Continued
+                        use of the platform after applicable changes may
+                        constitute acceptance of the updated terms.
+                    </p>
+
+                    <p class="mb-0">
+                        By accepting this agreement, you confirm that you
+                        have read, understood, and agreed to the Seller
+                        Agreement and the responsibilities associated with
+                        operating a seller account.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-light"
+                    id="sellerCancelBtn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="button"
+                    id="sellerAgreeBtn"
+                    class="btn btn-success"
+                >
+                    <i class="bi bi-check-circle me-1"></i>
+                    Accept Seller Agreement
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ======================================================
+     BOOTSTRAP
+======================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const form = document.getElementById("sellerForm");
+
+    const businessType =
+        document.getElementById("business_type");
+
+    const businessDocs =
+        document.getElementById("business_docs");
+
+    const llpDocs =
+        document.getElementById("llp_docs");
+
+    const companyDocs =
+        document.getElementById("company_docs");
+
+    const individualNotice =
+        document.getElementById("individual_notice");
+
+    const profilePhoto =
+        document.getElementById("profile_photo");
+
+    const profilePreview =
+        document.getElementById("profilePreview");
+
+    const uploadIcon =
+        document.getElementById("uploadIcon");
+
+    const password =
+        document.getElementById("password");
+
+    const passwordStrength =
+        document.getElementById("passwordStrength");
+
+    const passwordText =
+        document.getElementById("passwordText");
+
+    const togglePassword =
+        document.getElementById("togglePassword");
+
+    const progressBar =
+        document.getElementById("progressBar");
+
+    const progressText =
+        document.getElementById("progressText");
+
+    const registerButton =
+        document.getElementById("registerButton");
+
+
+    /* =====================================================
+       AGREEMENT ELEMENTS
+    ===================================================== */
+
+    const agreementModalElement =
+        document.getElementById("agreementModal");
+
+    const sellerModalElement =
+        document.getElementById("sellerModal");
+
+    const agreementModal =
+        new bootstrap.Modal(agreementModalElement);
+
+    const sellerModal =
+        new bootstrap.Modal(sellerModalElement);
+
+    const agreementText =
+        document.getElementById("agreementText");
+
+    const modalTitle =
+        document.getElementById("modalTitle");
+
+    const agreeBtn =
+        document.getElementById("agreeBtn");
+
+    const sellerAgreeBtn =
+        document.getElementById("sellerAgreeBtn");
+
+    const cancelAgreement =
+        document.getElementById("cancelAgreement");
+
+    const sellerCancelBtn =
+        document.getElementById("sellerCancelBtn");
+
+    const sellerCheck =
+        document.getElementById("sellerCheck");
+
+
+    let currentCheckbox = null;
+
+
+    /* =====================================================
+       AGREEMENT CONTENT
+    ===================================================== */
+
+    const agreements = {
+
+        termsCheck: {
+
+            title: "Terms & Conditions",
+
+            text: `
+                <p>
+                    By accessing, browsing, or using this eCommerce
+                    website, you agree to comply with and be bound by
+                    the applicable Terms and Conditions.
+                </p>
+
+                <p>
+                    Users are responsible for providing accurate and
+                    complete information and for maintaining the security
+                    of their account credentials.
+                </p>
+
+                <p>
+                    Products, prices, descriptions, availability,
+                    shipping information, and marketplace services may
+                    be changed or updated without prior notice.
+                </p>
+
+                <p>
+                    Orders are subject to availability and acceptance.
+                    The platform may cancel or refuse transactions in
+                    cases including pricing errors, product availability
+                    issues, suspected fraud, or policy violations.
+                </p>
+
+                <p>
+                    Users must not use the platform for fraudulent,
+                    unlawful, abusive, unauthorized, or disruptive
+                    activities.
+                </p>
+
+                <p>
+                    Platform content, branding, designs, text, images,
+                    and other materials may be protected by intellectual
+                    property laws.
+                </p>
+
+                <p>
+                    By continuing to use the platform, you acknowledge
+                    that you have read and understood these Terms and
+                    Conditions.
+                </p>
+            `
+        },
+
+
+        policyCheck: {
+
+            title: "Privacy Policy",
+
+            text: `
+                <p>
+                    This Privacy Policy explains how the marketplace
+                    collects, uses, stores, and protects personal
+                    information.
+                </p>
+
+                <p>
+                    Information may include your name, email address,
+                    phone number, business information, billing address,
+                    shipping address, and other information necessary
+                    to provide marketplace services.
+                </p>
+
+                <p>
+                    Information may be used for account creation,
+                    order processing, seller verification, customer
+                    support, communication, security, analytics,
+                    and legal compliance.
+                </p>
+
+                <p>
+                    Information may be shared with trusted service
+                    providers where necessary to operate marketplace
+                    services, such as payment, logistics, hosting,
+                    analytics, and customer support providers.
+                </p>
+
+                <p>
+                    Appropriate technical and organizational measures
+                    are used to protect information against unauthorized
+                    access, alteration, disclosure, or destruction.
+                </p>
+
+                <p>
+                    Users may have rights to access, update, correct,
+                    or request deletion of their personal information,
+                    subject to applicable legal requirements.
+                </p>
+
+                <p>
+                    By accepting this policy, you acknowledge that you
+                    have read and understood the Privacy Policy.
+                </p>
+            `
+        },
+
+
+        returnCheck: {
+
+            title: "Return Policy",
+
+            text: `
+                <p>
+                    This Return Policy describes the general conditions
+                    applicable to eligible product returns.
+                </p>
+
+                <p>
+                    Return eligibility may depend on the product category,
+                    condition of the product, delivery date, and applicable
+                    marketplace rules.
+                </p>
+
+                <p>
+                    Products generally need to be unused, undamaged, and
+                    returned with original packaging, labels, accessories,
+                    and documentation where applicable.
+                </p>
+
+                <p>
+                    Certain products may be excluded from returns because
+                    of their nature, including personalized, perishable,
+                    digital, hygiene-sensitive, or final-sale products,
+                    subject to applicable law.
+                </p>
+
+                <p>
+                    Sellers are responsible for cooperating with valid
+                    return, refund, replacement, and customer-service
+                    processes.
+                </p>
+
+                <p>
+                    Refunds or replacements are subject to inspection,
+                    applicable policy requirements, and payment-provider
+                    processing times.
+                </p>
+
+                <p>
+                    By accepting this policy, you acknowledge that you
+                    have read and understood the Return Policy.
+                </p>
+            `
+        }
+
+    };
+
+
+    /* =====================================================
+       BUSINESS TYPE
+    ===================================================== */
+
+    function updateBusinessDocuments() {
+
+        const type = businessType.value;
+
+        businessDocs.style.display = "none";
+        llpDocs.style.display = "none";
+        companyDocs.style.display = "none";
+
+        individualNotice.classList.add("d-none");
+
+
+        if (type === "individual") {
+
+            individualNotice.classList.remove("d-none");
+
+        }
+
+
+        if (
+            type === "proprietorship" ||
+            type === "partnership"
+        ) {
+
+            businessDocs.style.display = "block";
+
+        }
+
+
+        if (type === "llp") {
+
+            businessDocs.style.display = "block";
+            llpDocs.style.display = "block";
+
+        }
+
+
+        if (
+            type === "private_limited" ||
+            type === "opc"
+        ) {
+
+            businessDocs.style.display = "block";
+            companyDocs.style.display = "block";
+
+        }
+
+        updateProgress();
+
+    }
+
+
+    businessType.addEventListener(
+        "change",
+        updateBusinessDocuments
+    );
+
+
+    /* =====================================================
+       PROFILE PHOTO PREVIEW
+    ===================================================== */
+
+    profilePhoto.addEventListener(
+        "change",
+        function () {
+
+            const file = this.files[0];
+
+            if (!file) {
+
+                profilePreview.style.display = "none";
+                uploadIcon.style.display = "flex";
+
+                return;
+            }
+
+
+            const allowedTypes = [
+                "image/jpeg",
+                "image/png",
+                "image/webp"
+            ];
+
+
+            if (!allowedTypes.includes(file.type)) {
+
+                alert(
+                    "Please select a JPG, PNG, or WEBP image."
+                );
+
+                this.value = "";
+
+                profilePreview.style.display = "none";
+                uploadIcon.style.display = "flex";
+
+                return;
+            }
+
+
+            if (file.size > 2 * 1024 * 1024) {
+
+                alert(
+                    "Profile photo should be smaller than 2MB."
+                );
+
+                this.value = "";
+
+                profilePreview.style.display = "none";
+                uploadIcon.style.display = "flex";
+
+                return;
+            }
+
+
+            const reader = new FileReader();
+
+
+            reader.onload = function (event) {
+
+                profilePreview.src =
+                    event.target.result;
+
+                profilePreview.style.display =
+                    "block";
+
+                uploadIcon.style.display =
+                    "none";
+
+            };
+
+
+            reader.readAsDataURL(file);
+
+        }
+    );
+
+
+    /* =====================================================
+       UPPERCASE INPUTS
+    ===================================================== */
+
+    document
+        .querySelectorAll(".uppercase-input")
+        .forEach(function (input) {
+
+            input.addEventListener(
+                "input",
+                function () {
+
+                    this.value =
+                        this.value.toUpperCase();
+
+                }
+            );
+
+        });
+
+
+    /* =====================================================
+       PASSWORD TOGGLE
+    ===================================================== */
+
+    togglePassword.addEventListener(
+        "click",
+        function () {
+
+            const icon =
+                this.querySelector("i");
+
+            if (password.type === "password") {
+
+                password.type = "text";
+
+                icon.classList.remove("bi-eye");
+                icon.classList.add("bi-eye-slash");
+
+            } else {
+
+                password.type = "password";
+
+                icon.classList.remove("bi-eye-slash");
+                icon.classList.add("bi-eye");
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       PASSWORD STRENGTH
+    ===================================================== */
+
+    password.addEventListener(
+        "input",
+        function () {
+
+            const value = this.value;
+
+            let score = 0;
+
+
+            if (value.length >= 8) {
+                score++;
+            }
+
+            if (/[A-Z]/.test(value)) {
+                score++;
+            }
+
+            if (/[a-z]/.test(value)) {
+                score++;
+            }
+
+            if (/[0-9]/.test(value)) {
+                score++;
+            }
+
+            if (/[^A-Za-z0-9]/.test(value)) {
+                score++;
+            }
+
+
+            const levels = [
+
+                {
+                    width: "0%",
+                    color: "#e2e8f0",
+                    text: "Minimum 8 characters recommended."
+                },
+
+                {
+                    width: "20%",
+                    color: "#ef4444",
+                    text: "Very weak password."
+                },
+
+                {
+                    width: "40%",
+                    color: "#f97316",
+                    text: "Weak password."
+                },
+
+                {
+                    width: "60%",
+                    color: "#eab308",
+                    text: "Moderate password."
+                },
+
+                {
+                    width: "80%",
+                    color: "#22c55e",
+                    text: "Strong password."
+                },
+
+                {
+                    width: "100%",
+                    color: "#16a34a",
+                    text: "Very strong password."
+                }
+
+            ];
+
+
+            const level =
+                levels[score];
+
+
+            passwordStrength.style.width =
+                level.width;
+
+            passwordStrength.style.background =
+                level.color;
+
+            passwordText.textContent =
+                level.text;
+
+        }
+    );
+
+
+    /* =====================================================
+       AGREEMENT HANDLER
+    ===================================================== */
+
+    Object.keys(agreements).forEach(function (id) {
+
+        const checkbox =
+            document.getElementById(id);
+
+
+        checkbox.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    this.dataset.accepted === "true"
+                ) {
+
+                    event.preventDefault();
+
+                    return;
+
+                }
+
+
+                event.preventDefault();
+
+                currentCheckbox = this;
+
+                modalTitle.textContent =
+                    agreements[id].title;
+
+                agreementText.innerHTML =
+                    agreements[id].text;
+
+                agreementText.scrollTop = 0;
+
+                agreeBtn.disabled = true;
+
+                agreementModal.show();
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       AGREEMENT SCROLL
+    ===================================================== */
+
+    agreementText.addEventListener(
+        "scroll",
+        function () {
+
+            const reachedBottom =
+                this.scrollTop +
+                this.clientHeight >=
+                this.scrollHeight - 8;
+
+
+            if (reachedBottom) {
+
+                agreeBtn.disabled = false;
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       GENERAL AGREEMENT ACCEPT
+    ===================================================== */
+
+    agreeBtn.addEventListener(
+        "click",
+        function () {
+
+            if (!currentCheckbox) {
+                return;
+            }
+
+
+            currentCheckbox.checked = true;
+
+            currentCheckbox.dataset.accepted =
+                "true";
+
+
+            currentCheckbox.style.opacity =
+                "0.65";
+
+
+            currentCheckbox.style.cursor =
+                "not-allowed";
+
+
+            agreementModal.hide();
+
+            updateProgress();
+
+        }
+    );
+
+
+    /* =====================================================
+       CANCEL AGREEMENT
+    ===================================================== */
+
+    cancelAgreement.addEventListener(
+        "click",
+        function () {
+
+            if (currentCheckbox) {
+
+                currentCheckbox.checked = false;
+
+            }
+
+            agreementModal.hide();
+
+        }
+    );
+
+
+    /* =====================================================
+       SELLER AGREEMENT
+    ===================================================== */
+
+    sellerCheck.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                this.dataset.accepted === "true"
+            ) {
+
+                event.preventDefault();
+
+                return;
+
+            }
+
+
+            event.preventDefault();
+
+            sellerModal.show();
+
+        }
+    );
+
+
+    sellerAgreeBtn.addEventListener(
+        "click",
+        function () {
+
+            sellerCheck.checked = true;
+
+            sellerCheck.dataset.accepted =
+                "true";
+
+            sellerCheck.style.opacity =
+                "0.65";
+
+            sellerCheck.style.cursor =
+                "not-allowed";
+
+            sellerModal.hide();
+
+            updateProgress();
+
+        }
+    );
+
+
+    sellerCancelBtn.addEventListener(
+        "click",
+        function () {
+
+            sellerCheck.checked = false;
+
+            sellerModal.hide();
+
+        }
+    );
+
+
+    /* =====================================================
+       PROGRESS
+    ===================================================== */
+
+    function updateProgress() {
+
+        const sections =
+            document.querySelectorAll(
+                ".section"
+            );
+
+        let completed = 0;
+
+
+        sections.forEach(function (section) {
+
+            const requiredInputs =
+                section.querySelectorAll(
+                    "input[required], select[required], textarea[required]"
+                );
+
+
+            let sectionComplete = true;
+
+
+            requiredInputs.forEach(function (input) {
+
+                if (!input.value.trim()) {
+
+                    sectionComplete = false;
+
+                }
+
+            });
+
+
+            if (
+                section.dataset.step === "5"
+            ) {
+
+                const agreementsAccepted =
+                    document.querySelectorAll(
+                        ".agreement-container input:checked"
+                    ).length === 4;
+
+
+                if (!agreementsAccepted) {
+
+                    sectionComplete = false;
+
+                }
+
+            }
+
+
+            if (sectionComplete) {
+
+                completed++;
+
+            }
+
+        });
+
+
+        const total =
+            sections.length;
+
+        const percentage =
+            Math.max(
+                20,
+                Math.round(
+                    (completed / total) * 100
+                )
+            );
+
+
+        progressBar.style.width =
+            percentage + "%";
+
+
+        progressText.textContent =
+            "Step " +
+            Math.min(
+                completed + 1,
+                total
+            ) +
+            " of " +
+            total;
+
+    }
+
+
+    /* =====================================================
+       FORM INPUT PROGRESS
+    ===================================================== */
+
+    form.querySelectorAll(
+        "input, select, textarea"
+    ).forEach(function (element) {
+
+        element.addEventListener(
+            "input",
+            updateProgress
+        );
+
+        element.addEventListener(
+            "change",
+            updateProgress
+        );
+
+    });
+
+
+    /* =====================================================
+       FILE VALIDATION
+    ===================================================== */
+
+    document
+        .querySelectorAll(
+            'input[type="file"]'
+        )
+        .forEach(function (input) {
+
+            input.addEventListener(
+                "change",
+                function () {
+
+                    const file =
+                        this.files[0];
+
+                    if (!file) {
+                        return;
+                    }
+
+
+                    const maxSize =
+                        10 * 1024 * 1024;
+
+
+                    if (file.size > maxSize) {
+
+                        alert(
+                            "File size must be less than 10MB."
+                        );
+
+                        this.value = "";
+
+                    }
+
+                }
+            );
+
+        });
+
+
+    /* =====================================================
+       MOBILE NUMBER
+    ===================================================== */
+
+    document
+        .getElementById("mobile")
+        .addEventListener(
+            "input",
+            function () {
+
+                this.value =
+                    this.value
+                        .replace(/\D/g, "")
+                        .slice(0, 10);
+
+            }
+        );
+
+
+    /* =====================================================
+       PINCODE
+    ===================================================== */
+
+    document
+        .getElementById("pincode")
+        .addEventListener(
+            "input",
+            function () {
+
+                this.value =
+                    this.value
+                        .replace(/\D/g, "")
+                        .slice(0, 6);
+
+            }
+        );
+
+
+    /* =====================================================
+       FORM SUBMIT
+    ===================================================== */
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+
+            if (!form.checkValidity()) {
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                form.classList.add(
+                    "was-validated"
+                );
+
+                const firstInvalid =
+                    form.querySelector(
+                        ":invalid"
+                    );
+
+
+                if (firstInvalid) {
+
+                    firstInvalid.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+                    setTimeout(
+                        function () {
+
+                            firstInvalid.focus();
+
+                        },
+                        400
+                    );
+
+                }
+
+                return;
+
+            }
+
+
+            const agreementsAccepted =
+                document.querySelectorAll(
+                    ".agreement-container input:checked"
+                ).length === 4;
+
+
+            if (!agreementsAccepted) {
+
+                event.preventDefault();
+
+                alert(
+                    "Please accept all four agreements before registering."
+                );
+
+                document
+                    .querySelector(".agreement-container")
+                    .scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+                return;
+
+            }
+
+
+            registerButton.disabled = true;
+
+            registerButton.innerHTML = `
+                <span
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                ></span>
+                Creating Seller Account...
+            `;
+
+        }
+    );
+
+
+    /* =====================================================
+       SECURITY DATE VALIDATION
+    ===================================================== */
+
+    const weddingAnniversary =
+        document.getElementById("wedding_anniversary");
+
+    const dateOfBirth =
+        document.getElementById("date_of_birth");
+
+    const todayISO =
+        new Date().toISOString().split("T")[0];
+
+    if (weddingAnniversary) {
+        weddingAnniversary.max = todayISO;
+
+        weddingAnniversary.addEventListener(
+            "change",
+            function () {
+                this.setCustomValidity(
+                    this.value && this.value > todayISO
+                        ? "Wedding anniversary cannot be a future date."
+                        : ""
+                );
+                updateProgress();
+            }
+        );
+    }
+
+    if (dateOfBirth) {
+        dateOfBirth.max = todayISO;
+
+        dateOfBirth.addEventListener(
+            "change",
+            function () {
+                this.setCustomValidity(
+                    this.value && this.value > todayISO
+                        ? "Date of birth cannot be a future date."
+                        : ""
+                );
+                updateProgress();
+            }
+        );
+    }
+
+
+    /* =====================================================
+       STRICT AUTOFILL / AUTOCOMPLETE BLOCK
+    ===================================================== */
+
+    /*
+     * Browsers ultimately control autofill. The following measures
+     * strongly discourage autofill while keeping Django field names
+     * unchanged, so POST handling is not affected.
+     */
+    form.setAttribute("autocomplete", "off");
+    form.setAttribute("data-lpignore", "true");
+    form.setAttribute("data-1p-ignore", "true");
+    form.setAttribute("data-bwignore", "true");
+
+    form.querySelectorAll("input, select, textarea").forEach(function (element) {
+
+        element.setAttribute("autocomplete", "off");
+        element.setAttribute("data-lpignore", "true");
+        element.setAttribute("data-1p-ignore", "true");
+        element.setAttribute("data-bwignore", "true");
+        element.setAttribute("spellcheck", "false");
+        element.setAttribute("autocorrect", "off");
+        element.setAttribute("autocapitalize", "none");
+
+        /*
+         * readonly is applied only to user-editable text-like controls.
+         * It is removed immediately when the user intentionally focuses
+         * the field. This prevents many browsers from pre-populating
+         * values before user interaction.
+         */
+        const type = (element.type || "").toLowerCase();
+
+        const protectedTypes = [
+            "text",
+            "email",
+            "tel",
+            "password",
+            "date",
+            "number",
+            "search",
+            "url"
+        ];
+
+        if (
+            protectedTypes.includes(type) ||
+            element.tagName.toLowerCase() === "textarea"
+        ) {
+            element.setAttribute("readonly", "readonly");
+            element.setAttribute("data-autofill-protected", "true");
+
+            element.addEventListener("focus", function () {
+                this.removeAttribute("readonly");
+            }, { once: true });
+        }
+    });
+
+    /*
+     * Remove values that a browser/password manager may have inserted
+     * before the page became interactive. Do not clear file inputs.
+     */
+    function clearUnexpectedAutofill() {
+
+        form.querySelectorAll(
+            'input:not([type="hidden"]):not([type="file"]), textarea'
+        ).forEach(function (element) {
+
+            /*
+             * Do not overwrite values deliberately restored by Django.
+             * On this registration page, the form starts empty except
+             * for the intended Country value.
+             */
+            if (
+                element.id !== "country" &&
+                element.dataset.userTyped !== "true" &&
+                element.value
+            ) {
+                element.value = "";
+            }
+        });
+
+        /*
+         * Restore the intended default country value.
+         */
+        const country = document.getElementById("country");
+        if (country && !country.dataset.userTyped) {
+            country.value = "India";
+        }
+    }
+
+    /*
+     * Mark fields as user-entered so the autofill protection never
+     * clears a value after the user has started typing/selecting.
+     */
+    form.querySelectorAll("input, select, textarea").forEach(function (element) {
+
+        element.addEventListener("input", function () {
+            this.dataset.userTyped = "true";
+        });
+
+        element.addEventListener("change", function () {
+            this.dataset.userTyped = "true";
+        });
+
+        element.addEventListener("paste", function () {
+            this.dataset.userTyped = "true";
+        });
+    });
+
+    /*
+     * Run after browser autofill/password-manager initialization.
+     */
+    setTimeout(clearUnexpectedAutofill, 50);
+    setTimeout(clearUnexpectedAutofill, 300);
+    setTimeout(clearUnexpectedAutofill, 1000);
+
+    /*
+     * Also protect BFCache/page restoration.
+     */
+    window.addEventListener("pageshow", function () {
+        setTimeout(clearUnexpectedAutofill, 50);
+    });
+
+    /* =====================================================
+       INITIALIZE
+    ===================================================== */
+
+    updateBusinessDocuments();
+
+    updateProgress();
+
+});
+</script>
+
+
+<script>
+(function () {
+
+    /*
+     * Replace the current history entry.
+     * This prevents the registration form from
+     * remaining as a normal browser-history page.
+     */
+    history.replaceState(
+        null,
+        "",
+        window.location.href
+    );
+
+
+    /*
+     * Detect browser Back navigation.
+     */
+    window.addEventListener("popstate", function () {
+
+        history.pushState(
+            null,
+            "",
+            window.location.href
+        );
+
+        /*
+         * Keep the user on the current registration step.
+         */
+        window.location.reload();
+
+    });
+
+
+    /*
+     * Add one controlled history state.
+     */
+    history.pushState(
+        null,
+        "",
+        window.location.href
+    );
+
+
+})();
+</script>
+
+</body>
+</html>

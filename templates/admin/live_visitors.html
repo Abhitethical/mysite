@@ -1,0 +1,463 @@
+
+{% extends "adminbase.html" %}
+{% load static %}
+
+{% block title %}Live Visitor Monitoring | ShopKart{% endblock %}
+
+{% block content %}
+<style>
+    .lv-page {
+        --lv-blue: #2563eb;
+        --lv-ink: #0f172a;
+        --lv-muted: #64748b;
+        --lv-border: #e2e8f0;
+        color: var(--lv-ink);
+        font-family: Inter, system-ui, sans-serif;
+        padding: 24px;
+    }
+
+    .lv-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .lv-heading h1 {
+        font-size: clamp(23px, 3vw, 30px);
+        font-weight: 800;
+        margin: 0 0 7px;
+    }
+
+    .lv-muted { color: var(--lv-muted); font-size: 13px; }
+
+    .lv-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 13px;
+        border: 1px solid #bbf7d0;
+        border-radius: 999px;
+        background: #f0fdf4;
+        color: #166534;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .lv-dot {
+        height: 9px;
+        width: 9px;
+        background: #16a34a;
+        border-radius: 50%;
+        animation: lv-pulse 1.5s infinite;
+    }
+
+    @keyframes lv-pulse {
+        50% { opacity: .35; transform: scale(.8); }
+    }
+
+    .lv-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 22px;
+    }
+
+    .lv-card {
+        border: 1px solid var(--lv-border);
+        border-radius: 16px;
+        padding: 20px;
+        background: white;
+        box-shadow: 0 3px 12px #0f172a06;
+    }
+
+    .lv-card-label {
+        color: var(--lv-muted);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .lv-card-number {
+        display: block;
+        font-size: 30px;
+        font-weight: 800;
+        margin-top: 10px;
+        letter-spacing: -.7px;
+    }
+
+    .lv-section {
+        border: 1px solid var(--lv-border);
+        border-radius: 16px;
+        overflow: hidden;
+        background: white;
+    }
+
+    .lv-section-head {
+        padding: 19px 21px;
+        border-bottom: 1px solid var(--lv-border);
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .lv-section-head h2 {
+        font-size: 17px;
+        font-weight: 800;
+        margin: 0;
+    }
+
+    .lv-table-wrap { overflow-x: auto; }
+
+    .lv-table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 1000px;
+        font-size: 13px;
+    }
+
+    .lv-table th {
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 11px;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+        text-align: left;
+        padding: 14px 16px;
+        white-space: nowrap;
+    }
+
+    .lv-table td {
+        padding: 15px 16px;
+        border-top: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .lv-table tr:hover td { background: #fafcff; }
+
+    .lv-role {
+        display: inline-block;
+        padding: 5px 9px;
+        border-radius: 6px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-weight: 700;
+        text-transform: capitalize;
+    }
+
+    .lv-online {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #15803d;
+        font-weight: 700;
+    }
+
+    .lv-small-dot {
+        height: 7px;
+        width: 7px;
+        border-radius: 50%;
+        background: #22c55e;
+    }
+
+    .lv-url {
+        display: block;
+        max-width: 250px;
+        overflow-wrap: anywhere;
+        color: var(--lv-blue);
+        font-weight: 600;
+    }
+
+    .lv-btn {
+        border: 1px solid var(--lv-border);
+        border-radius: 9px;
+        padding: 9px 13px;
+        font-weight: 700;
+        background: white;
+        cursor: pointer;
+    }
+
+    .lv-empty {
+        text-align: center;
+        padding: 45px 15px;
+        color: var(--lv-muted);
+    }
+
+    .lv-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 14px 20px;
+        flex-wrap: wrap;
+        border-top: 1px solid var(--lv-border);
+    }
+
+    @media(max-width: 900px) {
+        .lv-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .lv-page { padding: 14px; }
+    }
+
+    @media(max-width: 450px) {
+        .lv-grid { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="lv-page">
+    <div class="lv-heading">
+        <div>
+            <h1>Live Visitor Monitoring</h1>
+            <div class="lv-muted">
+                Real-time website sessions, traffic and visitor activity
+            </div>
+        </div>
+
+        <div class="lv-live">
+            <span class="lv-dot"></span>
+            LIVE MONITORING
+        </div>
+    </div>
+
+    <div class="lv-grid">
+        <div class="lv-card">
+            <span class="lv-card-label">Live Visitors</span>
+            <strong class="lv-card-number" id="lvLive">
+                {{ live_count }}
+            </strong>
+            <span class="lv-muted">Active in last 90 seconds</span>
+        </div>
+
+        <div class="lv-card">
+            <span class="lv-card-label">Unique Visitor Profiles</span>
+            <strong class="lv-card-number" id="lvTotal">
+                {{ total_visitors }}
+            </strong>
+            <span class="lv-muted">Recorded browser profiles</span>
+        </div>
+
+        <div class="lv-card">
+            <span class="lv-card-label">Visitor Profiles Seen in 24h</span>
+            <strong class="lv-card-number" id="lvToday">
+                {{ today_visitors }}
+            </strong>
+            <span class="lv-muted">Recent profile activity</span>
+        </div>
+
+        <div class="lv-card">
+            <span class="lv-card-label">Page Views in 24h</span>
+            <strong class="lv-card-number" id="lvViews">
+                {{ today_page_views }}
+            </strong>
+            <span class="lv-muted">Recorded HTML page visits</span>
+        </div>
+    </div>
+
+    <div class="lv-grid">
+        <div class="lv-card">
+            <span class="lv-card-label">Guests Online</span>
+            <strong class="lv-card-number" id="lvGuests">
+                {{ guest_count }}
+            </strong>
+        </div>
+
+        <div class="lv-card">
+            <span class="lv-card-label">Customers Online</span>
+            <strong class="lv-card-number" id="lvCustomers">
+                {{ customer_count }}
+            </strong>
+        </div>
+
+        <div class="lv-card">
+            <span class="lv-card-label">Sellers Online</span>
+            <strong class="lv-card-number" id="lvSellers">
+                {{ seller_count }}
+            </strong>
+        </div>
+
+        <div class="lv-card">
+            <span class="lv-card-label">Admin / Staff Online</span>
+            <strong class="lv-card-number" id="lvAdmins">
+                {{ admin_count }}
+            </strong>
+        </div>
+    </div>
+
+    <div class="lv-section">
+        <div class="lv-section-head">
+            <div>
+                <h2>Currently Active Visitors</h2>
+                <div class="lv-muted">
+                    Maximum 100 sessions, sorted by last activity
+                </div>
+            </div>
+
+            <button type="button" class="lv-btn" id="lvRefresh">
+                Refresh now
+            </button>
+        </div>
+
+        <div class="lv-table-wrap">
+            <table class="lv-table">
+                <thead>
+                    <tr>
+                        <th>Visitor</th>
+                        <th>Role</th>
+                        <th>Current page</th>
+                        <th>Device / Browser</th>
+                        <th>IP address</th>
+                        <th>Location</th>
+                        <th>Activity</th>
+                        <th>Last seen</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="lvRows">
+                    <tr>
+                        <td colspan="9" class="lv-empty">
+                            Loading live visitors...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="lv-footer">
+            <span class="lv-muted" id="lvStatus">
+                Connecting to monitoring service...
+            </span>
+            <span class="lv-muted" id="lvUpdated">
+                Waiting for first refresh
+            </span>
+        </div>
+    </div>
+</div>
+
+<script>
+(() => {
+    const apiURL = "{% url 'live_visitors_api' %}";
+
+    const byId = id => document.getElementById(id);
+
+    function setText(id, value) {
+        byId(id).textContent = value ?? 0;
+    }
+
+    function addCell(row, value) {
+        const td = document.createElement("td");
+        td.textContent = value || "—";
+        row.appendChild(td);
+        return td;
+    }
+
+    function formatTime(value) {
+        if (!value) return "Unknown";
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return "Unknown";
+        return date.toLocaleTimeString();
+    }
+
+    function renderVisitors(data) {
+        const rows = byId("lvRows");
+        rows.replaceChildren();
+
+        if (!data.visitors.length) {
+            const tr = document.createElement("tr");
+            const td = document.createElement("td");
+            td.colSpan = 9;
+            td.className = "lv-empty";
+            td.textContent =
+                "No active visitors right now. Visitors will appear when they browse tracked pages.";
+            tr.appendChild(td);
+            rows.appendChild(tr);
+            return;
+        }
+
+        data.visitors.forEach(visitor => {
+            const tr = document.createElement("tr");
+
+            addCell(tr, visitor.visitor);
+
+            const role = addCell(tr, "");
+            const roleTag = document.createElement("span");
+            roleTag.className = "lv-role";
+            roleTag.textContent = visitor.role;
+            role.appendChild(roleTag);
+
+            const page = addCell(tr, "");
+            const link = document.createElement("span");
+            link.className = "lv-url";
+            link.textContent = visitor.title || visitor.url;
+            link.title = visitor.url || "";
+            page.appendChild(link);
+
+            addCell(
+                tr,
+                [visitor.device, visitor.browser].filter(Boolean).join(" / ")
+            );
+            addCell(tr, visitor.ip);
+            addCell(tr, visitor.city);
+            addCell(tr, visitor.activity);
+            addCell(tr, formatTime(visitor.last_seen));
+
+            const status = addCell(tr, "");
+            const online = document.createElement("span");
+            online.className = "lv-online";
+
+            const dot = document.createElement("span");
+            dot.className = "lv-small-dot";
+            online.appendChild(dot);
+            online.appendChild(document.createTextNode("Online"));
+            status.appendChild(online);
+
+            rows.appendChild(tr);
+        });
+    }
+
+    async function refresh() {
+        try {
+            const response = await fetch(apiURL, {
+                method: "GET",
+                credentials: "same-origin",
+                headers: { "Accept": "application/json" },
+                cache: "no-store"
+            });
+
+            if (!response.ok) {
+                throw new Error("HTTP " + response.status);
+            }
+
+            const data = await response.json();
+
+            setText("lvLive", data.count);
+            setText("lvGuests",
+                data.visitors.filter(v => v.role === "guest").length);
+            setText("lvCustomers",
+                data.visitors.filter(v => v.role === "customer").length);
+            setText("lvSellers",
+                data.visitors.filter(v => v.role === "seller").length);
+            setText("lvAdmins",
+                data.visitors.filter(
+                    v => v.role === "admin" || v.role === "staff"
+                ).length);
+
+            renderVisitors(data);
+
+            byId("lvStatus").textContent =
+                "Connected · " + data.count + " active sessions";
+            byId("lvUpdated").textContent =
+                "Last refreshed: " + new Date().toLocaleTimeString();
+
+        } catch (error) {
+            byId("lvStatus").textContent =
+                "Could not load live sessions. Check server and permissions.";
+        }
+    }
+
+    byId("lvRefresh").addEventListener("click", refresh);
+    refresh();
+    window.setInterval(refresh, 10000);
+})();
+</script>
+{% endblock %}

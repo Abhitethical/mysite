@@ -1,0 +1,24 @@
+<h2>Return Details</h2>
+
+<p><strong>Status:</strong> {{ return.status }}</p>
+<p><strong>Type:</strong> {{ return.return_type }}</p>
+<p><strong>Reason:</strong> {{ return.reason }}</p>
+
+{% if return.image %}
+    <img src="{{ return.image.url }}" width="200">
+{% endif %}
+
+<hr>
+
+<!-- Admin Actions -->
+<a href="{% url 'approve_return' return.id %}">Approve</a>
+<a href="{% url 'reject_return' return.id %}">Reject</a>
+
+<hr>
+
+<!-- Refund Button -->
+{% if return.status == "approved" %}
+    <a href="{% url 'process_refund' return.id %}">
+        <button>Process Refund</button>
+    </a>
+{% endif %}

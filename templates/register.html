@@ -1,0 +1,1041 @@
+{% extends 'layouts/main.html' %}
+
+{% block title %}
+    Registration | ShopKart
+{% endblock title %}
+
+{% block content %}
+
+<style>
+
+
+
+/* =========================================
+   SECURE IMAGE UPLOAD
+========================================= */
+
+.secure-upload-box {
+    position: relative;
+    transition: .25s ease;
+}
+
+.secure-upload-box.security-valid {
+    border-color: #16a34a;
+    background: #f0fdf4;
+}
+
+.secure-upload-box.security-invalid {
+    border-color: #dc2626;
+    background: #fff1f2;
+}
+
+.image-security-status {
+    margin-top: 9px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.image-security-status.valid {
+    display: block;
+    color: #166534;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.image-security-status.invalid {
+    display: block;
+    color: #991b1b;
+    background: #fff1f2;
+    border: 1px solid #fecaca;
+}
+
+.profile-preview-wrapper {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.profile-preview-image {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 14px;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 6px 20px rgba(15,23,42,.10);
+}
+
+.profile-preview-info {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.profile-preview-info strong {
+    display: block;
+    color: #374151;
+    margin-bottom: 3px;
+}
+
+
+:root {
+    --register-primary: #ff3d57;
+    --register-primary-dark: #e52d46;
+    --register-dark: #111827;
+    --register-text: #374151;
+    --register-muted: #6b7280;
+    --register-border: #e5e7eb;
+    --register-shadow: 0 25px 70px rgba(15, 23, 42, .10);
+}
+
+.registration-page {
+    min-height: calc(100vh - 70px);
+    padding: 60px 0 90px;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(255, 61, 87, .08), transparent 25%),
+        radial-gradient(circle at 90% 90%, rgba(99, 102, 241, .07), transparent 25%),
+        #f8fafc;
+}
+
+.registration-card {
+    max-width: 1180px;
+    margin: auto;
+    background: #fff;
+    border-radius: 28px;
+    overflow: hidden;
+    border: 1px solid rgba(15, 23, 42, .06);
+    box-shadow: var(--register-shadow);
+}
+
+.registration-brand {
+    position: relative;
+    min-height: 720px;
+    padding: 55px 45px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 90% 10%, rgba(255,255,255,.15), transparent 25%),
+        radial-gradient(circle at 10% 90%, rgba(255,255,255,.08), transparent 30%),
+        linear-gradient(145deg, #111827 0%, #1f2937 55%, #ff3d57 160%);
+}
+
+.registration-brand::before {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 50%;
+    right: -180px;
+    top: -140px;
+}
+
+.registration-brand::after {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 50%;
+    left: -160px;
+    bottom: -130px;
+}
+
+.brand-content {
+    position: relative;
+    z-index: 2;
+}
+
+.brand-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-size: 27px;
+    font-weight: 800;
+    letter-spacing: -.8px;
+    margin-bottom: 55px;
+    text-decoration: none;
+}
+
+.brand-logo i,
+.brand-logo span {
+    color: #ff6478;
+}
+
+.brand-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.13);
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.4px;
+    margin-bottom: 20px;
+}
+
+.brand-label i {
+    color: #ff6578;
+}
+
+.brand-title {
+    font-size: 43px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -1.8px;
+    margin-bottom: 20px;
+}
+
+.brand-title span {
+    color: #ff6478;
+}
+
+.brand-description {
+    color: rgba(255,255,255,.68);
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 430px;
+}
+
+.register-benefits {
+    position: relative;
+    z-index: 2;
+    list-style: none;
+    padding: 0;
+    margin: 35px 0 0;
+}
+
+.register-benefits li {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 18px;
+    color: rgba(255,255,255,.85);
+    font-size: 13px;
+}
+
+.benefit-icon {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: rgba(255,255,255,.08);
+    color: #ff687a;
+}
+
+.mini-testimonial {
+    position: relative;
+    z-index: 2;
+    padding: 20px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.10);
+    backdrop-filter: blur(10px);
+}
+
+.mini-testimonial .stars {
+    color: #fbbf24;
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.mini-testimonial p {
+    color: rgba(255,255,255,.72);
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 0 0 10px;
+}
+
+.mini-testimonial small {
+    color: rgba(255,255,255,.45);
+    font-size: 10px;
+}
+
+.registration-form-area {
+    padding: 55px 50px;
+    background: white;
+}
+
+.form-header {
+    margin-bottom: 30px;
+}
+
+.form-eyebrow {
+    color: var(--register-primary);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    margin-bottom: 8px;
+}
+
+.form-title {
+    color: var(--register-dark);
+    font-size: 31px;
+    font-weight: 800;
+    letter-spacing: -.8px;
+    margin-bottom: 8px;
+}
+
+.form-subtitle {
+    color: var(--register-muted);
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.register-field {
+    margin-bottom: 19px;
+}
+
+.register-field label {
+    display: block;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.register-field input,
+.register-field textarea,
+.register-field select {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid var(--register-border);
+    border-radius: 11px;
+    background: #f9fafb;
+    color: #111827;
+    padding: 11px 14px;
+    font-size: 13px;
+    outline: none;
+    transition: all .25s ease;
+}
+
+.register-field textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.register-field input[type="file"] {
+    padding: 11px;
+    background: #f9fafb;
+    cursor: pointer;
+}
+
+.register-field input:focus,
+.register-field textarea:focus,
+.register-field select:focus {
+    background: white;
+    border-color: var(--register-primary);
+    box-shadow: 0 0 0 4px rgba(255,61,87,.08);
+}
+
+.register-field input::placeholder,
+.register-field textarea::placeholder {
+    color: #9ca3af;
+}
+
+.password-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin-top: -8px;
+    margin-bottom: 18px;
+    color: #9ca3af;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.password-note i {
+    color: var(--register-primary);
+    margin-top: 2px;
+}
+
+.field-error {
+    margin-top: 7px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #fff1f2;
+    border-left: 3px solid #ef4444;
+    color: #dc2626;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.field-error ul {
+    padding-left: 15px;
+    margin: 0;
+}
+
+.non-field-errors {
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.non-field-errors ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.upload-box {
+    position: relative;
+    border: 1px dashed #d1d5db;
+    border-radius: 12px;
+    padding: 5px;
+    background: #fafafa;
+    transition: .25s ease;
+}
+
+.upload-box:hover {
+    border-color: var(--register-primary);
+    background: #fff7f8;
+}
+
+.upload-box input[type="file"] {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.upload-help {
+    color: #9ca3af;
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.register-button {
+    width: 100%;
+    min-height: 52px;
+    border: none;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #ff3d57, #e52d46);
+    color: white;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: .2px;
+    box-shadow: 0 12px 25px rgba(255,61,87,.20);
+    transition: all .3s ease;
+    margin-top: 4px;
+}
+
+.register-button:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 17px 35px rgba(255,61,87,.30);
+}
+
+.register-button:active {
+    transform: translateY(0);
+}
+
+.register-button i {
+    margin-left: 8px;
+}
+
+.login-section {
+    text-align: center;
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f1f3;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.login-section a {
+    color: var(--register-primary);
+    font-weight: 800;
+}
+
+.login-section a:hover {
+    color: var(--register-primary-dark);
+    text-decoration: underline;
+}
+
+.security-note {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    color: #9ca3af;
+    font-size: 10px;
+    margin-top: 15px;
+}
+
+.security-note i {
+    color: #16a34a;
+}
+
+.form-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0;
+}
+
+.form-divider::before,
+.form-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #edf0f2;
+}
+
+.form-divider span {
+    color: #9ca3af;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@media (max-width: 991px) {
+    .registration-page {
+        padding: 35px 15px 70px;
+    }
+
+    .registration-brand {
+        min-height: auto;
+        padding: 40px 35px;
+    }
+
+    .brand-logo {
+        margin-bottom: 35px;
+    }
+
+    .brand-title {
+        font-size: 36px;
+    }
+
+    .registration-form-area {
+        padding: 40px 35px;
+    }
+}
+
+@media (max-width: 767px) {
+    .registration-page {
+        padding: 20px 10px 50px;
+    }
+
+    .registration-card {
+        border-radius: 20px;
+    }
+
+    .registration-brand {
+        padding: 35px 25px;
+    }
+
+    .brand-logo {
+        margin-bottom: 30px;
+    }
+
+    .brand-title {
+        font-size: 32px;
+    }
+
+    .brand-description {
+        font-size: 13px;
+    }
+
+    .registration-form-area {
+        padding: 35px 22px;
+    }
+
+    .form-title {
+        font-size: 27px;
+    }
+}
+
+@media (max-width: 400px) {
+    .registration-form-area {
+        padding: 30px 18px;
+    }
+
+    .registration-brand {
+        padding: 30px 20px;
+    }
+
+    .brand-title {
+        font-size: 29px;
+    }
+}
+</style>
+
+<div class="registration-page">
+
+    <div class="container">
+
+        <div class="registration-card">
+
+            <div class="row g-0">
+
+                <!-- LEFT SIDE -->
+
+                <div class="col-lg-5">
+
+                    <div class="registration-brand">
+
+                        <div class="brand-content">
+
+                            <a href="{% url 'home' %}" class="brand-logo">
+                                <i class="fa fa-shopping-bag"></i>
+                                Shop<span>Kart</span>
+                            </a>
+
+                            <div class="brand-label">
+                                <i class="fa fa-star"></i>
+                                Join ShopKart
+                            </div>
+
+                            <h1 class="brand-title">
+                                Your shopping
+                                <br>
+                                journey starts
+                                <span>here.</span>
+                            </h1>
+
+                            <p class="brand-description">
+                                Create your ShopKart account and unlock
+                                a faster, smarter and more personalized
+                                shopping experience.
+                            </p>
+
+                            <ul class="register-benefits">
+
+                                <li>
+                                    <span class="benefit-icon">
+                                        <i class="fa fa-bolt"></i>
+                                    </span>
+                                    Faster checkout experience
+                                </li>
+
+                                <li>
+                                    <span class="benefit-icon">
+                                        <i class="fa fa-heart"></i>
+                                    </span>
+                                    Save your favourite products
+                                </li>
+
+                                <li>
+                                    <span class="benefit-icon">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </span>
+                                    Manage your shopping cart
+                                </li>
+
+                                <li>
+                                    <span class="benefit-icon">
+                                        <i class="fa fa-user"></i>
+                                    </span>
+                                    Personalized account dashboard
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                        <div class="mini-testimonial">
+
+                            <div class="stars">
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                                <i class="fa fa-star"></i>
+                            </div>
+
+                            <p>
+                                "ShopKart makes online shopping simple,
+                                convenient and enjoyable."
+                            </p>
+
+                            <small>
+                                Trusted by ShopKart customers
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT SIDE -->
+
+                <div class="col-lg-7">
+
+                    <div class="registration-form-area">
+
+                        <div class="form-header">
+
+                            <div class="form-eyebrow">
+                                Create Account
+                            </div>
+
+                            <h2 class="form-title">
+                                New User Registration
+                            </h2>
+
+                            <p class="form-subtitle">
+                                Fill in your details below to create
+                                your ShopKart account.
+                            </p>
+
+                        </div>
+
+
+                        {% include 'inc/message.html' %}
+
+
+                        {% if user_form.non_field_errors %}
+                            <div class="non-field-errors">
+                                <strong>Please check the following:</strong>
+                                {{ user_form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+
+                        {% if customer_form.non_field_errors %}
+                            <div class="non-field-errors">
+                                <strong>Please check the following:</strong>
+                                {{ customer_form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+
+                        <!-- IMPORTANT:
+                             autocomplete="off" / new-password
+                             prevents browser autofill as much as possible.
+                        -->
+
+                        <form method="POST"
+                              enctype="multipart/form-data"
+                              autocomplete="off"
+                              novalidate>
+
+                            {% csrf_token %}
+
+
+                            <!-- USERNAME -->
+
+                            <div class="register-field">
+
+                                <label for="{{ user_form.username.id_for_label }}">
+                                    <i class="fa fa-user me-1"></i>
+                                    User Name
+                                </label>
+
+                                {{ user_form.username.as_widget.attrs|default:"" }}
+
+                                <input type="text"
+                                       name="{{ user_form.username.html_name }}"
+                                       id="{{ user_form.username.id_for_label }}"
+                                       value="{{ user_form.username.value|default:'' }}"
+                                       class="form-control"
+                                       autocomplete="new-username"
+                                       placeholder="Enter your username">
+
+                                {% if user_form.username.errors %}
+                                    <div class="field-error">
+                                        {{ user_form.username.errors }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                            <div class="register-field">
+
+                                <label for="{{ customer_form.phone.id_for_label }}">
+                                    <i class="fa fa-phone me-1"></i>
+                                    Phone Number
+                                </label>
+
+                                <input type="tel"
+                                       name="{{ customer_form.phone.html_name }}"
+                                       id="{{ customer_form.phone.id_for_label }}"
+                                       value="{{ customer_form.phone.value|default:'' }}"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Enter your phone number">
+
+                                {% if customer_form.phone.errors %}
+                                    <div class="field-error">
+                                        {{ customer_form.phone.errors }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+                            <!-- EMAIL -->
+
+                            <div class="register-field">
+
+                                <label for="{{ user_form.email.id_for_label }}">
+                                    <i class="fa fa-envelope me-1"></i>
+                                    Email Address
+                                </label>
+
+                                <input type="email"
+                                       name="{{ user_form.email.html_name }}"
+                                       id="{{ user_form.email.id_for_label }}"
+                                       value="{{ user_form.email.value|default:'' }}"
+                                       class="form-control"
+                                       autocomplete="off"
+                                       placeholder="Enter your email address">
+
+                                {% if user_form.email.errors %}
+                                    <div class="field-error">
+                                        {{ user_form.email.errors }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+
+                            <!-- PASSWORD -->
+
+                            <div class="register-field">
+
+                                <label for="{{ user_form.password1.id_for_label }}">
+                                    <i class="fa fa-lock me-1"></i>
+                                    Password
+                                </label>
+
+                                <input type="password"
+                                       name="{{ user_form.password1.html_name }}"
+                                       id="{{ user_form.password1.id_for_label }}"
+                                       class="form-control"
+                                       autocomplete="new-password"
+                                       placeholder="Create a strong password">
+
+                                {% if user_form.password1.errors %}
+                                    <div class="field-error">
+                                        {{ user_form.password1.errors }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+
+                            <div class="password-note">
+
+                                <i class="fa fa-info-circle"></i>
+
+                                <span>
+                                    Use a strong password containing
+                                    letters, numbers and special characters.
+                                </span>
+
+                            </div>
+
+
+                            <!-- CONFIRM PASSWORD -->
+
+                            <div class="register-field">
+
+                                <label for="{{ user_form.password2.id_for_label }}">
+                                    <i class="fa fa-check-circle me-1"></i>
+                                    Confirm Password
+                                </label>
+
+                                <input type="password"
+                                       name="{{ user_form.password2.html_name }}"
+                                       id="{{ user_form.password2.id_for_label }}"
+                                       class="form-control"
+                                       autocomplete="new-password"
+                                       placeholder="Confirm your password">
+
+                                {% if user_form.password2.errors %}
+                                    <div class="field-error">
+                                        {{ user_form.password2.errors }}
+                                    </div>
+                                {% endif %}
+
+                            </div>
+
+
+                           
+
+
+
+                            <!-- ADDRESS -->
+
+                           
+
+                            <!-- SUBMIT -->
+
+                            <button type="submit"
+                                    class="register-button">
+
+                                <i class="fa fa-user-plus"></i>
+                                Create My Account
+                                <i class="fa fa-arrow-right"></i>
+
+                            </button>
+
+                        </form>
+
+
+                        <div class="login-section">
+
+                            Already have an account?
+
+                            <a href="{% url 'login' %}">
+                                Login Now
+                            </a>
+
+                        </div>
+
+
+                        <div class="security-note">
+
+                            <i class="fa fa-shield"></i>
+
+                            Your information is securely protected.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    /*
+     * Stop browser autofill/autocomplete as much as possible.
+     */
+    const form = document.querySelector(".registration-form-area form");
+
+    if (form) {
+        form.setAttribute("autocomplete", "off");
+    }
+
+
+    /*
+     * Explicitly configure username and password fields.
+     */
+    const username = document.getElementById(
+        "{{ user_form.username.id_for_label }}"
+    );
+
+    const password1 = document.getElementById(
+        "{{ user_form.password1.id_for_label }}"
+    );
+
+    const password2 = document.getElementById(
+        "{{ user_form.password2.id_for_label }}"
+    );
+
+    if (username) {
+        username.setAttribute("autocomplete", "new-username");
+        username.setAttribute("autocapitalize", "none");
+        username.setAttribute("spellcheck", "false");
+    }
+
+    if (password1) {
+        password1.setAttribute("autocomplete", "new-password");
+    }
+
+    if (password2) {
+        password2.setAttribute("autocomplete", "new-password");
+    }
+
+
+    /*
+     * Prevent accidental double submission.
+     */
+    if (form) {
+
+        form.addEventListener("submit", function () {
+
+            const button = form.querySelector(".register-button");
+
+            if (button) {
+
+                setTimeout(function () {
+
+                    button.disabled = true;
+
+                    button.innerHTML = `
+                        <i class="fa fa-spinner fa-spin"></i>
+                        Creating Account...
+                    `;
+
+                }, 50);
+            }
+
+        });
+    }
+
+
+    /*
+     * Profile image preview.
+     */
+    const fileInput = document.querySelector(
+        ".register-field input[type='file']"
+    );
+
+    if (fileInput) {
+
+        fileInput.classList.add("form-control");
+
+        fileInput.addEventListener("change", function () {
+
+            const file = this.files[0];
+
+            if (!file || !file.type.startsWith("image/")) {
+                return;
+            }
+
+            let preview = document.getElementById("profilePreview");
+
+            if (!preview) {
+
+                preview = document.createElement("img");
+
+                preview.id = "profilePreview";
+
+                preview.style.width = "70px";
+                preview.style.height = "70px";
+                preview.style.objectFit = "cover";
+                preview.style.borderRadius = "14px";
+                preview.style.marginTop = "10px";
+                preview.style.border = "2px solid #ffe0e5";
+
+                this.parentElement.appendChild(preview);
+            }
+
+            preview.src = URL.createObjectURL(file);
+
+        });
+    }
+
+});
+</script>
+
+{% endblock content %}

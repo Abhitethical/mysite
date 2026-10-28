@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Product Details</title>
+</head>
+<body>
+
+<h2>Product Details</h2>
+
+<p><strong>Name:</strong> {{ product.name }}</p>
+<p><strong>Price:</strong> {{ product.selling_price }}</p>
+<p><strong>Description:</strong> {{ product.description }}</p>
+
+{% if product.product_image %}
+    <img src="{{product.product_image.url}}" width="300">
+{% endif %}
+
+<br><br>
+<a href="{% url 'order_list' %}">Back to Orders</a>
+
+</body>
+</html>
+

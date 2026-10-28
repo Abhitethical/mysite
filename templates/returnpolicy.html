@@ -1,0 +1,1049 @@
+{% extends 'layouts/main.html' %} 
+{% block content %} 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Modern e-commerce store with return, refund, shipping, privacy and terms policies.">
+<title>ShopEase — Online Store</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --primary:#6c4df6;
+  --primary-dark:#5235d4;
+  --dark:#171717;
+  --text:#333;
+  --muted:#777;
+  --light:#f7f7fb;
+  --white:#fff;
+  --border:#e5e5e5;
+  --success:#159957;
+  --danger:#e53935;
+  --shadow:0 8px 30px rgba(0,0,0,.08);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:var(--light);
+  color:var(--text);
+  line-height:1.6;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer;border:0}
+a{text-decoration:none;color:inherit}
+
+/* Header */
+header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--border);
+}
+.nav{
+  max-width:1200px;
+  margin:auto;
+  min-height:70px;
+  display:flex;
+  align-items:center;
+  gap:25px;
+  padding:10px 20px;
+}
+.logo{
+  font-size:24px;
+  font-weight:800;
+  color:var(--primary);
+  white-space:nowrap;
+}
+.search{
+  flex:1;
+  position:relative;
+}
+.search input{
+  width:100%;
+  padding:12px 16px;
+  border:1px solid var(--border);
+  border-radius:25px;
+  outline:none;
+  background:#fafafa;
+}
+.search input:focus{border-color:var(--primary)}
+.nav-actions{
+  display:flex;
+  gap:10px;
+}
+.icon-btn{
+  background:#f1efff;
+  color:var(--primary);
+  border-radius:50%;
+  width:42px;
+  height:42px;
+  font-size:18px;
+  position:relative;
+}
+.badge{
+  position:absolute;
+  top:-4px;
+  right:-3px;
+  background:var(--danger);
+  color:white;
+  border-radius:20px;
+  min-width:19px;
+  height:19px;
+  font-size:11px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* Hero */
+.hero{
+  max-width:1200px;
+  margin:25px auto;
+  padding:55px 45px;
+  border-radius:25px;
+  color:#fff;
+  background:
+    linear-gradient(120deg,rgba(50,28,150,.95),rgba(108,77,246,.9)),
+    linear-gradient(45deg,#6c4df6,#8b6cff);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:30px;
+}
+.hero h1{font-size:44px;line-height:1.1;margin-bottom:15px}
+.hero p{max-width:550px;color:#eee;margin-bottom:25px}
+.btn{
+  padding:12px 20px;
+  border-radius:9px;
+  background:var(--primary);
+  color:#fff;
+  font-weight:bold;
+  transition:.2s;
+}
+.btn:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-light{background:#fff;color:var(--primary)}
+.hero-art{font-size:100px}
+
+/* Main */
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:10px 20px 50px;
+}
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:25px 0 15px;
+}
+.section-title h2{font-size:25px}
+.filters{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:8px;
+}
+.filter{
+  padding:9px 15px;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:20px;
+  white-space:nowrap;
+}
+.filter.active,.filter:hover{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+
+/* Products */
+.products{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+.card{
+  background:#fff;
+  border-radius:15px;
+  overflow:hidden;
+  box-shadow:0 3px 15px rgba(0,0,0,.04);
+  transition:.25s;
+  border:1px solid #eee;
+}
+.card:hover{transform:translateY(-5px);box-shadow:var(--shadow)}
+.product-image{
+  height:210px;
+  background:#f0efff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:80px;
+}
+.card-body{padding:15px}
+.category{font-size:12px;color:var(--primary);font-weight:bold}
+.card h3{font-size:17px;margin:5px 0}
+.rating{color:#f7a900;font-size:13px}
+.price{font-size:19px;font-weight:800;margin-top:7px}
+.old-price{
+  color:#999;
+  text-decoration:line-through;
+  font-size:13px;
+  margin-left:5px;
+}
+.card-bottom{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+}
+.add{
+  background:var(--primary);
+  color:#fff;
+  padding:8px 13px;
+  border-radius:8px;
+}
+.wish{
+  background:#f4f4f4;
+  border-radius:50%;
+  width:35px;
+  height:35px;
+}
+
+/* Policy */
+.policy{
+  background:#fff;
+  padding:30px;
+  border-radius:15px;
+  margin-top:25px;
+  box-shadow:0 2px 15px rgba(0,0,0,.04);
+}
+.policy h2{color:var(--dark);margin-bottom:12px}
+.policy h3{margin-top:22px;margin-bottom:7px;color:#444}
+.policy p,.policy li{color:#666}
+.policy ul{padding-left:22px}
+
+/* Footer */
+footer{
+  background:#171717;
+  color:#ddd;
+  margin-top:50px;
+}
+.footer-inner{
+  max-width:1200px;
+  margin:auto;
+  padding:45px 20px 25px;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:30px;
+}
+.footer-logo{color:#fff;font-size:24px;font-weight:bold}
+footer h3{color:#fff;margin-bottom:10px}
+footer a{
+  display:block;
+  color:#bbb;
+  margin:6px 0;
+}
+footer a:hover{color:#fff}
+.copyright{
+  border-top:1px solid #333;
+  text-align:center;
+  padding:15px;
+  color:#888;
+}
+
+/* Cart */
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.45);
+  z-index:2000;
+  display:none;
+}
+.overlay.show{display:block}
+.cart{
+  position:absolute;
+  right:0;
+  top:0;
+  width:min(420px,100%);
+  height:100%;
+  background:#fff;
+  padding:22px;
+  overflow:auto;
+}
+.cart-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+.close{
+  background:#eee;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+}
+.cart-item{
+  display:flex;
+  gap:10px;
+  border-bottom:1px solid var(--border);
+  padding:12px 0;
+}
+.cart-icon{
+  width:60px;
+  height:60px;
+  background:#f1efff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:8px;
+  font-size:28px;
+}
+.cart-info{flex:1}
+.qty{
+  display:flex;
+  gap:7px;
+  align-items:center;
+  margin-top:5px;
+}
+.qty button{
+  width:25px;height:25px;border-radius:5px;background:#eee;
+}
+.cart-total{
+  padding:20px 0;
+  font-size:21px;
+  font-weight:bold;
+}
+
+/* Modal */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:3000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+.modal-bg.show{display:flex}
+.modal{
+  width:min(650px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:18px;
+  padding:25px;
+}
+.modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.form-group{margin:13px 0}
+.form-group label{
+  display:block;
+  font-weight:bold;
+  margin-bottom:5px;
+}
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;
+  padding:11px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  outline:none;
+}
+.notice{
+  background:#f0f8ff;
+  padding:12px;
+  border-left:4px solid var(--primary);
+  margin:12px 0;
+  color:#555;
+}
+
+/* Toast */
+.toast{
+  position:fixed;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%) translateY(100px);
+  background:#222;
+  color:#fff;
+  padding:12px 20px;
+  border-radius:8px;
+  z-index:5000;
+  opacity:0;
+  transition:.3s;
+}
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+
+/* Responsive */
+@media(max-width:900px){
+  .products{grid-template-columns:repeat(3,1fr)}
+  .footer-inner{grid-template-columns:1fr 1fr}
+}
+@media(max-width:650px){
+  .nav{gap:10px}
+  .logo{font-size:20px}
+  .search{display:none}
+  .hero{
+    margin:15px;
+    padding:35px 25px;
+  }
+  .hero h1{font-size:32px}
+  .hero-art{font-size:65px}
+  .products{grid-template-columns:repeat(2,1fr);gap:10px}
+  .product-image{height:160px;font-size:60px}
+  .card-body{padding:11px}
+  .container{padding-left:12px;padding-right:12px}
+  .footer-inner{grid-template-columns:1fr}
+}
+@media(max-width:400px){
+  .products{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<section class="hero">
+  <div>
+    <h1>Shop smarter.<br>Live better.</h1>
+    <p>
+      Discover quality products at great prices. Easy shopping,
+      secure checkout and a customer-friendly return policy.
+    </p>
+    <a href="#products" class="btn btn-light">Shop Now</a>
+  </div>
+  <div class="hero-art">🛍️</div>
+</section>
+
+<main class="container">
+
+  <div class="section-title">
+    <h2>Categories</h2>
+  </div>
+
+  <div class="filters">
+    <button class="filter active" onclick="setCategory('All',this)">All</button>
+    <button class="filter" onclick="setCategory('Electronics',this)">Electronics</button>
+    <button class="filter" onclick="setCategory('Fashion',this)">Fashion</button>
+    <button class="filter" onclick="setCategory('Home',this)">Home</button>
+    <button class="filter" onclick="setCategory('Beauty',this)">Beauty</button>
+  </div>
+
+  <div class="section-title" id="products">
+    <h2>Featured Products</h2>
+    <span id="productCount"></span>
+  </div>
+
+  <div class="products" id="productGrid"></div>
+
+  <!-- RETURN POLICY -->
+  <section class="policy" id="returns">
+    <h2>Return & Exchange Policy</h2>
+
+    <p>
+      We want you to be happy with your purchase. If you are not satisfied
+      with an eligible product, you may request a return according to the
+      conditions below.
+    </p>
+
+    <h3>1. Return Period</h3>
+    <p>
+      Customers may request a return within <strong>7 days</strong> of
+      receiving the order unless a product listing specifies a different
+      return period.
+    </p>
+
+    <h3>2. Eligible Returns</h3>
+    <ul>
+      <li>Product must be unused and in resalable condition.</li>
+      <li>Original packaging, accessories and labels should be included.</li>
+      <li>Product should not show damage caused by misuse.</li>
+      <li>Proof of purchase/order information may be required.</li>
+    </ul>
+
+    <h3>3. Non-Returnable Products</h3>
+    <ul>
+      <li>Personalized or customized products.</li>
+      <li>Products marked as non-returnable on the product page.</li>
+      <li>Items damaged through customer misuse.</li>
+      <li>Products missing essential accessories or packaging.</li>
+    </ul>
+
+    <h3>4. Damaged or Incorrect Product</h3>
+    <p>
+      If you receive a damaged, defective or incorrect product, contact
+      customer support as soon as possible. Photos or videos may be requested
+      to verify the issue.
+    </p>
+
+    <h3>5. Exchange</h3>
+    <p>
+      Exchanges may be offered subject to product availability. If the
+      replacement is unavailable, an eligible refund may be issued.
+    </p>
+  </section>
+
+  <!-- REFUND -->
+  <section class="policy" id="refunds">
+    <h2>Refund Policy</h2>
+
+    <h3>Refund Approval</h3>
+    <p>
+      Refunds are processed after the returned product has been received and
+      inspected. Approval depends on the return conditions being satisfied.
+    </p>
+
+    <h3>Refund Method</h3>
+    <p>
+      Approved refunds are generally issued to the original payment method.
+      The time taken for the amount to appear can depend on the customer's
+      bank or payment provider.
+    </p>
+
+    <h3>Shipping Charges</h3>
+    <p>
+      Original shipping charges may not be refundable unless the return is
+      caused by an incorrect, defective or damaged product.
+    </p>
+  </section>
+
+  <!-- SHIPPING -->
+  <section class="policy" id="shipping">
+    <h2>Shipping Policy</h2>
+
+    <h3>Order Processing</h3>
+    <p>
+      Orders are normally processed after payment confirmation. Processing
+      and delivery times can vary depending on product availability and
+      delivery location.
+    </p>
+
+    <h3>Delivery Delays</h3>
+    <p>
+      Delivery estimates are not guaranteed. Delays can occur due to weather,
+      transportation issues, holidays, courier problems or other events
+      outside our control.
+    </p>
+
+    <h3>Incorrect Address</h3>
+    <p>
+      Customers are responsible for providing a complete and accurate
+      delivery address. Additional shipping costs may apply if an order must
+      be reshipped because of an incorrect address.
+    </p>
+  </section>
+
+  <!-- PRIVACY -->
+  <section class="policy" id="privacy">
+    <h2>Privacy Policy</h2>
+
+    <p>
+      We respect your privacy and aim to protect information provided while
+      using our website.
+    </p>
+
+    <h3>Information We Collect</h3>
+    <ul>
+      <li>Name and contact information.</li>
+      <li>Shipping and billing information.</li>
+      <li>Order and transaction details.</li>
+      <li>Information you voluntarily provide to customer support.</li>
+    </ul>
+
+    <h3>How We Use Information</h3>
+    <ul>
+      <li>Process and deliver orders.</li>
+      <li>Provide customer support.</li>
+      <li>Handle returns and refunds.</li>
+      <li>Improve website functionality and customer experience.</li>
+      <li>Prevent fraudulent or unauthorized activity.</li>
+    </ul>
+
+    <h3>Data Security</h3>
+    <p>
+      Reasonable technical and organizational measures should be used to
+      protect customer information. However, no internet transmission can
+      be guaranteed to be completely secure.
+    </p>
+  </section>
+
+  <!-- TERMS -->
+  <section class="policy" id="terms">
+    <h2>Terms & Conditions</h2>
+
+    <h3>Website Use</h3>
+    <p>
+      By using this website, you agree to use it lawfully and not interfere
+      with its operation or attempt unauthorized access.
+    </p>
+
+    <h3>Product Information</h3>
+    <p>
+      We attempt to provide accurate product descriptions, images, prices and
+      availability. Minor differences may occur due to screen settings,
+      manufacturing variations or updated product information.
+    </p>
+
+    <h3>Pricing</h3>
+    <p>
+      Prices may change without prior notice. If a pricing or product
+      information error occurs, the order may be reviewed or cancelled
+      subject to applicable law.
+    </p>
+
+    <h3>Order Cancellation</h3>
+    <p>
+      Orders may be cancelled before shipment where possible. Once an order
+      has entered the shipping process, cancellation may no longer be
+      available and the customer may need to follow the return procedure.
+    </p>
+
+    <h3>Policy Changes</h3>
+    <p>
+      We may update these policies from time to time. The latest version
+      published on this website will apply to future transactions.
+    </p>
+
+    <div class="notice">
+      <strong>Important:</strong> Replace these sample policies with terms
+      reviewed for your actual business, country, products, payment methods
+      and applicable consumer-protection laws.
+    </div>
+  </section>
+
+</main>
+
+
+<!-- CART -->
+<div class="overlay" id="cartOverlay" onclick="closeCart(event)">
+  <aside class="cart" onclick="event.stopPropagation()">
+
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <button class="close" onclick="closeCart()">×</button>
+    </div>
+
+    <div id="cartItems"></div>
+
+    <div class="cart-total">
+      Total: ₹<span id="cartTotal">0</span>
+    </div>
+
+    <button class="btn" style="width:100%" onclick="openCheckout()">
+      Proceed to Checkout
+    </button>
+
+  </aside>
+</div>
+
+<!-- CHECKOUT -->
+<div class="modal-bg" id="checkoutModal">
+  <div class="modal">
+
+    <div class="modal-head">
+      <h2>Checkout</h2>
+      <button class="close" onclick="closeCheckout()">×</button>
+    </div>
+
+    <div class="notice">
+      This demo does not process real payments.
+    </div>
+
+    <form onsubmit="placeOrder(event)">
+
+      <div class="form-group">
+        <label>Full Name</label>
+        <input required placeholder="Enter your name">
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input required type="email" placeholder="you@example.com">
+      </div>
+
+      <div class="form-group">
+        <label>Phone</label>
+        <input required type="tel" placeholder="Phone number">
+      </div>
+
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea required rows="4" placeholder="Complete delivery address"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Payment Method</label>
+        <select>
+          <option>Cash on Delivery</option>
+          <option>UPI</option>
+          <option>Credit / Debit Card</option>
+        </select>
+      </div>
+
+      <button class="btn" style="width:100%" type="submit">
+        Place Order
+      </button>
+
+    </form>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-bg" id="productModal">
+  <div class="modal">
+
+    <div class="modal-head">
+      <h2 id="modalTitle"></h2>
+      <button class="close" onclick="closeProduct()">×</button>
+    </div>
+
+    <div style="text-align:center;font-size:100px;padding:15px" id="modalIcon"></div>
+
+    <p id="modalDescription"></p>
+
+    <h2 style="margin:12px 0">
+      ₹<span id="modalPrice"></span>
+    </h2>
+
+    <button class="btn" onclick="addModalProduct()">
+      Add to Cart
+    </button>
+
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const products = [
+  {
+    id:1,
+    name:"Wireless Headphones",
+    category:"Electronics",
+    price:2499,
+    old:3299,
+    icon:"🎧",
+    rating:"★★★★★",
+    desc:"Comfortable wireless headphones with clear sound and long battery life."
+  },
+  {
+    id:2,
+    name:"Smart Watch",
+    category:"Electronics",
+    price:3199,
+    old:4499,
+    icon:"⌚",
+    rating:"★★★★☆",
+    desc:"Modern smartwatch for notifications, activity tracking and everyday use."
+  },
+  {
+    id:3,
+    name:"Classic Sneakers",
+    category:"Fashion",
+    price:1899,
+    old:2499,
+    icon:"👟",
+    rating:"★★★★★",
+    desc:"Comfortable everyday sneakers with a clean classic design."
+  },
+  {
+    id:4,
+    name:"Premium Backpack",
+    category:"Fashion",
+    price:1499,
+    old:1999,
+    icon:"🎒",
+    rating:"★★★★☆",
+    desc:"Spacious backpack suitable for travel, work and everyday use."
+  },
+  {
+    id:5,
+    name:"Desk Lamp",
+    category:"Home",
+    price:999,
+    old:1399,
+    icon:"💡",
+    rating:"★★★★★",
+    desc:"Minimal LED desk lamp designed for comfortable workspace lighting."
+  },
+  {
+    id:6,
+    name:"Coffee Maker",
+    category:"Home",
+    price:2799,
+    old:3499,
+    icon:"☕",
+    rating:"★★★★☆",
+    desc:"Easy-to-use coffee maker for your home or office."
+  },
+  {
+    id:7,
+    name:"Skin Care Kit",
+    category:"Beauty",
+    price:1299,
+    old:1699,
+    icon:"🧴",
+    rating:"★★★★★",
+    desc:"A simple daily personal-care collection."
+  },
+  {
+    id:8,
+    name:"Perfume",
+    category:"Beauty",
+    price:1599,
+    old:2199,
+    icon:"🌸",
+    rating:"★★★★☆",
+    desc:"Elegant everyday fragrance with a fresh and pleasant profile."
+  }
+];
+
+let category = "All";
+let cart = JSON.parse(localStorage.getItem("shopeaseCart") || "[]");
+let wishlist = JSON.parse(localStorage.getItem("shopeaseWishlist") || "[]");
+let modalProduct = null;
+
+function money(n){
+  return Number(n).toLocaleString("en-IN");
+}
+
+function save(){
+  localStorage.setItem("shopeaseCart",JSON.stringify(cart));
+  localStorage.setItem("shopeaseWishlist",JSON.stringify(wishlist));
+}
+
+function setCategory(cat,button){
+  category=cat;
+
+  document.querySelectorAll(".filter")
+    .forEach(x=>x.classList.remove("active"));
+
+  button.classList.add("active");
+  renderProducts();
+}
+
+function renderProducts(){
+
+  const query=document.getElementById("search").value.toLowerCase().trim();
+
+  const filtered=products.filter(p=>{
+    const matchCategory=category==="All" || p.category===category;
+    const matchSearch=
+      p.name.toLowerCase().includes(query) ||
+      p.category.toLowerCase().includes(query);
+
+    return matchCategory && matchSearch;
+  });
+
+  document.getElementById("productCount").textContent=
+    `${filtered.length} product${filtered.length!==1?"s":""}`;
+
+  document.getElementById("productGrid").innerHTML=
+    filtered.map(p=>`
+      <article class="card">
+
+        <div class="product-image"
+             onclick="openProduct(${p.id})"
+             style="cursor:pointer">
+          ${p.icon}
+        </div>
+
+        <div class="card-body">
+
+          <span class="category">${p.category}</span>
+
+          <h3>${p.name}</h3>
+
+          <div class="rating">${p.rating}</div>
+
+          <div class="price">
+            ₹${money(p.price)}
+            <span class="old-price">₹${money(p.old)}</span>
+          </div>
+
+          <div class="card-bottom">
+            <button class="add" onclick="addToCart(${p.id})">
+              Add to Cart
+            </button>
+
+            <button class="wish"
+              onclick="toggleWishlist(${p.id})">
+              ${wishlist.includes(p.id)?"❤️":"♡"}
+            </button>
+          </div>
+
+        </div>
+      </article>
+    `).join("");
+}
+
+function addToCart(id){
+
+  const item=cart.find(x=>x.id===id);
+
+  if(item){
+    item.qty++;
+  }else{
+    cart.push({id,qty:1});
+  }
+
+  save();
+  updateCart();
+  toast("Product added to cart");
+}
+
+function removeFromCart(id){
+  cart=cart.filter(x=>x.id!==id);
+  save();
+  updateCart();
+}
+
+function changeQty(id,amount){
+
+  const item=cart.find(x=>x.id===id);
+
+  if(!item)return;
+
+  item.qty+=amount;
+
+  if(item.qty<=0){
+    removeFromCart(id);
+    return;
+  }
+
+  save();
+  updateCart();
+}
+
+function updateCart(){
+
+  const count=cart.reduce((sum,x)=>sum+x.qty,0);
+
+  document.getElementById("cartBadge").textContent=count;
+
+  let total=0;
+
+  const html=cart.map(item=>{
+
+    const p=products.find(x=>x.id===item.id);
+
+    if(!p)return "";
+
+    total+=p.price*item.qty;
+
+    return `
+      <div class="cart-item">
+
+        <div class="cart-icon">${p.icon}</div>
+
+        <div class="cart-info">
+          <strong>${p.name}</strong>
+          <div>₹${money(p.price)}</div>
+
+          <div class="qty">
+            <button onclick="changeQty(${p.id},-1)">−</button>
+            <span>${item.qty}</span>
+            <button onclick="changeQty(${p.id},1)">+</button>
+
+            <button
+              onclick="removeFromCart(${p.id})"
+              style="margin-left:auto;color:#e53935">
+              Remove
+            </button>
+          </div>
+        </div>
+
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("cartItems").innerHTML=
+    html || "<p>Your cart is empty.</p>";
+
+  document.getElementById("cartTotal").textContent=money(total);
+}
+
+function openCart(){
+  updateCart();
+  document.getElementById("cartOverlay").classList.add("show");
+}
+
+function closeCart(event){
+  if(event && event.target!==event.currentTarget)return;
+  document.getElementById("cartOverlay").classList.remove("show");
+}
+
+function toggleWishlist(id){
+
+  if(wishlist.includes(id)){
+    wishlist=wishlist.filter(x=>x!==id);
+    toast("Removed from wishlist");
+  }else{
+    wishlist.push(id);
+    toast("Added to wishlist");
+  }
+
+  save();
+  renderProducts();
+}
+
+function openWishlist(){
+
+  if(!wishlist.length){
+    toast("Your wishlist is empty");
+    return;
+  }
+
+  const names=wishlist
+    .map(id=>products.find(p=>p.id===id)?.name)
+    .filter(Boolean)
+    .join(", ");
+
+  toast("Wishlist: "+names);
+}
+
+function openProduct(id){
+
+  modalProduct=products.find(p=>p.id===id);
+
+  if(!modalProduct)return;
+
+  document.getElementById("modalTitle").textContent=
+    modalProduct.name;
+
+  document.getElementById("modalIcon").textContent=
+    modalProduct.icon;
+
+  document.getElementById("modalDescription").textContent=
+    modalProduct.desc;
+
+  document.getElementById("modalPrice").textContent=
+    money(modalProduct.price);
+
+  document.getElementById("productModal").classList.add("show");
+}
+
+function closeProduct(){
+  document.getElementById("productModal").classList.remove("show");
+}
+
+function addModalProduct(){
+
+  if(modalProduct){
+    addToCart(modalProduct)}
+
+</script>
+
+
+{% endblock content %}

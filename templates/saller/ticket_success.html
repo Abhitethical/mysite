@@ -1,0 +1,684 @@
+{% block content %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Registration Successful</title>
+
+<!-- Prevent caching -->
+<meta
+    http-equiv="Cache-Control"
+    content="no-cache, no-store, must-revalidate"
+>
+
+<meta
+    http-equiv="Pragma"
+    content="no-cache"
+>
+
+<meta
+    http-equiv="Expires"
+    content="0"
+>
+
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+>
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+
+        font-family:
+            "Segoe UI",
+            Arial,
+            sans-serif;
+
+        background:
+            radial-gradient(
+                circle at 10% 10%,
+                rgba(37, 99, 235, 0.12),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 90% 90%,
+                rgba(16, 185, 129, 0.12),
+                transparent 30%
+            ),
+            #f4f7fb;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .success-wrapper {
+        width: 100%;
+        max-width: 650px;
+        padding: 20px;
+    }
+
+    .success-card {
+        background: rgba(255, 255, 255, 0.97);
+
+        border-radius: 24px;
+
+        padding: 45px 40px;
+
+        text-align: center;
+
+        box-shadow:
+            0 25px 70px rgba(15, 23, 42, 0.12);
+
+        border:
+            1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    /* ==========================================
+       SUCCESS ICON
+    ========================================== */
+
+    .success-icon {
+        width: 90px;
+        height: 90px;
+
+        margin: 0 auto 25px;
+
+        border-radius: 50%;
+
+        background:
+            linear-gradient(
+                135deg,
+                #10b981,
+                #059669
+            );
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: white;
+
+        font-size: 46px;
+        font-weight: bold;
+
+        box-shadow:
+            0 12px 30px rgba(16, 185, 129, 0.28);
+
+        animation:
+            pop 0.5s ease-out;
+    }
+
+    @keyframes pop {
+
+        0% {
+            transform: scale(0.5);
+            opacity: 0;
+        }
+
+        70% {
+            transform: scale(1.08);
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+    }
+
+    /* ==========================================
+       TITLE
+    ========================================== */
+
+    .title {
+        font-size: 30px;
+        font-weight: 700;
+
+        color: #0f172a;
+
+        margin-bottom: 12px;
+    }
+
+    .subtitle {
+        color: #64748b;
+
+        font-size: 16px;
+
+        line-height: 1.7;
+
+        margin-bottom: 30px;
+    }
+
+    /* ==========================================
+       TICKET
+    ========================================== */
+
+    .ticket-box {
+        position: relative;
+
+        background:
+            linear-gradient(
+                135deg,
+                #eff6ff,
+                #f8fafc
+            );
+
+        border:
+            1px solid #bfdbfe;
+
+        border-radius: 18px;
+
+        padding: 25px 20px;
+
+        margin: 25px 0;
+
+        overflow: hidden;
+    }
+
+    .ticket-box::before {
+        content: "";
+
+        position: absolute;
+
+        width: 100px;
+        height: 100px;
+
+        background:
+            rgba(37, 99, 235, 0.06);
+
+        border-radius: 50%;
+
+        top: -40px;
+        right: -30px;
+    }
+
+    .ticket-label {
+        position: relative;
+
+        font-size: 12px;
+        font-weight: 700;
+
+        color: #64748b;
+
+        text-transform: uppercase;
+
+        letter-spacing: 1.5px;
+
+        margin-bottom: 10px;
+    }
+
+    .ticket-number {
+        position: relative;
+
+        color: #dc2626;
+
+        font-size: 32px;
+
+        font-weight: 800;
+
+        letter-spacing: 1px;
+
+        word-break: break-word;
+    }
+
+    /* ==========================================
+       NOTICE
+    ========================================== */
+
+    .notice {
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+
+        text-align: left;
+
+        background: #fff7ed;
+
+        border:
+            1px solid #fed7aa;
+
+        color: #9a3412;
+
+        border-radius: 12px;
+
+        padding: 14px 16px;
+
+        font-size: 14px;
+
+        margin-bottom: 28px;
+    }
+
+    .notice-icon {
+        min-width: 28px;
+        height: 28px;
+
+        border-radius: 50%;
+
+        background: #f97316;
+
+        color: white;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        font-weight: bold;
+    }
+
+    /* ==========================================
+       BUTTON
+    ========================================== */
+
+    .dashboard-btn {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 10px;
+
+        width: 100%;
+        max-width: 280px;
+
+        padding: 14px 25px;
+
+        border-radius: 12px;
+
+        background:
+            linear-gradient(
+                135deg,
+                #2563eb,
+                #1d4ed8
+            );
+
+        color: #ffffff;
+
+        text-decoration: none;
+
+        font-size: 15px;
+
+        font-weight: 600;
+
+        box-shadow:
+            0 10px 25px rgba(37, 99, 235, 0.25);
+
+        transition:
+            all 0.25s ease;
+    }
+
+    .dashboard-btn:hover {
+        color: #ffffff;
+
+        transform:
+            translateY(-2px);
+
+        box-shadow:
+            0 15px 30px rgba(37, 99, 235, 0.32);
+    }
+
+    .footer {
+        margin-top: 28px;
+
+        color: #94a3b8;
+
+        font-size: 13px;
+    }
+
+    /* ==========================================
+       MOBILE
+    ========================================== */
+
+    @media (max-width: 576px) {
+
+        .success-card {
+            padding: 35px 20px;
+
+            border-radius: 20px;
+        }
+
+        .success-icon {
+            width: 72px;
+            height: 72px;
+
+            font-size: 36px;
+        }
+
+        .title {
+            font-size: 24px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+        }
+
+        .ticket-number {
+            font-size: 24px;
+        }
+
+    }
+
+</style>
+
+</head>
+
+<body>
+
+<div class="success-wrapper">
+
+<div class="success-card">
+
+
+    <!-- ==========================================
+         SUCCESS ICON
+    =========================================== -->
+
+    <div class="success-icon">
+        ✓
+    </div>
+
+
+    <!-- ==========================================
+         MAIN HEADING
+    =========================================== -->
+
+    <h1 class="title">
+        Registration Successful
+    </h1>
+
+
+    <p class="subtitle">
+
+        Dear Candidate,<br>
+
+        your registration has been completed successfully.
+
+    </p>
+
+
+    <!-- ==========================================
+         TICKET NUMBER
+    =========================================== -->
+
+    <div class="ticket-box">
+
+        <div class="ticket-label">
+
+            Application Ticket Number
+
+        </div>
+
+        <div class="ticket-number">
+
+            {{ ticket_number }}
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         IMPORTANT NOTICE
+    =========================================== -->
+
+    <div class="notice">
+
+        <div class="notice-icon">
+            !
+        </div>
+
+        <div>
+
+            <strong>
+                Please keep this number safe.
+            </strong>
+
+            <br>
+
+            You may need it for future reference.
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         DASHBOARD BUTTON
+    =========================================== -->
+
+    <a
+        href="{% url 'seller_ticket_dashboard' %}"
+        class="dashboard-btn"
+        id="dashboardButton"
+    >
+
+        Go to Dashboard
+
+        <span>
+            →
+        </span>
+
+    </a>
+
+
+    <div class="footer">
+
+        Thank you for completing your registration.
+
+    </div>
+
+
+</div>
+
+</div>
+
+<script>
+
+"use strict";
+
+
+(function () {
+
+
+    /* ==========================================
+       DASHBOARD URL
+    ========================================== */
+
+    const dashboardURL =
+        "{% url 'seller_ticket_dashboard' %}";
+
+
+    /* ==========================================
+       REDIRECT TO DASHBOARD
+    ========================================== */
+
+    function goToDashboard() {
+
+        /*
+            Replace is intentional.
+
+            It prevents the success page from
+            remaining in the browser history.
+        */
+
+        window.location.replace(
+            dashboardURL
+        );
+
+    }
+
+
+    /* ==========================================
+       PREVENT OLD REGISTRATION PAGE
+       FROM BEING RESTORED
+    ========================================== */
+
+    /*
+        Replace the current success-page
+        history entry.
+
+        Then create one controlled history
+        entry behind it.
+    */
+
+    history.replaceState(
+        {
+            page: "registration-success"
+        },
+        "",
+        window.location.href
+    );
+
+
+    history.pushState(
+        {
+            page: "registration-success-barrier"
+        },
+        "",
+        window.location.href
+    );
+
+
+    /* ==========================================
+       BROWSER BACK BUTTON
+    ========================================== */
+
+    window.addEventListener(
+        "popstate",
+        function () {
+
+            /*
+                If seller presses browser Back,
+                immediately go to dashboard.
+
+                The old registration/ticket page
+                will not be shown.
+            */
+
+            goToDashboard();
+
+        }
+    );
+
+
+    /* ==========================================
+       BACK/FORWARD CACHE PROTECTION
+    ========================================== */
+
+    window.addEventListener(
+        "pageshow",
+        function (event) {
+
+            /*
+                If browser restores this page
+                from Back/Forward Cache, send
+                seller to dashboard.
+            */
+
+            if (event.persisted) {
+
+                goToDashboard();
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       PAGE CACHE PROTECTION
+    ========================================== */
+
+    window.addEventListener(
+        "pagehide",
+        function () {
+
+            /*
+                Keep the page from being treated
+                as an active previous registration
+                screen.
+            */
+
+            try {
+
+                history.replaceState(
+                    {
+                        page: "registration-success"
+                    },
+                    "",
+                    window.location.href
+                );
+
+            } catch (error) {
+
+                /*
+                    Ignore history errors.
+                */
+
+            }
+
+        }
+    );
+
+
+    /* ==========================================
+       DASHBOARD BUTTON
+    ========================================== */
+
+    const dashboardButton =
+        document.getElementById(
+            "dashboardButton"
+        );
+
+
+    if (dashboardButton) {
+
+        dashboardButton.addEventListener(
+            "click",
+            function (event) {
+
+                /*
+                    Prevent normal navigation and
+                    explicitly replace the page.
+
+                    This removes the success page
+                    from the browser history.
+                */
+
+                event.preventDefault();
+
+                goToDashboard();
+
+            }
+        );
+
+    }
+
+
+})();
+
+</script>
+
+</body>
+
+</html>
+
+{% endblock %}

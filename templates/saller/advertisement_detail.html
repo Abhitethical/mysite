@@ -1,0 +1,681 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    /* ================================
+       Advertisement Details - Premium UI
+       ================================ */
+
+    .ad-page {
+        background: #f5f7fb;
+        min-height: calc(100vh - 70px);
+        padding: 35px 0 60px;
+    }
+
+    .ad-container {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    /* Main Card */
+    .ad-card {
+        background: #ffffff;
+        border: 0;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+    }
+
+    /* Header */
+    .ad-header {
+        background: linear-gradient(135deg, #2563eb, #4f46e5);
+        padding: 28px 32px;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ad-header::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        background: rgba(255,255,255,0.08);
+        border-radius: 50%;
+        right: -70px;
+        top: -90px;
+    }
+
+    .ad-header h2 {
+        margin: 0;
+        font-weight: 700;
+        font-size: 26px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .ad-header p {
+        margin: 7px 0 0;
+        color: rgba(255,255,255,0.8);
+        font-size: 14px;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* Product Image */
+    .product-image-wrapper {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 15px;
+        border: 1px solid #e5e7eb;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 350px;
+    }
+
+    .product-image {
+        max-height: 330px;
+        max-width: 100%;
+        width: auto;
+        object-fit: contain;
+        border-radius: 12px;
+    }
+
+    .no-image {
+        color: #94a3b8;
+        text-align: center;
+        font-size: 15px;
+    }
+
+    .no-image i {
+        display: block;
+        font-size: 55px;
+        margin-bottom: 12px;
+        color: #cbd5e1;
+    }
+
+    /* Advertisement Title */
+    .ad-title {
+        font-size: 25px;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 8px;
+    }
+
+    .ad-description {
+        color: #64748b;
+        line-height: 1.7;
+        margin-bottom: 25px;
+    }
+
+    /* Info Table */
+    .info-table {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+    }
+
+    .info-table table {
+        margin: 0;
+    }
+
+    .info-table th {
+        width: 35%;
+        background: #f8fafc;
+        color: #475569;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 14px 16px;
+        border-color: #e5e7eb;
+    }
+
+    .info-table td {
+        color: #1e293b;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 14px 16px;
+        border-color: #e5e7eb;
+    }
+
+    /* Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: capitalize;
+        background: #eff6ff;
+        color: #2563eb;
+    }
+
+    .payment-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: capitalize;
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    /* Statistics */
+    .stats-section {
+        margin-top: 30px;
+    }
+
+    .stat-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #fff;
+        padding: 20px;
+        height: 100%;
+        transition: all 0.25s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+    }
+
+    .stat-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-bottom: 14px;
+    }
+
+    .icon-blue {
+        background: #eff6ff;
+        color: #2563eb;
+    }
+
+    .icon-purple {
+        background: #f5f3ff;
+        color: #7c3aed;
+    }
+
+    .icon-green {
+        background: #ecfdf5;
+        color: #059669;
+    }
+
+    .icon-orange {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 5px;
+    }
+
+    .stat-value {
+        color: #0f172a;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    /* Action Area */
+    .action-area {
+        margin-top: 35px;
+        padding-top: 25px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .action-area .btn {
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-weight: 600;
+        font-size: 14px;
+        transition: all 0.2s ease;
+    }
+
+    .action-area .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .btn-pay {
+        background: #16a34a;
+        color: white;
+        border: none;
+    }
+
+    .btn-pay:hover {
+        background: #15803d;
+        color: white;
+    }
+
+    .btn-edit {
+        background: #f59e0b;
+        color: white;
+        border: none;
+    }
+
+    .btn-edit:hover {
+        background: #d97706;
+        color: white;
+    }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white;
+        border: none;
+    }
+
+    .btn-delete:hover {
+        background: #dc2626;
+        color: white;
+    }
+
+    .btn-renew {
+        background: #2563eb;
+        color: white;
+        border: none;
+    }
+
+    .btn-renew:hover {
+        background: #1d4ed8;
+        color: white;
+    }
+
+    .btn-back {
+        background: #f1f5f9;
+        color: #334155;
+        border: 1px solid #e2e8f0;
+    }
+
+    .btn-back:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+    }
+
+    /* Responsive */
+    @media (max-width: 767px) {
+
+        .ad-page {
+            padding: 20px 10px 40px;
+        }
+
+        .ad-header {
+            padding: 22px 20px;
+        }
+
+        .ad-header h2 {
+            font-size: 21px;
+        }
+
+        .product-image-wrapper {
+            min-height: 250px;
+            margin-bottom: 25px;
+        }
+
+        .ad-title {
+            font-size: 21px;
+        }
+
+        .info-table th {
+            width: 42%;
+        }
+
+        .action-area {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .action-area .btn {
+            width: 100%;
+        }
+    }
+</style>
+
+
+<div class="ad-page">
+
+    <div class="container ad-container">
+
+        <!-- Main Advertisement Card -->
+        <div class="ad-card">
+
+            <!-- Header -->
+            <div class="ad-header">
+
+                <h2>
+                    <i class="bi bi-megaphone-fill me-2"></i>
+                    Advertisement Details
+                </h2>
+
+                <p>
+                    View and manage your advertisement campaign
+                </p>
+
+            </div>
+
+
+            <div class="card-body p-4 p-md-5">
+
+                <!-- Advertisement Overview -->
+                <div class="row g-4">
+
+                    <!-- Product Image -->
+                    <div class="col-lg-4">
+
+                        <div class="product-image-wrapper">
+
+                            {% if advertisement.product_image %}
+
+                                <img
+                                    src="{{ advertisement.product_image.url }}"
+                                    alt="{{ advertisement.title }}"
+                                    class="product-image"
+                                >
+
+                            {% else %}
+
+                                <div class="no-image">
+
+                                    <i class="bi bi-image"></i>
+
+                                    <div>
+                                        No product image available
+                                    </div>
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Advertisement Information -->
+                    <div class="col-lg-8">
+
+                        <div class="ad-title">
+                            {{ advertisement.title }}
+                        </div>
+
+                        <div class="ad-description">
+                            {{ advertisement.description }}
+                        </div>
+
+
+                        <!-- Information Table -->
+                        <div class="info-table">
+
+                            <table class="table">
+
+                                <tbody>
+
+                                    <tr>
+                                        <th>
+                                            <i class="bi bi-box-seam me-2"></i>
+                                            Plan
+                                        </th>
+
+                                        <td>
+                                            {{ advertisement.plan }}
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>
+                                            <i class="bi bi-calendar3 me-2"></i>
+                                            Duration
+                                        </th>
+
+                                        <td>
+                                            {{ advertisement.duration }} Days
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>
+                                            <i class="bi bi-currency-rupee me-2"></i>
+                                            Amount
+                                        </th>
+
+                                        <td>
+                                            <strong class="text-success">
+                                                ₹ {{ advertisement.amount }}
+                                            </strong>
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>
+                                            <i class="bi bi-circle-fill me-2"></i>
+                                            Status
+                                        </th>
+
+                                        <td>
+
+                                            <span class="status-badge">
+                                                {{ advertisement.status }}
+                                            </span>
+
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>
+                                            <i class="bi bi-credit-card me-2"></i>
+                                            Payment Status
+                                        </th>
+
+                                        <td>
+
+                                            <span class="payment-badge">
+                                                {{ advertisement.payment_status }}
+                                            </span>
+
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>
+                                            <i class="bi bi-calendar-check me-2"></i>
+                                            Start Date
+                                        </th>
+
+                                        <td>
+                                            {{ advertisement.start_date }}
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>
+                                            <i class="bi bi-calendar-x me-2"></i>
+                                            End Date
+                                        </th>
+
+                                        <td>
+                                            {{ advertisement.end_date }}
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Performance Statistics -->
+                <div class="stats-section">
+
+                    <div class="row g-3">
+
+                        <!-- Views -->
+                        <div class="col-md-4">
+
+                            <div class="stat-card">
+
+                                <div class="stat-icon icon-blue">
+                                    <i class="bi bi-eye-fill"></i>
+                                </div>
+
+                                <div class="stat-label">
+                                    Total Views
+                                </div>
+
+                                <div class="stat-value">
+                                    {{ advertisement.views }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- Clicks -->
+                        <div class="col-md-4">
+
+                            <div class="stat-card">
+
+                                <div class="stat-icon icon-purple">
+                                    <i class="bi bi-cursor-fill"></i>
+                                </div>
+
+                                <div class="stat-label">
+                                    Total Clicks
+                                </div>
+
+                                <div class="stat-value">
+                                    {{ advertisement.clicks }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- CTR -->
+                        <div class="col-md-4">
+
+                            <div class="stat-card">
+
+                                <div class="stat-icon icon-green">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                </div>
+
+                                <div class="stat-label">
+                                    Click Through Rate
+                                </div>
+
+                                <div class="stat-value">
+                                    {{ advertisement.ctr }}%
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Action Buttons -->
+                <div class="action-area">
+
+                    {% if can_pay %}
+
+                        <a
+                            href="{% url 'advertisement_payment' advertisement.id %}"
+                            class="btn btn-pay"
+                        >
+                            <i class="bi bi-credit-card-fill me-1"></i>
+                            Pay Now
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if can_edit %}
+
+                        <a
+                            href="{% url 'edit_advertisement' advertisement.id %}"
+                            class="btn btn-edit"
+                        >
+                            <i class="bi bi-pencil-square me-1"></i>
+                            Edit Advertisement
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if can_delete %}
+
+                        <a
+                            href="{% url 'delete_advertisement' advertisement.id %}"
+                            class="btn btn-delete"
+                            onclick="return confirm('Are you sure you want to delete this advertisement?');"
+                        >
+                            <i class="bi bi-trash3-fill me-1"></i>
+                            Delete
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if can_renew %}
+
+                        <a
+                            href="{% url 'renew_advertisement' advertisement.id %}"
+                            class="btn btn-renew"
+                        >
+                            <i class="bi bi-arrow-repeat me-1"></i>
+                            Renew Advertisement
+                        </a>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{% url 'seller_dashboard' %}"
+                        class="btn btn-back ms-md-auto"
+                    >
+                        <i class="bi bi-arrow-left me-1"></i>
+                        Back to Dashboard
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

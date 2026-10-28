@@ -1,0 +1,622 @@
+{% extends "base.html" %}
+
+{% block content %}l
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Delete Product | Seller Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+        :root {
+            --danger: #dc3545;
+            --danger-dark: #b02a37;
+            --danger-light: #fff1f2;
+            --dark: #172033;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --background: #f5f7fb;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(220, 53, 69, 0.08),
+                    transparent 35%
+                ),
+                linear-gradient(135deg, #f8fafc 0%, #eef2f7 100%);
+            font-family:
+                Inter,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                sans-serif;
+            color: var(--dark);
+        }
+
+        /* Page wrapper */
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 15px;
+        }
+
+        /* Main card */
+        .delete-card {
+            width: 100%;
+            max-width: 560px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 24px;
+            box-shadow:
+                0 25px 60px rgba(15, 23, 42, 0.10),
+                0 8px 25px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+            animation: cardAppear 0.45s ease-out;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Header */
+        .card-header-custom {
+            padding: 30px 30px 25px;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(
+                135deg,
+                #ffffff 0%,
+                #fff7f7 100%
+            );
+        }
+
+        .delete-icon {
+            width: 62px;
+            height: 62px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--danger-light);
+            color: var(--danger);
+            font-size: 28px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 20px rgba(220, 53, 69, 0.10);
+        }
+
+        .page-title {
+            font-size: 25px;
+            font-weight: 750;
+            margin: 0 0 7px;
+            letter-spacing: -0.4px;
+        }
+
+        .page-subtitle {
+            margin: 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Content */
+        .card-content {
+            padding: 30px;
+        }
+
+        /* Product box */
+        .product-box {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 17px;
+            border: 1px solid var(--border);
+            background: #fafbfc;
+            border-radius: 15px;
+            margin-bottom: 22px;
+        }
+
+        .product-avatar {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            border-radius: 14px;
+            background: linear-gradient(
+                135deg,
+                #fee2e2,
+                #fecaca
+            );
+            color: var(--danger-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .product-label {
+            color: #9ca3af;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark);
+            word-break: break-word;
+        }
+
+        /* Alert */
+        .custom-alert {
+            display: flex;
+            gap: 13px;
+            align-items: flex-start;
+            border-radius: 15px;
+            padding: 17px;
+            margin-bottom: 25px;
+            border: 1px solid;
+        }
+
+        .custom-alert-danger {
+            background: #fff5f5;
+            border-color: #fecaca;
+            color: #991b1b;
+        }
+
+        .custom-alert-warning {
+            background: #fffbeb;
+            border-color: #fde68a;
+            color: #92400e;
+        }
+
+        .alert-icon {
+            font-size: 21px;
+            line-height: 1;
+            margin-top: 1px;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .alert-text {
+            font-size: 13px;
+            line-height: 1.55;
+            opacity: 0.9;
+        }
+
+        /* Form */
+        .form-label-custom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 9px;
+            color: #374151;
+        }
+
+        .optional-text {
+            color: #9ca3af;
+            font-weight: 500;
+            font-size: 11px;
+        }
+
+        .reason-input {
+            min-height: 120px;
+            resize: vertical;
+            border-radius: 13px;
+            border: 1px solid #dfe3e8;
+            padding: 13px 15px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            box-shadow: none !important;
+        }
+
+        .reason-input::placeholder {
+            color: #a1a8b3;
+        }
+
+        .reason-input:focus {
+            border-color: rgba(220, 53, 69, 0.55);
+            box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.08) !important;
+        }
+
+        .reason-help {
+            margin-top: 7px;
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        /* Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn-custom {
+            min-height: 48px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-cancel {
+            flex: 1;
+            background: #f8fafc;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+
+        .btn-cancel:hover {
+            background: #f1f5f9;
+            color: #111827;
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            flex: 1.4;
+            border: none;
+            color: #fff;
+            background: linear-gradient(
+                135deg,
+                #dc3545,
+                #c82333
+            );
+            box-shadow: 0 8px 18px rgba(220, 53, 69, 0.20);
+        }
+
+        .btn-delete:hover {
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(220, 53, 69, 0.28);
+        }
+
+        .btn-delete:active {
+            transform: translateY(0);
+        }
+
+        .btn-locked {
+            flex: 1.4;
+            background: #e5e7eb;
+            color: #6b7280;
+            border: none;
+            cursor: not-allowed;
+        }
+
+        /* Footer note */
+        .security-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            color: #9ca3af;
+            font-size: 11px;
+            margin-top: 20px;
+        }
+
+        .security-note i {
+            color: #16a34a;
+        }
+
+        /* Mobile */
+        @media (max-width: 576px) {
+            .page-wrapper {
+                padding: 20px 12px;
+                align-items: flex-start;
+            }
+
+            .delete-card {
+                margin-top: 15px;
+                border-radius: 19px;
+            }
+
+            .card-header-custom,
+            .card-content {
+                padding: 23px 20px;
+            }
+
+            .page-title {
+                font-size: 22px;
+            }
+
+            .action-buttons {
+                flex-direction: column-reverse;
+            }
+
+            .btn-custom {
+                width: 100%;
+            }
+
+            .product-box {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <div class="delete-card">
+
+        <!-- Header -->
+        <div class="card-header-custom">
+
+            <div class="delete-icon">
+                <i class="bi bi-trash3"></i>
+            </div>
+
+            <h1 class="page-title">
+                Delete Product
+            </h1>
+
+            <p class="page-subtitle">
+                Review the information below before permanently
+                removing this product from your store.
+            </p>
+
+        </div>
+
+
+        <!-- Content -->
+        <div class="card-content">
+
+            <!-- Product Information -->
+            <div class="product-box">
+
+                <div class="product-avatar">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+
+                <div class="flex-grow-1">
+
+                    <div class="product-label">
+                        Product to delete
+                    </div>
+
+                    <div class="product-name">
+                        {{ product.name }}
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            {% if product.is_ordered %}
+
+                <!-- Locked Product -->
+                <div class="custom-alert custom-alert-warning">
+
+                    <div class="alert-icon">
+                        <i class="bi bi-lock-fill"></i>
+                    </div>
+
+                    <div>
+                        <div class="alert-title">
+                            Product deletion is locked
+                        </div>
+
+                        <div class="alert-text">
+                            This product has already been ordered and
+                            cannot be deleted. This restriction helps
+                            preserve order history and transaction records.
+                        </div>
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <!-- Delete Warning -->
+                <div class="custom-alert custom-alert-danger">
+
+                    <div class="alert-icon">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+
+                    <div>
+                        <div class="alert-title">
+                            This action cannot be undone
+                        </div>
+
+                        <div class="alert-text">
+                            You are about to permanently delete
+                            <strong>"{{ product.name }}"</strong>
+                            from your store.
+                        </div>
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- Form -->
+            <form method="POST" id="deleteForm">
+
+                {% csrf_token %}
+
+                <!-- Reason -->
+                <div class="mb-0">
+
+                    <label
+                        for="delete_reason"
+                        class="form-label-custom"
+                    >
+                        <span>
+                            Reason for deletion
+                        </span>
+
+                        <span class="optional-text">
+                            Required
+                        </span>
+                    </label>
+
+                    <textarea
+                        id="delete_reason"
+                        name="delete_reason"
+                        class="form-control reason-input"
+                        rows="4"
+                        placeholder="Please explain why this product is being deleted..."
+                        {% if product.is_ordered %}disabled{% endif %}
+                        required
+                    ></textarea>
+
+                    <div class="reason-help">
+                        <i class="bi bi-info-circle me-1"></i>
+                        This reason may be stored in your product activity history.
+                    </div>
+
+                </div>
+
+
+                <!-- Buttons -->
+                <div class="action-buttons">
+
+                    <a
+                        href="{% url 'saller_product_list' %}"
+                        class="btn btn-custom btn-cancel"
+                    >
+                        <i class="bi bi-arrow-left"></i>
+                        Cancel
+                    </a>
+
+
+                    {% if product.is_ordered %}
+
+                        <button
+                            type="button"
+                            class="btn btn-custom btn-locked"
+                            disabled
+                        >
+                            <i class="bi bi-lock-fill"></i>
+                            Deletion Locked
+                        </button>
+
+                    {% else %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-custom btn-delete"
+                            id="deleteButton"
+                        >
+                            <i class="bi bi-trash3"></i>
+                            <span id="deleteButtonText">
+                                Confirm Delete
+                            </span>
+                        </button>
+
+                    {% endif %}
+
+                </div>
+
+            </form>
+
+
+            <!-- Security Note -->
+            <div class="security-note">
+
+                <i class="bi bi-shield-check"></i>
+
+                <span>
+                    Your action is securely recorded in the system.
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Bootstrap JS -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+<script>
+    const deleteForm = document.getElementById("deleteForm");
+    const deleteButton = document.getElementById("deleteButton");
+    const deleteButtonText = document.getElementById("deleteButtonText");
+
+    if (deleteForm && deleteButton) {
+
+        deleteForm.addEventListener("submit", function () {
+
+            const reason = document
+                .getElementById("delete_reason")
+                .value
+                .trim();
+
+            if (!reason) {
+                return;
+            }
+
+            deleteButton.disabled = true;
+
+            deleteButtonText.innerHTML = `
+                <span
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true">
+                </span>
+                Deleting...
+            `;
+        });
+
+    }
+</script>
+
+</body>
+</html>
+
+
+{% endblock %}

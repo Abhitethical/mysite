@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pincode Location Auto-Fill</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<h2>Enter Address</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+    // When user enters pincode
+    $('#id_pincode').on('blur', function () {
+        var pincode = $(this).val();
+        if (pincode.length === 6) {
+            $.ajax({
+                url: '/get-locations/',
+                data: { pincode: pincode },
+                success: function (response) {
+                    var locations = response.locations;
+                    var locationSelect = $('#id_location');
+                    locationSelect.empty();  // Clear existing options
+                    locationSelect.append('<option value="">Select Location</option>');
+                    locations.forEach(function (loc) {
+                        var option = $('<option>')
+                            .val(loc.name)
+                            .text(loc.name)
+                            .data('district', loc.district)
+                            .data('state', loc.state)
+                            .data('country', loc.country);
+                        locationSelect.append(option);
+                    });
+                },
+                error: function () {
+                    alert('Invalid PIN Code or failed to fetch locations.');
+                }
+            });
+        }
+    });
+
+    // When user selects a location
+    $('#id_location').on('change', function () {
+        var selected = $(this).find(':selected');
+        $('#id_city').val(selected.data('district'));
+        $('#id_state').val(selected.data('state'));
+        $('#id_country').val(selected.data('country'));
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,3521 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Low Stock Products | Inventory</title>
+
+    <!-- Bootstrap 5 -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #3730a3;
+            --danger: #dc2626;
+            --danger-light: #fef2f2;
+            --warning: #f59e0b;
+            --success: #16a34a;
+            --dark: #111827;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --background: #f5f7fb;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    rgba(79, 70, 229, 0.08),
+                    transparent 35%
+                ),
+                var(--background);
+
+            color: var(--dark);
+
+            font-family: "Inter", sans-serif;
+        }
+
+
+        /* =========================================
+           NAVBAR
+        ========================================== */
+
+        .top-navbar {
+            background: rgba(255, 255, 255, 0.94);
+
+            backdrop-filter: blur(14px);
+
+            border-bottom: 1px solid var(--border);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            font-size: 20px;
+
+            font-weight: 800;
+
+            color: var(--dark);
+
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 8px 20px rgba(79, 70, 229, 0.25);
+        }
+
+        .status-pill {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 7px 12px;
+
+            border-radius: 50px;
+
+            background: var(--danger-light);
+
+            color: var(--danger);
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--danger);
+
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+
+            0% {
+                box-shadow:
+                    0 0 0 0 rgba(220, 38, 38, 0.45);
+            }
+
+            70% {
+                box-shadow:
+                    0 0 0 7px rgba(220, 38, 38, 0);
+            }
+
+            100% {
+                box-shadow:
+                    0 0 0 0 rgba(220, 38, 38, 0);
+            }
+
+        }
+
+
+        /* =========================================
+           PAGE
+        ========================================== */
+
+        .page-wrapper {
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding: 45px 20px 60px;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: clamp(28px, 4vw, 38px);
+
+            font-weight: 800;
+
+            letter-spacing: -1px;
+
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            margin: 0;
+
+            color: var(--muted);
+
+            font-size: 15px;
+        }
+
+
+        /* =========================================
+           SUMMARY
+        ========================================== */
+
+        .summary-card {
+            border: 1px solid var(--border);
+
+            border-radius: 18px;
+
+            background: var(--white);
+
+            padding: 22px;
+
+            height: 100%;
+
+            transition: all 0.25s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 15px 35px rgba(17, 24, 39, 0.08);
+        }
+
+        .summary-icon {
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 13px;
+
+            font-size: 20px;
+
+            margin-bottom: 16px;
+        }
+
+        .summary-icon.red {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .summary-icon.orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .summary-icon.blue {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .summary-title {
+            color: var(--muted);
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            margin-bottom: 4px;
+        }
+
+        .summary-number {
+            font-size: 28px;
+
+            font-weight: 800;
+        }
+
+
+        /* =========================================
+           MAIN CARD
+        ========================================== */
+
+        .inventory-card {
+            margin-top: 28px;
+
+            background: var(--white);
+
+            border: 1px solid var(--border);
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 10px 35px rgba(17, 24, 39, 0.05);
+        }
+
+        .card-toolbar {
+            padding: 20px 22px;
+
+            border-bottom: 1px solid var(--border);
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+        }
+
+        .toolbar-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            font-size: 17px;
+
+            font-weight: 750;
+        }
+
+        .toolbar-title i {
+            color: var(--danger);
+        }
+
+        .search-wrapper {
+            position: relative;
+
+            width: min(300px, 100%);
+        }
+
+        .search-wrapper i {
+            position: absolute;
+
+            left: 13px;
+
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #9ca3af;
+        }
+
+        .search-input {
+            width: 100%;
+
+            border: 1px solid var(--border);
+
+            border-radius: 10px;
+
+            padding: 10px 14px 10px 38px;
+
+            outline: none;
+
+            font-size: 13px;
+
+            transition: 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+
+        /* =========================================
+           TABLE
+        ========================================== */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .inventory-table {
+            width: 100%;
+
+            margin: 0;
+
+            border-collapse: separate;
+
+            border-spacing: 0;
+        }
+
+        .inventory-table thead th {
+            background: #f9fafb;
+
+            color: #6b7280;
+
+            text-transform: uppercase;
+
+            font-size: 11px;
+
+            letter-spacing: 0.6px;
+
+            font-weight: 700;
+
+            padding: 15px 20px;
+
+            border-bottom: 1px solid var(--border);
+
+            white-space: nowrap;
+        }
+
+        .inventory-table tbody td {
+            padding: 18px 20px;
+
+            border-bottom: 1px solid #f0f1f3;
+
+            vertical-align: middle;
+        }
+
+        .inventory-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .inventory-table tbody tr:hover {
+            background: #fafbff;
+        }
+
+        .inventory-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        /* =========================================
+           PRODUCT
+        ========================================== */
+
+        .product-info {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+        }
+
+        .product-avatar {
+            width: 42px;
+            height: 42px;
+
+            min-width: 42px;
+
+            border-radius: 11px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #e0e7ff
+                );
+
+            color: var(--primary);
+
+            font-weight: 800;
+
+            overflow: hidden;
+        }
+
+        .product-avatar img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: cover;
+        }
+
+        .product-name-button {
+            border: 0;
+
+            padding: 0;
+
+            background: transparent;
+
+            color: #1f2937;
+
+            font-weight: 700;
+
+            font-size: 14px;
+
+            text-align: left;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .product-name-button:hover {
+            color: var(--primary);
+
+            text-decoration: underline;
+        }
+
+        .product-label {
+            color: #9ca3af;
+
+            font-size: 11px;
+
+            margin-top: 2px;
+        }
+
+
+        /* =========================================
+           BADGES
+        ========================================== */
+
+        .stock-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 7px 11px;
+
+            border-radius: 8px;
+
+            font-size: 12px;
+
+            font-weight: 800;
+        }
+
+        .stock-critical {
+            background: #fee2e2;
+
+            color: #b91c1c;
+        }
+
+        .stock-warning {
+            background: #fef3c7;
+
+            color: #b45309;
+        }
+
+        .stock-normal {
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+        .stock-indicator {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: currentColor;
+        }
+
+
+        /* =========================================
+           PROGRESS
+        ========================================== */
+
+        .stock-progress {
+            width: 140px;
+        }
+
+        .progress {
+            height: 6px;
+
+            border-radius: 20px;
+
+            background: #f1f5f9;
+        }
+
+        .progress-bar-danger {
+            background:
+                linear-gradient(
+                    90deg,
+                    #ef4444,
+                    #dc2626
+                );
+        }
+
+        .progress-bar-warning {
+            background:
+                linear-gradient(
+                    90deg,
+                    #fbbf24,
+                    #f59e0b
+                );
+        }
+
+
+        /* =========================================
+           PRODUCT MODAL
+        ========================================== */
+
+        .product-details-modal .modal-dialog {
+            max-width: 1050px;
+
+            margin: 1rem auto;
+        }
+
+        .product-details-modal .modal-content {
+            border: 0;
+
+            border-radius: 22px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 25px 80px rgba(15, 23, 42, 0.28);
+        }
+
+        .product-modal-header {
+            padding: 22px 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            color: white;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .product-modal-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .product-modal-icon {
+            width: 44px;
+            height: 44px;
+
+            border-radius: 12px;
+
+            background: rgba(255,255,255,0.16);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 20px;
+        }
+
+        .product-modal-title h5 {
+            margin: 0;
+
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+        .product-modal-title small {
+            opacity: 0.8;
+
+            font-size: 11px;
+        }
+
+        .product-modal-close {
+            border: 0;
+
+            background: rgba(255,255,255,0.12);
+
+            color: white;
+
+            width: 38px;
+            height: 38px;
+
+            border-radius: 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 18px;
+        }
+
+        .product-modal-close:hover {
+            background: rgba(255,255,255,0.22);
+        }
+
+        .product-modal-body {
+            padding: 25px;
+
+            background: #ffffff;
+        }
+
+
+        /* =========================================
+           DETAIL SECTIONS
+        ========================================== */
+
+        .detail-section {
+            border: 1px solid #e5e7eb;
+
+            border-radius: 15px;
+
+            padding: 18px;
+
+            margin-bottom: 18px;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-section-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 14px;
+
+            font-weight: 800;
+
+            color: #111827;
+
+            margin-bottom: 15px;
+
+            padding-bottom: 12px;
+
+            border-bottom: 1px solid #f0f1f3;
+        }
+
+        .detail-section-title i {
+            color: var(--primary);
+        }
+
+        .detail-item {
+            margin-bottom: 13px;
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-label {
+            display: block;
+
+            color: #9ca3af;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            margin-bottom: 4px;
+        }
+
+        .detail-value {
+            color: #1f2937;
+
+            font-size: 13px;
+
+            font-weight: 600;
+
+            word-break: break-word;
+        }
+
+
+        /* =========================================
+           IMAGE GALLERY
+        ========================================== */
+
+        .product-main-image {
+            width: 100%;
+
+            height: 330px;
+
+            object-fit: contain;
+
+            border-radius: 15px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+        }
+
+        .image-gallery {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 8px;
+
+            margin-top: 10px;
+        }
+
+        .gallery-image {
+            width: 100%;
+
+            height: 70px;
+
+            object-fit: cover;
+
+            border-radius: 9px;
+
+            border: 1px solid #e5e7eb;
+
+            background: #f8fafc;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .gallery-image:hover {
+            transform: translateY(-2px);
+
+            border-color: var(--primary);
+
+            box-shadow:
+                0 5px 15px rgba(79,70,229,0.15);
+        }
+
+        .no-image {
+            width: 100%;
+
+            height: 330px;
+
+            border-radius: 15px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-direction: column;
+
+            color: #9ca3af;
+
+            gap: 8px;
+        }
+
+        .no-image i {
+            font-size: 40px;
+        }
+
+
+        /* =========================================
+           PRICE
+        ========================================== */
+
+        .price-box {
+            padding: 13px;
+
+            background: #f8fafc;
+
+            border-radius: 12px;
+
+            border: 1px solid #eef0f3;
+
+            height: 100%;
+        }
+
+        .selling-price {
+            color: #16a34a;
+
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+        .original-price {
+            color: #9ca3af;
+
+            font-size: 12px;
+
+            text-decoration: line-through;
+        }
+
+
+        /* =========================================
+           DESCRIPTION
+        ========================================== */
+
+        .description-box {
+            background: #f8fafc;
+
+            border-radius: 12px;
+
+            padding: 14px;
+
+            color: #4b5563;
+
+            font-size: 13px;
+
+            line-height: 1.7;
+
+            white-space: pre-line;
+        }
+
+
+        /* =========================================
+           COUPON
+        ========================================== */
+
+        .coupon-box {
+            background:
+                linear-gradient(
+                    135deg,
+                    #eff6ff,
+                    #eef2ff
+                );
+
+            border: 1px solid #c7d2fe;
+
+            border-radius: 14px;
+
+            padding: 16px;
+        }
+
+        .coupon-code {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 7px 11px;
+
+            background: white;
+
+            border: 1px dashed #6366f1;
+
+            border-radius: 8px;
+
+            color: #4338ca;
+
+            font-weight: 800;
+
+            font-size: 13px;
+        }
+
+        .coupon-active {
+            color: #15803d;
+
+            font-weight: 700;
+
+            font-size: 12px;
+        }
+
+        .coupon-inactive {
+            color: #b91c1c;
+
+            font-weight: 700;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           SELLER
+        ========================================== */
+
+        .seller-box {
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fafc,
+                    #eef2ff
+                );
+
+            border: 1px solid #e0e7ff;
+
+            border-radius: 15px;
+
+            padding: 18px;
+        }
+
+        .seller-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            margin-bottom: 18px;
+        }
+
+        .seller-avatar {
+            width: 56px;
+            height: 56px;
+
+            min-width: 56px;
+
+            border-radius: 14px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #4f46e5,
+                    #7c3aed
+                );
+
+            color: white;
+
+            font-size: 21px;
+
+            font-weight: 800;
+
+            overflow: hidden;
+        }
+
+        .seller-name {
+            font-size: 15px;
+
+            font-weight: 800;
+
+            color: #111827;
+        }
+
+        .seller-company {
+            font-size: 11px;
+
+            color: #6b7280;
+
+            margin-top: 3px;
+        }
+
+        .seller-detail {
+            display: flex;
+
+            gap: 9px;
+
+            margin-bottom: 10px;
+
+            font-size: 12px;
+
+            color: #374151;
+        }
+
+        .seller-detail i {
+            width: 18px;
+
+            color: var(--primary);
+
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================
+           STATUS
+        ========================================== */
+
+        .info-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding: 6px 10px;
+
+            border-radius: 8px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+        }
+
+        .info-badge-success {
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+        .info-badge-danger {
+            background: #fee2e2;
+
+            color: #b91c1c;
+        }
+
+        .info-badge-warning {
+            background: #fef3c7;
+
+            color: #b45309;
+        }
+
+        .info-badge-primary {
+            background: #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+
+        /* =========================================
+           OUT OF STOCK
+        ========================================== */
+
+        .out-stock-box {
+            padding: 16px;
+
+            border-radius: 14px;
+
+            background: #fef2f2;
+
+            border: 1px solid #fecaca;
+
+            color: #991b1b;
+        }
+
+        .out-stock-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            font-size: 13px;
+
+            font-weight: 800;
+
+            margin-bottom: 5px;
+        }
+
+        .out-stock-time {
+            font-size: 12px;
+
+            color: #7f1d1d;
+        }
+
+
+        /* =========================================
+           EMPTY
+        ========================================== */
+
+        .empty-state {
+            padding: 70px 25px;
+
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 75px;
+            height: 75px;
+
+            margin: 0 auto 18px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #ecfdf5;
+
+            color: #16a34a;
+
+            font-size: 30px;
+        }
+
+        .empty-state h4 {
+            font-size: 18px;
+
+            font-weight: 750;
+
+            margin-bottom: 7px;
+        }
+
+        .empty-state p {
+            color: var(--muted);
+
+            margin: 0;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================== */
+
+        .page-footer {
+            text-align: center;
+
+            color: #9ca3af;
+
+            font-size: 12px;
+
+            margin-top: 25px;
+        }
+
+
+
+        /* =========================================
+           SELLER DETAILS MODAL
+        ========================================== */
+
+        .seller-details-modal .modal-dialog {
+            max-width: 1050px;
+            margin: 1rem auto;
+        }
+
+        .seller-details-modal .modal-content {
+            border: 0;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(15, 23, 42, 0.30);
+        }
+
+        .seller-modal-header {
+            padding: 22px 25px;
+            background: linear-gradient(135deg, #111827, #4f46e5);
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .seller-modal-title {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .seller-modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,.15);
+            font-size: 22px;
+            overflow: hidden;
+        }
+
+        .seller-modal-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .seller-modal-title h5 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .seller-modal-title small {
+            opacity: .78;
+            font-size: 11px;
+        }
+
+        .seller-name-button {
+            border: 0;
+            background: transparent;
+            padding: 0;
+            color: #111827;
+            font: inherit;
+            font-size: 15px;
+            font-weight: 800;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .seller-name-button:hover {
+            color: var(--primary);
+        }
+
+        .seller-name-button i {
+            font-size: 11px;
+            opacity: .65;
+        }
+
+        .seller-modal-body {
+            padding: 25px;
+            background: #fff;
+        }
+
+        .seller-profile-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 18px;
+            background: #fff;
+            margin-bottom: 18px;
+        }
+
+        .seller-profile-card:last-child { margin-bottom: 0; }
+
+        .seller-profile-card-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #111827;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f0f1f3;
+        }
+
+        .seller-profile-card-title i { color: var(--primary); }
+
+        .seller-profile-item {
+            padding: 12px;
+            border-radius: 11px;
+            background: #f8fafc;
+            border: 1px solid #eef0f3;
+            height: 100%;
+        }
+
+        .seller-profile-label {
+            display: block;
+            color: #9ca3af;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 5px;
+        }
+
+        .seller-profile-value {
+            color: #1f2937;
+            font-size: 13px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .seller-profile-photo {
+            width: 105px;
+            height: 105px;
+            border-radius: 18px;
+            object-fit: cover;
+            border: 3px solid #fff;
+            box-shadow: 0 8px 25px rgba(15,23,42,.12);
+            background: #eef2ff;
+        }
+
+        .seller-document {
+            display: block;
+            text-decoration: none;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 12px;
+            color: #374151;
+            background: #f8fafc;
+            transition: .2s;
+        }
+
+        .seller-document:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .seller-document i { font-size: 22px; }
+
+        @media (max-width: 768px) {
+            .seller-details-modal .modal-dialog { margin: 10px; }
+            .seller-modal-body { padding: 16px; }
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 768px) {
+
+            .page-wrapper {
+                padding: 30px 14px 45px;
+            }
+
+            .card-toolbar {
+                align-items: stretch;
+            }
+
+            .search-wrapper {
+                width: 100%;
+            }
+
+            .inventory-table thead th,
+            .inventory-table tbody td {
+                padding: 13px 14px;
+            }
+
+            .stock-progress {
+                width: 100px;
+            }
+
+            .product-details-modal .modal-dialog {
+                margin: 10px;
+            }
+
+            .product-modal-body {
+                padding: 16px;
+            }
+
+            .product-main-image,
+            .no-image {
+                height: 250px;
+            }
+
+        }
+
+        @media (max-width: 576px) {
+
+            .brand-text {
+                display: none;
+            }
+
+            .status-pill span:last-child {
+                display: none;
+            }
+
+            .summary-card {
+                padding: 17px;
+            }
+
+            .product-avatar {
+                width: 36px;
+                height: 36px;
+
+                min-width: 36px;
+            }
+
+            .product-name-button {
+                font-size: 13px;
+            }
+
+            .image-gallery {
+                grid-template-columns:
+                    repeat(4, 1fr);
+            }
+
+            .gallery-image {
+                height: 55px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================
+     NAVIGATION
+========================================== -->
+
+<nav class="top-navbar">
+
+    <div class="container-fluid px-3 px-md-4">
+
+        <div class="d-flex justify-content-between align-items-center py-3">
+
+            <a href="#" class="brand">
+
+                <div class="brand-icon">
+                    <i class="bi bi-box-seam"></i>
+                </div>
+
+                <span class="brand-text">
+                    Inventory Manager
+                </span>
+
+            </a>
+
+            <div class="status-pill">
+
+                <span class="status-dot"></span>
+
+                <span>
+                    Low Stock Alert
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================
+     MAIN
+========================================== -->
+
+<main class="page-wrapper">
+
+
+    <div class="page-header">
+
+        <h1>
+            Low Stock Products
+        </h1>
+
+        <p>
+            Monitor products that require attention and restocking.
+        </p>
+
+    </div>
+
+
+    <!-- =========================================
+         SUMMARY
+    ========================================== -->
+
+    <div class="row g-3">
+
+
+        <div class="col-12 col-md-4">
+
+            <div class="summary-card">
+
+                <div class="summary-icon red">
+
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                </div>
+
+                <div class="summary-title">
+                    Products Requiring Attention
+                </div>
+
+                <div class="summary-number">
+                    {{ products|length }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-md-4">
+
+            <div class="summary-card">
+
+                <div class="summary-icon orange">
+
+                    <i class="bi bi-boxes"></i>
+
+                </div>
+
+                <div class="summary-title">
+                    Low Inventory Status
+                </div>
+
+                <div class="summary-number">
+                    Active
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-12 col-md-4">
+
+            <div class="summary-card">
+
+                <div class="summary-icon blue">
+
+                    <i class="bi bi-arrow-repeat"></i>
+
+                </div>
+
+                <div class="summary-title">
+                    Inventory Monitoring
+                </div>
+
+                <div class="summary-number">
+                    Live
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         INVENTORY
+    ========================================== -->
+
+    <div class="inventory-card">
+
+
+        <div class="card-toolbar">
+
+            <div class="toolbar-title">
+
+                <i class="bi bi-clipboard-data"></i>
+
+                Inventory Overview
+
+            </div>
+
+
+            <div class="search-wrapper">
+
+                <i class="bi bi-search"></i>
+
+                <input
+                    type="text"
+                    id="productSearch"
+                    class="search-input"
+                    placeholder="Search products..."
+                    autocomplete="off"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table
+                class="inventory-table"
+                id="stockTable"
+            >
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Product
+                        </th>
+
+                        <th>
+                            Quantity Remaining
+                        </th>
+
+                        <th>
+                            Stock Level
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="productTableBody">
+
+
+                    {% for product in products %}
+
+                    <tr class="product-row">
+
+
+                        <!-- PRODUCT -->
+
+                        <td>
+
+                            <div class="product-info">
+
+                                <div class="product-avatar">
+
+                                    {% if product.product_image %}
+
+                                        <img
+                                            src="{{ product.product_image.url }}"
+                                            alt="{{ product.name }}"
+                                        >
+
+                                    {% else %}
+
+                                        <i class="bi bi-box"></i>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div>
+
+                                    <button
+                                        type="button"
+                                        class="product-name-button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#productDetailsModal{{ product.id }}"
+                                    >
+                                        {{ product.name }}
+                                    </button>
+
+                        
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- QUANTITY -->
+
+                        <td>
+
+                            {% if product.quantity <= 3 %}
+
+                                <span class="stock-badge stock-critical">
+
+                                    <span class="stock-indicator"></span>
+
+                                    {{ product.quantity }} units
+
+                                </span>
+
+                            {% elif product.quantity <= 10 %}
+
+                                <span class="stock-badge stock-warning">
+
+                                    <span class="stock-indicator"></span>
+
+                                    {{ product.quantity }} units
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="stock-badge stock-normal">
+
+                                    <span class="stock-indicator"></span>
+
+                                    {{ product.quantity }} units
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- PROGRESS -->
+
+                        <td>
+
+                            <div class="stock-progress">
+
+                                {% if product.quantity <= 3 %}
+
+                                    <div class="progress">
+
+                                        <div
+                                            class="progress-bar progress-bar-danger"
+                                            style="width:20%;"
+                                        ></div>
+
+                                    </div>
+
+                                {% elif product.quantity <= 10 %}
+
+                                    <div class="progress">
+
+                                        <div
+                                            class="progress-bar progress-bar-warning"
+                                            style="width:55%;"
+                                        ></div>
+
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="progress">
+
+                                        <div
+                                            class="progress-bar bg-success"
+                                            style="width:80%;"
+                                        ></div>
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- STATUS -->
+
+                        <td>
+
+                            {% if product.quantity <= 0 %}
+
+                                <span class="stock-badge stock-critical">
+
+                                    <i class="bi bi-x-circle-fill"></i>
+
+                                    Out of Stock
+
+                                </span>
+
+                            {% elif product.quantity <= 3 %}
+
+                                <span class="stock-badge stock-critical">
+
+                                    <i class="bi bi-exclamation-circle-fill"></i>
+
+                                    Critical
+
+                                </span>
+
+                            {% elif product.quantity <= 10 %}
+
+                                <span class="stock-badge stock-warning">
+
+                                    <i class="bi bi-exclamation-triangle-fill"></i>
+
+                                    Low
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="stock-badge stock-normal">
+
+                                    <i class="bi bi-check-circle-fill"></i>
+
+                                    Available
+
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td colspan="4">
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+
+                                    <i class="bi bi-check-lg"></i>
+
+                                </div>
+
+                                <h4>
+                                    Inventory Looks Good
+                                </h4>
+
+                                <p>
+                                    There are currently no low stock products.
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <div class="page-footer">
+
+        Inventory Management System
+        &bull;
+        Low Stock Monitoring
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     PRODUCT DETAILS MODALS
+========================================================= -->
+
+{% for product in products %}
+
+<div
+    class="modal fade product-details-modal"
+    id="productDetailsModal{{ product.id }}"
+    tabindex="-1"
+    aria-labelledby="productDetailsLabel{{ product.id }}"
+    aria-hidden="true"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+>
+
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+
+        <div class="modal-content">
+
+
+            <!-- =============================================
+                 HEADER
+            ============================================== -->
+
+            <div class="product-modal-header">
+
+                <div class="product-modal-title">
+
+                    <div class="product-modal-icon">
+
+                        <i class="bi bi-box-seam"></i>
+
+                    </div>
+
+                    <div>
+
+                        <h5 id="productDetailsLabel{{ product.id }}">
+                            Product Details
+                        </h5>
+
+                        <small>
+                            Complete product & seller information
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="product-modal-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                >
+
+                    <i class="bi bi-x-lg"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- =============================================
+                 BODY
+            ============================================== -->
+
+            <div class="product-modal-body">
+
+
+                <!-- =========================================
+                     PRODUCT INFORMATION
+                ========================================== -->
+
+                <div class="detail-section">
+
+                    <div class="detail-section-title">
+
+                        <i class="bi bi-box"></i>
+
+                        Product Information
+
+                    </div>
+
+
+                    <div class="row g-4">
+
+
+                        <!-- IMAGE GALLERY -->
+
+                        <div class="col-12 col-md-5">
+
+
+                            {% if product.product_image %}
+
+                                <img
+                                    id="mainProductImage{{ product.id }}"
+                                    src="{{ product.product_image.url }}"
+                                    class="product-main-image"
+                                    alt="{{ product.name }}"
+                                >
+
+                                <div class="image-gallery">
+
+
+                                    {% if product.product_image %}
+
+                                    <img
+                                        src="{{ product.product_image.url }}"
+                                        class="gallery-image"
+                                        alt="{{ product.name }}"
+                                        onclick="changeProductImage(
+                                            '{{ product.id }}',
+                                            '{{ product.product_image.url }}'
+                                        )"
+                                    >
+
+                                    {% endif %}
+
+
+                                    {% if product.product_image2 %}
+
+                                    <img
+                                        src="{{ product.product_image2.url }}"
+                                        class="gallery-image"
+                                        alt="{{ product.name }}"
+                                        onclick="changeProductImage(
+                                            '{{ product.id }}',
+                                            '{{ product.product_image2.url }}'
+                                        )"
+                                    >
+
+                                    {% endif %}
+
+
+                                    {% if product.product_image3 %}
+
+                                    <img
+                                        src="{{ product.product_image3.url }}"
+                                        class="gallery-image"
+                                        alt="{{ product.name }}"
+                                        onclick="changeProductImage(
+                                            '{{ product.id }}',
+                                            '{{ product.product_image3.url }}'
+                                        )"
+                                    >
+
+                                    {% endif %}
+
+
+                                    {% if product.product_image4 %}
+
+                                    <img
+                                        src="{{ product.product_image4.url }}"
+                                        class="gallery-image"
+                                        alt="{{ product.name }}"
+                                        onclick="changeProductImage(
+                                            '{{ product.id }}',
+                                            '{{ product.product_image4.url }}'
+                                        )"
+                                    >
+
+                                    {% endif %}
+
+
+                                </div>
+
+                            {% else %}
+
+                                <div class="no-image">
+
+                                    <i class="bi bi-image"></i>
+
+                                    <span>
+                                        No product image
+                                    </span>
+
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+
+                        <!-- BASIC DETAILS -->
+
+                        <div class="col-12 col-md-7">
+
+
+                            <div class="row g-3">
+
+
+                                <div class="col-12">
+
+                                    <div class="detail-item">
+
+                                        <span class="detail-label">
+                                            Product Name
+                                        </span>
+
+                                        <div class="detail-value">
+
+                                            {{ product.name }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-6">
+
+                                    <div class="detail-item">
+
+                                        <span class="detail-label">
+                                            Product ID
+                                        </span>
+
+                                        <div class="detail-value">
+
+                                            #{{ product.id }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-6">
+
+                                    <div class="detail-item">
+
+                                        <span class="detail-label">
+                                            Category
+                                        </span>
+
+                                        <div class="detail-value">
+
+                                            {% if product.category %}
+
+                                                {{ product.category.name }}
+
+                                            {% else %}
+
+                                                Not available
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-6">
+
+                                    <div class="price-box">
+
+                                        <span class="detail-label">
+                                            Selling Price
+                                        </span>
+
+                                        <div class="selling-price">
+
+                                            ₹{{ product.selling_price|default:"0" }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-6">
+
+                                    <div class="price-box">
+
+                                        <span class="detail-label">
+                                            Original Price
+                                        </span>
+
+                                        <div class="original-price">
+
+                                            ₹{{ product.original_price|default:"0" }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-6">
+
+                                    <div class="detail-item">
+
+                                        <span class="detail-label">
+                                            Quantity
+                                        </span>
+
+                                        <div class="detail-value">
+
+                                            {{ product.quantity }} units
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-6">
+
+                                    <div class="detail-item">
+
+                                        <span class="detail-label">
+                                            Size
+                                        </span>
+
+                                        <div class="detail-value">
+
+                                            {{ product.size|default:"Not specified" }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <div class="col-12">
+
+                                    <div class="detail-item">
+
+                                        <span class="detail-label">
+                                            Vendor
+                                        </span>
+
+                                        <div class="detail-value">
+
+                                            {{ product.vendor }}
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     SIZE PRICING
+                ========================================== -->
+
+                <div class="detail-section">
+
+                    <div class="detail-section-title">
+
+                        <i class="bi bi-rulers"></i>
+
+                        Size & Pricing
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+
+                        <div class="col-6 col-md-4">
+
+                            <div class="price-box">
+
+                                <span class="detail-label">
+                                    Small (S)
+                                </span>
+
+                                <div class="detail-value">
+                                    ₹{{ product.price_s|default:"0" }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-6 col-md-4">
+
+                            <div class="price-box">
+
+                                <span class="detail-label">
+                                    Medium (M)
+                                </span>
+
+                                <div class="detail-value">
+                                    ₹{{ product.price_m|default:"0" }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-6 col-md-4">
+
+                            <div class="price-box">
+
+                                <span class="detail-label">
+                                    Large (L)
+                                </span>
+
+                                <div class="detail-value">
+                                    ₹{{ product.price_l|default:"0" }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-6 col-md-4">
+
+                            <div class="price-box">
+
+                                <span class="detail-label">
+                                    Extra Large (XL)
+                                </span>
+
+                                <div class="detail-value">
+                                    ₹{{ product.price_xl|default:"0" }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-6 col-md-4">
+
+                            <div class="price-box">
+
+                                <span class="detail-label">
+                                    XX Large (XXL)
+                                </span>
+
+                                <div class="detail-value">
+                                    ₹{{ product.price_xxl|default:"0" }}
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     COUPON
+                ========================================== -->
+
+                <div class="detail-section">
+
+                    <div class="detail-section-title">
+
+                        <i class="bi bi-ticket-perforated"></i>
+
+                        Coupon Details
+
+                    </div>
+
+
+                    {% if product.coupon_code %}
+
+                    <div class="coupon-box">
+
+                        <div class="row g-3 align-items-center">
+
+
+                            <div class="col-12 col-md-6">
+
+                                <span class="detail-label">
+                                    Coupon Code
+                                </span>
+
+                                <div class="coupon-code">
+
+                                    <i class="bi bi-ticket"></i>
+
+                                    {{ product.coupon_code }}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-6 col-md-3">
+
+                                <span class="detail-label">
+                                    Discount
+                                </span>
+
+                                <div class="detail-value">
+
+                                    ₹{{ product.coupon_discount|default:"0" }}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-6 col-md-3">
+
+                                <span class="detail-label">
+                                    Status
+                                </span>
+
+                                {% if product.coupon_active %}
+
+                                    <div class="coupon-active">
+
+                                        <i class="bi bi-check-circle-fill"></i>
+
+                                        Active
+
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="coupon-inactive">
+
+                                        <i class="bi bi-x-circle-fill"></i>
+
+                                        Inactive
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if product.coupon_expiry %}
+
+                            <div class="col-6 col-md-4">
+
+                                <span class="detail-label">
+                                    Expiry Date
+                                </span>
+
+                                <div class="detail-value">
+
+                                    {{ product.coupon_expiry|date:"d M Y" }}
+
+                                </div>
+
+                            </div>
+
+                            {% endif %}
+
+
+                            <div class="col-6 col-md-4">
+
+                                <span class="detail-label">
+                                    Coupon Used
+                                </span>
+
+                                <div class="detail-value">
+
+                                    {% if product.coupon_used %}
+
+                                        Yes
+
+                                    {% else %}
+
+                                        No
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    {% else %}
+
+                    <div class="description-box">
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        No coupon has been configured for this product.
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- =========================================
+                     DESCRIPTION
+                ========================================== -->
+
+                <div class="detail-section">
+
+                    <div class="detail-section-title">
+
+                        <i class="bi bi-file-text"></i>
+
+                        Product Description
+
+                    </div>
+
+
+                    <div class="description-box">
+
+                        {% if product.description %}
+
+                            {{ product.description }}
+
+                        {% else %}
+
+                            No product description available.
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     PRODUCT STATUS
+                ========================================== -->
+
+                <div class="detail-section">
+
+                    <div class="detail-section-title">
+
+                        <i class="bi bi-shield-check"></i>
+
+                        Product Status & Activity
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+
+                        <div class="col-6 col-md-3">
+
+                            <span class="detail-label">
+                                Visibility
+                            </span>
+
+                            {% if product.status %}
+
+                                <span class="info-badge info-badge-danger">
+
+                                    <i class="bi bi-eye-slash-fill"></i>
+
+                                    Hidden
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="info-badge info-badge-success">
+
+                                    <i class="bi bi-eye-fill"></i>
+
+                                    Visible
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="col-6 col-md-3">
+
+                            <span class="detail-label">
+                                Trending
+                            </span>
+
+                            {% if product.trending %}
+
+                                <span class="info-badge info-badge-primary">
+
+                                    <i class="bi bi-fire"></i>
+
+                                    Trending
+
+                                </span>
+
+                            {% else %}
+
+                                <span class="info-badge info-badge-warning">
+
+                                    <i class="bi bi-dash-circle"></i>
+
+                                    Normal
+
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="col-6 col-md-3">
+
+                            <span class="detail-label">
+                                Created Date
+                            </span>
+
+                            <div class="detail-value">
+
+                                {{ product.created_at|date:"d M Y" }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-6 col-md-3">
+
+                            <span class="detail-label">
+                                Created Time
+                            </span>
+
+                            <div class="detail-value">
+
+                                {{ product.created_at|date:"h:i A" }}
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     INVENTORY STATUS
+                ========================================== -->
+
+                <div class="detail-section">
+
+                    <div class="detail-section-title">
+
+                        <i class="bi bi-boxes"></i>
+
+                        Inventory Status
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+
+                        <div class="col-6 col-md-4">
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Current Stock
+                                </span>
+
+                                <div class="detail-value">
+
+                                    {{ product.quantity }} units
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-6 col-md-4">
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Current Status
+                                </span>
+
+                                <div>
+
+                                    {% if product.quantity <= 0 %}
+
+                                        <span class="stock-badge stock-critical">
+
+                                            <i class="bi bi-x-circle-fill"></i>
+
+                                            Out of Stock
+
+                                        </span>
+
+                                    {% elif product.quantity <= 3 %}
+
+                                        <span class="stock-badge stock-critical">
+
+                                            <i class="bi bi-exclamation-circle-fill"></i>
+
+                                            Critical
+
+                                        </span>
+
+                                    {% elif product.quantity <= 10 %}
+
+                                        <span class="stock-badge stock-warning">
+
+                                            <i class="bi bi-exclamation-triangle-fill"></i>
+
+                                            Low
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="stock-badge stock-normal">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            Available
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-6 col-md-4">
+
+                            <div class="detail-item">
+
+                                <span class="detail-label">
+                                    Stock Level
+                                </span>
+
+                                <div class="detail-value">
+
+                                    {% if product.quantity <= 0 %}
+
+                                        0%
+
+                                    {% elif product.quantity <= 3 %}
+
+                                        Critical
+
+                                    {% elif product.quantity <= 10 %}
+
+                                        Low
+
+                                    {% else %}
+
+                                        Good
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        {% if product.quantity <= 0 %}
+
+                        <div class="col-12">
+
+                            <div class="out-stock-box">
+
+                                <div class="out-stock-title">
+
+                                    <i class="bi bi-clock-history"></i>
+
+                                    Out of Stock
+
+                                </div>
+
+
+                                {% if product.out_of_stock_at %}
+
+                                    <div class="out-stock-time">
+
+                                        Out of Stock Since:
+
+                                        <strong>
+
+                                            {{ product.out_of_stock_at|date:"d M Y, h:i:s A" }}
+
+                                        </strong>
+
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="out-stock-time">
+
+                                        Out-of-stock date and time has not
+                                        been recorded for this product.
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     SELLER DETAILS
+                ========================================== -->
+
+                <div class="detail-section">
+
+                    <div class="detail-section-title">
+
+                        <i class="bi bi-person-vcard"></i>
+
+                        Seller Details
+
+                    </div>
+
+
+                    {% if product.seller_profile %}
+
+                    <div class="seller-box">
+
+
+                        <div class="seller-header">
+
+
+                            <div class="seller-avatar">
+
+                                <i class="bi bi-person-fill"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <button
+                                    type="button"
+                                    class="seller-name seller-name-button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#sellerDetailsModal{{ product.id }}"
+                                >
+
+                                    {% if product.seller_profile.company_name %}
+
+                                        {{ product.seller_profile.company_name }}
+
+                                    {% else %}
+
+                                        {{ product.vendor }}
+
+                                    {% endif %}
+
+                                    <i class="bi bi-box-arrow-up-right ms-1"></i>
+
+                                </button>
+
+
+                                <div class="seller-company">
+
+                                    Seller:
+                                    {{ product.vendor }}
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                        <div class="row g-3">
+
+
+                            <!-- USERNAME -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-person-circle"></i>
+
+                                    <span>
+
+                                        <strong>Username:</strong>
+
+                                        {{ product.seller_profile.user.username }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-envelope-fill"></i>
+
+                                    <span>
+
+                                        <strong>Email:</strong>
+
+                                        {{ product.seller_profile.user.email|default:"Not available" }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- COMPANY -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-building"></i>
+
+                                    <span>
+
+                                        <strong>Company:</strong>
+
+                                        {{ product.seller_profile.company_name|default:"Not available" }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- BUSINESS TYPE -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-briefcase-fill"></i>
+
+                                    <span>
+
+                                        <strong>Business Type:</strong>
+
+                                        {{ product.seller_profile.get_business_type_display }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- MOBILE -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-telephone-fill"></i>
+
+                                    <span>
+
+                                        <strong>Mobile:</strong>
+
+                                        {{ product.seller_profile.mobile_number|default:"Not available" }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- SELLER STATUS -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-shield-check"></i>
+
+                                    <span>
+
+                                        <strong>Status:</strong>
+
+                                        {{ product.seller_profile.get_status_display|default:"Not available" }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- ADDRESS -->
+
+                            <div class="col-12">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-geo-alt-fill"></i>
+
+                                    <span>
+
+                                        <strong>Address:</strong>
+
+                                        {{ product.seller_profile.address|default:"Not available" }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- CITY -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-building"></i>
+
+                                    <span>
+
+                                        <strong>City:</strong>
+
+                                        {{ product.seller_profile.city|default:"Not available" }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- STATE -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-map"></i>
+
+                                    <span>
+
+                                        <strong>State:</strong>
+
+                                        {{ product.seller_profile.state|default:"Not available" }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- PINCODE -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-mailbox"></i>
+
+                                    <span>
+
+                                        <strong>Pincode:</strong>
+
+                                        {{ product.seller_profile.pincode|default:"Not available" }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- COUNTRY -->
+
+                            <div class="col-12 col-md-6">
+
+                                <div class="seller-detail">
+
+                                    <i class="bi bi-globe2"></i>
+
+                                    <span>
+
+                                        <strong>Country:</strong>
+
+                                        {{ product.seller_profile.country|default:"Not available" }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                    {% else %}
+
+
+                    <div class="seller-box">
+
+                        <div class="seller-header">
+
+                            <div class="seller-avatar">
+
+                                <i class="bi bi-person-fill"></i>
+
+                            </div>
+
+                            <div>
+
+                                <div class="seller-name">
+
+                                    {{ product.vendor|default:"Seller information unavailable" }}
+
+                                </div>
+
+                                <div class="seller-company">
+
+                                    Seller profile not available
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="seller-detail">
+
+                            <i class="bi bi-info-circle"></i>
+
+                            <span>
+
+                                Detailed seller information is not available
+                                for this product.
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =============================================
+                 FOOTER
+            ============================================== -->
+
+            <div
+                class="modal-footer"
+                style="
+                    border-top:1px solid #e5e7eb;
+                    padding:16px 25px;
+                    background:#ffffff;
+                "
+            >
+
+                <button
+                    type="button"
+                    class="btn btn-light px-4"
+                    data-bs-dismiss="modal"
+                >
+
+                    <i class="bi bi-x-lg me-1"></i>
+
+                    Close
+
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+
+
+
+<!-- =========================================================
+     SELLER DETAILS MODALS
+========================================================= -->
+
+{% for product in products %}
+
+{% if product.seller_profile %}
+<div
+    class="modal fade seller-details-modal"
+    id="sellerDetailsModal{{ product.id }}"
+    tabindex="-1"
+    aria-labelledby="sellerDetailsLabel{{ product.id }}"
+    aria-hidden="true"
+    data-bs-backdrop="static"
+    data-bs-keyboard="false"
+>
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="seller-modal-header">
+                <div class="seller-modal-title">
+                    <div class="seller-modal-icon">
+                        {% if product.seller_profile.profile_photo %}
+                            <img src="{{ product.seller_profile.profile_photo.url }}" alt="Seller profile photo">
+                        {% else %}
+                            <i class="bi bi-person-vcard"></i>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h5 id="sellerDetailsLabel{{ product.id }}">Seller Full Details</h5>
+                        <small>{{ product.seller_profile.company_name|default:product.vendor }} &bull; {{ product.seller_profile.user.username }}</small>
+                    </div>
+                </div>
+
+                <button type="button" class="product-modal-close" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="seller-modal-body">
+
+                <div class="seller-profile-card">
+                    <div class="seller-profile-card-title">
+                        <i class="bi bi-person-badge"></i> Personal Information
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-4 text-center">
+                            {% if product.seller_profile.profile_photo %}
+                                <img class="seller-profile-photo" src="{{ product.seller_profile.profile_photo.url }}" alt="{{ product.seller_profile.company_name|default:product.vendor }}">
+                            {% else %}
+                                <div class="seller-profile-photo d-inline-flex align-items-center justify-content-center">
+                                    <i class="bi bi-person-fill fs-1 text-secondary"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-12 col-md-8">
+                            <div class="row g-3">
+                                <div class="col-12 col-sm-6"><div class="seller-profile-item"><span class="seller-profile-label">Username</span><div class="seller-profile-value">{{ product.seller_profile.user.username|default:"Not available" }}</div></div></div>
+                                <div class="col-12 col-sm-6"><div class="seller-profile-item"><span class="seller-profile-label">Email</span><div class="seller-profile-value">{{ product.seller_profile.email|default:product.seller_profile.user.email|default:"Not available" }}</div></div></div>
+                                <div class="col-12 col-sm-6"><div class="seller-profile-item"><span class="seller-profile-label">Date of Birth</span><div class="seller-profile-value">{{ product.seller_profile.date_of_birth|date:"d M Y"|default:"Not available" }}</div></div></div>
+                                <div class="col-12 col-sm-6"><div class="seller-profile-item"><span class="seller-profile-label">Gender</span><div class="seller-profile-value">{{ product.seller_profile.gender|default:"Not available" }}</div></div></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="seller-profile-card">
+                    <div class="seller-profile-card-title"><i class="bi bi-building"></i> Business Information</div>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">Company Name</span><div class="seller-profile-value">{{ product.seller_profile.company_name|default:"Not available" }}</div></div></div>
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">Business Type</span><div class="seller-profile-value">{{ product.seller_profile.get_business_type_display|default:"Not available" }}</div></div></div>
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">Mobile Number</span><div class="seller-profile-value">{{ product.seller_profile.mobile_number|default:"Not available" }}</div></div></div>
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">Seller Status</span><div class="seller-profile-value">{{ product.seller_profile.get_status_display|default:"Not available" }}</div></div></div>
+                    </div>
+                </div>
+
+                <div class="seller-profile-card">
+                    <div class="seller-profile-card-title"><i class="bi bi-geo-alt"></i> Address Information</div>
+                    <div class="row g-3">
+                        <div class="col-12"><div class="seller-profile-item"><span class="seller-profile-label">Address</span><div class="seller-profile-value">{{ product.seller_profile.address|default:"Not available" }}</div></div></div>
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">City</span><div class="seller-profile-value">{{ product.seller_profile.city|default:"Not available" }}</div></div></div>
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">State</span><div class="seller-profile-value">{{ product.seller_profile.state|default:"Not available" }}</div></div></div>
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">Pincode</span><div class="seller-profile-value">{{ product.seller_profile.pincode|default:"Not available" }}</div></div></div>
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">Country</span><div class="seller-profile-value">{{ product.seller_profile.country|default:"Not available" }}</div></div></div>
+                    </div>
+                </div>
+
+                <div class="seller-profile-card">
+                    <div class="seller-profile-card-title"><i class="bi bi-shield-check"></i> Identity & Verification</div>
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">Aadhaar Number</span><div class="seller-profile-value">{{ product.seller_profile.aadhar_number|default:"Not available" }}</div></div></div>
+                        <div class="col-12 col-md-6"><div class="seller-profile-item"><span class="seller-profile-label">PAN Number</span><div class="seller-profile-value">{{ product.seller_profile.pan_number|default:"Not available" }}</div></div></div>
+                        <div class="col-12 col-md-4">
+                            {% if product.seller_profile.aadhar_image %}<a class="seller-document" href="{{ product.seller_profile.aadhar_image.url }}" target="_blank" rel="noopener"><i class="bi bi-card-image me-2"></i><strong>Aadhaar Image</strong><br><small>Open document</small></a>{% else %}<div class="seller-profile-item">Aadhaar image not available</div>{% endif %}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            {% if product.seller_profile.pan_image %}<a class="seller-document" href="{{ product.seller_profile.pan_image.url }}" target="_blank" rel="noopener"><i class="bi bi-card-image me-2"></i><strong>PAN Image</strong><br><small>Open document</small></a>{% else %}<div class="seller-profile-item">PAN image not available</div>{% endif %}
+                        </div>
+                        <div class="col-12 col-md-4">
+                            {% if product.seller_profile.registered_office_proof %}<a class="seller-document" href="{{ product.seller_profile.registered_office_proof.url }}" target="_blank" rel="noopener"><i class="bi bi-file-earmark-check me-2"></i><strong>Office Proof</strong><br><small>Open document</small></a>{% else %}<div class="seller-profile-item">Office proof not available</div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer" style="border-top:1px solid #e5e7eb;padding:16px 25px;background:#ffffff;">
+                <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal"><i class="bi bi-x-lg me-1"></i>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endfor %}
+
+
+<!-- Bootstrap JS -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"  
+></script>  
+  
+  
+<!-- =========================================  
+     SEARCH  
+========================================== -->  
+  
+<script>  
+  
+document.addEventListener("DOMContentLoaded", function () {  
+  
+    const searchInput =  
+        document.getElementById("productSearch");  
+  
+    const rows =  
+        document.querySelectorAll(".product-row");  
+  
+  
+    if (!searchInput) {  
+        return;  
+    }  
+  
+  
+    searchInput.addEventListener("input", function () {  
+  
+        const searchValue =  
+            this.value.toLowerCase().trim();  
+  
+  
+        rows.forEach(function (row) {  
+  
+            const productNameElement =  
+                row.querySelector(".product-name-button");  
+  
+  
+            if (!productNameElement) {  
+                return;  
+            }  
+  
+  
+            const productName =  
+                productNameElement.textContent  
+                    .toLowerCase()  
+                    .trim();  
+  
+  
+            row.style.display =  
+                productName.includes(searchValue)  
+                    ? ""  
+                    : "none";  
+  
+        });  
+  
+    });  
+  
+});  
+  
+</script>  
+  
+  
+<!-- =========================================  
+     PRODUCT IMAGE SWITCHER  
+========================================== -->  
+  
+<script>  
+  
+function changeProductImage(productId, imageUrl) {  
+  
+    const mainImage =  
+        document.getElementById(  
+            "mainProductImage" + productId  
+        );  
+  
+  
+    if (!mainImage) {  
+        return;  
+    }  
+  
+  
+    mainImage.src = imageUrl;  
+  
+}  
+  
+</script>  
+  
+  
+<!-- =========================================  
+     PREVENT MODAL FROM CLOSING OUTSIDE  
+========================================== -->  
+  
+<script>  
+  
+document.addEventListener("DOMContentLoaded", function () {  
+  
+    document  
+        .querySelectorAll(".product-details-modal")  
+        .forEach(function (modalElement) {  
+  
+            new bootstrap.Modal(  
+                modalElement,  
+                {  
+                    backdrop: "static",  
+                    keyboard: false  
+                }  
+            );  
+  
+        });  
+  
+});  
+  
+</script>  
+  
+  
+</body>  
+  
+</html>  
+  
+{% endblock %} 

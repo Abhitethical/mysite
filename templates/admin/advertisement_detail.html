@@ -1,0 +1,3912 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+    Advertisement #{{ ad.id }} - {{ ad.title }}
+</title>
+
+
+<style>
+
+/* =====================================================
+   ROOT
+===================================================== */
+
+:root {
+
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+
+    --success: #16a34a;
+    --success-bg: #dcfce7;
+
+    --warning: #d97706;
+    --warning-bg: #fef3c7;
+
+    --danger: #dc2626;
+    --danger-bg: #fee2e2;
+
+    --purple: #7c3aed;
+    --purple-bg: #ede9fe;
+
+    --dark: #0f172a;
+    --text: #334155;
+    --muted: #64748b;
+
+    --border: #e2e8f0;
+    --background: #f1f5f9;
+    --white: #ffffff;
+
+    --radius: 16px;
+
+    --shadow:
+        0 8px 30px rgba(15, 23, 42, .07);
+
+}
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    background: var(--background);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+}
+
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container {
+
+    width: min(1400px, 94%);
+
+    margin: 30px auto 60px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.top-header {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 24px 28px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    box-shadow: var(--shadow);
+
+    margin-bottom: 24px;
+}
+
+
+.header-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+
+.header-icon {
+
+    width: 54px;
+    height: 54px;
+
+    border-radius: 14px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 800;
+}
+
+
+.header-title h1 {
+
+    margin: 0;
+
+    color: var(--dark);
+
+    font-size: 25px;
+
+    font-weight: 750;
+}
+
+
+.header-title p {
+
+    margin: 5px 0 0;
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+.header-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+.btn {
+
+    border: 0;
+
+    text-decoration: none;
+
+    padding: 11px 17px;
+
+    border-radius: 9px;
+
+    font-size: 14px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+
+.btn-edit {
+
+    color: white;
+
+    background: var(--primary);
+}
+
+
+.btn-edit:hover {
+
+    background: var(--primary-dark);
+
+    transform: translateY(-1px);
+}
+
+
+.btn-back {
+
+    color: var(--text);
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+}
+
+
+.btn-back:hover {
+
+    background: #e2e8f0;
+}
+
+
+/* =====================================================
+   MAIN GRID
+===================================================== */
+
+.dashboard-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        350px;
+
+    gap: 24px;
+
+    align-items: start;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.card {
+
+    background: var(--white);
+
+    border: 1px solid var(--border);
+
+    border-radius: var(--radius);
+
+    padding: 24px;
+
+    margin-bottom: 24px;
+
+    box-shadow: var(--shadow);
+}
+
+
+.card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom: 17px;
+
+    margin-bottom: 18px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+
+.card-title {
+
+    margin: 0;
+
+    color: var(--dark);
+
+    font-size: 17px;
+
+    font-weight: 720;
+}
+
+
+.card-subtitle {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-top: 4px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.advertisement-hero {
+
+    display: grid;
+
+    grid-template-columns:
+        220px
+        1fr;
+
+    gap: 25px;
+
+    align-items: center;
+}
+
+
+.hero-image {
+
+    width: 220px;
+
+    height: 180px;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+}
+
+
+.hero-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.no-image {
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+.hero-content h2 {
+
+    margin: 0 0 8px;
+
+    color: var(--dark);
+
+    font-size: 25px;
+}
+
+
+.hero-description {
+
+    color: var(--muted);
+
+    line-height: 1.7;
+
+    font-size: 14px;
+
+    margin: 0 0 15px;
+}
+
+
+.hero-meta {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+.meta-chip {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 7px 10px;
+
+    border-radius: 8px;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+
+    color: var(--text);
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 7px 11px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    white-space: nowrap;
+}
+
+
+.badge-dot {
+
+    width: 7px;
+
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+.badge-running {
+
+    color: #15803d;
+
+    background: var(--success-bg);
+}
+
+
+.badge-approved {
+
+    color: #1d4ed8;
+
+    background: #dbeafe;
+}
+
+
+.badge-pending {
+
+    color: #92400e;
+
+    background: var(--warning-bg);
+}
+
+
+.badge-rejected,
+.badge-cancelled {
+
+    color: #991b1b;
+
+    background: var(--danger-bg);
+}
+
+
+.badge-expired {
+
+    color: #475569;
+
+    background: #e2e8f0;
+}
+
+
+.badge-waiting {
+
+    color: #6d28d9;
+
+    background: var(--purple-bg);
+}
+
+
+/* =====================================================
+   INFORMATION GRID
+===================================================== */
+
+.info-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+}
+
+
+.info-item {
+
+    padding: 15px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    background: #fbfdff;
+}
+
+
+.info-label {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    text-transform: uppercase;
+
+    letter-spacing: .04em;
+
+    margin-bottom: 7px;
+}
+
+
+.info-value {
+
+    color: var(--dark);
+
+    font-size: 14px;
+
+    font-weight: 650;
+
+    word-break: break-word;
+}
+
+
+.info-value.normal {
+
+    font-weight: 500;
+
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   PROFESSIONAL MEDIA SECTION
+===================================================== */
+
+.media-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    gap: 22px;
+}
+
+
+.media-card {
+
+    border: 1px solid var(--border);
+
+    border-radius: 16px;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #f8fafc,
+            #eef2ff
+        );
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, .05);
+}
+
+
+.media-card-title {
+
+    min-height: 58px;
+
+    padding: 14px 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    font-size: 14px;
+
+    font-weight: 750;
+
+    color: var(--dark);
+
+    border-bottom: 1px solid var(--border);
+
+    background: rgba(255,255,255,.96);
+}
+
+
+.media-title-left {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.media-title-icon {
+
+    width: 34px;
+
+    height: 34px;
+
+    border-radius: 9px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #dbeafe;
+
+    color: var(--primary);
+
+    font-size: 14px;
+
+    font-weight: 800;
+}
+
+
+.media-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    background: #ecfdf5;
+
+    color: #15803d;
+
+    border: 1px solid #bbf7d0;
+
+    font-size: 10px;
+
+    font-weight: 750;
+
+    text-transform: uppercase;
+
+    letter-spacing: .04em;
+}
+
+
+.media-status-dot {
+
+    width: 6px;
+
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: #16a34a;
+}
+
+
+/* =====================================================
+   600 x 600 MEDIA PREVIEW
+===================================================== */
+
+.media-preview-area {
+
+    width: 600px;
+
+    height: 600px;
+
+    max-width: 100%;
+
+    margin: 22px auto;
+
+    padding: 12px;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f1f5f9
+        );
+
+    border: 1px solid #dbe3ef;
+
+    box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.7),
+        0 10px 30px rgba(15,23,42,.07);
+}
+
+
+.media-preview-area::before {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 12px;
+
+    border: 1px dashed #cbd5e1;
+
+    border-radius: 10px;
+
+    pointer-events: none;
+}
+
+
+.media-preview-area img,
+.media-preview-area video {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: contain;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    background: #f8fafc;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+
+.media-preview-area img:hover,
+.media-preview-area video:hover {
+
+    transform: scale(.985);
+
+    box-shadow:
+        0 8px 25px rgba(37,99,235,.12);
+}
+
+
+.media-empty-large {
+
+    position: relative;
+
+    z-index: 2;
+
+    width: 100%;
+
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+.media-empty-icon {
+
+    width: 60px;
+
+    height: 60px;
+
+    border-radius: 16px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin-bottom: 12px;
+
+    background: #e2e8f0;
+
+    color: #64748b;
+
+    font-size: 23px;
+
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   MEDIA FOOTER
+===================================================== */
+
+.media-footer {
+
+    padding: 14px 18px 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    border-top: 1px solid var(--border);
+
+    background: rgba(255,255,255,.9);
+}
+
+
+.media-view-btn {
+
+    border: 0;
+
+    padding: 10px 18px;
+
+    border-radius: 9px;
+
+    background: var(--primary);
+
+    color: #ffffff;
+
+    font-size: 12px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.media-view-btn:hover {
+
+    background: var(--primary-dark);
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 7px 18px rgba(37,99,235,.2);
+}
+
+
+.media-file-label {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   600 x 600 PROFESSIONAL POPUP
+===================================================== */
+
+.media-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 999999;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(2, 6, 23, .88);
+
+    backdrop-filter: blur(8px);
+
+    -webkit-backdrop-filter: blur(8px);
+}
+
+
+.media-modal.active {
+
+    display: flex;
+}
+
+
+/*
+   IMPORTANT:
+   Clicking outside the popup does NOT close it.
+   There is intentionally NO backdrop click handler.
+*/
+
+
+.media-modal-content {
+
+    position: relative;
+
+    width: 600px;
+
+    height: 600px;
+
+    max-width: 94vw;
+
+    max-height: 88vh;
+
+    padding: 52px 18px 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #ffffff,
+            #f8fafc
+        );
+
+    border: 1px solid rgba(255,255,255,.45);
+
+    box-shadow:
+        0 35px 90px rgba(0,0,0,.42);
+}
+
+
+/* =====================================================
+   MODAL TITLE
+===================================================== */
+
+.media-modal-title {
+
+    position: absolute;
+
+    left: 18px;
+
+    top: 15px;
+
+    color: var(--dark);
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    letter-spacing: .02em;
+}
+
+
+/* =====================================================
+   ONLY CLOSE BUTTON
+===================================================== */
+
+.media-modal-close {
+
+    position: absolute;
+
+    top: 10px;
+
+    right: 12px;
+
+    z-index: 20;
+
+    width: 38px;
+
+    height: 38px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #fee2e2;
+
+    color: #991b1b;
+
+    font-size: 24px;
+
+    line-height: 1;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+}
+
+
+.media-modal-close:hover {
+
+    background: #fecaca;
+
+    transform: scale(1.04);
+}
+
+
+/* =====================================================
+   MODAL MEDIA
+===================================================== */
+
+.media-modal-image,
+.media-modal-video {
+
+    width: 100%;
+
+    height: 100%;
+
+    max-width: 100%;
+
+    max-height: 100%;
+
+    object-fit: contain;
+
+    border-radius: 11px;
+
+    background: #f1f5f9;
+}
+
+
+.media-modal-hint {
+
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 7px;
+
+    transform: translateX(-50%);
+
+    color: #64748b;
+
+    font-size: 9px;
+
+    white-space: nowrap;
+
+    pointer-events: none;
+}
+
+
+/* =====================================================
+   ANALYTICS
+===================================================== */
+
+.analytics-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 13px;
+}
+
+
+.analytics-item {
+
+    padding: 19px;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f8fafc,
+            #eff6ff
+        );
+
+    border: 1px solid #dbeafe;
+}
+
+
+.analytics-icon {
+
+    width: 35px;
+
+    height: 35px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #dbeafe;
+
+    color: var(--primary);
+
+    font-size: 14px;
+
+    margin-bottom: 12px;
+}
+
+
+.analytics-number {
+
+    color: var(--dark);
+
+    font-size: 25px;
+
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+
+.analytics-label {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    margin-top: 7px;
+}
+
+
+/* =====================================================
+   TIMELINE
+===================================================== */
+
+.timeline {
+
+    position: relative;
+
+    padding-left: 28px;
+}
+
+
+.timeline::before {
+
+    content: "";
+
+    position: absolute;
+
+    left: 7px;
+
+    top: 7px;
+
+    bottom: 7px;
+
+    width: 2px;
+
+    background: var(--border);
+}
+
+
+.timeline-item {
+
+    position: relative;
+
+    padding-bottom: 22px;
+}
+
+
+.timeline-item:last-child {
+
+    padding-bottom: 0;
+}
+
+
+.timeline-dot {
+
+    position: absolute;
+
+    left: -28px;
+
+    top: 3px;
+
+    width: 16px;
+
+    height: 16px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    border: 4px solid var(--primary);
+}
+
+
+.timeline-title {
+
+    color: var(--dark);
+
+    font-weight: 700;
+
+    font-size: 13px;
+}
+
+
+.timeline-date {
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    margin-top: 4px;
+}
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.sidebar-card {
+
+    position: sticky;
+
+    top: 20px;
+}
+
+
+.status-large {
+
+    text-align: center;
+
+    padding: 25px 15px;
+
+    border-radius: 13px;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+
+    margin-bottom: 18px;
+}
+
+
+.status-large .badge {
+
+    font-size: 12px;
+
+    padding: 9px 15px;
+}
+
+
+.status-note {
+
+    margin: 12px 0 0;
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   SIDE LIST
+===================================================== */
+
+.side-list {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 0;
+}
+
+
+.side-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 13px 0;
+
+    border-bottom: 1px solid #f1f5f9;
+}
+
+
+.side-row:last-child {
+
+    border-bottom: 0;
+}
+
+
+.side-label {
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+.side-value {
+
+    color: var(--dark);
+
+    font-size: 12px;
+
+    font-weight: 650;
+
+    text-align: right;
+
+    word-break: break-word;
+}
+
+
+/* =====================================================
+   PLAN
+===================================================== */
+
+.plan-card {
+
+    padding: 20px;
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #eef2ff
+        );
+
+    border: 1px solid #c7d2fe;
+}
+
+
+.plan-name {
+
+    color: var(--primary);
+
+    font-size: 12px;
+
+    font-weight: 750;
+
+    text-transform: uppercase;
+
+    letter-spacing: .05em;
+}
+
+
+.plan-price {
+
+    color: var(--dark);
+
+    font-size: 28px;
+
+    font-weight: 800;
+
+    margin: 6px 0;
+}
+
+
+.plan-duration {
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   APPROVAL BOX
+===================================================== */
+
+.approval-box {
+
+    padding: 16px;
+
+    border-radius: 12px;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+}
+
+
+.approval-status {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 13px;
+}
+
+
+.approval-icon {
+
+    width: 36px;
+
+    height: 36px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: var(--success-bg);
+
+    color: var(--success);
+
+    font-weight: 800;
+}
+
+
+/* =====================================================
+   APPROVED DATE
+===================================================== */
+
+.approved-date-box {
+
+    margin-top: 16px;
+
+    padding: 16px 18px;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ecfdf5,
+            #f0fdf4
+        );
+
+    border: 1px solid #bbf7d0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.approved-date-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #dcfce7;
+
+    color: #15803d;
+
+    font-size: 19px;
+
+    font-weight: 800;
+}
+
+
+.approved-date-content {
+
+    min-width: 0;
+}
+
+
+.approved-date-label {
+
+    color: #166534;
+
+    font-size: 11px;
+
+    font-weight: 750;
+
+    text-transform: uppercase;
+
+    letter-spacing: .05em;
+
+    margin-bottom: 4px;
+}
+
+
+.approved-date-value {
+
+    color: #14532d;
+
+    font-size: 15px;
+
+    font-weight: 750;
+
+    word-break: break-word;
+}
+
+
+.approved-date-empty {
+
+    color: #92400e;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   ALERT
+===================================================== */
+
+.alert {
+
+    padding: 14px 16px;
+
+    border-radius: 11px;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+
+.alert-danger {
+
+    color: #991b1b;
+
+    background: var(--danger-bg);
+
+    border: 1px solid #fecaca;
+}
+
+
+.alert-warning {
+
+    color: #92400e;
+
+    background: var(--warning-bg);
+
+    border: 1px solid #fde68a;
+}
+
+
+/* =====================================================
+   AUDIT LOG
+===================================================== */
+
+.audit-log {
+
+    background: #0f172a;
+
+    color: #cbd5e1;
+
+    border-radius: 12px;
+
+    padding: 18px;
+
+    overflow-x: auto;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 12px;
+
+    line-height: 1.7;
+
+    max-height: 350px;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media(max-width:1100px) {
+
+    .dashboard-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar-card {
+
+        position: static;
+    }
+
+}
+
+
+@media(max-width:700px) {
+
+    .media-preview-area {
+
+        width: 600px;
+
+        height: 600px;
+
+        max-width: calc(100vw - 80px);
+
+        max-height: calc(100vw - 80px);
+    }
+
+
+    .media-modal-content {
+
+        width: 600px;
+
+        height: 600px;
+
+        max-width: 94vw;
+
+        max-height: 82vh;
+    }
+
+}
+
+
+@media(max-width:800px) {
+
+    .advertisement-hero {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .hero-image {
+
+        width: 100%;
+
+        height: 250px;
+    }
+
+
+    .analytics-grid {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media(max-width:600px) {
+
+    .container {
+
+        width: 92%;
+
+        margin-top: 15px;
+    }
+
+
+    .top-header {
+
+        padding: 18px;
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .header-actions {
+
+        width: 100%;
+    }
+
+
+    .header-actions .btn {
+
+        flex: 1;
+
+        text-align: center;
+    }
+
+
+    .info-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .analytics-grid {
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+
+    .card {
+
+        padding: 17px;
+    }
+
+
+    .hero-content h2 {
+
+        font-size: 21px;
+    }
+
+
+    .approved-date-box {
+
+        align-items: flex-start;
+    }
+
+
+    .media-card-title {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .media-status {
+
+        align-self: flex-start;
+    }
+
+
+    .media-preview-area {
+
+        margin: 15px auto;
+
+        max-width: calc(100vw - 60px);
+
+        max-height: calc(100vw - 60px);
+    }
+
+
+    .media-modal {
+
+        padding: 10px;
+    }
+
+
+    .media-modal-content {
+
+        width: 600px;
+
+        height: 600px;
+
+        max-width: 94vw;
+
+        max-height: 78vh;
+
+        padding-left: 10px;
+
+        padding-right: 10px;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+<!-- =====================================================
+     HEADER
+====================================================== -->
+
+<div class="top-header">
+
+    <div class="header-left">
+
+        <div class="header-icon">
+            AD
+        </div>
+
+        <div class="header-title">
+
+            <h1>
+                Advertisement Details
+            </h1>
+
+            <p>
+                Advertisement #{{ ad.id }}
+                &nbsp;•&nbsp;
+                Created
+                {{ ad.created_at|date:"d M Y" }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+        <a
+            href="javascript:history.back()"
+            class="btn btn-back"
+        >
+            ← Back
+        </a>
+
+
+        <a
+            href="{% url 'advertisement_edit_form' ad.id %}"
+            class="btn btn-edit"
+        >
+            ✎ Edit Advertisement
+        </a>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     DASHBOARD
+====================================================== -->
+
+<div class="dashboard-grid">
+
+
+<!-- =====================================================
+     MAIN CONTENT
+====================================================== -->
+
+<main>
+
+
+<!-- =====================================================
+     ADVERTISEMENT HERO
+====================================================== -->
+
+<section class="card">
+
+    <div class="advertisement-hero">
+
+
+        <div class="hero-image">
+
+            {% if ad.product_image %}
+
+                <img
+                    src="{{ ad.product_image.url }}"
+                    alt="{{ ad.title }}"
+                >
+
+            {% else %}
+
+                <div class="no-image">
+                    No Product Image
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="hero-content">
+
+            <h2>
+                {{ ad.title }}
+            </h2>
+
+
+            <p class="hero-description">
+
+                {% if ad.description %}
+
+                    {{ ad.description }}
+
+                {% else %}
+
+                    No description provided.
+
+                {% endif %}
+
+            </p>
+
+
+            <div class="hero-meta">
+
+                <span class="meta-chip">
+                    Plan:
+                    {{ ad.get_plan_display }}
+                </span>
+
+
+                <span class="meta-chip">
+                    ₹ {{ ad.amount }}
+                </span>
+
+
+                <span class="meta-chip">
+                    {{ ad.duration }} Days
+                </span>
+
+
+                {% if ad.featured %}
+
+                    <span
+                        class="meta-chip"
+                        style="
+                            color:#7c3aed;
+                            background:#ede9fe;
+                        "
+                    >
+                        ★ Featured
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ADVERTISEMENT INFORMATION
+====================================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h2 class="card-title">
+                Advertisement Information
+            </h2>
+
+            <div class="card-subtitle">
+                Basic information about this advertisement
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Advertisement ID
+            </div>
+
+            <div class="info-value">
+                #{{ ad.id }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Title
+            </div>
+
+            <div class="info-value">
+                {{ ad.title }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Plan
+            </div>
+
+            <div class="info-value">
+                {{ ad.get_plan_display }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Duration
+            </div>
+
+            <div class="info-value">
+                {{ ad.duration }} Days
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Amount
+            </div>
+
+            <div class="info-value">
+                ₹ {{ ad.amount }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Featured
+            </div>
+
+            <div class="info-value">
+
+                {% if ad.featured %}
+                    Yes
+                {% else %}
+                    No
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="info-item"
+            style="grid-column:1/-1;"
+        >
+
+            <div class="info-label">
+                Description
+            </div>
+
+            <div class="info-value normal">
+
+                {% if ad.description %}
+
+                    {{ ad.description|linebreaksbr }}
+
+                {% else %}
+
+                    No description provided.
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PROFESSIONAL MEDIA
+====================================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h2 class="card-title">
+                Advertisement Media
+            </h2>
+
+            <div class="card-subtitle">
+                Click any media preview to open the 600 × 600 professional viewer
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="media-grid">
+
+
+        <!-- =================================================
+             PRODUCT IMAGE
+        ================================================== -->
+
+        <div class="media-card">
+
+            <div class="media-card-title">
+
+                <div class="media-title-left">
+
+                    <div class="media-title-icon">
+                        IMG
+                    </div>
+
+                    <span>
+                        Product Image
+                    </span>
+
+                </div>
+
+
+                {% if ad.product_image %}
+
+                    <span class="media-status">
+
+                        <span class="media-status-dot"></span>
+
+                        Available
+
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="media-preview-area">
+
+                {% if ad.product_image %}
+
+                    <img
+                        src="{{ ad.product_image.url }}"
+                        alt="Product Image"
+                        class="popup-image"
+                        data-title="Product Image"
+                        data-image="{{ ad.product_image.url }}"
+                    >
+
+                {% else %}
+
+                    <div class="media-empty-large">
+
+                        <div class="media-empty-icon">
+                            IMG
+                        </div>
+
+                        No product image uploaded
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if ad.product_image %}
+
+            <div class="media-footer">
+
+                <button
+                    type="button"
+                    class="media-view-btn open-image"
+                    data-title="Product Image"
+                    data-image="{{ ad.product_image.url }}"
+                >
+                    View Product Image
+                </button>
+
+                <span class="media-file-label">
+                    600 × 600 Viewer
+                </span>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- =================================================
+             THUMBNAIL
+        ================================================== -->
+
+        <div class="media-card">
+
+            <div class="media-card-title">
+
+                <div class="media-title-left">
+
+                    <div class="media-title-icon">
+                        TH
+                    </div>
+
+                    <span>
+                        Video Thumbnail
+                    </span>
+
+                </div>
+
+
+                {% if ad.thumbnail %}
+
+                    <span class="media-status">
+
+                        <span class="media-status-dot"></span>
+
+                        Available
+
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="media-preview-area">
+
+                {% if ad.thumbnail %}
+
+                    <img
+                        src="{{ ad.thumbnail.url }}"
+                        alt="Video Thumbnail"
+                        class="popup-image"
+                        data-title="Video Thumbnail"
+                        data-image="{{ ad.thumbnail.url }}"
+                    >
+
+                {% else %}
+
+                    <div class="media-empty-large">
+
+                        <div class="media-empty-icon">
+                            TH
+                        </div>
+
+                        No thumbnail uploaded
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if ad.thumbnail %}
+
+            <div class="media-footer">
+
+                <button
+                    type="button"
+                    class="media-view-btn open-image"
+                    data-title="Video Thumbnail"
+                    data-image="{{ ad.thumbnail.url }}"
+                >
+                    View Thumbnail
+                </button>
+
+                <span class="media-file-label">
+                    600 × 600 Viewer
+                </span>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- =================================================
+             ADVERTISEMENT VIDEO
+        ================================================== -->
+
+        <div class="media-card">
+
+            <div class="media-card-title">
+
+                <div class="media-title-left">
+
+                    <div class="media-title-icon">
+                        VID
+                    </div>
+
+                    <span>
+                        Advertisement Video
+                    </span>
+
+                </div>
+
+
+                {% if ad.video %}
+
+                    <span class="media-status">
+
+                        <span class="media-status-dot"></span>
+
+                        Available
+
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="media-preview-area">
+
+                {% if ad.video %}
+
+                    <video
+                        class="popup-video"
+                        controls
+                        preload="metadata"
+                        playsinline
+                        poster="{% if ad.thumbnail %}{{ ad.thumbnail.url }}{% endif %}"
+                        data-title="Advertisement Video"
+                        data-video="{{ ad.video.url }}"
+                    >
+
+                        <source
+                            src="{{ ad.video.url }}"
+                        >
+
+                        Your browser does not support
+                        video playback.
+
+                    </video>
+
+                {% else %}
+
+                    <div class="media-empty-large">
+
+                        <div class="media-empty-icon">
+                            VID
+                        </div>
+
+                        No advertisement video uploaded
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if ad.video %}
+
+            <div class="media-footer">
+
+                <button
+                    type="button"
+                    class="media-view-btn open-video"
+                    data-title="Advertisement Video"
+                    data-video="{{ ad.video.url }}"
+                >
+                    View Advertisement Video
+                </button>
+
+                <span class="media-file-label">
+                    600 × 600 Viewer
+                </span>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     SCHEDULE
+====================================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h2 class="card-title">
+                Advertisement Schedule
+            </h2>
+
+            <div class="card-subtitle">
+                Campaign start and expiry information
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Start Date
+            </div>
+
+            <div class="info-value">
+                {{ ad.start_date|date:"d M Y"|default:"-" }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                End Date
+            </div>
+
+            <div class="info-value">
+                {{ ad.end_date|date:"d M Y"|default:"-" }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Start Date & Time
+            </div>
+
+            <div class="info-value">
+                {{ ad.start_datetime|date:"d M Y, h:i A"|default:"-" }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                End Date & Time
+            </div>
+
+            <div class="info-value">
+                {{ ad.end_datetime|date:"d M Y, h:i A"|default:"-" }}
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     ANALYTICS
+====================================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h2 class="card-title">
+                Advertisement Analytics
+            </h2>
+
+            <div class="card-subtitle">
+                Performance statistics
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="analytics-grid">
+
+
+        <div class="analytics-item">
+
+            <div class="analytics-icon">
+                👁
+            </div>
+
+            <div class="analytics-number">
+                {{ ad.views }}
+            </div>
+
+            <div class="analytics-label">
+                Total Views
+            </div>
+
+        </div>
+
+
+        <div class="analytics-item">
+
+            <div class="analytics-icon">
+                ↗
+            </div>
+
+            <div class="analytics-number">
+                {{ ad.clicks }}
+            </div>
+
+            <div class="analytics-label">
+                Total Clicks
+            </div>
+
+        </div>
+
+
+        <div class="analytics-item">
+
+            <div class="analytics-icon">
+                %
+            </div>
+
+            <div class="analytics-number">
+                {{ ad.ctr|floatformat:2 }}%
+            </div>
+
+            <div class="analytics-label">
+                Click Through Rate
+            </div>
+
+        </div>
+
+
+        <div class="analytics-item">
+
+            <div class="analytics-icon">
+                ★
+            </div>
+
+            <div class="analytics-number">
+
+                {% if ad.featured %}
+                    YES
+                {% else %}
+                    NO
+                {% endif %}
+
+            </div>
+
+            <div class="analytics-label">
+                Featured Advertisement
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     PAYMENT
+====================================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h2 class="card-title">
+                Payment Information
+            </h2>
+
+            <div class="card-subtitle">
+                Payment and transaction details
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Payment Status
+            </div>
+
+            <div class="info-value">
+                {{ ad.get_payment_status_display }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Payment Method
+            </div>
+
+            <div class="info-value">
+                {{ ad.get_payment_method_display|default:"-" }}
+            </div>
+
+        </div>
+
+
+        <div
+            class="info-item"
+            style="grid-column:1/-1;"
+        >
+
+            <div class="info-label">
+                Payment ID
+            </div>
+
+            <div class="info-value">
+                {{ ad.payment_id|default:"-" }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Paid At
+            </div>
+
+            <div class="info-value">
+                {{ ad.paid_at|date:"d M Y, h:i A"|default:"-" }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Invoice
+            </div>
+
+            <div class="info-value">
+
+                {% if ad.invoice_pdf %}
+
+                    <a
+                        href="{{ ad.invoice_pdf.url }}"
+                        target="_blank"
+                        style="
+                            color:#2563eb;
+                            text-decoration:none;
+                            font-weight:700;
+                        "
+                    >
+                        View Invoice →
+                    </a>
+
+                {% else %}
+
+                    No Invoice
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     APPROVAL
+====================================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h2 class="card-title">
+                Approval Information
+            </h2>
+
+            <div class="card-subtitle">
+                Administrative review details
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="approval-box">
+
+
+        <div class="approval-status">
+
+            <div class="approval-icon">
+                ✓
+            </div>
+
+            <div>
+
+                <div class="info-value">
+
+                    {% if ad.approved_by %}
+
+                        Approved
+
+                    {% else %}
+
+                        Not Approved
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="card-subtitle">
+
+                    {% if ad.approved_at %}
+
+                        Approved on
+                        {{ ad.approved_at|date:"d M Y, h:i A" }}
+
+                    {% else %}
+
+                        Awaiting approval date
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="info-grid">
+
+
+            <div>
+
+                <div class="info-label">
+                    Approved By
+                </div>
+
+                <div class="info-value">
+
+                    {% if ad.approved_by %}
+
+                        {{ ad.approved_by.username }}
+
+                    {% else %}
+
+                        -
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+
+            <div>
+
+                <div class="info-label">
+                    Approval Status
+                </div>
+
+                <div class="info-value">
+
+                    {% if ad.approved_by %}
+                        Approved
+                    {% else %}
+                        Pending
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="approved-date-box">
+
+            <div class="approved-date-icon">
+                ✓
+            </div>
+
+
+            <div class="approved-date-content">
+
+                <div class="approved-date-label">
+                    Approved Date & Time
+                </div>
+
+
+                {% if ad.approved_at %}
+
+                    <div class="approved-date-value">
+
+                        {{ ad.approved_at|date:"d M Y, h:i A" }}
+
+                    </div>
+
+                {% elif ad.approved_by and ad.updated_at %}
+
+                    <div class="approved-date-value">
+
+                        {{ ad.updated_at|date:"d M Y, h:i A" }}
+
+                    </div>
+
+                    <div
+                        style="
+                            color:#64748b;
+                            font-size:10px;
+                            margin-top:3px;
+                        "
+                    >
+                        Showing last updated date because
+                        approved_at is empty.
+                    </div>
+
+                {% else %}
+
+                    <div class="approved-date-empty">
+
+                        Approval date has not been recorded yet.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    {% if ad.rejected_reason %}
+
+        <div
+            class="alert alert-danger"
+            style="margin-top:15px;"
+        >
+
+            <strong>
+                Rejection Reason
+            </strong>
+
+            <br>
+
+            {{ ad.rejected_reason|linebreaksbr }}
+
+        </div>
+
+    {% endif %}
+
+
+</section>
+
+
+
+<!-- =====================================================
+     RENEWAL
+====================================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h2 class="card-title">
+                Renewal Information
+            </h2>
+
+            <div class="card-subtitle">
+                Advertisement renewal history
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-grid">
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Renewal Status
+            </div>
+
+            <div class="info-value">
+
+                {% if ad.is_renewed %}
+
+                    Renewed
+
+                {% else %}
+
+                    Not Renewed
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Renewal Date
+            </div>
+
+            <div class="info-value">
+                {{ ad.renewal_date|date:"d M Y"|default:"-" }}
+            </div>
+
+        </div>
+
+
+        <div class="info-item">
+
+            <div class="info-label">
+                Renewal Expiry
+            </div>
+
+            <div class="info-value">
+                {{ ad.renewal_expiry|date:"d M Y"|default:"-" }}
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     AUDIT LOG
+====================================================== -->
+
+{% if ad.audit_log %}
+
+<section class="card">
+
+    <div class="card-header">
+
+        <div>
+
+            <h2 class="card-title">
+                Audit Log
+            </h2>
+
+            <div class="card-subtitle">
+                Advertisement activity history
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="audit-log">
+
+        {{ ad.audit_log|pprint }}
+
+    </div>
+
+</section>
+
+{% endif %}
+
+
+</main>
+
+
+
+<!-- =====================================================
+     SIDEBAR
+====================================================== -->
+
+<aside>
+
+
+<div class="card sidebar-card">
+
+
+<!-- =================================================
+     CURRENT STATUS
+================================================== -->
+
+<div class="card-header">
+
+    <div>
+
+        <h2 class="card-title">
+            Current Status
+        </h2>
+
+    </div>
+
+</div>
+
+
+<div class="status-large">
+
+
+{% if ad.status == "RUNNING" %}
+
+    <span class="badge badge-running">
+
+        <span class="badge-dot"></span>
+
+        {{ ad.get_status_display }}
+
+    </span>
+
+
+{% elif ad.status == "APPROVED" %}
+
+    <span class="badge badge-approved">
+
+        <span class="badge-dot"></span>
+
+        {{ ad.get_status_display }}
+
+    </span>
+
+
+{% elif ad.status == "PENDING_PAYMENT" %}
+
+    <span class="badge badge-pending">
+
+        <span class="badge-dot"></span>
+
+        {{ ad.get_status_display }}
+
+    </span>
+
+
+{% elif ad.status == "WAITING_APPROVAL" %}
+
+    <span class="badge badge-waiting">
+
+        <span class="badge-dot"></span>
+
+        {{ ad.get_status_display }}
+
+    </span>
+
+
+{% elif ad.status == "REJECTED" %}
+
+    <span class="badge badge-rejected">
+
+        <span class="badge-dot"></span>
+
+        {{ ad.get_status_display }}
+
+    </span>
+
+
+{% elif ad.status == "CANCELLED" %}
+
+    <span class="badge badge-cancelled">
+
+        <span class="badge-dot"></span>
+
+        {{ ad.get_status_display }}
+
+    </span>
+
+
+{% elif ad.status == "EXPIRED" %}
+
+    <span class="badge badge-expired">
+
+        <span class="badge-dot"></span>
+
+        {{ ad.get_status_display }}
+
+    </span>
+
+
+{% else %}
+
+    <span class="badge badge-pending">
+
+        <span class="badge-dot"></span>
+
+        {{ ad.get_status_display }}
+
+    </span>
+
+{% endif %}
+
+
+
+<p class="status-note">
+
+
+{% if ad.status == "RUNNING" %}
+
+    This advertisement is currently
+    active and being displayed.
+
+
+{% elif ad.status == "APPROVED" %}
+
+    This advertisement has been approved
+    and is scheduled to run.
+
+
+{% elif ad.status == "EXPIRED" %}
+
+    This advertisement campaign has ended.
+
+
+{% elif ad.status == "REJECTED" %}
+
+    This advertisement was rejected
+    by an administrator.
+
+
+{% elif ad.status == "CANCELLED" %}
+
+    This advertisement has been cancelled.
+
+
+{% else %}
+
+    Advertisement is currently in
+    {{ ad.get_status_display|lower }}
+    status.
+
+{% endif %}
+
+
+</p>
+
+</div>
+
+
+
+<!-- =================================================
+     SELLER
+================================================== -->
+
+<div class="card-header">
+
+    <div>
+
+        <h2 class="card-title">
+            Seller
+        </h2>
+
+    </div>
+
+</div>
+
+
+<div class="side-list">
+
+
+<div class="side-row">
+
+    <span class="side-label">
+        Username
+    </span>
+
+    <span class="side-value">
+        {{ ad.seller.username }}
+    </span>
+
+</div>
+
+
+<div class="side-row">
+
+    <span class="side-label">
+        Name
+    </span>
+
+    <span class="side-value">
+
+        {{ ad.seller.get_full_name|default:"-" }}
+
+    </span>
+
+</div>
+
+
+<div class="side-row">
+
+    <span class="side-label">
+        Email
+    </span>
+
+    <span class="side-value">
+
+        {{ ad.seller.email|default:"-" }}
+
+    </span>
+
+</div>
+
+
+</div>
+
+
+
+<!-- =================================================
+     PLAN
+================================================== -->
+
+<div
+    class="plan-card"
+    style="margin-top:22px;"
+>
+
+    <div class="plan-name">
+
+        {{ ad.get_plan_display }}
+
+    </div>
+
+    <div class="plan-price">
+
+        ₹ {{ ad.amount }}
+
+    </div>
+
+    <div class="plan-duration">
+
+        {{ ad.duration }} day campaign
+
+    </div>
+
+</div>
+
+
+
+<!-- =================================================
+     RECORD
+================================================== -->
+
+<div
+    class="card-header"
+    style="margin-top:25px;"
+>
+
+    <div>
+
+        <h2 class="card-title">
+            Record Information
+        </h2>
+
+    </div>
+
+</div>
+
+
+<div class="side-list">
+
+
+<div class="side-row">
+
+    <span class="side-label">
+        Advertisement ID
+    </span>
+
+    <span class="side-value">
+        #{{ ad.id }}
+    </span>
+
+</div>
+
+
+<div class="side-row">
+
+    <span class="side-label">
+        Created
+    </span>
+
+    <span class="side-value">
+
+        {{ ad.created_at|date:"d M Y, h:i A" }}
+
+    </span>
+
+</div>
+
+
+<div class="side-row">
+
+    <span class="side-label">
+        Payment
+    </span>
+
+    <span class="side-value">
+
+        {{ ad.get_payment_status_display }}
+
+    </span>
+
+</div>
+
+
+<div class="side-row">
+
+    <span class="side-label">
+        Approved
+    </span>
+
+    <span class="side-value">
+
+        {% if ad.approved_at %}
+
+            {{ ad.approved_at|date:"d M Y, h:i A" }}
+
+        {% elif ad.approved_by and ad.updated_at %}
+
+            {{ ad.updated_at|date:"d M Y, h:i A" }}
+
+        {% else %}
+
+            -
+
+        {% endif %}
+
+    </span>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</aside>
+
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     MEDIA POPUP
+     
+     IMPORTANT:
+     1. Outside click DOES NOT close.
+     2. ESC DOES NOT close.
+     3. Only Close button closes.
+====================================================== -->
+
+<div
+    id="mediaModal"
+    class="media-modal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="mediaModalTitle"
+>
+
+    <div
+        class="media-modal-content"
+        id="mediaModalContent"
+    >
+
+        <div
+            class="media-modal-title"
+            id="mediaModalTitle"
+        >
+            Media Preview
+        </div>
+
+
+        <!-- ONLY CLOSE BUTTON -->
+
+        <button
+            type="button"
+            class="media-modal-close"
+            id="mediaModalClose"
+            aria-label="Close preview"
+            title="Close"
+        >
+            ×
+        </button>
+
+
+        <!-- IMAGE -->
+
+        <img
+            id="mediaModalImage"
+            class="media-modal-image"
+            alt="Media preview"
+            style="display:none;"
+        >
+
+
+        <!-- VIDEO -->
+
+        <video
+            id="mediaModalVideo"
+            class="media-modal-video"
+            controls
+            playsinline
+            preload="metadata"
+            style="display:none;"
+        ></video>
+
+
+        <div class="media-modal-hint">
+            Use the Close button to exit preview
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   PROFESSIONAL MEDIA POPUP
+===================================================== */
+
+(function () {
+
+    "use strict";
+
+
+    const modal =
+        document.getElementById("mediaModal");
+
+    const modalTitle =
+        document.getElementById("mediaModalTitle");
+
+    const modalImage =
+        document.getElementById("mediaModalImage");
+
+    const modalVideo =
+        document.getElementById("mediaModalVideo");
+
+    const closeButton =
+        document.getElementById("mediaModalClose");
+
+    const modalContent =
+        document.getElementById("mediaModalContent");
+
+
+    if (
+        !modal ||
+        !modalTitle ||
+        !modalImage ||
+        !modalVideo ||
+        !closeButton
+    ) {
+        return;
+    }
+
+
+    let previousBodyOverflow = "";
+
+
+    /* =================================================
+       OPEN IMAGE
+    ================================================= */
+
+    function openImage(title, imageUrl) {
+
+        modalTitle.textContent =
+            title || "Image Preview";
+
+
+        modalImage.src = imageUrl;
+
+        modalImage.alt =
+            title || "Image Preview";
+
+        modalImage.style.display = "block";
+
+
+        modalVideo.pause();
+
+        modalVideo.removeAttribute("src");
+
+        modalVideo.load();
+
+        modalVideo.style.display = "none";
+
+
+        previousBodyOverflow =
+            document.body.style.overflow;
+
+        document.body.style.overflow =
+            "hidden";
+
+
+        modal.classList.add("active");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+    }
+
+
+    /* =================================================
+       OPEN VIDEO
+    ================================================= */
+
+    function openVideo(title, videoUrl) {
+
+        modalTitle.textContent =
+            title || "Video Preview";
+
+
+        modalImage.removeAttribute("src");
+
+        modalImage.style.display = "none";
+
+
+        modalVideo.pause();
+
+        modalVideo.src = videoUrl;
+
+        modalVideo.style.display = "block";
+
+        modalVideo.load();
+
+
+        previousBodyOverflow =
+            document.body.style.overflow;
+
+        document.body.style.overflow =
+            "hidden";
+
+
+        modal.classList.add("active");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+    }
+
+
+    /* =================================================
+       CLOSE
+       
+       ONLY THIS FUNCTION IS CONNECTED
+       TO THE CLOSE BUTTON.
+    ================================================= */
+
+    function closeModal() {
+
+        modal.classList.remove("active");
+
+        modal.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+
+        modalImage.removeAttribute("src");
+
+        modalImage.style.display =
+            "none";
+
+
+        modalVideo.pause();
+
+        modalVideo.removeAttribute("src");
+
+        modalVideo.load();
+
+        modalVideo.style.display =
+            "none";
+
+
+        document.body.style.overflow =
+            previousBodyOverflow || "";
+
+    }
+
+
+    /* =================================================
+       IMAGE PREVIEW CLICK
+    ================================================= */
+
+    document
+        .querySelectorAll(".popup-image")
+        .forEach(function (image) {
+
+            image.addEventListener(
+                "click",
+                function () {
+
+                    openImage(
+                        this.dataset.title,
+                        this.dataset.image
+                    );
+
+                }
+            );
+
+        });
+
+
+    /* =================================================
+       IMAGE VIEW BUTTON
+    ================================================= */
+
+    document
+        .querySelectorAll(".open-image")
+        .forEach(function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    openImage(
+                        this.dataset.title,
+                        this.dataset.image
+                    );
+
+                }
+            );
+
+        });
+
+
+    /* =================================================
+       VIDEO PREVIEW CLICK
+    ================================================= */
+
+    document
+        .querySelectorAll(".popup-video")
+        .forEach(function (video) {
+
+            video.addEventListener(
+                "dblclick",
+                function (event) {
+
+                    event.preventDefault();
+
+                    openVideo(
+                        this.dataset.title,
+                        this.dataset.video
+                    );
+
+                }
+            );
+
+        });
+
+
+    /* =================================================
+       VIDEO VIEW BUTTON
+    ================================================= */
+
+    document
+        .querySelectorAll(".open-video")
+        .forEach(function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    openVideo(
+                        this.dataset.title,
+                        this.dataset.video
+                    );
+
+                }
+            );
+
+        });
+
+
+    /* =================================================
+       CLOSE BUTTON ONLY
+    ================================================= */
+
+    closeButton.addEventListener(
+        "click",
+        function (event) {
+
+            event.preventDefault();
+
+            event.stopPropagation();
+
+            closeModal();
+
+        }
+    );
+
+
+    /* =================================================
+       IMPORTANT:
+       NO OUTSIDE CLICK CLOSE HANDLER
+       
+       Therefore clicking:
+       - black background
+       - outside modal content
+       - modal content background
+       
+       WILL NOT CLOSE THE POPUP.
+    ================================================= */
+
+
+    modal.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+        }
+    );
+
+
+    /* =================================================
+       IMPORTANT:
+       ESCAPE KEY DOES NOTHING
+       
+       There is intentionally NO:
+       
+       document.addEventListener("keydown", ...)
+       
+       close handler.
+    ================================================= */
+
+
+    /* =================================================
+       PROTECT MODAL CONTENT
+    ================================================= */
+
+    if (modalContent) {
+
+        modalContent.addEventListener(
+            "click",
+            function (event) {
+
+                event.stopPropagation();
+
+            }
+        );
+
+    }
+
+
+})();
+
+</script>
+
+
+</body>
+
+</html>
+
+{% endblock %}

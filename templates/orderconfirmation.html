@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Order Confirmation</title>
+</head>
+<body>
+    <h2>Thank you for your order, {{ checkout_data.full_name }}!</h2>
+    <p>Your order has been received and is now being processed.</p>
+
+    <h3>Shipping Address</h3>
+    <p>
+        {{ checkout_data.address_line1 }}<br>
+        {{ checkout_data.address_line2 }}<br>
+        {{ checkout_data.city }}, {{ checkout_data.state }}<br>
+        {{ checkout_data.postal_code }}<br>
+        Phone: {{ checkout_data.phone }}
+    </p>
+
+    <h3>Order Details</h3>
+    <ul>
+        {% for order in placed_items %}
+            <li>{{ order.product.name }} - Quantity: {{ order.quantity }}</li>
+        {% endfor %}
+    </ul>
+
+    <p>We’ll notify you when your items are shipped.</p>
+</body>
+</html>

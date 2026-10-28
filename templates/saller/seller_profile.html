@@ -1,0 +1,1607 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Seller Profile Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <!-- Bootstrap Icons -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+        rel="stylesheet"
+    >
+
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        /* ==============================
+           GLOBAL
+        ============================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Inter", sans-serif;
+            background:
+                radial-gradient(circle at top left, rgba(79, 70, 229, 0.08), transparent 30%),
+                radial-gradient(circle at bottom right, rgba(14, 165, 233, 0.08), transparent 30%),
+                #f4f7fb;
+            color: #172033;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+
+        /* ==============================
+           PAGE WRAPPER
+        ============================== */
+
+        .dashboard-wrapper {
+            max-width: 1250px;
+            margin: auto;
+            padding: 40px 20px;
+        }
+
+
+        /* ==============================
+           MAIN CARD
+        ============================== */
+
+        .dashboard-card {
+            border: 0;
+            border-radius: 24px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow:
+                0 20px 60px rgba(15, 23, 42, 0.08),
+                0 4px 15px rgba(15, 23, 42, 0.04);
+        }
+
+
+        /* ==============================
+           HEADER
+        ============================== */
+
+        .dashboard-header {
+            position: relative;
+            padding: 28px 32px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #111827 0%,
+                    #1e293b 45%,
+                    #312e81 100%
+                );
+            color: white;
+            overflow: hidden;
+        }
+
+        .dashboard-header::before {
+            content: "";
+            position: absolute;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            top: -150px;
+            right: -80px;
+        }
+
+        .dashboard-header::after {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(99,102,241,0.18);
+            bottom: -100px;
+            left: 35%;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-icon {
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.12);
+            font-size: 21px;
+        }
+
+        .header-title h4 {
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+
+        .header-subtitle {
+            margin: 5px 0 0 58px;
+            color: rgba(255,255,255,0.65);
+            font-size: 13px;
+        }
+
+
+        /* ==============================
+           STATUS
+        ============================== */
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 9px 16px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-approved {
+            background: rgba(34,197,94,0.15);
+            color: #86efac;
+            border: 1px solid rgba(134,239,172,0.2);
+        }
+
+        .status-pending {
+            background: rgba(250,204,21,0.15);
+            color: #fde68a;
+            border: 1px solid rgba(253,230,138,0.2);
+        }
+
+        .status-rejected {
+            background: rgba(239,68,68,0.15);
+            color: #fca5a5;
+            border: 1px solid rgba(252,165,165,0.2);
+        }
+
+        .status-blocked {
+            background: rgba(148,163,184,0.15);
+            color: #cbd5e1;
+            border: 1px solid rgba(203,213,225,0.2);
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+
+        /* ==============================
+           PROFILE HERO
+        ============================== */
+
+        .profile-section {
+            padding: 38px 32px;
+            background: linear-gradient(
+                180deg,
+                #ffffff 0%,
+                #fafbff 100%
+            );
+            border-bottom: 1px solid #eef0f5;
+        }
+
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .profile-photo-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .profile-photo {
+            width: 125px;
+            height: 125px;
+            object-fit: cover;
+            border-radius: 30px;
+            border: 5px solid #fff;
+            box-shadow:
+                0 10px 30px rgba(15,23,42,0.15);
+        }
+
+        .online-indicator {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            width: 21px;
+            height: 21px;
+            border-radius: 50%;
+            background: #22c55e;
+            border: 4px solid white;
+        }
+
+        .profile-details h2 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .username {
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .username i {
+            color: #6366f1;
+        }
+
+        .seller-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 13px;
+            padding: 7px 12px;
+            border-radius: 8px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+
+        /* ==============================
+           CONTENT
+        ============================== */
+
+        .dashboard-body {
+            padding: 35px 32px;
+        }
+
+        .welcome-alert {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 20px;
+            margin-bottom: 35px;
+            border: 1px solid #dbeafe;
+            border-radius: 15px;
+            background: linear-gradient(
+                135deg,
+                #eff6ff,
+                #f5f3ff
+            );
+            color: #334155;
+        }
+
+        .welcome-icon {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: #6366f1;
+            color: white;
+            font-size: 19px;
+        }
+
+        .welcome-title {
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .welcome-text {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+
+        /* ==============================
+           SECTION TITLE
+        ============================== */
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .section-icon {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 11px;
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+        .section-title h6 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .section-title p {
+            margin: 2px 0 0;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+
+        /* ==============================
+           INFORMATION CARDS
+        ============================== */
+
+        .info-box {
+            height: 100%;
+            padding: 20px;
+            border: 1px solid #edf0f5;
+            border-radius: 15px;
+            background: #ffffff;
+            transition: all 0.25s ease;
+        }
+
+        .info-box:hover {
+            transform: translateY(-3px);
+            border-color: #dfe3ff;
+            box-shadow: 0 10px 25px rgba(79,70,229,0.08);
+        }
+
+        .info-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .info-icon {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #94a3b8;
+        }
+
+        .value {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+            word-break: break-word;
+        }
+
+
+        /* ==============================
+           VERIFICATION
+        ============================== */
+
+        .verification-card {
+            text-align: center;
+            padding: 22px 15px;
+        }
+
+        .verification-icon {
+            width: 45px;
+            height: 45px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 13px;
+            font-size: 18px;
+        }
+
+        .icon-success {
+            color: #16a34a;
+            background: #dcfce7;
+        }
+
+        .icon-warning {
+            color: #d97706;
+            background: #fef3c7;
+        }
+
+        .icon-danger {
+            color: #dc2626;
+            background: #fee2e2;
+        }
+
+        .verification-status {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 5px 11px;
+            border-radius: 50px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .yes {
+            color: #15803d;
+            background: #dcfce7;
+        }
+
+        .no {
+            color: #b45309;
+            background: #fef3c7;
+        }
+
+        .no-danger {
+            color: #b91c1c;
+            background: #fee2e2;
+        }
+
+
+        /* ==============================
+           DIVIDER
+        ============================== */
+
+        .section-divider {
+            margin: 35px 0;
+            border: 0;
+            border-top: 1px solid #edf0f5;
+        }
+
+
+        /* ==============================
+           KYC
+        ============================== */
+
+        .kyc-field {
+            position: relative;
+        }
+
+        .kyc-field .form-control {
+            height: 50px;
+            padding-left: 45px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 600;
+        }
+
+        .kyc-field i {
+            position: absolute;
+            left: 16px;
+            bottom: 16px;
+            color: #6366f1;
+            z-index: 2;
+        }
+
+        .kyc-field label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+
+        /* ==============================
+           LOCATION
+        ============================== */
+
+        .location-box {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location-box::after {
+            content: "";
+            position: absolute;
+            right: -25px;
+            top: -25px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(99,102,241,0.05);
+        }
+
+        .location-icon {
+            color: #ef4444;
+        }
+
+
+        /* ==============================
+           UPDATE FORM
+        ============================== */
+
+        .update-section {
+            padding: 25px;
+            border: 1px solid #edf0f5;
+            border-radius: 18px;
+            background: #fafbff;
+        }
+
+        .update-section .form-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 7px;
+        }
+
+        .update-section input,
+        .update-section select,
+        .update-section textarea {
+            border: 1px solid #e2e8f0;
+            border-radius: 11px;
+            min-height: 46px;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .update-section input:focus,
+        .update-section select:focus,
+        .update-section textarea:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+        }
+
+        .update-button {
+            min-height: 50px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(
+                135deg,
+                #4f46e5,
+                #6366f1
+            );
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(79,70,229,0.2);
+            transition: all 0.25s ease;
+        }
+
+        .update-button:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(
+                135deg,
+                #4338ca,
+                #4f46e5
+            );
+            box-shadow: 0 12px 25px rgba(79,70,229,0.28);
+        }
+
+
+        /* ==============================
+           FOOTER
+        ============================== */
+
+        .dashboard-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #edf0f5;
+            background: #fafbfc;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .dashboard-footer i {
+            color: #6366f1;
+        }
+
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 768px) {
+
+            .dashboard-wrapper {
+                padding: 15px;
+            }
+
+            .dashboard-header {
+                padding: 22px;
+            }
+
+            .header-subtitle {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            .profile-section {
+                padding: 28px 20px;
+            }
+
+            .profile-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .dashboard-body {
+                padding: 25px 18px;
+            }
+
+            .profile-photo {
+                width: 110px;
+                height: 110px;
+            }
+
+            .profile-details h2 {
+                font-size: 22px;
+            }
+
+            .status-badge {
+                margin-top: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .dashboard-header {
+                padding: 20px 16px;
+            }
+
+            .header-title h4 {
+                font-size: 17px;
+            }
+
+            .dashboard-body {
+                padding: 22px 14px;
+            }
+
+            .welcome-alert {
+                align-items: flex-start;
+            }
+
+            .update-section {
+                padding: 18px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-wrapper">
+
+    <div class="dashboard-card">
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="dashboard-header">
+
+            <div class="header-content">
+
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+                    <div>
+
+                        <div class="header-title">
+
+                            <div class="header-icon">
+                                <i class="bi bi-shop"></i>
+                            </div>
+
+                            <div>
+                                <h4>Seller Dashboard</h4>
+                            </div>
+
+                        </div>
+
+                        <div class="header-subtitle">
+                            Manage your seller profile, verification and business information
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div>
+
+                        {% if profile.status == 'approved' %}
+
+                            <span class="status-badge status-approved">
+                                <span class="status-dot"></span>
+                                Approved
+                            </span>
+
+                        {% elif profile.status == 'pending' %}
+
+                            <span class="status-badge status-pending">
+                                <span class="status-dot"></span>
+                                Pending Review
+                            </span>
+
+                        {% elif profile.status == 'rejected' %}
+
+                            <span class="status-badge status-rejected">
+                                <span class="status-dot"></span>
+                                Rejected
+                            </span>
+
+                        {% else %}
+
+                            <span class="status-badge status-blocked">
+                                <span class="status-dot"></span>
+                                Blocked
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             PROFILE HERO
+        ====================================================== -->
+
+        <div class="profile-section">
+
+            <div class="profile-container">
+
+                <div class="profile-photo-wrapper">
+
+                    {% if profile.profile_photo %}
+
+                        <img
+                            src="{{ profile.profile_photo.url }}"
+                            class="profile-photo"
+                            alt="Seller Profile Photo"
+                        >
+
+                    {% else %}
+
+                        <img
+                            src="{% static 'images/default-user.png' %}"
+                            class="profile-photo"
+                            alt="Default Profile Photo"
+                        >
+
+                    {% endif %}
+
+                    <span class="online-indicator"></span>
+
+                </div>
+
+
+                <div class="profile-details">
+
+                    <h2>
+                        {{ profile.company_name }}
+                    </h2>
+
+                    <div class="username">
+
+                        <i class="bi bi-person-circle me-1"></i>
+
+                        @{{ profile.user.username }}
+
+                    </div>
+
+                    <div class="seller-tag">
+
+                        <i class="bi bi-patch-check-fill"></i>
+
+                        Seller Account
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             BODY
+        ====================================================== -->
+
+        <div class="dashboard-body">
+
+
+            <!-- WELCOME -->
+
+            <div class="welcome-alert">
+
+                <div class="welcome-icon">
+                    <i class="bi bi-shield-lock-fill"></i>
+                </div>
+
+                <div>
+
+                    <div class="welcome-title">
+                        Welcome to your Seller Dashboard
+                    </div>
+
+                    <div class="welcome-text">
+                        Your business profile and verification information are securely managed here.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 BUSINESS INFORMATION
+            ================================================== -->
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="bi bi-building"></i>
+                </div>
+
+                <div>
+
+                    <h6>Business Information</h6>
+
+                    <p>Your registered business details</p>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-3">
+
+
+                <!-- BUSINESS TYPE -->
+
+                <div class="col-md-6">
+
+                    <div class="info-box">
+
+                        <div class="info-top">
+
+                            <div class="label">
+                                Business Type
+                            </div>
+
+                            <div class="info-icon">
+                                <i class="bi bi-briefcase"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="value">
+                            {{ profile.business_type|default:"Not provided" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COMPANY -->
+
+                <div class="col-md-6">
+
+                    <div class="info-box">
+
+                        <div class="info-top">
+
+                            <div class="label">
+                                Company Name
+                            </div>
+
+                            <div class="info-icon">
+                                <i class="bi bi-buildings"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="value">
+                            {{ profile.company_name|default:"Not provided" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="col-md-6">
+
+                    <div class="info-box">
+
+                        <div class="info-top">
+
+                            <div class="label">
+                                Email Address
+                            </div>
+
+                            <div class="info-icon">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="value">
+                            {{ profile.email|default:"Not provided" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MOBILE -->
+
+                <div class="col-md-6">
+
+                    <div class="info-box">
+
+                        <div class="info-top">
+
+                            <div class="label">
+                                Mobile Number
+                            </div>
+
+                            <div class="info-icon">
+                                <i class="bi bi-phone"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="value">
+                            {{ profile.mobile_number|default:"Not provided" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DATE OF BIRTH -->
+
+                <div class="col-md-6">
+
+                    <div class="info-box">
+
+                        <div class="info-top">
+
+                            <div class="label">
+                                Date of Birth
+                            </div>
+
+                            <div class="info-icon">
+                                <i class="bi bi-calendar3"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="value">
+                            {{ profile.date_of_birth|default:"Not provided" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- GENDER -->
+
+                <div class="col-md-6">
+
+                    <div class="info-box">
+
+                        <div class="info-top">
+
+                            <div class="label">
+                                Gender
+                            </div>
+
+                            <div class="info-icon">
+                                <i class="bi bi-person"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="value">
+                            {{ profile.gender|default:"Not provided" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr class="section-divider">
+
+
+            <!-- =================================================
+                 VERIFICATION STATUS
+            ================================================== -->
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+
+                <div>
+
+                    <h6>Verification & Agreements</h6>
+
+                    <p>Review your account compliance status</p>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-3">
+
+
+                <!-- TERMS -->
+
+                <div class="col-md-3">
+
+                    <div class="info-box verification-card">
+
+                        {% if profile.terms_accepted %}
+
+                            <div class="verification-icon icon-success">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+
+                        {% else %}
+
+                            <div class="verification-icon icon-danger">
+                                <i class="bi bi-x-lg"></i>
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="label">
+                            Terms & Conditions
+                        </div>
+
+
+                        {% if profile.terms_accepted %}
+
+                            <span class="verification-status yes">
+                                ACCEPTED
+                            </span>
+
+                        {% else %}
+
+                            <span class="verification-status no-danger">
+                                NOT ACCEPTED
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- PRIVACY -->
+
+                <div class="col-md-3">
+
+                    <div class="info-box verification-card">
+
+                        {% if profile.privacy_policy_accepted %}
+
+                            <div class="verification-icon icon-success">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+
+                        {% else %}
+
+                            <div class="verification-icon icon-danger">
+                                <i class="bi bi-shield-x"></i>
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="label">
+                            Privacy Policy
+                        </div>
+
+
+                        {% if profile.privacy_policy_accepted %}
+
+                            <span class="verification-status yes">
+                                ACCEPTED
+                            </span>
+
+                        {% else %}
+
+                            <span class="verification-status no-danger">
+                                NOT ACCEPTED
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- RETURN POLICY -->
+
+                <div class="col-md-3">
+
+                    <div class="info-box verification-card">
+
+                        {% if profile.return_policy_accepted %}
+
+                            <div class="verification-icon icon-success">
+                                <i class="bi bi-arrow-return-left"></i>
+                            </div>
+
+                        {% else %}
+
+                            <div class="verification-icon icon-warning">
+                                <i class="bi bi-exclamation-lg"></i>
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="label">
+                            Return Policy
+                        </div>
+
+
+                        {% if profile.return_policy_accepted %}
+
+                            <span class="verification-status yes">
+                                ACCEPTED
+                            </span>
+
+                        {% else %}
+
+                            <span class="verification-status no">
+                                NOT ACCEPTED
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <!-- COMMISSION -->
+
+                <div class="col-md-3">
+
+                    <div class="info-box verification-card">
+
+                        {% if profile.commission_agreement_accepted %}
+
+                            <div class="verification-icon icon-success">
+                                <i class="bi bi-cash-coin"></i>
+                            </div>
+
+                        {% else %}
+
+                            <div class="verification-icon icon-warning">
+                                <i class="bi bi-exclamation-lg"></i>
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="label">
+                            Commission Agreement
+                        </div>
+
+
+                        {% if profile.commission_agreement_accepted %}
+
+                            <span class="verification-status yes">
+                                ACCEPTED
+                            </span>
+
+                        {% else %}
+
+                            <span class="verification-status no">
+                                NOT ACCEPTED
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr class="section-divider">
+
+
+            <!-- =================================================
+                 KYC
+            ================================================== -->
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="bi bi-person-vcard"></i>
+                </div>
+
+                <div>
+
+                    <h6>KYC Verification</h6>
+
+                    <p>Identity verification information</p>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-3">
+
+
+                <!-- AADHAR -->
+
+                <div class="col-md-6">
+
+                    <div class="kyc-field">
+
+                        <label>
+                            Aadhar Number
+                        </label>
+
+                        <i class="bi bi-credit-card-2-front"></i>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ profile.aadhar_number|default:'Not provided' }}"
+                            disabled
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PAN -->
+
+                <div class="col-md-6">
+
+                    <div class="kyc-field">
+
+                        <label>
+                            PAN Number
+                        </label>
+
+                        <i class="bi bi-card-heading"></i>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            value="{{ profile.pan_number|default:'Not provided' }}"
+                            disabled
+                        >
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr class="section-divider">
+
+
+            <!-- =================================================
+                 LOCATION
+            ================================================== -->
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="bi bi-geo-alt"></i>
+                </div>
+
+                <div>
+
+                    <h6>Live Location Tracking</h6>
+
+                    <p>Current location information associated with your account</p>
+
+                </div>
+
+            </div>
+
+
+            <div class="row g-3">
+
+
+                <!-- LATITUDE -->
+
+                <div class="col-md-4">
+
+                    <div class="info-box location-box">
+
+                        <div class="info-top">
+
+                            <div class="label">
+                                Latitude
+                            </div>
+
+                            <div class="info-icon">
+                                <i class="bi bi-crosshair"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="value">
+                            {{ profile.latitude|default:"Not available" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LONGITUDE -->
+
+                <div class="col-md-4">
+
+                    <div class="info-box location-box">
+
+                        <div class="info-top">
+
+                            <div class="label">
+                                Longitude
+                            </div>
+
+                            <div class="info-icon">
+                                <i class="bi bi-compass"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="value">
+                            {{ profile.longitude|default:"Not available" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LIVE LOCATION -->
+
+                <div class="col-md-4">
+
+                    <div class="info-box location-box">
+
+                        <div class="info-top">
+
+                            <div class="label">
+                                Live Location
+                            </div>
+
+                            <div class="info-icon">
+                                <i class="bi bi-geo-alt-fill location-icon"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="value">
+                            {{ profile.live_location|default:"Not available" }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <hr class="section-divider">
+
+
+            <!-- =================================================
+                 UPDATE PROFILE
+            ================================================== -->
+
+            <div class="section-title">
+
+                <div class="section-icon">
+                    <i class="bi bi-pencil-square"></i>
+                </div>
+
+                <div>
+
+                    <h6>Update Profile</h6>
+
+                    <p>Keep your seller information up to date</p>
+
+                </div>
+
+            </div>
+
+
+            <div class="update-section">
+
+                <form
+                    method="POST"
+                    enctype="multipart/form-data"
+                >
+
+                    {% csrf_token %}
+
+
+                    <div class="row">
+
+                        {% for field in form %}
+
+                            <div class="col-md-6 mb-3">
+
+                                <label class="form-label">
+                                    {{ field.label }}
+                                </label>
+
+                                {{ field }}
+
+
+                                {% if field.help_text %}
+
+                                    <small class="text-muted d-block mt-1">
+                                        {{ field.help_text }}
+                                    </small>
+
+                                {% endif %}
+
+
+                                {% if field.errors %}
+
+                                    <div class="text-danger small mt-1">
+
+                                        {% for error in field.errors %}
+
+                                            <div>
+                                                {{ error }}
+                                            </div>
+
+                                        {% endfor %}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    {% if not is_locked %}
+
+                        <div class="mt-3">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary update-button w-100"
+                            >
+
+                                <i class="bi bi-cloud-arrow-up me-2"></i>
+
+                                Update Seller Profile
+
+                            </button>
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="alert alert-warning d-flex align-items-center gap-2 mb-0">
+
+                            <i class="bi bi-lock-fill"></i>
+
+                            <span>
+                                Your profile is currently locked and cannot be modified.
+                            </span>
+
+                        </div>
+
+                    {% endif %}
+
+                </form>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             FOOTER
+        ====================================================== -->
+
+        <div class="dashboard-footer">
+
+            <i class="bi bi-shield-check me-1"></i>
+
+            Seller verification securely managed by
+            <strong>Admin Team</strong>
+
+            <span class="mx-2">•</span>
+
+            <span>
+                All rights reserved
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Bootstrap JS -->
+<script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+</html>
+
+
+{% endblock %}

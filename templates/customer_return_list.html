@@ -1,0 +1,719 @@
+
+{% extends 'layouts/main.html' %}
+{% block content %}
+
+<style>
+    :root {
+        --primary: #4f46e5;
+        --primary-dark: #3730a3;
+        --success: #16a34a;
+        --warning: #d97706;
+        --danger: #dc2626;
+        --dark: #111827;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --bg: #f8fafc;
+        --white: #ffffff;
+    }
+
+    body {
+        background: var(--bg);
+    }
+
+    .returns-page {
+        padding: 40px 0 70px;
+    }
+
+    /* Header */
+    .returns-header {
+        background: linear-gradient(
+            135deg,
+            #4f46e5 0%,
+            #6366f1 50%,
+            #7c3aed 100%
+        );
+        border-radius: 24px;
+        padding: 35px;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 28px;
+        box-shadow: 0 15px 40px rgba(79, 70, 229, 0.20);
+    }
+
+    .returns-header::before {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 50%;
+        top: -100px;
+        right: -60px;
+    }
+
+    .returns-header::after {
+        content: "";
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 50%;
+        bottom: -80px;
+        left: 30%;
+    }
+
+    .header-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .header-icon {
+        width: 58px;
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 16px;
+        font-size: 25px;
+        margin-bottom: 18px;
+        backdrop-filter: blur(10px);
+    }
+
+    .returns-header h1 {
+        font-size: 30px;
+        font-weight: 750;
+        margin: 0 0 8px;
+        letter-spacing: -0.5px;
+    }
+
+    .returns-header p {
+        margin: 0;
+        opacity: 0.85;
+        font-size: 15px;
+    }
+
+    /* Stats */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+        margin-bottom: 28px;
+    }
+
+    .stat-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 18px;
+        padding: 22px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 5px 20px rgba(15, 23, 42, 0.04);
+        transition: all 0.25s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.total {
+        background: #eef2ff;
+        color: var(--primary);
+    }
+
+    .stat-icon.pending {
+        background: #fff7ed;
+        color: var(--warning);
+    }
+
+    .stat-icon.approved {
+        background: #f0fdf4;
+        color: var(--success);
+    }
+
+    .stat-info small {
+        display: block;
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 3px;
+    }
+
+    .stat-info strong {
+        display: block;
+        color: var(--dark);
+        font-size: 23px;
+        font-weight: 750;
+    }
+
+    /* Main Card */
+    .returns-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        overflow: hidden;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+    }
+
+    .card-top {
+        padding: 24px 28px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .card-title {
+        margin: 0;
+        color: var(--dark);
+        font-size: 19px;
+        font-weight: 700;
+    }
+
+    .card-subtitle {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+    }
+
+    .request-counta {
+        background: #eef2ff;
+        color: var(--primary);
+        padding: 7px 13px;
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    /* Table */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .returns-table {
+        width: 100%;
+        margin: 0;
+        border-collapse: collapse;
+    }
+
+    .returns-table thead th {
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 11px;
+        font-weight: 750;
+        text-transform: uppercase;
+        letter-spacing: 0.7px;
+        padding: 16px 22px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+    }
+
+    .returns-table tbody td {
+        padding: 19px 22px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        color: #334155;
+        font-size: 14px;
+    }
+
+    .returns-table tbody tr {
+        transition: background 0.2s ease;
+    }
+
+    .returns-table tbody tr:hover {
+        background: #fafbff;
+    }
+
+    .returns-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Product */
+    .product-cell {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+        min-width: 240px;
+    }
+
+    .product-imagez {
+        width: 62px;
+        height: 62px;
+        object-fit: cover;
+        border-radius: 13px;
+        border: 1px solid var(--border);
+        background: #f8fafc;
+        padding: 3px;
+        transition: transform 0.2s ease;
+    }
+
+    .returns-table tbody tr:hover .product-imagez {
+        transform: scale(1.05);
+    }
+
+    .product-name {
+        color: var(--dark);
+        font-weight: 650;
+        line-height: 1.4;
+    }
+
+    /* Price */
+    .pricez {
+        color: var(--dark);
+        font-size: 15px;
+        font-weight: 750;
+        white-space: nowrap;
+    }
+
+    /* Status */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 11px;
+        border-radius: 50px;
+        font-size: 11px;
+        font-weight: 750;
+        white-space: nowrap;
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .status-pending {
+        background: #fff7ed;
+        color: #c2410c;
+    }
+
+    .status-pending .status-dot {
+        background: #f97316;
+    }
+
+    .status-approved {
+        background: #f0fdf4;
+        color: #15803d;
+    }
+
+    .status-approved .status-dot {
+        background: #22c55e;
+    }
+
+    .status-rejected {
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    .status-rejected .status-dot {
+        background: #ef4444;
+    }
+
+    /* Date */
+    .date-cell {
+        color: #64748b;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    /* View Button */
+    .view-btnzz {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 9px;
+        background: #eef2ff;
+        color: var(--primary);
+        border: 1px solid #e0e7ff;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 700;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .view-btnzz:hover {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+        transform: translateY(-1px);
+    }
+
+    /* Empty State */
+    .empty-state {
+        padding: 75px 25px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        width: 78px;
+        height: 78px;
+        margin: 0 auto 20px;
+        border-radius: 22px;
+        background: #f1f5f9;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+    }
+
+    .empty-state h4 {
+        color: var(--dark);
+        font-size: 19px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        color: var(--muted);
+        margin: 0 auto;
+        max-width: 430px;
+        font-size: 14px;
+    }
+
+    /* Footer */
+    .returns-footer {
+        padding: 17px 28px;
+        border-top: 1px solid var(--border);
+        background: #fafbfc;
+        color: #94a3b8;
+        font-size: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .returns-header {
+            padding: 28px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .returns-page {
+            padding: 20px 0 40px;
+        }
+
+        .returns-header {
+            border-radius: 18px;
+            padding: 25px 20px;
+        }
+
+        .returns-header h1 {
+            font-size: 24px;
+        }
+
+        .card-top {
+            padding: 20px;
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .returns-table thead th,
+        .returns-table tbody td {
+            padding: 14px 15px;
+        }
+
+        .product-cell {
+            min-width: 200px;
+        }
+
+        .product-imagez {
+            width: 52px;
+            height: 52px;
+        }
+
+        .returns-card {
+            border-radius: 18px;
+        }
+
+        .returns-footer {
+            padding: 15px 20px;
+        }
+    }
+</style>
+
+
+<div class="container returns-page">
+
+    <!-- Page Header -->
+    <div class="returns-header">
+
+        <div class="header-content">
+
+            <div class="header-icon">
+                ↩
+            </div>
+
+            <h1>My Return Requests</h1>
+
+            <p>
+                Track and manage all your product return requests in one place.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Statistics -->
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-icon total">
+                ▣
+            </div>
+
+            <div class="stat-info">
+                <small>Total Requests</small>
+                <strong>{{ returns|length }}</strong>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon pending">
+                ◷
+            </div>
+
+            <div class="stat-info">
+                <small>Return Status</small>
+                <strong>Active</strong>
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon approved">
+                ✓
+            </div>
+
+            <div class="stat-info">
+                <small>Return Center</small>
+                <strong>Online</strong>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Returns Card -->
+    <div class="returns-card">
+
+        <div class="card-top">
+
+            <div>
+                <h3 class="card-title">
+                    Return Request History
+                </h3>
+
+                <p class="card-subtitle">
+                    Review the current status of your submitted return requests.
+                </p>
+            </div>
+
+            <div class="request-counta">
+                {{ returns|length }} Request{{ returns|length|pluralize }}
+            </div>
+
+        </div>
+
+
+        {% if returns %}
+
+        <div class="table-wrapper">
+
+            <table class="returns-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Requested On</th>
+                        <th>Action</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for item in returns %}
+
+                    <tr>
+
+                        <!-- Product -->
+                        <td>
+
+                            <div class="product-cell">
+
+                                {% if item.product_image %}
+                                    <img
+                                        src="{{ item.product_image.url }}"
+                                        alt="{{ item.product_name }}"
+                                        class="product-imagez"
+                                    >
+                                {% else %}
+
+                                    <div class="product-image d-flex align-items-center justify-content-center">
+                                        📦
+                                    </div>
+
+                                {% endif %}
+
+
+                                <div>
+
+                                    <div class="product-name">
+                                        {{ item.product_name }}
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- Price -->
+                        <td>
+
+                            <span class="pricez">
+                                ₹{{ item.selling_price }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- Status -->
+                        <td>
+
+                            {% if item.status == 'Pending' %}
+
+                                <span class="status-badge status-pending">
+                                    <span class="status-dot"></span>
+                                    Pending
+                                </span>
+
+                            {% elif item.status == 'Approved' %}
+
+                                <span class="status-badge status-approved">
+                                    <span class="status-dot"></span>
+                                    Approved
+                                </span>
+
+                            {% elif item.status == 'Rejected' %}
+
+                                <span class="status-badge status-rejected">
+                                    <span class="status-dot"></span>
+                                    Rejected
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge status-rejected">
+                                    <span class="status-dot"></span>
+                                    {{ item.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- Date -->
+                        <td>
+
+                            <span class="date-cell">
+                                {{ item.created_at|date:"d M Y, h:i A" }}
+                            </span>
+
+                        </td>
+
+
+                        <!-- Action -->
+                        <td>
+
+                            <a
+                                href="{% url 'return_detail' item.id %}"
+                                class="view-btnzz"
+                            >
+                                View Details
+                                <span>→</span>
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="returns-footer">
+            Your return requests are securely stored and updated by our support team.
+        </div>
+
+
+        {% else %}
+
+        <!-- Empty State -->
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ↩
+            </div>
+
+            <h4>No Return Requests</h4>
+
+            <p>
+                You haven't submitted any return requests yet.
+                Once you request a return, it will appear here.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+```
