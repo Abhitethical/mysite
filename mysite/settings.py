@@ -20,12 +20,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!37*w593^ks#5^3jo49tnb^q8$=l_3&__cr3pcr^$odlapo*y4'
+#SECRET_KEY = 'django-insecure-!37*w593^ks#5^3jo49tnb^q8$=l_3&__cr3pcr^$odlapo*y4'
 
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    "django-insecure-local-development-only"
+)
+
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [    "localhost",
+    "127.0.0.1",
+    ".vercel.app",]
 
 
 # Application definition
@@ -225,6 +233,7 @@ STATICFILES_DIRS =[
     os.path.join(BASE_DIR,'static')   # new add
 ]
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -278,6 +287,10 @@ SESSION_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_SECURE = not DEBUG  # HTTPS in production
 CSRF_COOKIE_SECURE = not DEBUG
 
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.vercel.app",
+]
 import os
 
 TWILIO_ACCOUNT_SID = os.environ.get("TWILIO_ACCOUNT_SID", "")
