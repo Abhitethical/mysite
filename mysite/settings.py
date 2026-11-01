@@ -22,15 +22,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'django-insecure-!37*w593^ks#5^3jo49tnb^q8$=l_3&__cr3pcr^$odlapo*y4'
 
-import os
-
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
-
-if not SECRET_KEY:
-    raise ValueError("DJANGO_SECRET_KEY environment variable is missing")
-
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
-
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
     "django-insecure-local-development-only"
@@ -40,11 +31,9 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "localhost",
+ALLOWED_HOSTS = [    "localhost",
     "127.0.0.1",
-    ".vercel.app",
-]
+    ".vercel.app",]
 
 
 # Application definition
@@ -57,9 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    "crispy_forms",
-    "crispy_bootstrap4",
     'home',
     
     
@@ -256,13 +242,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-#MIDEA_ROOT = BASE_DIR /'uploads'    # new add
-
-MIDEA_ROOT = BASE_DIR / 'uploads'
-
+MIDEA_ROOT = BASE_DIR /'uploads'    # new add
 MEDIA_URL = '/media/'                # new add
 
-CRISPY_TEMPLATE_PACK = "bootstrap4"
+CRISPY_TEMPLATE_PACK ='boostrap4'     # new add
 
 # settings.py (development only)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
