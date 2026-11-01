@@ -27,15 +27,20 @@ SECRET_KEY = os.environ.get(
     "django-insecure-local-development-only"
 )
 
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "temporary-development-key")
+
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [    "localhost",
-    "127.0.0.1",
-    ".vercel.app",]
+ALLOWED_HOSTS = [".vercel.app",
+    "localhost",
+    "127.0.0.1",]
 
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.vercel.app",
+]
 # Application definition
 
 INSTALLED_APPS = [
