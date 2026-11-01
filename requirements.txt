@@ -1,2 +1,6 @@
-Django
+Django==5.0.7
 gunicorn
+django-jazzmin
+django-crispy-forms
+crispy-bootstrap4
+Pillow

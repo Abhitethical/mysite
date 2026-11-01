@@ -26,7 +26,10 @@ import os
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+if not SECRET_KEY:
+    raise ValueError("DJANGO_SECRET_KEY environment variable is missing")
+
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
@@ -37,7 +40,11 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost","127.0.0.1",".vercel.app",]
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".vercel.app",
+]
 
 
 # Application definition
@@ -50,6 +57,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    "crispy_forms",
+    "crispy_bootstrap4",
     'home',
     
     
@@ -194,9 +204,7 @@ DATABASES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://shopkart.vercel.app",
-]
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -235,8 +243,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
 STATICFILES_DIRS =[             
     os.path.join(BASE_DIR,'static')   # new add
 ]
@@ -250,10 +256,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 
-MIDEA_ROOT = BASE_DIR /'uploads'    # new add
+#MIDEA_ROOT = BASE_DIR /'uploads'    # new add
+
+MIDEA_ROOT = BASE_DIR / 'uploads'
+
 MEDIA_URL = '/media/'                # new add
 
-CRISPY_TEMPLATE_PACK ='boostrap4'     # new add
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # settings.py (development only)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
