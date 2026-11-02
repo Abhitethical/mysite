@@ -1,19 +1,10 @@
-
 {
   "version": 2,
-  "builds": [
+  "outputDirectory": "staticfiles_build",
+  "rewrites": [
     {
-      "src": "mysite/wsgi.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "mysite/wsgi.py"
+      "source": "/(.*)",
+      "destination": "mysite/wsgi.py"
     }
   ]
 }
