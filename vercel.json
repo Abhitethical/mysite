@@ -1,5 +1,11 @@
 {
-  "builds": [
-    { "src": "package.json", "use": "@vercel/next" }
+  "version": 2,
+  "outputDirectory": "staticfiles_build",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "your_project_name/wsgi.py"
+    }
   ]
 }
+
