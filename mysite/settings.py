@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
+import os
+
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build')
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,6 +39,7 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True
 DEBUG = False
+<<<<<<< HEAD
 
 ALLOWED_HOSTS = [
     '.vercel.app',
@@ -44,6 +51,15 @@ SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
     'temporary-development-key-change-this'
 )
+=======
+ALLOWED_HOSTS = [
+    ".vercel.app",
+    "localhost",
+    "127.0.0.1",
+]
+
+STATIC_URL = "static/"
+>>>>>>> 76664fdff9192dc498ffdc9543a0ec612beadcab
 
 CSRF_TRUSTED_ORIGINS = [
     "https://*.vercel.app",
