@@ -1,11 +1,19 @@
 {
   "version": 2,
-  "outputDirectory": "staticfiles_build",
-  "rewrites": [
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "your_project_name/wsgi.py"
+      "src": "abhitethical/wsgi.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+    }
+  ],
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "abhitethical/wsgi.py"
     }
   ]
 }
-
