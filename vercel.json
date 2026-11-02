@@ -1,17 +1,5 @@
-
-
 {
-  "version": 2,
   "builds": [
-    {
-      "src": "mysite/wsgi.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "mysite/wsgi.py"
-    }
+    { "src": "package.json", "use": "@vercel/next" }
   ]
 }
